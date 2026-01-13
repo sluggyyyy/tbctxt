@@ -205,7 +205,7 @@ const itemIds={
 function getItemId(n){return itemIds[n.toLowerCase()]||null}
 function getItemQuality(itemName){
     const name=itemName.toLowerCase();
-    const legendaryItems=['warglaive of azzinoth',"thori'dal, the stars' fury",'thunderfury, blessed blade of the windseeker','sulfuras, hand of ragnaros'];
+    const legendaryItems=['warglaive of azzinoth'];
     const rareItems=[];
     if(legendaryItems.some(leg=>name.includes(leg)))return 'legendary';
     if(rareItems.some(rare=>name.includes(rare)))return 'rare';
