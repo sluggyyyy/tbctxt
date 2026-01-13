@@ -1,315 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" href="illidan.ico" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TBC.txt - The Burning Crusade PvP Database</title>
+    <title>tbc.txt - TBC PvP Database</title>
+    <script>const whTooltips={colorLinks:true,iconizeLinks:true,renameLinks:false,iconSize:'small',hide:{sellprice:true,ilvl:false}};</script>
+    <script src="https://wow.zamimg.com/widgets/power.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#222222;--text:#ffffff;--text-dim:#cccccc;--text-bright:#ffffff;--border:#ffffff;--accent:#1eff00;--error:#ff0000;--rare:#0070dd;--epic:#a335ee;--legendary:#ff8000}
+        body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono','Courier Prime',monospace;line-height:1.6;padding:20px;max-width:1400px;margin:0 auto;font-size:14px}
+        header{border:2px solid var(--border);padding:20px;margin-bottom:20px}
+        .ascii-logo{font-size:10px;line-height:1.2;color:var(--text-bright);white-space:pre;font-family:'Courier Prime',monospace;margin-bottom:10px}
+        h1{color:var(--text-bright);font-size:24px;margin-bottom:10px;text-transform:uppercase;letter-spacing:2px}
+        .tagline{color:var(--text-dim);font-size:12px;margin-bottom:15px}
+        .container{display:grid;grid-template-columns:250px 1fr;gap:20px;margin-bottom:20px}
+        aside{border:1px solid var(--border);padding:15px;height:fit-content}
+        aside h3{color:var(--accent);font-size:14px;margin-bottom:10px;text-transform:uppercase}
+        .class-list{list-style:none}
+        .class-list li{padding:5px 0;cursor:pointer;transition:all 0.2s;border-left:2px solid transparent;padding-left:10px}
+        .class-list li:hover{border-left-color:var(--accent);padding-left:15px;color:var(--text-bright)}
+        .class-list li.active{border-left-color:var(--border);color:var(--text-bright)}
+        main{border:1px solid var(--border);padding:20px}
+        .section{margin-bottom:30px;padding-bottom:20px;border-bottom:1px dashed var(--text-dim)}
+        .section:last-child{border-bottom:none}
+        h2{color:var(--accent);font-size:18px;margin-bottom:15px;text-transform:uppercase;letter-spacing:1px}
+        h3{color:var(--text-bright);font-size:14px;margin:15px 0 10px 0;text-transform:uppercase}
+        table{width:100%;border-collapse:collapse;margin:15px 0;font-size:13px}
+        th{background:var(--text-dim);color:var(--bg);padding:8px;text-align:left;font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:1px}
+        td{padding:8px;border-bottom:1px solid var(--text-dim)}
+        tr:hover{background:rgba(255,255,255,0.05)}
+        .stat-line{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dotted var(--text-dim)}
+        .stat-label{color:var(--text-dim)}
+        .stat-value{color:var(--text-bright);font-weight:600}
+        .item-quality-epic{color:var(--epic)}
+        .item-quality-epic a{color:var(--epic)!important;text-decoration:none;border-bottom:1px dotted var(--epic);transition:all 0.2s ease}
+        .item-quality-epic a:hover{color:var(--text-bright)!important;border-bottom-color:var(--text-bright)}
+        .talent-tree{font-family:'Courier Prime',monospace;font-size:12px;line-height:1.4;background:rgba(255,255,255,0.03);padding:15px;border:1px solid var(--text-dim);margin:10px 0;white-space:pre}
+        .meta-info{background:rgba(255,255,0,0.05);border-left:3px solid var(--accent);padding:10px 15px;margin:15px 0;font-size:12px}
+        .phase-selector{display:flex;gap:10px;margin:15px 0;flex-wrap:wrap}
+        .phase-btn{background:transparent;border:1px solid var(--border);color:var(--text);padding:8px 15px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:12px;transition:all 0.2s}
+        .phase-btn:hover,.phase-btn.active{background:var(--text);color:var(--bg)}
+        .command-line{color:var(--text-dim);margin:20px 0 10px 0}
+        .command-line:before{content:'$ ';color:var(--accent)}
+        footer{border:1px solid var(--border);padding:15px;text-align:center;font-size:11px;color:var(--text-dim);margin-top:20px}
+        .spec-tab{display:inline-block;padding:5px 10px;margin-right:10px;border:1px solid var(--text-dim);cursor:pointer;transition:all 0.2s;font-size:12px}
+        .spec-tab:hover,.spec-tab.active{border-color:var(--accent);color:var(--accent)}
+
+        /* Wowhead Tooltip Styling */
+        .wowhead-tooltip{background:#222222!important;border:1px solid #ffffff!important;font-family:'IBM Plex Mono',monospace!important;color:#ffffff!important;font-size:12px!important}
+        .wowhead-tooltip .q0,.wowhead-tooltip .q{color:#9d9d9d!important}
+        .wowhead-tooltip .q1{color:#ffffff!important}
+        .wowhead-tooltip .q2{color:#1eff00!important}
+        .wowhead-tooltip .q3{color:#0070dd!important}
+        .wowhead-tooltip .q4{color:#a335ee!important}
+        .wowhead-tooltip .q5{color:#ff8000!important}
+        .wowhead-tooltip table{background:#222222!important;border-color:#ffffff!important}
+
+        @media(max-width:768px){
+            body{padding:8px;font-size:11px;max-width:100%;overflow-x:hidden}
+            .ascii-logo{font-size:5px;line-height:1;margin-bottom:8px}
+            header{padding:10px;border-width:1px}
+            .tagline{font-size:10px;margin-bottom:8px}
+            .container{grid-template-columns:1fr;gap:10px}
+            aside{margin-bottom:10px;padding:10px}
+            aside h3{font-size:12px;margin-bottom:8px}
+            .class-list li{padding:4px 0;padding-left:8px;font-size:12px}
+            .class-list li:hover{padding-left:10px}
+            main{padding:10px;border-width:1px}
+            .command-line{font-size:10px;margin:10px 0 8px 0}
+            .section{margin-bottom:20px;padding-bottom:15px}
+            table{font-size:10px;display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
+            th,td{padding:4px;font-size:10px;white-space:nowrap}
+            th{font-size:9px;letter-spacing:0.5px}
+            h2{font-size:14px;margin-bottom:10px;letter-spacing:0.5px}
+            h3{font-size:12px;margin:10px 0 8px 0}
+            .phase-selector{gap:5px;margin:10px 0}
+            .phase-btn{padding:5px 10px;font-size:10px}
+            .spec-tab{padding:4px 8px;font-size:10px;margin-right:5px}
+            .talent-tree{font-size:8px;padding:8px;line-height:1.3;overflow-x:auto}
+            .meta-info{font-size:10px;padding:8px 10px;margin:10px 0}
+            .stat-line{font-size:10px;padding:4px 0}
+            footer{padding:10px;font-size:9px;border-width:1px}
         }
-
-        :root {
-            --bg: #222222;
-            --text: #ffffff;
-            --text-dim: #cccccc;
-            --text-bright: #ffffff;
-            --border: #ffffff;
-            --accent: #1eff00;
-            --error: #ff0000;
-            --rare: #0070dd;
-            --epic: #a335ee;
-            --legendary: #ff8000;
-        }
-
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'IBM Plex Mono', 'Courier Prime', monospace;
-            line-height: 1.6;
-            padding: 20px;
-            max-width: 1400px;
-            margin: 0 auto;
-            font-size: 14px;
-        }
-
-        header {
-            border: 2px solid var(--border);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .ascii-logo {
-            font-size: 10px;
-            line-height: 1.2;
-            color: var(--text-bright);
-            white-space: pre;
-            font-family: 'Courier Prime', monospace;
-            margin-bottom: 10px;
-        }
-
-        h1 {
-            color: var(--text-bright);
-            font-size: 24px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .tagline {
-            color: var(--text-dim);
-            font-size: 12px;
-            margin-bottom: 15px;
-        }
-
-        nav {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid var(--text-dim);
-        }
-
-        nav a {
-            color: var(--text);
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-
-        nav a:hover {
-            color: var(--accent);
-        }
-
-        nav a:before {
-            content: '> ';
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        nav a:hover:before {
-            opacity: 1;
-        }
-
-        .container {
-            display: grid;
-            grid-template-columns: 250px 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        aside {
-            border: 1px solid var(--border);
-            padding: 15px;
-            height: fit-content;
-        }
-
-        aside h3 {
-            color: var(--accent);
-            font-size: 14px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
-
-        .class-list {
-            list-style: none;
-        }
-
-        .class-list li {
-            padding: 5px 0;
-            cursor: pointer;
-            transition: all 0.2s;
-            border-left: 2px solid transparent;
-            padding-left: 10px;
-        }
-
-        .class-list li:hover {
-            border-left-color: var(--accent);
-            padding-left: 15px;
-            color: var(--text-bright);
-        }
-
-        .class-list li.active {
-            border-left-color: var(--border);
-            color: var(--text-bright);
-        }
-
-        main {
-            border: 1px solid var(--border);
-            padding: 20px;
-        }
-
-        .section {
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px dashed var(--text-dim);
-        }
-
-        .section:last-child {
-            border-bottom: none;
-        }
-
-        h2 {
-            color: var(--accent);
-            font-size: 18px;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        h3 {
-            color: var(--text-bright);
-            font-size: 14px;
-            margin: 15px 0 10px 0;
-            text-transform: uppercase;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 15px 0;
-            font-size: 13px;
-        }
-
-        th {
-            background: var(--text-dim);
-            color: var(--bg);
-            padding: 8px;
-            text-align: left;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 11px;
-            letter-spacing: 1px;
-        }
-
-        td {
-            padding: 8px;
-            border-bottom: 1px solid var(--text-dim);
-        }
-
-        tr:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .stat-line {
-            display: flex;
-            justify-content: space-between;
-            padding: 5px 0;
-            border-bottom: 1px dotted var(--text-dim);
-        }
-
-        .stat-label {
-            color: var(--text-dim);
-        }
-
-        .stat-value {
-            color: var(--text-bright);
-            font-weight: 600;
-        }
-
-        .item-quality-rare { color: var(--rare); }
-        .item-quality-epic { color: var(--epic); }
-        .item-quality-legendary { color: var(--legendary); }
-
-        .talent-tree {
-            font-family: 'Courier Prime', monospace;
-            font-size: 12px;
-            line-height: 1.4;
-            background: rgba(255, 255, 255, 0.03);
-            padding: 15px;
-            border: 1px solid var(--text-dim);
-            margin: 10px 0;
-            white-space: pre;
-        }
-
-        .meta-info {
-            background: rgba(255, 255, 0, 0.05);
-            border-left: 3px solid var(--accent);
-            padding: 10px 15px;
-            margin: 15px 0;
-            font-size: 12px;
-        }
-
-        .bracket-selector {
-            display: flex;
-            gap: 10px;
-            margin: 15px 0;
-        }
-
-        .bracket-btn {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text);
-            padding: 8px 15px;
-            cursor: pointer;
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 12px;
-            transition: all 0.2s;
-        }
-
-        .bracket-btn:hover,
-        .bracket-btn.active {
-            background: var(--text);
-            color: var(--bg);
-        }
-
-        .command-line {
-            color: var(--text-dim);
-            margin: 20px 0 10px 0;
-        }
-
-        .command-line:before {
-            content: '$ ';
-            color: var(--accent);
-        }
-
-        footer {
-            border: 1px solid var(--border);
-            padding: 15px;
-            text-align: center;
-            font-size: 11px;
-            color: var(--text-dim);
-            margin-top: 20px;
-        }
-
-        .spec-tab {
-            display: inline-block;
-            padding: 5px 10px;
-            margin-right: 10px;
-            border: 1px solid var(--text-dim);
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 12px;
-        }
-
-        .spec-tab:hover,
-        .spec-tab.active {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        .enchant {
-            color: var(--text-bright);
-            font-size: 11px;
-            margin-left: 10px;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-            body {
-                padding: 10px;
-                font-size: 12px;
-            }
-            .ascii-logo {
-                font-size: 8px;
-            }
+        @media(max-width:480px){
+            body{padding:5px;font-size:10px}
+            .ascii-logo{font-size:4px}
+            header{padding:8px}
+            .tagline{font-size:9px}
+            aside{padding:8px}
+            aside h3{font-size:11px}
+            .class-list li{font-size:11px}
+            main{padding:8px}
+            h2{font-size:13px}
+            h3{font-size:11px}
+            table{font-size:9px}
+            th,td{padding:3px;font-size:9px}
+            th{font-size:8px}
+            .phase-btn{padding:4px 8px;font-size:9px}
+            .spec-tab{padding:3px 6px;font-size:9px}
+            .talent-tree{font-size:7px;padding:6px}
+            .meta-info{font-size:9px;padding:6px 8px}
         }
     </style>
 </head>
@@ -319,19 +114,9 @@
  |_   _| __ ) / ___| | |___  _| |_ 
    | | |  _ \| |     | __\ \/ / __|
    | | | |_) | |  _ _| |_ >  <| |_ 
-   |_| |____/ \___(_)\__/_/\_\\__|
-                                    </div>
-        <h1>TBC.TXT</h1>
-        <div class="tagline">// The Burning Crusade PvP Database - Plain Text Edition v2.4.3</div>
-        <nav>
-            <a href="#classes">CLASSES</a>
-            <a href="#bis">BiS LISTS</a>
-            <a href="#guides">GUIDES</a>
-            <a href="#comps">ARENA COMPS</a>
-            <a href="#talents">TALENTS</a>
-        </nav>
+   |_| |____/ \___(_)\__/_/\_\\__|</div>
+        <div class="tagline">// A Burning Crusade PvP Database - Data sourced from Icy Veins</div>
     </header>
-
     <div class="container">
         <aside>
             <h3>▼ CLASS SELECT</h3>
@@ -346,602 +131,2324 @@
                 <li data-class="warlock">[ WARLOCK ]</li>
                 <li data-class="druid">[ DRUID ]</li>
             </ul>
-
-            <h3 style="margin-top: 20px;">▼ QUICK STATS</h3>
-            <div style="font-size: 11px; margin-top: 10px; color: var(--text-dim);">
-                <div>Season: 4</div>
-                <div>Patch: 2.4.3</div>
-                <div>Active Teams: 18,432</div>
-                <div>Glad Cutoff: 2341</div>
-            </div>
         </aside>
-
-        <main id="main-content">
-            <!-- Content loads here dynamically -->
-        </main>
+        <main id="main-content"></main>
     </div>
-
     <footer>
-        <div>TBC.TXT v2.4.3 // Data updated every 6 hours from Armory API</div>
-        <div style="margin-top: 5px;">NOT affiliated with Blizzard Entertainment // Community Project</div>
+        <div>TBC.TXT // Data sourced from Icy Veins guides</div>
+        <div style="margin-top:5px">NOT affiliated with Blizzard Entertainment // Community Project</div>
     </footer>
-
     <script>
-        const mainContent = document.getElementById('main-content');
-        
-        // FULL CLASS DATA - ALL 9 CLASSES WITH COMPLETE INFO
-        const classData = {
-            warrior: {
-                title: "WARRIOR // ARMS PVP",
-                metaTier: "S-Tier (2v2/3v3) | A-Tier (5v5)",
-                primaryStats: "Resilience > Hit Cap (5%) > Crit > AP > Armor Pen",
-                specs: ["17/44/0 ARMS", "33/28/0 MS/PROT"],
-                bis: [
-                    ["HEAD", "Vengeful Gladiator's Plate Helm", "Arena S4 (1200)", "114 Resil, 88 Stam"],
-                    ["", "◆ Glyph of Ferocity (+34 AP, +16 Hit)", "Aldor Revered", ""],
-                    ["NECK", "Choker of Serrated Blades", "Badge of Justice (25)", "32 Crit, 24 Hit, 28 AP"],
-                    ["SHOULDER", "Vengeful Gladiator's Plate Shoulders", "Arena S4 (1000)", "76 Resil, 59 Stam"],
-                    ["", "◆ Greater Inscription of Vengeance (+15 Crit, +20 AP)", "Aldor Exalted", ""],
-                    ["BACK", "Cloak of Unforgivable Sin", "Sunwell Plateau", "45 AP, 30 Crit, 17 Hit"],
-                    ["", "◆ Enchant Cloak - Major Agility (+12 Agi)", "Enchanting", ""],
-                    ["CHEST", "Vengeful Gladiator's Plate Chestpiece", "Arena S4 (1350)", "114 Resil, 88 Stam"],
-                    ["", "◆ Enchant Chest - Exceptional Resilience (+15 Resil)", "Enchanting", ""],
-                    ["WRIST", "Bracers of the Silent Hunter", "Black Temple", "29 Stam, 50 AP, 29 Crit"],
-                    ["", "◆ Enchant Bracer - Major Strength (+12 Str)", "Enchanting", ""],
-                    ["HANDS", "Vengeful Gladiator's Plate Gauntlets", "Arena S4 (900)", "76 Resil, 59 Stam"],
-                    ["", "◆ Enchant Gloves - Crusher (+44 AP)", "Enchanting", ""],
-                    ["WAIST", "Belt of Deep Shadow", "Black Temple", "36 Stam, 44 AP, 22 Hit"],
-                    ["LEGS", "Vengeful Gladiator's Plate Legguards", "Arena S4 (1350)", "114 Resil, 88 Stam"],
-                    ["", "◆ Nethercleft Leg Armor (+40 Resil, +12 Agi)", "Leatherworking", ""],
-                    ["FEET", "Boots of Utter Darkness", "Sunwell Plateau", "41 Stam, 80 AP, 46 Crit"],
-                    ["", "◆ Enchant Boots - Boar's Speed (+9 Stam, Minor Speed)", "Enchanting", ""],
-                    ["RING 1", "Band of Ruinous Delight", "Sunwell Plateau", "32 Stam, 38 AP, 23 Crit"],
-                    ["RING 2", "Ring of Hardened Resolve", "Badge of Justice (60)", "29 Stam, 60 Resil"],
-                    ["TRINKET 1", "Medallion of the Horde", "Arena (Any Rating)", "106 Resil + USE"],
-                    ["TRINKET 2", "Berserker's Call", "Badge of Justice (41)", "90 AP Proc"],
-                    ["WEAPON", "Vengeful Gladiator's Greatsword", "Arena S4 (1850)", "72 Crit, 137 AP"],
-                    ["", "◆ Enchant Weapon - Mongoose", "Enchanting", ""]
-                ],
-                talents: `17 / 44 / 0 - MORTAL STRIKE BUILD
+const itemIds={
+"brutal gladiator's plate helm":35069,"guardian's pendant of triumph":33922,"brutal gladiator's plate shoulders":35072,"dory's embrace":33592,"brutal gladiator's plate chestpiece":35066,"guardian's plate bracers":33812,"brutal gladiator's plate gauntlets":35067,"guardian's plate belt":33811,"brutal gladiator's plate legguards":35068,"guardian's plate greaves":33813,"guardian's band of triumph":33919,"vindicator's band of triumph":33057,"medallion of the horde":34578,"medallion of the alliance":34579,"battlemaster's cruelty":34576,"brutal gladiator's bonegrinder":34989,"brutal gladiator's war edge":35108,"brutal gladiator's greatsword":35015,"apolyon, the soul-render":34247,
+"brutal gladiator's leather helm":35033,"brutal gladiator's leather spaulders":35036,"brutal gladiator's leather tunic":35030,"guardian's leather bracers":33810,"brutal gladiator's leather gloves":35031,"guardian's leather belt":33809,"brutal gladiator's leather legguards":35032,"guardian's leather boots":33808,"stormrage signet ring":32497,"bloodlust brooch":34427,"brutal gladiator's slicer":35058,"brutal gladiator's quickblade":35052,
+"vengeful gladiator's slicer":33762,"vengeful gladiator's shiv":33756,"cursed vision of sargeras":32235,"vengeful gladiator's leather helm":33701,"vengeful gladiator's leather spaulders":33703,"vengeful gladiator's leather tunic":33704,"vengeful gladiator's leather gloves":33700,"vengeful gladiator's leather legguards":33702,"thalassian wildercloak":29994,"shadowmoon destroyer's drape":32323,"vindicator's dragonhide bracers":33881,"vindicator's leather belt":33891,"belt of deep shadow":30040,"vindicator's leather boots":33892,"band of the eternal champion":29301,"berserker's call":33831,"warglaive of azzinoth":32837,
+"brutal gladiator's kodohide helm":35021,"guardian's pendant of reprieve":33920,"brutal gladiator's kodohide spaulders":35024,"bishop's cloak":33593,"brutal gladiator's kodohide tunic":35018,"guardian's kodohide bracers":33804,"brutal gladiator's kodohide gloves":35019,"guardian's kodohide belt":33803,"brutal gladiator's kodohide legguards":35020,"guardian's kodohide boots":35139,"ring of calming waves":30897,"guardian's band of salvation":33918,"battlemaster's perseverance":34577,"brutal gladiator's maul":35078,"idol of the raven goddess":32387,
+"brutal gladiator's ornamented headcover":35045,"brutal gladiator's ornamented spaulders":35048,"brutal gladiator's ornamented chestguard":35042,"guardian's ornamented bracers":35175,"brutal gladiator's ornamented gloves":35043,"guardian's ornamented belt":33805,"brutal gladiator's ornamented legplates":35044,"guardian's ornamented greaves":35145,"brutal gladiator's gavel":35054,"brutal gladiator's shield wall":35074,"libram of mending":28592,
+"brutal gladiator's satin hood":35061,"brutal gladiator's satin mantle":35064,"brutal gladiator's satin robe":35060,"guardian's satin cuffs":33816,"brutal gladiator's satin gloves":35062,"guardian's satin belt":33815,"brutal gladiator's satin leggings":35063,"guardian's satin slippers":33814,"brutal gladiator's salvation":35102,"brutal gladiator's reprieve":35103,"wand of the demonsoul":34892,
+"brutal gladiator's ringmail helm":35053,"brutal gladiator's ringmail spaulders":35056,"brutal gladiator's ringmail armor":35050,"guardian's ringmail bracers":35177,"brutal gladiator's ringmail gauntlets":35051,"guardian's ringmail belt":33818,"brutal gladiator's ringmail leggings":35055,"guardian's ringmail sabatons":35147,"totem of the plains":33507,
+"brutal gladiator's silk cowl":35097,"guardian's pendant of subjugation":37928,"brutal gladiator's silk amice":35096,"tattered cape of antonidas":34242,"brutal gladiator's silk raiment":35099,"guardian's silk cuffs":35179,"brutal gladiator's silk handguards":35098,"belt of the tempest":34557,"leggings of calamity":34181,"guardian's silk footguards":35149,"ring of omnipotence":34230,"guardian's band of dominance":35129,"the skull of gul'dan":32483,"sunflare":34336,"heart of the pit":34179,"brutal gladiator's spellblade":35102,"brutal gladiator's endgame":35097,
+"brutal gladiator's dreadweave hood":35004,"brutal gladiator's dreadweave mantle":35006,"cloak of arcane alacrity":35321,"brutal gladiator's dreadweave robe":35007,"guardian's dreadweave cuffs":35168,"brutal gladiator's dreadweave gloves":35003,"guardian's dreadweave belt":35153,"brutal gladiator's dreadweave leggings":35005,"guardian's dreadweave stalkers":35138,"the seal of danzalar":33054,"hex shrunken head":33829,"void star talisman":30449,"brutal gladiator's grimoire":35016,"brutal gladiator's touch of defeat":35107,
+"brutal gladiator's chain helm":34992,"brutal gladiator's chain spaulders":34994,"brutal gladiator's chain armor":34990,"guardian's chain bracers":35166,"brutal gladiator's chain gauntlets":34991,"guardian's chain girdle":35151,"brutal gladiator's chain leggings":34993,"guardian's chain sabatons":35136,"band of ruinous delight":34189,"madness of the betrayer":32505,"brutal gladiator's decapitator":34997,"brutal gladiator's heavy crossbow":35018,
+"gladiator's plate helm":24545,"gladiator's plate shoulders":24547,"gladiator's plate chestpiece":24544,"gladiator's plate gauntlets":24546,"gladiator's plate legguards":24548,"merciless gladiator's plate helm":32014,"merciless gladiator's plate shoulders":32016,"merciless gladiator's plate chestpiece":32013,"merciless gladiator's plate gauntlets":32015,"merciless gladiator's plate legguards":32017,"vengeful gladiator's plate helm":33729,"vengeful gladiator's plate shoulders":33731,"vengeful gladiator's plate chestpiece":33728,"vengeful gladiator's plate gauntlets":33730,"vengeful gladiator's plate legguards":33732,"veteran's plate bracers":32810,"veteran's plate belt":32809,"veteran's plate greaves":32811,"vindicator's plate bracers":33813,"vindicator's plate belt":33812,"vindicator's plate greaves":33814,
+"pendant of triumph":28343,"cloak of the pit stalker":28797,"general's plate bracers":28929,"general's plate belt":28927,"general's plate greaves":28928,"ring of a thousand marks":29295,"band of the exorcist":28649,"deep thunder":30090,"stormherald":30090,"veteran's pendant of triumph":28343,"merciless gladiator's war edge":31964,
+"gladiator's leather helm":27704,"general's dragonhide bracers":28976,"gladiator's leather gloves":27702,"general's leather belt":28970,"gladiator's leather legguards":27703,"general's leather boots":28971,"gladiator's slicer":28294,"gladiator's quickblade":28295,"gladiator's war edge":28309,
+"merciless gladiator's leather helm":31967,"veteran's pendant of triumph":28343,"merciless gladiator's leather spaulders":31969,"merciless gladiator's leather tunic":32002,"veteran's dragonhide bracers":28976,"merciless gladiator's leather gloves":31966,"merciless gladiator's leather legguards":31968,"veteran's leather boots":28971,"veteran's band of triumph":28984,"merciless gladiator's slicer":32026,"merciless gladiator's quickblade":32025,"merciless gladiator's war edge":31964,
+"vindicator's pendant of triumph":28343,"vengeful gladiator's war edge":33810,"band of the eternal restorer":34167,"blessed band of karabor":32528,"vengeance of the illidari":32254,"vial of the sunwell":35733,"brutal gladiator's staff":35103,"idol of the white stag":32387,
+"gladiator's chain helm":25830,"pendant of triumph":28343,"gladiator's chain spaulders":25831,"gladiator's chain armor":25832,"general's chain bracers":28910,"gladiator's chain gauntlets":25834,"general's chain girdle":28908,"gladiator's chain leggings":25833,"general's chain sabatons":28909,"gladiator's decapitator":28294,"gladiator's heavy crossbow":27808,
+"merciless gladiator's chain helm":31397,"merciless gladiator's chain spaulders":31405,"merciless gladiator's chain armor":31396,"veteran's chain bracers":28910,"merciless gladiator's chain gauntlets":31400,"veteran's chain girdle":28908,"merciless gladiator's chain leggings":31404,"veteran's chain sabatons":28909,"merciless gladiator's decapitator":32044,"merciless gladiator's heavy crossbow":32003,
+"vengeful gladiator's chain helm":33668,"vindicator's pendant of triumph":28343,"vengeful gladiator's chain spaulders":33672,"vengeful gladiator's chain armor":33666,"vindicator's chain bracers":33883,"vengeful gladiator's chain gauntlets":33670,"vindicator's chain girdle":33884,"vengeful gladiator's chain leggings":33674,"vindicator's chain sabatons":33882,"vengeful gladiator's decapitator":34015,"vengeful gladiator's heavy crossbow":33952,
+"gladiator's silk cowl":24553,"pendant of subjugation":28340,"gladiator's silk amice":24555,"shawl of shifting probabilities":29369,"gladiator's silk raiment":24554,"general's silk cuffs":28949,"gladiator's silk handguards":24556,"general's silk belt":28945,"gladiator's silk trousers":25855,"general's silk footguards":28946,"violet signet of the archmage":29287,"icon of the silver crescent":29370,"gladiator's spellblade":28297,"gladiator's endgame":28298,"nathrezim mindblade":28770,
+"merciless gladiator's silk cowl":31987,"veteran's pendant of subjugation":28340,"merciless gladiator's silk amice":31989,"merciless gladiator's silk raiment":31988,"veteran's silk cuffs":28949,"merciless gladiator's silk handguards":31985,"veteran's silk belt":28945,"merciless gladiator's silk trousers":31990,"veteran's silk footguards":28946,"veteran's band of dominance":28957,"loop of forged power":29352,"the lightning capacitor":28785,"merciless gladiator's spellblade":31978,"merciless gladiator's endgame":31986,
+"vengeful gladiator's silk cowl":33718,"vindicator's pendant of subjugation":28340,"vengeful gladiator's silk amice":33724,"vengeful gladiator's silk raiment":33717,"vindicator's silk cuffs":33883,"vengeful gladiator's silk handguards":33722,"vindicator's silk belt":33882,"vengeful gladiator's silk trousers":33723,"vindicator's silk footguards":33880,"vindicator's band of dominance":33918,"ring of ancient knowledge":32527,"vengeful gladiator's spellblade":33763,"vengeful gladiator's endgame":33764,
+"sergeant's heavy cape":28346,"gladiator's dreadweave hood":24553,"pendant of subjugation":28340,"gladiator's dreadweave mantle":24555,"gladiator's dreadweave robe":24554,"general's dreadweave cuffs":28949,"gladiator's dreadweave gloves":24556,"general's dreadweave belt":28945,"gladiator's dreadweave leggings":24557,"general's dreadweave stalkers":28946,"gladiator's grimoire":28298,
+"merciless gladiator's dreadweave hood":31974,"veteran's pendant of subjugation":28340,"merciless gladiator's dreadweave mantle":31976,"royal cloak of the sunstriders":29349,"merciless gladiator's dreadweave robe":31975,"veteran's dreadweave cuffs":28949,"merciless gladiator's dreadweave gloves":31973,"veteran's dreadweave belt":28945,"merciless gladiator's dreadweave leggings":31977,"veteran's dreadweave stalkers":28946,"merciless gladiator's grimoire":32056,"merciless gladiator's touch of defeat":32055,
+"vengeful gladiator's dreadweave hood":33711,"vindicator's pendant of subjugation":28340,"vengeful gladiator's dreadweave mantle":33713,"vengeful gladiator's dreadweave robe":33712,"vindicator's dreadweave cuffs":33883,"vengeful gladiator's dreadweave gloves":33710,"vindicator's dreadweave belt":33882,"vengeful gladiator's dreadweave leggings":33714,"vindicator's dreadweave stalkers":33880,"vengeful gladiator's grimoire":33955,"vengeful gladiator's touch of defeat":33956,
+"gladiator's mooncloth hood":27707,"shining chain of the afterworld":29354,"gladiator's mooncloth mantle":27713,"stainless cloak of the pure hearted":29313,"gladiator's mooncloth robe":27711,"general's mooncloth cuffs":28980,"gladiator's mooncloth gloves":27708,"general's mooncloth belt":28978,"gladiator's mooncloth leggings":27710,"general's mooncloth slippers":28979,"naaru lightwarden's band":28793,"violet signet of the grand restorer":29352,"bangle of endless blessings":27924,"gladiator's salvation":28298,"gladiator's reprieve":28297,"blue diamond witchwand":32837,
+"merciless gladiator's satin hood":31997,"veteran's pendant of salvation":28345,"merciless gladiator's satin mantle":31999,"sunshower light cloak":29352,"merciless gladiator's mooncloth robe":31975,"veteran's mooncloth cuffs":28980,"merciless gladiator's mooncloth gloves":31995,"veteran's mooncloth belt":28978,"merciless gladiator's mooncloth leggings":31996,"veteran's mooncloth slippers":28979,"veteran's band of salvation":28985,"coral band of the revived":30367,"earring of soulful meditation":29370,"merciless gladiator's salvation":32056,"merciless gladiator's reprieve":32055,"merciless gladiator's touch of defeat":32055,
+"vengeful gladiator's mooncloth hood":33718,"vindicator's pendant of salvation":28345,"vengeful gladiator's mooncloth mantle":33724,"kharmaa's shroud of hope":29313,"vengeful gladiator's mooncloth robe":33717,"vindicator's mooncloth cuffs":33883,"vengeful gladiator's mooncloth gloves":33722,"vindicator's mooncloth belt":33882,"vengeful gladiator's mooncloth leggings":33723,"vindicator's mooncloth slippers":33880,"vindicator's band of salvation":33918,"vengeful gladiator's salvation":33763,"vengeful gladiator's reprieve":33764,"vengeful gladiator's baton of light":33957,
+"brutal gladiator's mooncloth hood":35061,"brutal gladiator's mooncloth mantle":35064,"cloak of swift reprieve":34010,"brutal gladiator's mooncloth robe":35060,"guardian's mooncloth cuffs":33816,"brutal gladiator's mooncloth gloves":35062,"guardian's mooncloth belt":33815,"brutal gladiator's mooncloth leggings":35063,"guardian's mooncloth slippers":33814,"vindicator's band of salvation":33918,"brutal gladiator's baton of light":35107,
+"gladiator's satin hood":27708,"pendant of dominance":28340,"gladiator's satin mantle":27713,"gladiator's satin robe":27711,"general's dreadweave cuffs":28949,"gladiator's satin gloves":27708,"gladiator's satin leggings":27710,"ring of recurrence":28793,"seal of the exorcist":28649,"orb of the soul-eater":28342,"gladiator's touch of defeat":28309,
+"merciless gladiator's satin hood":31997,"veteran's pendant of dominance":28340,"merciless gladiator's satin mantle":31999,"merciless gladiator's satin robe":31998,"merciless gladiator's satin gloves":31992,"merciless gladiator's satin leggings":31996,"merciless gladiator's gavel":32014,"merciless gladiator's endgame":32015,
+"vengeful gladiator's satin hood":33718,"vindicator's pendant of dominance":28340,"vengeful gladiator's satin mantle":33724,"cloak of subjugated power":32524,"vengeful gladiator's satin robe":33717,"vindicator's dreadweave cuffs":33883,"vengeful gladiator's satin gloves":33722,"vengeful gladiator's satin leggings":33723,"vengeful gladiator's spellblade":33763,"vengeful gladiator's grimoire":33764,
+"gladiator's ornamented headcover":27881,"pendant of salvation":28345,"gladiator's ornamented spaulders":27884,"farstrider's cloak":28672,"gladiator's ornamented chestguard":27879,"general's ornamented bracers":28959,"gladiator's ornamented gloves":27880,"general's ornamented belt":28957,"gladiator's ornamented legplates":27883,"general's ornamented greaves":32984,"essence of the martyr":29376,
+"merciless gladiator's ornamented headcover":32006,"veteran's pendant of salvation":28345,"merciless gladiator's ornamented spaulders":32009,"merciless gladiator's ornamented chestguard":32004,"veteran's ornamented bracers":28959,"merciless gladiator's ornamented gloves":32007,"veteran's ornamented belt":28957,"merciless gladiator's ornamented legplates":32008,"veteran's ornamented greaves":32990,"merciless gladiator's gavel":32014,"merciless gladiator's shield wall":32043,
+"vengeful gladiator's ornamented headcover":33739,"vindicator's pendant of salvation":28345,"vengeful gladiator's ornamented spaulders":33742,"vengeful gladiator's ornamented chestguard":33737,"vindicator's ornamented bracers":33883,"vengeful gladiator's ornamented gloves":33740,"vindicator's ornamented belt":33882,"vengeful gladiator's ornamented legplates":33741,"vindicator's ornamented greaves":33880,"vengeful gladiator's gavel":33784,"vengeful gladiator's shield wall":33947,"blessed book of nagrand":34587,
+"shroud of redeemed souls":34011,"hammer of sanctification":34011,"aegis of angelic fortune":34011,
+"gladiator's scaled helm":28127,"gladiator's scaled shoulders":28129,"gladiator's scaled chestpiece":28126,"general's scaled bracers":28929,"gladiator's scaled gauntlets":28128,"general's scaled belt":28927,"gladiator's scaled legguards":28130,"general's scaled greaves":28928,"gladiator's greatsword":28298,"libram of avengement":27484,
+"merciless gladiator's scaled helm":31997,"merciless gladiator's scaled shoulders":31999,"razor-scale battlecloak":30720,"merciless gladiator's scaled chestpiece":31998,"veteran's scaled bracers":28929,"merciless gladiator's scaled gauntlets":31995,"veteran's scaled belt":28927,"merciless gladiator's scaled legguards":31996,"veteran's scaled greaves":28928,"hard khorium band":30834,"merciless gladiator's greatsword":32014,
+"vengeful gladiator's scaled helm":33730,"vengeful gladiator's scaled shoulders":33732,"vengeful gladiator's scaled chestpiece":33729,"vindicator's scaled bracers":33883,"vengeful gladiator's scaled gauntlets":33731,"vindicator's scaled belt":33882,"vengeful gladiator's scaled legguards":33733,"vindicator's scaled greaves":33880,"vengeful gladiator's greatsword":33784,
+"brutal gladiator's scaled helm":35082,"brutal gladiator's scaled shoulders":35084,"brutal gladiator's scaled chestpiece":35079,"guardian's scaled bracers":33812,"brutal gladiator's scaled gauntlets":35080,"guardian's scaled belt":33811,"brutal gladiator's scaled legguards":35081,"guardian's scaled greaves":33813,
+"gladiator's ringmail helm":25830,"gladiator's ringmail spaulders":25831,"gladiator's ringmail armor":25832,"general's ringmail bracers":28910,"gladiator's ringmail gauntlets":25834,"general's ringmail belt":28908,"gladiator's ringmail leggings":25833,"totem of the thunderhead":27477,
+"merciless gladiator's ringmail helm":31397,"merciless gladiator's ringmail spaulders":31405,"merciless gladiator's ringmail armor":31396,"veteran's ringmail bracers":28910,"merciless gladiator's ringmail gauntlets":31400,"veteran's ringmail belt":28908,"merciless gladiator's ringmail leggings":31404,"merciless gladiator's shield wall":32043,
+"vengeful gladiator's ringmail helm":33668,"vengeful gladiator's ringmail spaulders":33672,"vengeful gladiator's ringmail armor":33666,"vindicator's ringmail bracers":33883,"vengeful gladiator's ringmail gauntlets":33670,"vindicator's ringmail belt":33882,"vengeful gladiator's ringmail leggings":33674,"vindicator's ringmail sabatons":33882,"memento of tyrande":32496,"vengeful gladiator's redoubt":33784,"brutal gladiator's totem of the third wind":35109,"magisters terrace":35733,
+"gladiator's dragonhide helm":28127,"gladiator's dragonhide spaulders":28129,"gladiator's dragonhide tunic":28130,"gladiator's dragonhide gloves":28126,"gladiator's dragonhide legguards":28128,"gladiator's kodohide helm":31376,"gladiator's kodohide spaulders":31378,"gladiator's kodohide tunic":31379,"gladiator's kodohide gloves":31375,"gladiator's leather tunic":25831,"gladiator's leather spaulders":25832,
+"merciless gladiator's dragonhide helm":31968,"merciless gladiator's dragonhide spaulders":31971,"merciless gladiator's dragonhide tunic":31972,"merciless gladiator's dragonhide gloves":31967,"merciless gladiator's dragonhide legguards":31969,"merciless gladiator's kodohide helm":31988,"merciless gladiator's kodohide spaulders":31990,"merciless gladiator's kodohide tunic":31991,"merciless gladiator's kodohide gloves":31987,"merciless gladiator's kodohide legguards":31989,"merciless gladiator's staff":32055,
+"vengeful gladiator's dragonhide helm":33672,"vengeful gladiator's dragonhide spaulders":33674,"vengeful gladiator's dragonhide tunic":33675,"vengeful gladiator's dragonhide gloves":33671,"vengeful gladiator's dragonhide legguards":33673,"vengeful gladiator's kodohide helm":33691,"vengeful gladiator's kodohide spaulders":33693,"vengeful gladiator's kodohide tunic":33694,"vengeful gladiator's kodohide gloves":33690,"vengeful gladiator's kodohide legguards":33692,"vengeful gladiator's staff":33766,
+"brutal gladiator's dragonhide helm":34999,"brutal gladiator's dragonhide spaulders":35001,"brutal gladiator's dragonhide tunic":35002,"brutal gladiator's dragonhide gloves":34998,"brutal gladiator's dragonhide legguards":35000,"brutal gladiator's redoubt":35073,
+"general's dragonhide belt":28443,"general's kodohide belt":31594,"general's kodohide boots":31595,"general's kodohide bracers":31598,"veteran's dragonhide belt":32798,"veteran's kodohide belt":32800,"veteran's kodohide boots":32788,"veteran's kodohide bracers":32812,"vindicator's dragonhide belt":33879,"vindicator's dragonhide bracers":33881,"vindicator's kodohide belt":33885,"vindicator's kodohide bracers":33887,"guardian's dragonhide belt":35152,"guardian's dragonhide bracers":35167,
+"general's ringmail sabatons":32993,"veteran's ringmail sabatons":32999,"gladiator's shield wall":28358,"gladiator's gavel":32450,"guardian's pendant of salvation":35134,"guardian's pendant of dominance":35133,"sergeant's heavy cloak":28377,"garona's signet ring":28649,"ring of the recalcitrant":28791,"idol of the emerald queen":27886,"everbloom idol":29390,"boots of natural grace":30041,"nordrassil feral-kilt":30229,"terestian's stranglestaff":28658,
+"ancestral ring of conquest":30061,"band of the ranger-general":29997,"bracers of maliciousness":28514,"earthsoul leggings":28591,"mender's heart-ring":28661,"nyn'jah's tabi boots":33222,"telonicus's pendant of mayhem":30017,"the 2 ring":34837,"vindicator's kodohide boots":33886,"worgen claw necklace":28509,
+"brutal gladiator's mail helm":35050,"brutal gladiator's mail spaulders":35052,"brutal gladiator's mail armor":35048,"brutal gladiator's mail gauntlets":35049,"brutal gladiator's mail leggings":35051,"vengeful gladiator's mail helm":33713,"vengeful gladiator's mail spaulders":33715,"vengeful gladiator's mail armor":33711,"vengeful gladiator's mail gauntlets":33712,"vengeful gladiator's mail leggings":33714,"merciless gladiator's mail helm":32011,"merciless gladiator's mail spaulders":32013,"merciless gladiator's mail armor":32009,"merciless gladiator's mail gauntlets":32010,"merciless gladiator's mail leggings":32012,"gladiator's mail helm":27471,"gladiator's mail spaulders":27473,"gladiator's mail armor":27469,"gladiator's mail gauntlets":27470,"gladiator's mail leggings":27472,"guardian's mail bracers":35173,"guardian's mail girdle":35158,"guardian's mail sabatons":35143,"veteran's mail bracers":32817,"veteran's mail sabatons":32792,"general's mail bracers":28638,"general's mail sabatons":28640,
+"brutal gladiator's linked helm":35044,"brutal gladiator's linked spaulders":35046,"brutal gladiator's linked armor":35042,"brutal gladiator's linked gauntlets":35043,"brutal gladiator's linked leggings":35045,"vengeful gladiator's linked helm":33708,"vengeful gladiator's linked spaulders":33710,"vengeful gladiator's linked armor":33706,"vengeful gladiator's linked gauntlets":33707,"vengeful gladiator's linked leggings":33709,"merciless gladiator's linked helm":32006,"merciless gladiator's linked spaulders":32008,"merciless gladiator's linked armor":32004,"merciless gladiator's linked gauntlets":32005,"merciless gladiator's linked leggings":32007,"gladiator's linked helm":25998,"gladiator's linked spaulders":25999,"gladiator's linked armor":25997,"gladiator's linked gauntlets":26000,"gladiator's linked leggings":26001,"guardian's linked bracers":35172,"guardian's linked girdle":35157,"guardian's linked sabatons":35142,"veteran's linked bracers":32816,"veteran's linked girdle":32803,"veteran's linked sabatons":32791,"general's linked bracers":28605,"general's linked girdle":28629,"general's linked sabatons":28630,
+"brutal gladiator's gavel":35014,"brutal gladiator's barrier":34986,"brutal gladiator's cleaver":34996,"vengeful gladiator's gavel":33687,"vengeful gladiator's cleaver":33669,"the maelstrom's fury":32237,"syphon of the nathrezim":32262,"talon of the phoenix":32944,"rod of the sun king":29996,
+"netherstrike breastplate":29519,"netherstrike belt":29520,"netherstrike bracers":29521,"cataclysm legplates":30192,"pendant of the perilous":30022,"skyshatter cord":34542,"flashfire girdle":32276,"dragonheart flameshield":28611,"antonidas's aegis of rapt concentration":30909,"mazthoril honor shield":33334,
+"totem of ancestral guidance":32330,"totem of the astral winds":27815,"totem of the void":28248,"stonebreaker's totem":33507,"madness of the betrayer":32505,"battlemaster's determination":33832,"tsunami talisman":30627,"dragonspine trophy":28830,"signet of primal wrath":33496,
+"adornment of stolen souls":28762,"ring of unrelenting storms":30667,"band of crimson fury":28793,"pendant of the lost ages":30008,"ring of lethality":30052,"brute cloak of the ogre-magi":28797,"cloak of the illidari council":32331,
+"gladiator's cleaver":28308,"gladiator's barrier":28358,"merciless gladiator's cleaver":31965,"general's mail girdle":28639,"vindicator's linked bracers":33894,"vindicator's linked girdle":33895,"vindicator's linked sabatons":33896,"vindicator's mail bracers":33897,"vindicator's mail sabatons":33899
+};
 
-ARMS (17)
-├─ Deflection: 5/5
-├─ Improved Rend: 3/3
-├─ Tactical Mastery: 3/3
-├─ Improved Overpower: 2/2
-├─ Anger Management: 1/1
-├─ Deep Wounds: 3/3
-└─ Sweeping Strikes: 0/1 (PvP Skip)
+function getItemId(n){return itemIds[n.toLowerCase()]||null}
+function createWowheadLink(n,id){
+    if(n.includes(' / ')){
+        return n.split(' / ').map(item=>{
+            const itemId=getItemId(item.trim());
+            return itemId?`<a href="https://tbc.wowhead.com/item=${itemId}">${item.trim()}</a>`:`<span class="item-link">${item.trim()}</span>`;
+        }).join(' / ');
+    }
+    return id?`<a href="https://tbc.wowhead.com/item=${id}">${n}</a>`:`<span class="item-link">${n}</span>`;
+}
+function processItemLinks(){document.querySelectorAll('[data-item-name]').forEach(c=>{const n=c.getAttribute('data-item-name');if(n)c.innerHTML=createWowheadLink(n,getItemId(n))});if(typeof $WowheadPower!=='undefined')$WowheadPower.refreshLinks()}
 
-FURY (44)
-├─ Cruelty: 5/5
-├─ Unbridled Wrath: 5/5
-├─ Improved Battle Shout: 5/5
-├─ Dual Wield Spec: 5/5
-├─ Improved Execute: 2/2
-├─ Enrage: 5/5
-├─ Death Wish: 1/1
-├─ Improved Intercept: 2/2
-├─ Improved Berserker Rage: 2/2
-├─ Flurry: 5/5
-├─ Improved Whirlwind: 2/2
-├─ Bloodthirst: 1/1
-├─ Improved Slam: 2/2
-└─ Rampage: 1/1`,
-                rotation: `⚙ OPENER: Charge → Intimidating Shout → Mortal Strike → Hamstring
-<br>PRESSURE: MS on CD > Execute in range > Whirlwind filler
-<br>UTILITY: Disarm vs. melee | Spell Reflect vs. casters | Hamstring uptime 100%`,
-                macros: `/cast [target=focus,modifier:shift] Pummel; Pummel
-/cast [target=focus,modifier:ctrl] Charge; Charge
-/cast [target=mouseover,exists] Hamstring; Hamstring
-/equip [worn:shields] 2H_Weapon; 1H_Weapon
-/equip [noworn:shields] Shield`,
-                comps2v2: [
-                    ["Warrior + Druid (Resto)", "9.5/10"],
-                    ["Warrior + Priest (Disc)", "9.0/10"],
-                    ["Warrior + Paladin (Holy)", "8.5/10"]
-                ],
-                comps3v3: [
-                    ["Beast Cleave (War/Hunt/Druid)", "9.8/10"],
-                    ["TSG (War/DK/Pal)", "9.5/10"],
-                    ["WLD (War/Lock/Druid)", "9.0/10"]
-                ]
-            },
-            rogue: {
-                title: "ROGUE // MUTILATE PVP",
-                metaTier: "S-Tier (2v2/3v3/5v5)",
-                primaryStats: "Resilience > Hit Cap (5%) > Crit > AP > Haste",
-                specs: ["41/20/0 MUTILATE", "17/44/0 HEMO"],
-                bis: [
-                    ["HEAD", "Vengeful Gladiator's Leather Helm", "Arena S4 (1200)", "114 Resil, 88 Stam"],
-                    ["", "◆ Glyph of Ferocity (+34 AP, +16 Hit)", "Aldor Revered", ""],
-                    ["NECK", "Pendant of the Violet Eye", "Karazhan", "28 Crit, 22 Hit, 32 AP"],
-                    ["SHOULDER", "Vengeful Gladiator's Leather Shoulders", "Arena S4 (1000)", "76 Resil, 59 Stam"],
-                    ["CHEST", "Vengeful Gladiator's Leather Tunic", "Arena S4 (1350)", "114 Resil, 88 Stam"],
-                    ["HANDS", "Vengeful Gladiator's Leather Gloves", "Arena S4 (900)", "76 Resil, 59 Stam"],
-                    ["LEGS", "Vengeful Gladiator's Leather Legguards", "Arena S4 (1350)", "114 Resil, 88 Stam"],
-                    ["WEAPON MH", "Vengeful Gladiator's Shiv", "Arena S4 (1850)", "Fast OH, 42 Crit, 73 AP"],
-                    ["WEAPON OH", "Vengeful Gladiator's Shanker", "Arena S4 (1850)", "Slow MH, 42 Crit, 73 AP"]
-                ],
-                talents: `41 / 20 / 0 - MUTILATE BUILD
+let currentClass='warrior';
+let currentSpec=null;
+let currentPhase=4;
 
-ASSASSINATION (41)
-├─ Malice: 5/5
-├─ Ruthlessness: 3/3
-├─ Murder: 2/2
-├─ Relentless Strikes: 5/5
-├─ Lethality: 5/5
-├─ Vile Poisons: 5/5
-├─ Cold Blood: 1/1
-├─ Seal Fate: 5/5
-└─ Mutilate: 1/1`,
-                rotation: `⚙ OPENER: Cheap Shot → Mutilate → Kidney Shot → Envenom
-<br>PRESSURE: Mutilate > Envenom (4-5 CP) > Maintain Slice and Dice
-<br>UTILITY: Kick on CD | Blind healer | Vanish → Sap/Reopen`,
-                macros: `/cast [target=focus,modifier:shift] Kick; Kick
-/cast [target=focus,modifier:ctrl] Blind; Blind
-/cast [target=mouseover,exists] Sap; Sap`,
-                comps2v2: [["Rogue + Priest", "9.8/10"], ["Rogue + Mage", "9.5/10"]],
-                comps3v3: [["RMP (Rogue/Mage/Priest)", "10/10"], ["RLD (Rogue/Lock/Druid)", "9.5/10"]]
-            },
-            druid: {
-                title: "DRUID // RESTO PVP",
-                metaTier: "S-Tier (All Brackets)",
-                primaryStats: "Resilience > Spell Damage > Spell Crit > Haste > Spirit",
-                specs: ["0/11/50 RESTO", "8/11/42 FERAL"],
-                bis: [
-                    ["HEAD", "Vengeful Gladiator's Dragonhide Helm", "Arena S4 (1200)", "114 Resil, 88 Stam"],
-                    ["CHEST", "Vengeful Gladiator's Dragonhide Tunic", "Arena S4 (1350)", "114 Resil, 88 Stam"],
-                    ["HANDS", "Vengeful Gladiator's Dragonhide Gloves", "Arena S4 (900)", "76 Resil, 59 Stam"],
-                    ["LEGS", "Vengeful Gladiator's Dragonhide Legguards", "Arena S4 (1350)", "114 Resil, 88 Stam"],
-                    ["WEAPON", "Vengeful Gladiator's Gavel", "Arena S4 (1850)", "250 SP, 42 Resil"]
-                ],
-                talents: `0 / 11 / 50 - RESTO BUILD
+const classData={
+warrior:{
+    title:"WARRIOR",
+    defaultSpec:"arms",
+    specs:{
+        arms:{
+            name:"Arms",
+            talentString:"41/20/0",
+            primaryStats:"Resilience > 5% Hit > Crit > AP > Armor Pen",
+            talents:`41/20/0 - MORTAL STRIKE BUILD
 
-RESTORATION (50)
-├─ Improved Rejuvenation: 3/3
-├─ Nature's Swiftness: 1/1
-├─ Gift of Nature: 5/5
-├─ Swiftmend: 1/1
-├─ Empowered Rejuvenation: 5/5
-└─ Tree of Life: 1/1`,
-                rotation: `⚙ HEALING: HoT Stack (Lifebloom x3 + Rejuv + Regrowth) → Swiftmend emergency
-<br>OFFENSE: Cyclone on DPS | Root melee | Moonfire DoT
-<br>UTILITY: Abolish Poison spam | Nature's Swiftness + Healing Touch`,
-                macros: `/cast [target=focus,modifier:shift] Cyclone; Cyclone
-/cast [target=mouseover,exists] Lifebloom; Lifebloom
-/cast [target=party1] Swiftmend`,
-                comps2v2: [["Druid + Warrior", "9.8/10"], ["Druid + Warlock", "9.5/10"]],
-                comps3v3: [["Beast Cleave (War/Hunt/Druid)", "9.8/10"], ["WLD (War/Lock/Druid)", "9.5/10"]]
-            },
-            paladin: {
-                title: "PALADIN // HOLY PVP",
-                metaTier: "A-Tier (2v2/3v3) | S-Tier (5v5)",
-                primaryStats: "Resilience > Spell Damage > Spell Crit > Haste > Int",
-                specs: ["41/20/0 HOLY", "30/0/31 SHOCKADIN"],
-                bis: [
-                    ["HEAD", "Vengeful Gladiator's Scaled Helm", "Arena S4 (1200)", "114 Resil, 88 Stam"],
-                    ["CHEST", "Vengeful Gladiator's Scaled Chestpiece", "Arena S4 (1350)", "114 Resil, 88 Stam"],
-                    ["HANDS", "Vengeful Gladiator's Scaled Gauntlets", "Arena S4 (900)", "76 Resil, 59 Stam"],
-                    ["LEGS", "Vengeful Gladiator's Scaled Legguards", "Arena S4 (1350)", "114 Resil, 88 Stam"],
-                    ["WEAPON", "Vengeful Gladiator's Salvation", "Arena S4 (1850)", "268 SP, 38 Resil"]
-                ],
-                talents: `41 / 20 / 0 - HOLY BUILD
+ARMS (41 points)
+├─ Deflection 5/5
+├─ Improved Rend 3/3
+├─ Improved Charge 2/2
+├─ Iron Will 3/5
+├─ Tactical Mastery 3/3
+├─ Improved Overpower 2/2
+├─ Anger Management 1/1
+├─ Impale 2/2
+├─ Deep Wounds 3/3
+├─ Two-Handed Weapon Spec 5/5
+├─ Sweeping Strikes 1/1
+├─ Weapon Mastery 2/2
+├─ Improved Hamstring 3/3
+├─ Trauma 2/2
+├─ Second Wind 2/2
+├─ Mortal Strike 1/1
+├─ Improved Mortal Strike 5/5
+├─ Endless Rage 1/1
+└─ Blood Frenzy 2/2
 
-HOLY (41)
-├─ Divine Strength: 5/5
-├─ Spiritual Focus: 5/5
-├─ Illumination: 5/5
-├─ Divine Favor: 1/1
-├─ Holy Power: 5/5
-└─ Holy Shock: 1/1`,
-                rotation: `⚙ HEALING: Flash of Light spam → Holy Shock emergency
-<br>OFFENSE: Hammer of Justice on DPS | Cleanse spam
-<br>UTILITY: Blessing of Freedom on focus | Divine Shield survive`,
-                macros: `/cast [target=focus,modifier:shift] Hammer of Justice
-/cast [target=mouseover,exists] Cleanse
-/cast Divine Favor`,
-                comps2v2: [["Paladin + Warrior", "8.5/10"]],
-                comps3v3: [["TSG (War/DK/Pal)", "9.5/10"]]
-            },
-            priest: {
-                title: "PRIEST // DISCIPLINE PVP",
-                metaTier: "S-Tier (2v2/3v3) | A-Tier (5v5)",
-                primaryStats: "Resilience > Spell Damage > Spell Crit > Haste > Spirit",
-                specs: ["33/28/0 DISC/HOLY", "21/40/0 DISC/SHADOW"],
-                bis: [
-                    ["HEAD", "Vengeful Gladiator's Mooncloth Hood", "Arena S4 (1200)", "114 Resil, 88 Stam"],
-                    ["CHEST", "Vengeful Gladiator's Mooncloth Robe", "Arena S4 (1350)", "114 Resil, 88 Stam"],
-                    ["HANDS", "Vengeful Gladiator's Mooncloth Gloves", "Arena S4 (900)", "76 Resil, 59 Stam"],
-                    ["LEGS", "Vengeful Gladiator's Mooncloth Leggings", "Arena S4 (1350)", "114 Resil, 88 Stam"],
-                    ["WEAPON", "Vengeful Gladiator's Touch of Defeat", "Arena S4 (1850)", "256 SP, 40 Resil"]
-                ],
-                talents: `33 / 28 / 0 - DISC/HOLY BUILD
+FURY (20 points)
+├─ Cruelty 5/5
+├─ Unbridled Wrath 5/5
+├─ Commanding Presence 5/5
+└─ Dual Wield Spec 5/5`,
+            rotation:`OPENER: Charge > Hamstring > MS > Rend
+PRESSURE: MS on CD > Execute < 20% > Overpower procs
+UTILITY: Disarm vs melee | Spell Reflect vs casters
+KEY: Keep Hamstring up 100% | Stance dance for abilities`,
+            macros:`#showtooltip Pummel
+/cast [target=focus,mod:shift] Pummel; Pummel
 
-DISCIPLINE (33)
-├─ Unbreakable Will: 5/5
-├─ Improved Power Word: Shield: 3/3
-├─ Focused Will: 3/3
-├─ Meditation: 3/3
-├─ Inner Focus: 1/1
-├─ Power Infusion: 1/1
-└─ Pain Suppression: 1/1`,
-                rotation: `⚙ HEALING: Power Word: Shield spam → Renew HoT → Flash Heal emergency
-<br>OFFENSE: Mana Burn key targets | Mind Control | Fear DR rotation
-<br>UTILITY: Pain Suppression on focus | Dispel all debuffs`,
-                macros: `/cast [target=focus,modifier:shift] Mana Burn
-/cast [target=mouseover,exists] Dispel Magic
-/cast [target=party1] Power Word: Shield`,
-                comps2v2: [["Priest + Rogue", "9.8/10"], ["Priest + Warrior", "9.0/10"]],
-                comps3v3: [["RMP (Rogue/Mage/Priest)", "10/10"]]
-            },
-            shaman: {
-                title: "SHAMAN // RESTORATION PVP",
-                metaTier: "A-Tier (2v2/3v3) | S-Tier (5v5)",
-                primaryStats: "Resilience > Spell Damage > Spell Crit > Haste > MP5",
-                specs: ["0/16/45 RESTO", "30/0/31 ELEMENTAL"],
-                bis: [
-                    ["HEAD", "Vengeful Gladiator's Linked Helm", "Arena S4 (1200)", "114 Resil, 88 Stam"],
-                    ["CHEST", "Vengeful Gladiator's Linked Armor", "Arena S4 (1350)", "114 Resil, 88 Stam"],
-                    ["HANDS", "Vengeful Gladiator's Linked Gauntlets", "Arena S4 (900)", "76 Resil, 59 Stam"],
-                    ["WEAPON", "Vengeful Gladiator's War Edge", "Arena S4 (1850)", "244 SP, 36 Resil"]
-                ],
-                talents: `0 / 16 / 45 - RESTO BUILD
+#showtooltip Charge
+/cast [stance:1] Charge; [stance:2/3] Intercept
 
-RESTORATION (45)
-├─ Improved Healing Wave: 5/5
-├─ Tidal Focus: 5/5
-├─ Healing Focus: 5/5
-├─ Nature's Swiftness: 1/1
-├─ Purification: 5/5
-├─ Mana Tide Totem: 1/1
-└─ Earth Shield: 1/1`,
-                rotation: `⚙ HEALING: Earth Shield on focus → Lesser Healing Wave spam
-<br>OFFENSE: Purge buffs | Frost Shock kite | Wind Shear interrupt
-<br>UTILITY: Grounding Totem reflect | Tremor Totem fear ward`,
-                macros: `/cast [target=focus,modifier:shift] Purge
+#showtooltip Spell Reflection
+/equip [noequipped:Shields] Shield
+/cast Spell Reflection
+
+/cancelaura Bladestorm
+/startattack`,
+            phases:{
+                1:{name:"Season 1",bis:[
+                    ["HEAD","Gladiator's Plate Helm","Arena Points"],
+                    ["NECK","Pendant of Triumph","Honor"],
+                    ["SHOULDER","Gladiator's Plate Shoulders","Arena Points"],
+                    ["BACK","Cloak of the Pit Stalker","Karazhan"],
+                    ["CHEST","Gladiator's Plate Chestpiece","Arena Points"],
+                    ["WRIST","General's Plate Bracers","Honor + Marks"],
+                    ["HANDS","Gladiator's Plate Gauntlets","Arena Points"],
+                    ["WAIST","General's Plate Belt","Honor + Marks"],
+                    ["LEGS","Gladiator's Plate Legguards","Arena Points"],
+                    ["FEET","General's Plate Greaves","Honor + Marks"],
+                    ["RING 1","Ring of a Thousand Marks","Honor"],
+                    ["RING 2","Band of the Exorcist","Lower City"],
+                    ["TRINKET 1","Bloodlust Brooch","Badges"],
+                    ["TRINKET 2","Medallion of the Horde","Honor"],
+                    ["WEAPON","Deep Thunder","Crafted"],
+                    ["RANGED","Gladiator's War Edge","Arena Points"]
+                ]},
+                2:{name:"Season 2",bis:[
+                    ["HEAD","Merciless Gladiator's Plate Helm","Arena Points"],
+                    ["NECK","Veteran's Pendant of Triumph","Honor + Marks"],
+                    ["SHOULDER","Merciless Gladiator's Plate Shoulders","Arena Points"],
+                    ["BACK","Thalassian Wildercloak","Tempest Keep"],
+                    ["CHEST","Merciless Gladiator's Plate Chestpiece","Arena Points"],
+                    ["WRIST","Veteran's Plate Bracers","Honor + Marks"],
+                    ["HANDS","Merciless Gladiator's Plate Gauntlets","Arena Points"],
+                    ["WAIST","Veteran's Plate Belt","Honor + Marks"],
+                    ["LEGS","Merciless Gladiator's Plate Legguards","Arena Points"],
+                    ["FEET","Veteran's Plate Greaves","Honor + Marks"],
+                    ["RING 1","Veteran's Band of Triumph","Honor + Marks"],
+                    ["RING 2","Band of the Exorcist","Lower City"],
+                    ["TRINKET 1","Bloodlust Brooch","Badges"],
+                    ["TRINKET 2","Medallion of the Horde","Honor"],
+                    ["WEAPON","Stormherald","Crafted"],
+                    ["RANGED","Merciless Gladiator's War Edge","Arena Points"]
+                ]},
+                3:{name:"Season 3",bis:[
+                    ["HEAD","Vengeful Gladiator's Plate Helm","Arena Points"],
+                    ["NECK","Vindicator's Pendant of Triumph","Honor + Marks"],
+                    ["SHOULDER","Vengeful Gladiator's Plate Shoulders","Arena Points"],
+                    ["BACK","Dory's Embrace","Badges"],
+                    ["CHEST","Vengeful Gladiator's Plate Chestpiece","Arena Points"],
+                    ["WRIST","Vindicator's Plate Bracers","Honor + Marks"],
+                    ["HANDS","Vengeful Gladiator's Plate Gauntlets","Arena Points"],
+                    ["WAIST","Vindicator's Plate Belt","Honor + Marks"],
+                    ["LEGS","Vengeful Gladiator's Plate Legguards","Arena Points"],
+                    ["FEET","Vindicator's Plate Greaves","Honor + Marks"],
+                    ["RING 1","Vindicator's Band of Triumph","Honor + Marks"],
+                    ["RING 2","Veteran's Band of Triumph","Honor + Marks"],
+                    ["TRINKET 1","Battlemaster's Cruelty","Honor + Marks"],
+                    ["TRINKET 2","Medallion of the Horde","Honor"],
+                    ["WEAPON","Stormherald","Crafted"],
+                    ["RANGED","Vengeful Gladiator's War Edge","Arena Points"]
+                ]},
+                4:{name:"Season 4",bis:[
+                    ["HEAD","Brutal Gladiator's Plate Helm","Arena Points"],
+                    ["NECK","Guardian's Pendant of Triumph","Honor + Marks"],
+                    ["SHOULDER","Brutal Gladiator's Plate Shoulders","Arena Points"],
+                    ["BACK","Dory's Embrace","Badges"],
+                    ["CHEST","Brutal Gladiator's Plate Chestpiece","Arena Points"],
+                    ["WRIST","Guardian's Plate Bracers","Honor + Marks"],
+                    ["HANDS","Brutal Gladiator's Plate Gauntlets","Arena Points"],
+                    ["WAIST","Guardian's Plate Belt","Honor + Marks"],
+                    ["LEGS","Brutal Gladiator's Plate Legguards","Arena Points"],
+                    ["FEET","Guardian's Plate Greaves","Honor + Marks"],
+                    ["RING 1","Guardian's Band of Triumph","Honor + Marks"],
+                    ["RING 2","Vindicator's Band of Triumph","Honor + Marks"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","Battlemaster's Cruelty","Honor + Marks"],
+                    ["WEAPON","Brutal Gladiator's Bonegrinder / Apolyon, the Soul-Render","Arena / Sunwell"],
+                    ["RANGED","Brutal Gladiator's War Edge","Arena Points"]
+                ]}
+            }
+        }
+    }
+},
+
+rogue:{
+    title:"ROGUE",
+    defaultSpec:"subtlety",
+    specs:{
+        subtlety:{
+            name:"Subtlety",
+            talentString:"20/0/41",
+            primaryStats:"Resilience > 5% Hit > Agility > AP > Crit",
+            talents:`20/0/41 - SHADOWSTEP BUILD
+
+ASSASSINATION (20 points)
+├─ Malice 5/5
+├─ Ruthlessness 3/3
+├─ Murder 2/2
+├─ Puncturing Wounds 3/3
+├─ Relentless Strikes 5/5
+└─ Lethality 2/5
+
+SUBTLETY (41 points)
+├─ Master of Deception 5/5
+├─ Camouflage 5/5
+├─ Initiative 3/3
+├─ Ghostly Strike 1/1
+├─ Improved Ambush 2/3
+├─ Setup 3/3
+├─ Elusiveness 2/2
+├─ Serrated Blades 3/3
+├─ Heightened Senses 2/2
+├─ Preparation 1/1
+├─ Dirty Deeds 2/2
+├─ Hemorrhage 1/1
+├─ Deadliness 5/5
+├─ Premeditation 1/1
+├─ Sinister Calling 5/5
+└─ Shadowstep 1/1`,
+            rotation:`OPENER: Premeditation > Cheap Shot > Hemo
+PRESSURE: Hemo > Rupture 5CP > Eviscerate burst
+CONTROL: Kidney Shot > Blind > Vanish > Reopen
+KEY: Energy pooling | Cloak of Shadows timing`,
+            macros:`#showtooltip Kick
+/cast [target=focus,mod:shift] Kick; Kick
+
+#showtooltip Blind
+/cast [target=focus] Blind
+
+/cast Shadowstep
+/cast Premeditation
+
+/cancelaura Stealth
+/cast Vanish`,
+            phases:{
+                1:{name:"Season 1",bis:[
+                    ["HEAD","Gladiator's Leather Helm","Arena Points"],
+                    ["NECK","Pendant of Triumph","Honor"],
+                    ["SHOULDER","Gladiator's Leather Spaulders","Arena Points"],
+                    ["BACK","Cloak of the Pit Stalker","Karazhan"],
+                    ["CHEST","Gladiator's Leather Tunic","Arena Points"],
+                    ["WRIST","General's Dragonhide Bracers","Honor + Marks"],
+                    ["HANDS","Gladiator's Leather Gloves","Arena Points"],
+                    ["WAIST","General's Leather Belt","Honor + Marks"],
+                    ["LEGS","Gladiator's Leather Legguards","Arena Points"],
+                    ["FEET","General's Leather Boots","Honor + Marks"],
+                    ["RING 1","Ring of a Thousand Marks","Honor"],
+                    ["RING 2","Band of the Exorcist","Lower City"],
+                    ["TRINKET 1","Bloodlust Brooch","Badges"],
+                    ["TRINKET 2","Medallion of the Horde","Honor"],
+                    ["MAIN HAND","Gladiator's Slicer","Arena Points"],
+                    ["OFF HAND","Gladiator's Quickblade","Arena Points"],
+                    ["RANGED","Gladiator's War Edge","Arena Points"]
+                ]},
+                2:{name:"Season 2",bis:[
+                    ["HEAD","Merciless Gladiator's Leather Helm","Arena Points"],
+                    ["NECK","Veteran's Pendant of Triumph","Honor + Marks"],
+                    ["SHOULDER","Merciless Gladiator's Leather Spaulders","Arena Points"],
+                    ["BACK","Thalassian Wildercloak","Tempest Keep"],
+                    ["CHEST","Merciless Gladiator's Leather Tunic","Arena Points"],
+                    ["WRIST","Veteran's Dragonhide Bracers","Honor + Marks"],
+                    ["HANDS","Merciless Gladiator's Leather Gloves","Arena Points"],
+                    ["WAIST","Belt of Deep Shadow","Leatherworking"],
+                    ["LEGS","Merciless Gladiator's Leather Legguards","Arena Points"],
+                    ["FEET","Veteran's Leather Boots","Honor + Marks"],
+                    ["RING 1","Band of the Exorcist","Lower City"],
+                    ["RING 2","Veteran's Band of Triumph","Honor + Marks"],
+                    ["TRINKET 1","Bloodlust Brooch","Badges"],
+                    ["TRINKET 2","Medallion of the Horde","Honor"],
+                    ["MAIN HAND","Merciless Gladiator's Slicer","Arena Points"],
+                    ["OFF HAND","Merciless Gladiator's Quickblade","Arena Points"],
+                    ["RANGED","Merciless Gladiator's War Edge","Arena Points"]
+                ]},
+                3:{name:"Season 3",bis:[
+                    ["HEAD","Cursed Vision of Sargeras / Vengeful Gladiator's Leather Helm","Black Temple / Arena"],
+                    ["NECK","Vindicator's Pendant of Triumph","Honor + Marks"],
+                    ["SHOULDER","Vengeful Gladiator's Leather Spaulders","Arena Points"],
+                    ["BACK","Thalassian Wildercloak / Shadowmoon Destroyer's Drape","Tempest Keep / BT"],
+                    ["CHEST","Vengeful Gladiator's Leather Tunic","Arena Points"],
+                    ["WRIST","Vindicator's Dragonhide Bracers","Honor + Marks"],
+                    ["HANDS","Vengeful Gladiator's Leather Gloves","Arena Points"],
+                    ["WAIST","Vindicator's Leather Belt / Belt of Deep Shadow","Honor / Leatherworking"],
+                    ["LEGS","Vengeful Gladiator's Leather Legguards","Arena Points"],
+                    ["FEET","Vindicator's Leather Boots","Honor + Marks"],
+                    ["RING 1","Band of the Eternal Champion","Scale of Sands"],
+                    ["RING 2","Stormrage Signet Ring / Vindicator's Band of Triumph","Black Temple / Honor"],
+                    ["TRINKET 1","Berserker's Call","Zul'Aman"],
+                    ["TRINKET 2","Medallion of the Horde","Honor"],
+                    ["MAIN HAND","Warglaive of Azzinoth / Vengeful Gladiator's Slicer","Black Temple / Arena"],
+                    ["OFF HAND","Warglaive of Azzinoth / Vengeful Gladiator's Shiv","Black Temple / Arena"],
+                    ["RANGED","Vengeful Gladiator's War Edge","Arena Points"]
+                ]},
+                4:{name:"Season 4",bis:[
+                    ["HEAD","Brutal Gladiator's Leather Helm","Arena Points"],
+                    ["NECK","Guardian's Pendant of Triumph","Honor + Marks"],
+                    ["SHOULDER","Brutal Gladiator's Leather Spaulders","Arena Points"],
+                    ["BACK","Shadowmoon Destroyer's Drape","Black Temple"],
+                    ["CHEST","Brutal Gladiator's Leather Tunic","Arena Points"],
+                    ["WRIST","Guardian's Leather Bracers","Honor + Marks"],
+                    ["HANDS","Brutal Gladiator's Leather Gloves","Arena Points"],
+                    ["WAIST","Guardian's Leather Belt","Honor + Marks"],
+                    ["LEGS","Brutal Gladiator's Leather Legguards","Arena Points"],
+                    ["FEET","Guardian's Leather Boots","Honor + Marks"],
+                    ["RING 1","Stormrage Signet Ring","Black Temple"],
+                    ["RING 2","Band of the Eternal Champion","Scale of Sands"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","Berserker's Call","Zul'Aman"],
+                    ["MAIN HAND","Brutal Gladiator's Slicer","Arena Points"],
+                    ["OFF HAND","Brutal Gladiator's Quickblade","Arena Points"],
+                    ["RANGED","Brutal Gladiator's War Edge","Arena Points"]
+                ]}
+            }
+        }
+    }
+},
+
+mage:{
+    title:"MAGE",
+    defaultSpec:"frost",
+    specs:{
+        frost:{
+            name:"Frost",
+            talentString:"17/0/44",
+            primaryStats:"Resilience > 3% Spell Hit > Spell Damage > Haste > Crit",
+            talents:`17/0/44 - DEEP FROST BUILD
+
+ARCANE (17 points)
+├─ Arcane Subtlety 2/2
+├─ Arcane Focus 3/5
+├─ Arcane Concentration 5/5
+├─ Magic Attunement 2/2
+├─ Arcane Impact 2/3
+└─ Presence of Mind 1/1
+
+FROST (44 points)
+├─ Improved Frostbolt 5/5
+├─ Elemental Precision 3/3
+├─ Ice Shards 5/5
+├─ Frostbite 3/3
+├─ Improved Frost Nova 2/2
+├─ Permafrost 3/3
+├─ Piercing Ice 3/3
+├─ Icy Veins 1/1
+├─ Improved Blizzard 3/3
+├─ Arctic Reach 2/2
+├─ Frost Channeling 3/3
+├─ Shatter 5/5
+├─ Cold Snap 1/1
+├─ Ice Barrier 1/1
+├─ Arctic Winds 5/5
+└─ Summon Water Elemental 1/1`,
+            rotation:`CONTROL: Frost Nova > CoC > Frostbolt > Ice Lance (shatter)
+BURST: Icy Veins + Water Ele > Deep Freeze > Shatter combo
+UTILITY: Polymorph healer > CS interrupts > Ice Block
+KEY: Shatter combos | Poly chains | Positioning`,
+            macros:`#showtooltip Counterspell
+/cast [target=focus,mod:shift] Counterspell; Counterspell
+
+#showtooltip Polymorph
+/cast [target=focus] Polymorph
+
+/cast Icy Veins
+/cast Cold Snap
+
+/cancelaura Ice Block`,
+            phases:{
+                1:{name:"Season 1",bis:[
+                    ["HEAD","Gladiator's Silk Cowl","Arena Points"],
+                    ["NECK","Pendant of Subjugation","Honor"],
+                    ["SHOULDER","Gladiator's Silk Amice","Arena Points"],
+                    ["BACK","Shawl of Shifting Probabilities","Karazhan"],
+                    ["CHEST","Gladiator's Silk Raiment","Arena Points"],
+                    ["WRIST","General's Silk Cuffs","Honor + Marks"],
+                    ["HANDS","Gladiator's Silk Handguards","Arena Points"],
+                    ["WAIST","General's Silk Belt","Honor + Marks"],
+                    ["LEGS","Gladiator's Silk Trousers","Arena Points"],
+                    ["FEET","General's Silk Footguards","Honor + Marks"],
+                    ["RING 1","Ring of a Thousand Marks","Honor"],
+                    ["RING 2","Violet Signet of the Archmage","Violet Eye"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","Icon of the Silver Crescent","Badges"],
+                    ["WEAPON","Gladiator's Spellblade","Arena Points"],
+                    ["OFF HAND","Gladiator's Endgame","Arena Points"],
+                    ["WAND","Nathrezim Mindblade","Karazhan"]
+                ]},
+                2:{name:"Season 2",bis:[
+                    ["HEAD","Merciless Gladiator's Silk Cowl","Arena Points"],
+                    ["NECK","Veteran's Pendant of Subjugation","Honor + Marks"],
+                    ["SHOULDER","Merciless Gladiator's Silk Amice","Arena Points"],
+                    ["BACK","Thalassian Wildercloak","Tempest Keep"],
+                    ["CHEST","Merciless Gladiator's Silk Raiment","Arena Points"],
+                    ["WRIST","Veteran's Silk Cuffs","Honor + Marks"],
+                    ["HANDS","Merciless Gladiator's Silk Handguards","Arena Points"],
+                    ["WAIST","Veteran's Silk Belt","Honor + Marks"],
+                    ["LEGS","Merciless Gladiator's Silk Trousers","Arena Points"],
+                    ["FEET","Veteran's Silk Footguards","Honor + Marks"],
+                    ["RING 1","Veteran's Band of Dominance","Honor + Marks"],
+                    ["RING 2","Loop of Forged Power","Tempest Keep"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","The Lightning Capacitor","Tempest Keep"],
+                    ["WEAPON","Merciless Gladiator's Spellblade","Arena Points"],
+                    ["OFF HAND","Merciless Gladiator's Endgame","Arena Points"],
+                    ["WAND","Nathrezim Mindblade","Karazhan"]
+                ]},
+                3:{name:"Season 3",bis:[
+                    ["HEAD","Vengeful Gladiator's Silk Cowl","Arena Points"],
+                    ["NECK","Vindicator's Pendant of Subjugation","Honor + Marks"],
+                    ["SHOULDER","Vengeful Gladiator's Silk Amice","Arena Points"],
+                    ["BACK","Tattered Cape of Antonidas","Sunwell Plateau"],
+                    ["CHEST","Vengeful Gladiator's Silk Raiment","Arena Points"],
+                    ["WRIST","Vindicator's Silk Cuffs","Honor + Marks"],
+                    ["HANDS","Vengeful Gladiator's Silk Handguards","Arena Points"],
+                    ["WAIST","Vindicator's Silk Belt","Honor + Marks"],
+                    ["LEGS","Vengeful Gladiator's Silk Trousers","Arena Points"],
+                    ["FEET","Vindicator's Silk Footguards","Honor + Marks"],
+                    ["RING 1","Vindicator's Band of Dominance","Honor + Marks"],
+                    ["RING 2","Ring of Ancient Knowledge","Hyjal Summit"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","The Skull of Gul'dan","Black Temple"],
+                    ["WEAPON","Vengeful Gladiator's Spellblade","Arena Points"],
+                    ["OFF HAND","Vengeful Gladiator's Endgame","Arena Points"],
+                    ["WAND","Wand of the Demonsoul","Sunwell Trash"]
+                ]},
+                4:{name:"Season 4",bis:[
+                    ["HEAD","Brutal Gladiator's Silk Cowl","Arena Points"],
+                    ["NECK","Guardian's Pendant of Subjugation","Honor + Marks"],
+                    ["SHOULDER","Brutal Gladiator's Silk Amice","Arena Points"],
+                    ["BACK","Tattered Cape of Antonidas","Sunwell Plateau"],
+                    ["CHEST","Brutal Gladiator's Silk Raiment","Arena Points"],
+                    ["WRIST","Guardian's Silk Cuffs","Honor + Marks"],
+                    ["HANDS","Brutal Gladiator's Silk Handguards","Arena Points"],
+                    ["WAIST","Belt of the Tempest","Sunwell Plateau"],
+                    ["LEGS","Leggings of Calamity","Sunwell Plateau"],
+                    ["FEET","Guardian's Silk Footguards","Honor + Marks"],
+                    ["RING 1","Ring of Omnipotence","Sunwell Plateau"],
+                    ["RING 2","Guardian's Band of Dominance","Honor + Marks"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","The Skull of Gul'dan","Black Temple"],
+                    ["WEAPON","Sunflare","Sunwell Plateau"],
+                    ["OFF HAND","Heart of the Pit","Sunwell Plateau"],
+                    ["WAND","Wand of the Demonsoul","Sunwell Trash"]
+                ]}
+            }
+        },
+        fire:{
+            name:"Fire",
+            talentString:"33/28/0",
+            primaryStats:"Resilience > 3% Spell Hit > Spell Damage > Crit > Haste",
+            talents:`33/28/0 - POM PYRO BUILD
+
+ARCANE (33 points)
+├─ Arcane Subtlety 2/2
+├─ Arcane Focus 5/5
+├─ Arcane Concentration 5/5
+├─ Magic Absorption 2/2
+├─ Magic Attunement 2/2
+├─ Arcane Impact 3/3
+├─ Arcane Fortitude 1/1
+├─ Improved Counterspell 2/2
+├─ Arcane Meditation 3/3
+├─ Presence of Mind 1/1
+├─ Arcane Mind 5/5
+└─ Arcane Power 1/1
+
+FIRE (28 points)
+├─ Improved Fire Blast 3/3
+├─ Incinerate 2/2
+├─ Ignite 5/5
+├─ Flame Throwing 2/2
+├─ Improved Flamestrike 3/3
+├─ Pyroblast 1/1
+├─ Burning Soul 2/2
+├─ Critical Mass 3/3
+├─ Blast Wave 1/1
+├─ Fire Power 5/5
+└─ Combustion 1/1`,
+            rotation:`OPENER: Presence of Mind > Pyroblast > Fire Blast
+BURST: Arcane Power + Combustion > Fireball spam
+CONTROL: Polymorph > Counterspell > Dragon's Breath
+KEY: PoM Pyro timing | Cooldown management | Positioning`,
+            macros:`#showtooltip Counterspell
+/cast [target=focus,mod:shift] Counterspell; Counterspell
+
+#showtooltip Polymorph
+/cast [target=focus] Polymorph
+
+/cast Presence of Mind
+/cast Pyroblast
+
+/cast Arcane Power
+/cast Combustion`,
+            phases:{
+                1:{name:"Season 1",bis:[
+                    ["HEAD","Gladiator's Silk Cowl","Arena Points"],
+                    ["NECK","Pendant of Subjugation","Honor"],
+                    ["SHOULDER","Gladiator's Silk Amice","Arena Points"],
+                    ["BACK","Shawl of Shifting Probabilities","Karazhan"],
+                    ["CHEST","Gladiator's Silk Raiment","Arena Points"],
+                    ["WRIST","General's Silk Cuffs","Honor + Marks"],
+                    ["HANDS","Gladiator's Silk Handguards","Arena Points"],
+                    ["WAIST","General's Silk Belt","Honor + Marks"],
+                    ["LEGS","Gladiator's Silk Trousers","Arena Points"],
+                    ["FEET","General's Silk Footguards","Honor + Marks"],
+                    ["RING 1","Ring of a Thousand Marks","Honor"],
+                    ["RING 2","Violet Signet of the Archmage","Violet Eye"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","Icon of the Silver Crescent","Badges"],
+                    ["WEAPON","Gladiator's Spellblade","Arena Points"],
+                    ["OFF HAND","Gladiator's Endgame","Arena Points"],
+                    ["WAND","Nathrezim Mindblade","Karazhan"]
+                ]},
+                2:{name:"Season 2",bis:[
+                    ["HEAD","Merciless Gladiator's Silk Cowl","Arena Points"],
+                    ["NECK","Veteran's Pendant of Subjugation","Honor + Marks"],
+                    ["SHOULDER","Merciless Gladiator's Silk Amice","Arena Points"],
+                    ["BACK","Thalassian Wildercloak","Tempest Keep"],
+                    ["CHEST","Merciless Gladiator's Silk Raiment","Arena Points"],
+                    ["WRIST","Veteran's Silk Cuffs","Honor + Marks"],
+                    ["HANDS","Merciless Gladiator's Silk Handguards","Arena Points"],
+                    ["WAIST","Veteran's Silk Belt","Honor + Marks"],
+                    ["LEGS","Merciless Gladiator's Silk Trousers","Arena Points"],
+                    ["FEET","Veteran's Silk Footguards","Honor + Marks"],
+                    ["RING 1","Veteran's Band of Dominance","Honor + Marks"],
+                    ["RING 2","Loop of Forged Power","Tempest Keep"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","The Lightning Capacitor","Tempest Keep"],
+                    ["WEAPON","Merciless Gladiator's Spellblade","Arena Points"],
+                    ["OFF HAND","Merciless Gladiator's Endgame","Arena Points"],
+                    ["WAND","Nathrezim Mindblade","Karazhan"]
+                ]},
+                3:{name:"Season 3",bis:[
+                    ["HEAD","Vengeful Gladiator's Silk Cowl","Arena Points"],
+                    ["NECK","Vindicator's Pendant of Subjugation","Honor + Marks"],
+                    ["SHOULDER","Vengeful Gladiator's Silk Amice","Arena Points"],
+                    ["BACK","Tattered Cape of Antonidas","Sunwell Plateau"],
+                    ["CHEST","Vengeful Gladiator's Silk Raiment","Arena Points"],
+                    ["WRIST","Vindicator's Silk Cuffs","Honor + Marks"],
+                    ["HANDS","Vengeful Gladiator's Silk Handguards","Arena Points"],
+                    ["WAIST","Vindicator's Silk Belt","Honor + Marks"],
+                    ["LEGS","Vengeful Gladiator's Silk Trousers","Arena Points"],
+                    ["FEET","Vindicator's Silk Footguards","Honor + Marks"],
+                    ["RING 1","Vindicator's Band of Dominance","Honor + Marks"],
+                    ["RING 2","Ring of Ancient Knowledge","Hyjal Summit"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","The Skull of Gul'dan","Black Temple"],
+                    ["WEAPON","Vengeful Gladiator's Spellblade","Arena Points"],
+                    ["OFF HAND","Vengeful Gladiator's Endgame","Arena Points"],
+                    ["WAND","Wand of the Demonsoul","Sunwell Trash"]
+                ]},
+                4:{name:"Season 4",bis:[
+                    ["HEAD","Brutal Gladiator's Silk Cowl","Arena Points"],
+                    ["NECK","Guardian's Pendant of Subjugation","Honor + Marks"],
+                    ["SHOULDER","Brutal Gladiator's Silk Amice","Arena Points"],
+                    ["BACK","Tattered Cape of Antonidas","Sunwell Plateau"],
+                    ["CHEST","Brutal Gladiator's Silk Raiment","Arena Points"],
+                    ["WRIST","Guardian's Silk Cuffs","Honor + Marks"],
+                    ["HANDS","Brutal Gladiator's Silk Handguards","Arena Points"],
+                    ["WAIST","Belt of the Tempest","Sunwell Plateau"],
+                    ["LEGS","Leggings of Calamity","Sunwell Plateau"],
+                    ["FEET","Guardian's Silk Footguards","Honor + Marks"],
+                    ["RING 1","Ring of Omnipotence","Sunwell Plateau"],
+                    ["RING 2","Guardian's Band of Dominance","Honor + Marks"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","The Skull of Gul'dan","Black Temple"],
+                    ["WEAPON","Sunflare","Sunwell Plateau"],
+                    ["OFF HAND","Heart of the Pit","Sunwell Plateau"],
+                    ["WAND","Wand of the Demonsoul","Sunwell Trash"]
+                ]}
+            }
+        }
+    }
+},
+
+warlock:{
+    title:"WARLOCK",
+    defaultSpec:"slsl",
+    specs:{
+        slsl:{
+            name:"SL/SL (0/21/40)",
+            talentString:"0/21/40",
+            primaryStats:"Resilience > 3% Spell Hit > Spell Damage > Stamina",
+            talents:`0/21/40 - SL/SL BUILD
+
+DEMONOLOGY (21 points)
+├─ Improved Healthstone 2/2
+├─ Demonic Embrace 5/5
+├─ Fel Intellect 3/3
+├─ Fel Domination 1/1
+├─ Fel Stamina 3/3
+├─ Demonic Aegis 3/3
+├─ Master Summoner 2/2
+├─ Demonic Sacrifice 1/1
+└─ Soul Link 1/1
+
+AFFLICTION (40 points)
+├─ Suppression 5/5
+├─ Improved Corruption 5/5
+├─ Improved Curse of Weakness 2/2
+├─ Improved Drain Soul 2/2
+├─ Improved Life Tap 2/2
+├─ Soul Siphon 2/2
+├─ Improved Curse of Agony 2/2
+├─ Fel Concentration 5/5
+├─ Amplify Curse 1/1
+├─ Grim Reach 2/2
+├─ Nightfall 2/2
+├─ Empowered Corruption 3/3
+├─ Shadow Embrace 5/5
+├─ Siphon Life 1/1
+└─ Curse of Exhaustion 1/1`,
+            rotation:`OPENER: Siphon Life > Corruption > CoA > Fear
+PRESSURE: Maintain DoTs > Death Coil > Drain Life
+CONTROL: Fear > Spell Lock > Devour Magic dispel
+KEY: DoT uptime | Fel Dom resummon | Soul Link tank`,
+            macros:`#showtooltip Spell Lock
+/cast [target=focus,mod:shift] Spell Lock; Spell Lock
+
+#showtooltip Fear
+/cast [target=focus] Fear
+
+/cast Fel Domination
+/cast Summon Felhunter
+
+/cast Devour Magic`,
+            phases:{
+                1:{name:"Season 1",bis:[
+                    ["HEAD","Gladiator's Dreadweave Hood","Arena Points"],
+                    ["NECK","Pendant of Subjugation","Honor"],
+                    ["SHOULDER","Gladiator's Dreadweave Mantle","Arena Points"],
+                    ["BACK","Sergeant's Heavy Cape","Honor"],
+                    ["CHEST","Gladiator's Dreadweave Robe","Arena Points"],
+                    ["WRIST","General's Dreadweave Cuffs","Honor + Marks"],
+                    ["HANDS","Gladiator's Dreadweave Gloves","Arena Points"],
+                    ["WAIST","General's Dreadweave Belt","Honor + Marks"],
+                    ["LEGS","Gladiator's Dreadweave Leggings","Arena Points"],
+                    ["FEET","General's Dreadweave Stalkers","Honor + Marks"],
+                    ["RING 1","Ring of a Thousand Marks","Honor"],
+                    ["RING 2","Violet Signet of the Archmage","Violet Eye"],
+                    ["TRINKET 1","Medallion of the Alliance","Honor"],
+                    ["TRINKET 2","Icon of the Silver Crescent","Badges"],
+                    ["WEAPON","Gladiator's Spellblade","Arena Points"],
+                    ["OFF HAND","Gladiator's Grimoire","Arena Points"],
+                    ["WAND","Gladiator's Touch of Defeat","Arena Points"]
+                ]},
+                2:{name:"Season 2",bis:[
+                    ["HEAD","Merciless Gladiator's Dreadweave Hood","Arena Points"],
+                    ["NECK","Veteran's Pendant of Subjugation","Honor + Marks"],
+                    ["SHOULDER","Merciless Gladiator's Dreadweave Mantle","Arena Points"],
+                    ["BACK","Royal Cloak of the Sunstriders","Tempest Keep"],
+                    ["CHEST","Merciless Gladiator's Dreadweave Robe","Arena Points"],
+                    ["WRIST","Veteran's Dreadweave Cuffs","Honor + Marks"],
+                    ["HANDS","Merciless Gladiator's Dreadweave Gloves","Arena Points"],
+                    ["WAIST","Veteran's Dreadweave Belt","Honor + Marks"],
+                    ["LEGS","Merciless Gladiator's Dreadweave Leggings","Arena Points"],
+                    ["FEET","Veteran's Dreadweave Stalkers","Honor + Marks"],
+                    ["RING 1","Veteran's Band of Dominance","Honor + Marks"],
+                    ["RING 2","The Seal of Danzalar","SSC"],
+                    ["TRINKET 1","Medallion of the Alliance","Honor"],
+                    ["TRINKET 2","Void Star Talisman","Tempest Keep"],
+                    ["WEAPON","Merciless Gladiator's Spellblade","Arena Points"],
+                    ["OFF HAND","Merciless Gladiator's Grimoire","Arena Points"],
+                    ["WAND","Merciless Gladiator's Touch of Defeat","Arena Points"]
+                ]},
+                3:{name:"Season 3",bis:[
+                    ["HEAD","Vengeful Gladiator's Dreadweave Hood","Arena Points"],
+                    ["NECK","Vindicator's Pendant of Subjugation","Honor + Marks"],
+                    ["SHOULDER","Vengeful Gladiator's Dreadweave Mantle","Arena Points"],
+                    ["BACK","Cloak of Arcane Alacrity","Badges"],
+                    ["CHEST","Vengeful Gladiator's Dreadweave Robe","Arena Points"],
+                    ["WRIST","Vindicator's Dreadweave Cuffs","Honor + Marks"],
+                    ["HANDS","Vengeful Gladiator's Dreadweave Gloves","Arena Points"],
+                    ["WAIST","Vindicator's Dreadweave Belt","Honor + Marks"],
+                    ["LEGS","Vengeful Gladiator's Dreadweave Leggings","Arena Points"],
+                    ["FEET","Vindicator's Dreadweave Stalkers","Honor + Marks"],
+                    ["RING 1","Guardian's Band of Dominance","Honor + Marks"],
+                    ["RING 2","The Seal of Danzalar","SSC"],
+                    ["TRINKET 1","Medallion of the Alliance","Honor"],
+                    ["TRINKET 2","Hex Shrunken Head","Zul'Aman"],
+                    ["WEAPON","Vengeful Gladiator's Spellblade","Arena Points"],
+                    ["OFF HAND","Vengeful Gladiator's Grimoire","Arena Points"],
+                    ["WAND","Vengeful Gladiator's Touch of Defeat","Arena Points"]
+                ]},
+                4:{name:"Season 4",bis:[
+                    ["HEAD","Brutal Gladiator's Dreadweave Hood","Arena Points"],
+                    ["NECK","Guardian's Pendant of Subjugation","Honor + Marks"],
+                    ["SHOULDER","Brutal Gladiator's Dreadweave Mantle","Arena Points"],
+                    ["BACK","Cloak of Arcane Alacrity","Badges"],
+                    ["CHEST","Brutal Gladiator's Dreadweave Robe","Arena Points"],
+                    ["WRIST","Guardian's Dreadweave Cuffs","Honor + Marks"],
+                    ["HANDS","Brutal Gladiator's Dreadweave Gloves","Arena Points"],
+                    ["WAIST","Guardian's Dreadweave Belt","Honor + Marks"],
+                    ["LEGS","Brutal Gladiator's Dreadweave Leggings","Arena Points"],
+                    ["FEET","Guardian's Dreadweave Stalkers","Honor + Marks"],
+                    ["RING 1","Guardian's Band of Dominance","Honor + Marks"],
+                    ["RING 2","The Seal of Danzalar","SSC"],
+                    ["TRINKET 1","Medallion of the Alliance","Honor"],
+                    ["TRINKET 2","Hex Shrunken Head","Zul'Aman"],
+                    ["WEAPON","Brutal Gladiator's Spellblade","Arena Points"],
+                    ["OFF HAND","Brutal Gladiator's Grimoire","Arena Points"],
+                    ["WAND","Brutal Gladiator's Touch of Defeat","Arena Points"]
+                ]}
+            }
+        }
+    }
+},
+
+hunter:{
+    title:"HUNTER",
+    defaultSpec:"beastmastery",
+    specs:{
+        beastmastery:{
+            name:"Beast Mastery",
+            talentString:"41/20/0",
+            primaryStats:"5% Hit > Resilience ≥ Agility > AP > Crit",
+            talents:`41/20/0 - BEAST MASTERY BUILD
+
+BEAST MASTERY (41 points)
+├─ Improved Aspect of Hawk 5/5
+├─ Endurance Training 5/5
+├─ Focused Fire 2/2
+├─ Improved Aspect of Monkey 3/3
+├─ Thick Hide 3/3
+├─ Improved Revive Pet 2/2
+├─ Pathfinding 2/2
+├─ Bestial Swiftness 1/1
+├─ Unleashed Fury 5/5
+├─ Improved Mend Pet 2/2
+├─ Ferocity 5/5
+├─ Intimidation 1/1
+├─ Bestial Discipline 2/2
+├─ Frenzy 4/5
+├─ Bestial Wrath 1/1
+├─ Serpent's Swiftness 5/5
+└─ The Beast Within 1/1
+
+MARKSMANSHIP (20 points)
+├─ Lethal Shots 5/5
+├─ Improved Hunter's Mark 5/5
+├─ Efficiency 5/5
+├─ Go for the Throat 2/2
+└─ Aimed Shot 1/1`,
+            rotation:`OPENER: Hunter's Mark > Bestial Wrath > Intimidation
+PRESSURE: Steady Shot weave > Arcane Shot > Multi-Shot
+CONTROL: Scatter Shot > Freezing Trap > Wing Clip kite
+KEY: Pet management | Kiting at 30+ yards | Viper Sting`,
+            macros:`#showtooltip Scatter Shot
+/cast [target=focus,mod:shift] Scatter Shot; Scatter Shot
+
+/cast Bestial Wrath
+/cast Intimidation
+
+#showtooltip Steady Shot
+/cast !Auto Shot
+/cast Steady Shot
+/cast Kill Command`,
+            phases:{
+                1:{name:"Season 1",bis:[
+                    ["HEAD","Gladiator's Chain Helm","Arena Points"],
+                    ["NECK","Pendant of Triumph","Honor"],
+                    ["SHOULDER","Gladiator's Chain Spaulders","Arena Points"],
+                    ["BACK","Cloak of the Pit Stalker","Karazhan"],
+                    ["CHEST","Gladiator's Chain Armor","Arena Points"],
+                    ["WRIST","General's Chain Bracers","Honor + Marks"],
+                    ["HANDS","Gladiator's Chain Gauntlets","Arena Points"],
+                    ["WAIST","General's Chain Girdle","Honor + Marks"],
+                    ["LEGS","Gladiator's Chain Leggings","Arena Points"],
+                    ["FEET","General's Chain Sabatons","Honor + Marks"],
+                    ["RING 1","Ring of a Thousand Marks","Honor"],
+                    ["RING 2","Band of the Exorcist","Lower City"],
+                    ["TRINKET 1","Bloodlust Brooch","Badges"],
+                    ["TRINKET 2","Medallion of the Alliance","Honor"],
+                    ["MELEE","Gladiator's Decapitator","Arena Points"],
+                    ["RANGED","Gladiator's Heavy Crossbow","Arena Points"]
+                ]},
+                2:{name:"Season 2",bis:[
+                    ["HEAD","Merciless Gladiator's Chain Helm","Arena Points"],
+                    ["NECK","Veteran's Pendant of Triumph","Honor + Marks"],
+                    ["SHOULDER","Merciless Gladiator's Chain Spaulders","Arena Points"],
+                    ["BACK","Thalassian Wildercloak","Tempest Keep"],
+                    ["CHEST","Merciless Gladiator's Chain Armor","Arena Points"],
+                    ["WRIST","Veteran's Chain Bracers","Honor + Marks"],
+                    ["HANDS","Merciless Gladiator's Chain Gauntlets","Arena Points"],
+                    ["WAIST","Veteran's Chain Girdle","Honor + Marks"],
+                    ["LEGS","Merciless Gladiator's Chain Leggings","Arena Points"],
+                    ["FEET","Veteran's Chain Sabatons","Honor + Marks"],
+                    ["RING 1","Band of the Exorcist","Lower City"],
+                    ["RING 2","Veteran's Band of Triumph","Honor + Marks"],
+                    ["TRINKET 1","Bloodlust Brooch","Badges"],
+                    ["TRINKET 2","Medallion of the Alliance","Honor"],
+                    ["MELEE","Merciless Gladiator's Decapitator","Arena Points"],
+                    ["RANGED","Merciless Gladiator's Heavy Crossbow","Arena Points"]
+                ]},
+                3:{name:"Season 3",bis:[
+                    ["HEAD","Vengeful Gladiator's Chain Helm","Arena Points"],
+                    ["NECK","Vindicator's Pendant of Triumph","Honor + Marks"],
+                    ["SHOULDER","Vengeful Gladiator's Chain Spaulders","Arena Points"],
+                    ["BACK","Dory's Embrace","Badges"],
+                    ["CHEST","Vengeful Gladiator's Chain Armor","Arena Points"],
+                    ["WRIST","Vindicator's Chain Bracers","Honor + Marks"],
+                    ["HANDS","Vengeful Gladiator's Chain Gauntlets","Arena Points"],
+                    ["WAIST","Vindicator's Chain Girdle","Honor + Marks"],
+                    ["LEGS","Vengeful Gladiator's Chain Leggings","Arena Points"],
+                    ["FEET","Vindicator's Chain Sabatons","Honor + Marks"],
+                    ["RING 1","Vindicator's Band of Triumph","Honor + Marks"],
+                    ["RING 2","Band of Ruinous Delight","Sunwell Plateau"],
+                    ["TRINKET 1","Medallion of the Alliance","Honor"],
+                    ["TRINKET 2","Madness of the Betrayer","Black Temple"],
+                    ["MELEE","Vengeful Gladiator's Decapitator","Arena Points"],
+                    ["RANGED","Vengeful Gladiator's Heavy Crossbow","Arena Points"]
+                ]},
+                4:{name:"Season 4",bis:[
+                    ["HEAD","Brutal Gladiator's Chain Helm","Arena Points"],
+                    ["NECK","Guardian's Pendant of Triumph","Honor + Marks"],
+                    ["SHOULDER","Brutal Gladiator's Chain Spaulders","Arena Points"],
+                    ["BACK","Dory's Embrace","Badges"],
+                    ["CHEST","Brutal Gladiator's Chain Armor","Arena Points"],
+                    ["WRIST","Guardian's Chain Bracers","Honor + Marks"],
+                    ["HANDS","Brutal Gladiator's Chain Gauntlets","Arena Points"],
+                    ["WAIST","Guardian's Chain Girdle","Honor + Marks"],
+                    ["LEGS","Brutal Gladiator's Chain Leggings","Arena Points"],
+                    ["FEET","Guardian's Chain Sabatons","Honor + Marks"],
+                    ["RING 1","Band of Ruinous Delight","Sunwell Plateau"],
+                    ["RING 2","Guardian's Band of Triumph","Honor + Marks"],
+                    ["TRINKET 1","Medallion of the Alliance","Honor"],
+                    ["TRINKET 2","Madness of the Betrayer","Black Temple"],
+                    ["MELEE","Brutal Gladiator's Decapitator","Arena Points"],
+                    ["RANGED","Brutal Gladiator's Heavy Crossbow","Arena Points"]
+                ]}
+            }
+        },
+        marksmanship:{
+            name:"Marksmanship",
+            talentString:"0/41/20",
+            primaryStats:"5% Hit > Resilience ≥ Agility > AP > Crit",
+            talents:`0/41/20 - MARKSMANSHIP BUILD
+
+MARKSMANSHIP (41 points)
+├─ Lethal Shots 5/5
+├─ Improved Hunter's Mark 5/5
+├─ Efficiency 5/5
+├─ Aimed Shot 1/1
+├─ Mortal Shots 5/5
+├─ Go for the Throat 2/2
+├─ Improved Arcane Shot 5/5
+├─ Concussive Barrage 2/2
+├─ Scatter Shot 1/1
+├─ Barrage 3/3
+├─ Combat Experience 2/2
+├─ Ranged Weapon Specialization 5/5
+└─ Silencing Shot 1/1
+
+SURVIVAL (20 points)
+├─ Monster Slaying 3/3
+├─ Humanoid Slaying 3/3
+├─ Hawk Eye 3/3
+├─ Savage Strikes 2/2
+├─ Surefooted 3/3
+├─ Survival Instincts 2/2
+├─ Killer Instinct 3/3
+└─ Lightning Reflexes 1/5`,
+            rotation:`OPENER: Hunter's Mark > Aimed Shot > Steady Shot
+PRESSURE: Steady Shot spam > Multi-Shot > Arcane Shot
+CONTROL: Scatter Shot > Freezing Trap > Wing Clip kite
+KEY: Kiting at 41 yards | Silencing Shot interrupts`,
+            macros:`#showtooltip Silencing Shot
+/cast [target=focus,mod:shift] Silencing Shot; Silencing Shot
+
+#showtooltip Scatter Shot
+/cast [target=focus,mod:shift] Scatter Shot; Scatter Shot
+
+#showtooltip Steady Shot
+/cast !Auto Shot
+/cast Steady Shot
+
+/cast Aspect of the Viper
+/cast Aimed Shot`,
+            phases:{
+                1:{name:"Season 1",bis:[
+                    ["HEAD","Gladiator's Chain Helm","Arena Points"],
+                    ["NECK","Pendant of Triumph","Honor"],
+                    ["SHOULDER","Gladiator's Chain Spaulders","Arena Points"],
+                    ["BACK","Cloak of the Pit Stalker","Karazhan"],
+                    ["CHEST","Gladiator's Chain Armor","Arena Points"],
+                    ["WRIST","General's Chain Bracers","Honor + Marks"],
+                    ["HANDS","Gladiator's Chain Gauntlets","Arena Points"],
+                    ["WAIST","General's Chain Girdle","Honor + Marks"],
+                    ["LEGS","Gladiator's Chain Leggings","Arena Points"],
+                    ["FEET","General's Chain Sabatons","Honor + Marks"],
+                    ["RING 1","Ring of a Thousand Marks","Honor"],
+                    ["RING 2","Band of the Exorcist","Lower City"],
+                    ["TRINKET 1","Bloodlust Brooch","Badges"],
+                    ["TRINKET 2","Medallion of the Alliance","Honor"],
+                    ["MELEE","Gladiator's Decapitator","Arena Points"],
+                    ["RANGED","Gladiator's Heavy Crossbow","Arena Points"]
+                ]},
+                2:{name:"Season 2",bis:[
+                    ["HEAD","Merciless Gladiator's Chain Helm","Arena Points"],
+                    ["NECK","Veteran's Pendant of Triumph","Honor + Marks"],
+                    ["SHOULDER","Merciless Gladiator's Chain Spaulders","Arena Points"],
+                    ["BACK","Thalassian Wildercloak","Tempest Keep"],
+                    ["CHEST","Merciless Gladiator's Chain Armor","Arena Points"],
+                    ["WRIST","Veteran's Chain Bracers","Honor + Marks"],
+                    ["HANDS","Merciless Gladiator's Chain Gauntlets","Arena Points"],
+                    ["WAIST","Veteran's Chain Girdle","Honor + Marks"],
+                    ["LEGS","Merciless Gladiator's Chain Leggings","Arena Points"],
+                    ["FEET","Veteran's Chain Sabatons","Honor + Marks"],
+                    ["RING 1","Band of the Exorcist","Lower City"],
+                    ["RING 2","Veteran's Band of Triumph","Honor + Marks"],
+                    ["TRINKET 1","Bloodlust Brooch","Badges"],
+                    ["TRINKET 2","Medallion of the Alliance","Honor"],
+                    ["MELEE","Merciless Gladiator's Decapitator","Arena Points"],
+                    ["RANGED","Merciless Gladiator's Heavy Crossbow","Arena Points"]
+                ]},
+                3:{name:"Season 3",bis:[
+                    ["HEAD","Vengeful Gladiator's Chain Helm","Arena Points"],
+                    ["NECK","Vindicator's Pendant of Triumph","Honor + Marks"],
+                    ["SHOULDER","Vengeful Gladiator's Chain Spaulders","Arena Points"],
+                    ["BACK","Dory's Embrace","Badges"],
+                    ["CHEST","Vengeful Gladiator's Chain Armor","Arena Points"],
+                    ["WRIST","Vindicator's Chain Bracers","Honor + Marks"],
+                    ["HANDS","Vengeful Gladiator's Chain Gauntlets","Arena Points"],
+                    ["WAIST","Vindicator's Chain Girdle","Honor + Marks"],
+                    ["LEGS","Vengeful Gladiator's Chain Leggings","Arena Points"],
+                    ["FEET","Vindicator's Chain Sabatons","Honor + Marks"],
+                    ["RING 1","Vindicator's Band of Triumph","Honor + Marks"],
+                    ["RING 2","Band of Ruinous Delight","Sunwell Plateau"],
+                    ["TRINKET 1","Medallion of the Alliance","Honor"],
+                    ["TRINKET 2","Madness of the Betrayer","Black Temple"],
+                    ["MELEE","Vengeful Gladiator's Decapitator","Arena Points"],
+                    ["RANGED","Vengeful Gladiator's Heavy Crossbow","Arena Points"]
+                ]},
+                4:{name:"Season 4",bis:[
+                    ["HEAD","Brutal Gladiator's Chain Helm","Arena Points"],
+                    ["NECK","Guardian's Pendant of Triumph","Honor + Marks"],
+                    ["SHOULDER","Brutal Gladiator's Chain Spaulders","Arena Points"],
+                    ["BACK","Dory's Embrace","Badges"],
+                    ["CHEST","Brutal Gladiator's Chain Armor","Arena Points"],
+                    ["WRIST","Guardian's Chain Bracers","Honor + Marks"],
+                    ["HANDS","Brutal Gladiator's Chain Gauntlets","Arena Points"],
+                    ["WAIST","Guardian's Chain Girdle","Honor + Marks"],
+                    ["LEGS","Brutal Gladiator's Chain Leggings","Arena Points"],
+                    ["FEET","Guardian's Chain Sabatons","Honor + Marks"],
+                    ["RING 1","Band of Ruinous Delight","Sunwell Plateau"],
+                    ["RING 2","Guardian's Band of Triumph","Honor + Marks"],
+                    ["TRINKET 1","Medallion of the Alliance","Honor"],
+                    ["TRINKET 2","Madness of the Betrayer","Black Temple"],
+                    ["MELEE","Brutal Gladiator's Decapitator","Arena Points"],
+                    ["RANGED","Brutal Gladiator's Heavy Crossbow","Arena Points"]
+                ]}
+            }
+        },
+        survival:{
+            name:"Survival",
+            talentString:"0/20/41",
+            primaryStats:"5% Hit > Resilience ≥ Agility > AP > Crit",
+            talents:`0/20/41 - SURVIVAL BUILD
+
+MARKSMANSHIP (20 points)
+├─ Lethal Shots 5/5
+├─ Improved Hunter's Mark 5/5
+├─ Efficiency 5/5
+├─ Go for the Throat 2/2
+├─ Aimed Shot 1/1
+└─ Mortal Shots 2/5
+
+SURVIVAL (41 points)
+├─ Monster Slaying 3/3
+├─ Humanoid Slaying 3/3
+├─ Hawk Eye 3/3
+├─ Savage Strikes 2/2
+├─ Surefooted 3/3
+├─ Survival Instincts 2/2
+├─ Killer Instinct 3/3
+├─ Survivalist 5/5
+├─ Trap Mastery 2/2
+├─ Lightning Reflexes 5/5
+├─ Resourcefulness 3/3
+├─ Expose Weakness 3/3
+├─ Wyvern Sting 1/1
+├─ Master Tactician 5/5
+└─ Readiness 1/1`,
+            rotation:`OPENER: Hunter's Mark > Aimed Shot > Steady Shot
+PRESSURE: Steady Shot spam > Multi-Shot > Arcane Shot
+CONTROL: Wyvern Sting > Freezing Trap > Wing Clip kite
+KEY: Expose Weakness uptime | Trap cooldown management`,
+            macros:`#showtooltip Wyvern Sting
+/cast [target=focus,mod:shift] Wyvern Sting; Wyvern Sting
+
+#showtooltip Scatter Shot
+/cast [target=focus,mod:shift] Scatter Shot; Scatter Shot
+
+#showtooltip Steady Shot
+/cast !Auto Shot
+/cast Steady Shot
+
+/cast Readiness`,
+            phases:{
+                1:{name:"Season 1",bis:[
+                    ["HEAD","Gladiator's Chain Helm","Arena Points"],
+                    ["NECK","Pendant of Triumph","Honor"],
+                    ["SHOULDER","Gladiator's Chain Spaulders","Arena Points"],
+                    ["BACK","Cloak of the Pit Stalker","Karazhan"],
+                    ["CHEST","Gladiator's Chain Armor","Arena Points"],
+                    ["WRIST","General's Chain Bracers","Honor + Marks"],
+                    ["HANDS","Gladiator's Chain Gauntlets","Arena Points"],
+                    ["WAIST","General's Chain Girdle","Honor + Marks"],
+                    ["LEGS","Gladiator's Chain Leggings","Arena Points"],
+                    ["FEET","General's Chain Sabatons","Honor + Marks"],
+                    ["RING 1","Ring of a Thousand Marks","Honor"],
+                    ["RING 2","Band of the Exorcist","Lower City"],
+                    ["TRINKET 1","Bloodlust Brooch","Badges"],
+                    ["TRINKET 2","Medallion of the Alliance","Honor"],
+                    ["MELEE","Gladiator's Decapitator","Arena Points"],
+                    ["RANGED","Gladiator's Heavy Crossbow","Arena Points"]
+                ]},
+                2:{name:"Season 2",bis:[
+                    ["HEAD","Merciless Gladiator's Chain Helm","Arena Points"],
+                    ["NECK","Veteran's Pendant of Triumph","Honor + Marks"],
+                    ["SHOULDER","Merciless Gladiator's Chain Spaulders","Arena Points"],
+                    ["BACK","Thalassian Wildercloak","Tempest Keep"],
+                    ["CHEST","Merciless Gladiator's Chain Armor","Arena Points"],
+                    ["WRIST","Veteran's Chain Bracers","Honor + Marks"],
+                    ["HANDS","Merciless Gladiator's Chain Gauntlets","Arena Points"],
+                    ["WAIST","Veteran's Chain Girdle","Honor + Marks"],
+                    ["LEGS","Merciless Gladiator's Chain Leggings","Arena Points"],
+                    ["FEET","Veteran's Chain Sabatons","Honor + Marks"],
+                    ["RING 1","Band of the Exorcist","Lower City"],
+                    ["RING 2","Veteran's Band of Triumph","Honor + Marks"],
+                    ["TRINKET 1","Bloodlust Brooch","Badges"],
+                    ["TRINKET 2","Medallion of the Alliance","Honor"],
+                    ["MELEE","Merciless Gladiator's Decapitator","Arena Points"],
+                    ["RANGED","Merciless Gladiator's Heavy Crossbow","Arena Points"]
+                ]},
+                3:{name:"Season 3",bis:[
+                    ["HEAD","Vengeful Gladiator's Chain Helm","Arena Points"],
+                    ["NECK","Vindicator's Pendant of Triumph","Honor + Marks"],
+                    ["SHOULDER","Vengeful Gladiator's Chain Spaulders","Arena Points"],
+                    ["BACK","Dory's Embrace","Badges"],
+                    ["CHEST","Vengeful Gladiator's Chain Armor","Arena Points"],
+                    ["WRIST","Vindicator's Chain Bracers","Honor + Marks"],
+                    ["HANDS","Vengeful Gladiator's Chain Gauntlets","Arena Points"],
+                    ["WAIST","Vindicator's Chain Girdle","Honor + Marks"],
+                    ["LEGS","Vengeful Gladiator's Chain Leggings","Arena Points"],
+                    ["FEET","Vindicator's Chain Sabatons","Honor + Marks"],
+                    ["RING 1","Vindicator's Band of Triumph","Honor + Marks"],
+                    ["RING 2","Band of Ruinous Delight","Sunwell Plateau"],
+                    ["TRINKET 1","Medallion of the Alliance","Honor"],
+                    ["TRINKET 2","Madness of the Betrayer","Black Temple"],
+                    ["MELEE","Vengeful Gladiator's Decapitator","Arena Points"],
+                    ["RANGED","Vengeful Gladiator's Heavy Crossbow","Arena Points"]
+                ]},
+                4:{name:"Season 4",bis:[
+                    ["HEAD","Brutal Gladiator's Chain Helm","Arena Points"],
+                    ["NECK","Guardian's Pendant of Triumph","Honor + Marks"],
+                    ["SHOULDER","Brutal Gladiator's Chain Spaulders","Arena Points"],
+                    ["BACK","Dory's Embrace","Badges"],
+                    ["CHEST","Brutal Gladiator's Chain Armor","Arena Points"],
+                    ["WRIST","Guardian's Chain Bracers","Honor + Marks"],
+                    ["HANDS","Brutal Gladiator's Chain Gauntlets","Arena Points"],
+                    ["WAIST","Guardian's Chain Girdle","Honor + Marks"],
+                    ["LEGS","Brutal Gladiator's Chain Leggings","Arena Points"],
+                    ["FEET","Guardian's Chain Sabatons","Honor + Marks"],
+                    ["RING 1","Band of Ruinous Delight","Sunwell Plateau"],
+                    ["RING 2","Guardian's Band of Triumph","Honor + Marks"],
+                    ["TRINKET 1","Medallion of the Alliance","Honor"],
+                    ["TRINKET 2","Madness of the Betrayer","Black Temple"],
+                    ["MELEE","Brutal Gladiator's Decapitator","Arena Points"],
+                    ["RANGED","Brutal Gladiator's Heavy Crossbow","Arena Points"]
+                ]}
+            }
+        }
+    }
+},
+
+priest:{
+    title:"PRIEST",
+    defaultSpec:"discipline",
+    specs:{
+        discipline:{
+            name:"Discipline",
+            talentString:"23/38/0",
+            primaryStats:"Resilience > Spell Haste > +Healing > Stamina > Spirit",
+            talents:`23/38/0 - DISC/HOLY BUILD
+
+DISCIPLINE (23 points)
+├─ Unbreakable Will 5/5
+├─ Silent Resolve 5/5
+├─ Improved PW: Fortitude 2/2
+├─ Improved PW: Shield 3/3
+├─ Absolution 3/3
+├─ Mental Agility 5/5
+└─ Inner Focus 1/1
+
+HOLY (38 points)
+├─ Holy Specialization 5/5
+├─ Spell Warding 5/5
+├─ Divine Fury 5/5
+├─ Holy Reach 2/2
+├─ Inspiration 3/3
+├─ Improved Healing 3/3
+├─ Holy Nova 1/1
+├─ Healing Prayers 3/3
+├─ Spirit of Redemption 1/1
+├─ Spiritual Guidance 5/5
+├─ Surge of Light 2/2
+└─ Empowered Healing 3/5`,
+            rotation:`HEALING: PW:Shield spam > Renew > Flash Heal > Greater Heal
+OFFENSE: Mana Burn priority > SW:Pain DoT > Smite
+UTILITY: Pain Suppression CD > Dispel spam > Psychic Scream
+KEY: Shield uptime > Mana management > Fear positioning`,
+            macros:`#showtooltip Mana Burn
+/cast [target=focus,mod:shift] Mana Burn; Mana Burn
+
+/cast [target=mouseover,exists] Dispel Magic; Dispel Magic
+
+/cast [target=party1] Power Word: Shield
+
+/cast Inner Focus
+/cast Prayer of Mending`,
+            phases:{
+                1:{name:"Season 1",bis:[
+                    ["HEAD","Gladiator's Mooncloth Hood","Arena Points"],
+                    ["NECK","Shining Chain of the Afterworld","Badges"],
+                    ["SHOULDER","Gladiator's Mooncloth Mantle","Arena Points"],
+                    ["BACK","Stainless Cloak of the Pure Hearted","Karazhan"],
+                    ["CHEST","Gladiator's Mooncloth Robe","Arena Points"],
+                    ["WRIST","General's Mooncloth Cuffs","Honor + Marks"],
+                    ["HANDS","Gladiator's Mooncloth Gloves","Arena Points"],
+                    ["WAIST","General's Mooncloth Belt","Honor + Marks"],
+                    ["LEGS","Gladiator's Mooncloth Leggings","Arena Points"],
+                    ["FEET","General's Mooncloth Slippers","Honor + Marks"],
+                    ["RING 1","Naaru Lightwarden's Band","Lower City"],
+                    ["RING 2","Violet Signet of the Grand Restorer","Violet Eye"],
+                    ["TRINKET 1","Bangle of Endless Blessings","Botanica"],
+                    ["TRINKET 2","Medallion of the Horde","Honor"],
+                    ["WEAPON","Gladiator's Salvation","Arena Points"],
+                    ["OFF HAND","Gladiator's Reprieve","Arena Points"],
+                    ["WAND","Blue Diamond Witchwand","Crafted"]
+                ]},
+                2:{name:"Season 2",bis:[
+                    ["HEAD","Merciless Gladiator's Satin Hood","Arena Points"],
+                    ["NECK","Veteran's Pendant of Salvation","Honor + Marks"],
+                    ["SHOULDER","Merciless Gladiator's Satin Mantle","Arena Points"],
+                    ["BACK","Sunshower Light Cloak","Tempest Keep"],
+                    ["CHEST","Merciless Gladiator's Mooncloth Robe","Arena Points"],
+                    ["WRIST","Veteran's Mooncloth Cuffs","Honor + Marks"],
+                    ["HANDS","Merciless Gladiator's Mooncloth Gloves","Arena Points"],
+                    ["WAIST","Veteran's Mooncloth Belt","Honor + Marks"],
+                    ["LEGS","Merciless Gladiator's Mooncloth Leggings","Arena Points"],
+                    ["FEET","Veteran's Mooncloth Slippers","Honor + Marks"],
+                    ["RING 1","Veteran's Band of Salvation","Honor + Marks"],
+                    ["RING 2","Coral Band of the Revived","SSC"],
+                    ["TRINKET 1","Earring of Soulful Meditation","Badges"],
+                    ["TRINKET 2","Medallion of the Horde","Honor"],
+                    ["WEAPON","Merciless Gladiator's Salvation","Arena Points"],
+                    ["OFF HAND","Merciless Gladiator's Reprieve","Arena Points"],
+                    ["WAND","Merciless Gladiator's Touch of Defeat","Arena Points"]
+                ]},
+                3:{name:"Season 3",bis:[
+                    ["HEAD","Vengeful Gladiator's Mooncloth Hood","Arena Points"],
+                    ["NECK","Vindicator's Pendant of Salvation","Honor + Marks"],
+                    ["SHOULDER","Vengeful Gladiator's Mooncloth Mantle","Arena Points"],
+                    ["BACK","Kharmaa's Shroud of Hope","Karazhan"],
+                    ["CHEST","Vengeful Gladiator's Mooncloth Robe","Arena Points"],
+                    ["WRIST","Vindicator's Mooncloth Cuffs","Honor + Marks"],
+                    ["HANDS","Vengeful Gladiator's Mooncloth Gloves","Arena Points"],
+                    ["WAIST","Vindicator's Mooncloth Belt","Honor + Marks"],
+                    ["LEGS","Vengeful Gladiator's Mooncloth Leggings","Arena Points"],
+                    ["FEET","Vindicator's Mooncloth Slippers","Honor + Marks"],
+                    ["RING 1","Vindicator's Band of Salvation","Honor + Marks"],
+                    ["RING 2","Blessed Band of Karabor","Black Temple"],
+                    ["TRINKET 1","Earring of Soulful Meditation","Badges"],
+                    ["TRINKET 2","Medallion of the Horde","Honor"],
+                    ["WEAPON","Vengeful Gladiator's Salvation","Arena Points"],
+                    ["OFF HAND","Vengeful Gladiator's Reprieve","Arena Points"],
+                    ["WAND","Vengeful Gladiator's Baton of Light","Arena Points"]
+                ]},
+                4:{name:"Season 4",bis:[
+                    ["HEAD","Brutal Gladiator's Mooncloth Hood","Arena Points"],
+                    ["NECK","Guardian's Pendant of Reprieve","Honor + Marks"],
+                    ["SHOULDER","Brutal Gladiator's Mooncloth Mantle","Arena Points"],
+                    ["BACK","Cloak of Swift Reprieve","Badges"],
+                    ["CHEST","Brutal Gladiator's Mooncloth Robe","Arena Points"],
+                    ["WRIST","Guardian's Mooncloth Cuffs","Honor + Marks"],
+                    ["HANDS","Brutal Gladiator's Mooncloth Gloves","Arena Points"],
+                    ["WAIST","Guardian's Mooncloth Belt","Honor + Marks"],
+                    ["LEGS","Brutal Gladiator's Mooncloth Leggings","Arena Points"],
+                    ["FEET","Guardian's Mooncloth Slippers","Honor + Marks"],
+                    ["RING 1","Vindicator's Band of Salvation","Honor + Marks"],
+                    ["RING 2","Guardian's Band of Salvation","Honor + Marks"],
+                    ["TRINKET 1","Vial of the Sunwell","Sunwell Plateau"],
+                    ["TRINKET 2","Medallion of the Horde","Honor"],
+                    ["WEAPON","Brutal Gladiator's Salvation","Arena Points"],
+                    ["OFF HAND","Brutal Gladiator's Reprieve","Arena Points"],
+                    ["WAND","Brutal Gladiator's Baton of Light","Arena Points"]
+                ]}
+            }
+        },
+        shadow:{
+            name:"Shadow",
+            talentString:"14/0/47",
+            primaryStats:"Resilience > 3% Spell Hit > Spell Damage > Stamina > Crit",
+            talents:`14/0/47 - SHADOW BUILD
+
+DISCIPLINE (14 points)
+├─ Silent Resolve 5/5
+├─ Improved Power Word: Fortitude 2/2
+├─ Improved Power Word: Shield 3/3
+├─ Meditation 3/3
+└─ Inner Focus 1/1
+
+SHADOW (47 points)
+├─ Spirit Tap 3/3
+├─ Improved Shadow Word: Pain 2/2
+├─ Shadow Focus 5/5
+├─ Improved Psychic Scream 2/2
+├─ Improved Mind Blast 5/5
+├─ Mind Flay 1/1
+├─ Improved Fade 2/2
+├─ Shadow Reach 2/2
+├─ Shadow Weaving 5/5
+├─ Silence 1/1
+├─ Vampiric Embrace 1/1
+├─ Improved Vampiric Embrace 2/2
+├─ Focused Mind 3/3
+├─ Darkness 5/5
+├─ Shadowform 1/1
+├─ Shadow Power 5/5
+└─ Misery 5/5`,
+            rotation:`OPENER: Vampiric Touch > SW:Pain > Mind Blast > Mind Flay
+PRESSURE: Maintain DoTs > Mind Blast on CD > Mind Flay filler
+UTILITY: Dispersion for mana/defense > Psychic Scream > Silence
+KEY: DoT uptime | Mana management | Dispersion timing`,
+            macros:`#showtooltip Silence
+/cast [target=focus,mod:shift] Silence; Silence
+
+#showtooltip Psychic Scream
+/cast Psychic Scream
+
+/cast [target=mouseover,exists] Dispel Magic; Dispel Magic
+
+/cast Shadowfiend`,
+            phases:{
+                1:{name:"Season 1",bis:[
+                    ["HEAD","Gladiator's Satin Hood","Arena Points"],
+                    ["NECK","Pendant of Dominance","Honor"],
+                    ["SHOULDER","Gladiator's Satin Mantle","Arena Points"],
+                    ["BACK","Sergeant's Heavy Cape","Honor"],
+                    ["CHEST","Gladiator's Satin Robe","Arena Points"],
+                    ["WRIST","General's Dreadweave Cuffs","Honor + Marks"],
+                    ["HANDS","Gladiator's Satin Gloves","Arena Points"],
+                    ["WAIST","General's Dreadweave Belt","Honor + Marks"],
+                    ["LEGS","Gladiator's Satin Leggings","Arena Points"],
+                    ["FEET","General's Dreadweave Stalkers","Honor + Marks"],
+                    ["RING 1","Ring of Recurrence","Karazhan"],
+                    ["RING 2","Seal of the Exorcist","Lower City"],
+                    ["TRINKET 1","Icon of the Silver Crescent","Badges"],
+                    ["TRINKET 2","Medallion of the Horde","Honor"],
+                    ["WEAPON","Gladiator's Gavel","Arena Points"],
+                    ["OFF HAND","Orb of the Soul-Eater","Karazhan"],
+                    ["WAND","Gladiator's Touch of Defeat","Arena Points"]
+                ]},
+                2:{name:"Season 2",bis:[
+                    ["HEAD","Merciless Gladiator's Satin Hood","Arena Points"],
+                    ["NECK","Veteran's Pendant of Dominance","Honor + Marks"],
+                    ["SHOULDER","Merciless Gladiator's Satin Mantle","Arena Points"],
+                    ["BACK","Royal Cloak of the Sunstriders","Tempest Keep"],
+                    ["CHEST","Merciless Gladiator's Satin Robe","Arena Points"],
+                    ["WRIST","Veteran's Dreadweave Cuffs","Honor + Marks"],
+                    ["HANDS","Merciless Gladiator's Satin Gloves","Arena Points"],
+                    ["WAIST","Veteran's Dreadweave Belt","Honor + Marks"],
+                    ["LEGS","Merciless Gladiator's Satin Leggings","Arena Points"],
+                    ["FEET","Veteran's Dreadweave Stalkers","Honor + Marks"],
+                    ["RING 1","Veteran's Band of Dominance","Honor + Marks"],
+                    ["RING 2","Seal of the Exorcist","Lower City"],
+                    ["TRINKET 1","Icon of the Silver Crescent","Badges"],
+                    ["TRINKET 2","Medallion of the Horde","Honor"],
+                    ["WEAPON","Merciless Gladiator's Gavel","Arena Points"],
+                    ["OFF HAND","Merciless Gladiator's Endgame","Arena Points"],
+                    ["WAND","Merciless Gladiator's Touch of Defeat","Arena Points"]
+                ]},
+                3:{name:"Season 3",bis:[
+                    ["HEAD","Vengeful Gladiator's Satin Hood","Arena Points"],
+                    ["NECK","Vindicator's Pendant of Dominance","Honor + Marks"],
+                    ["SHOULDER","Vengeful Gladiator's Satin Mantle","Arena Points"],
+                    ["BACK","Cloak of Subjugated Power","Black Temple"],
+                    ["CHEST","Vengeful Gladiator's Satin Robe","Arena Points"],
+                    ["WRIST","Vindicator's Dreadweave Cuffs","Honor + Marks"],
+                    ["HANDS","Vengeful Gladiator's Satin Gloves","Arena Points"],
+                    ["WAIST","Vindicator's Dreadweave Belt","Honor + Marks"],
+                    ["LEGS","Vengeful Gladiator's Satin Leggings","Arena Points"],
+                    ["FEET","Vindicator's Dreadweave Stalkers","Honor + Marks"],
+                    ["RING 1","Vindicator's Band of Dominance","Honor + Marks"],
+                    ["RING 2","Ring of Ancient Knowledge","Hyjal Summit"],
+                    ["TRINKET 1","Hex Shrunken Head","Zul'Aman"],
+                    ["TRINKET 2","Medallion of the Horde","Honor"],
+                    ["WEAPON","Vengeful Gladiator's Spellblade","Arena Points"],
+                    ["OFF HAND","Vengeful Gladiator's Grimoire","Arena Points"],
+                    ["WAND","Vengeful Gladiator's Touch of Defeat","Arena Points"]
+                ]},
+                4:{name:"Season 4",bis:[
+                    ["HEAD","Brutal Gladiator's Satin Hood","Arena Points"],
+                    ["NECK","Guardian's Pendant of Dominance","Honor + Marks"],
+                    ["SHOULDER","Brutal Gladiator's Satin Mantle","Arena Points"],
+                    ["BACK","Cloak of Arcane Alacrity","Badges"],
+                    ["CHEST","Brutal Gladiator's Satin Robe","Arena Points"],
+                    ["WRIST","Guardian's Dreadweave Cuffs","Honor + Marks"],
+                    ["HANDS","Brutal Gladiator's Satin Gloves","Arena Points"],
+                    ["WAIST","Guardian's Dreadweave Belt","Honor + Marks"],
+                    ["LEGS","Brutal Gladiator's Satin Leggings","Arena Points"],
+                    ["FEET","Guardian's Dreadweave Stalkers","Honor + Marks"],
+                    ["RING 1","Vindicator's Band of Dominance","Honor + Marks"],
+                    ["RING 2","Guardian's Band of Dominance","Honor + Marks"],
+                    ["TRINKET 1","The Skull of Gul'dan","Black Temple"],
+                    ["TRINKET 2","Medallion of the Horde","Honor"],
+                    ["WEAPON","Brutal Gladiator's Spellblade","Arena Points"],
+                    ["OFF HAND","Brutal Gladiator's Grimoire","Arena Points"],
+                    ["WAND","Brutal Gladiator's Touch of Defeat","Arena Points"]
+                ]}
+            }
+        }
+    }
+},
+
+paladin:{
+    title:"PALADIN",
+    defaultSpec:"holy",
+    specs:{
+        holy:{
+            name:"Holy",
+            talentString:"41/20/0",
+            primaryStats:"Resilience > Spell Crit > Intellect > +Healing > MP5",
+            talents:`41/20/0 - HOLY BUILD
+
+HOLY (41 points)
+├─ Spiritual Focus 5/5
+├─ Healing Light 3/3
+├─ Divine Intellect 5/5
+├─ Improved Lay on Hands 2/2
+├─ Unyielding Faith 2/2
+├─ Illumination 5/5
+├─ Improved BoW 2/2
+├─ Divine Favor 1/1
+├─ Sanctified Light 3/3
+├─ Holy Power 5/5
+├─ Light's Grace 3/3
+├─ Holy Shock 1/1
+├─ Blessed Life 3/3
+└─ Holy Guidance 5/5
+
+PROTECTION (20 points)
+├─ Improved Devotion Aura 5/5
+├─ Redoubt 5/5
+├─ Precision 3/3
+├─ Guardian's Favor 2/2
+└─ Toughness 5/5`,
+            rotation:`HEALING: Flash of Light spam > Holy Light big heals > Holy Shock
+UTILITY: BoF > Cleanse spam > Divine Shield > HoJ stun
+KEY: Blessing management > Cleanse priority > Bubble timing`,
+            macros:`#showtooltip Hammer of Justice
+/cast [target=focus,mod:shift] Hammer of Justice
+
+/cast [target=mouseover,exists] Cleanse; Cleanse
+
+/cast Divine Shield
+/cancelaura Divine Shield`,
+            phases:{
+                1:{name:"Season 1",bis:[
+                    ["HEAD","Gladiator's Ornamented Headcover","Arena Points"],
+                    ["NECK","Pendant of Salvation","Honor"],
+                    ["SHOULDER","Gladiator's Ornamented Spaulders","Arena Points"],
+                    ["BACK","Farstrider's Cloak","Karazhan"],
+                    ["CHEST","Gladiator's Ornamented Chestguard","Arena Points"],
+                    ["WRIST","General's Ornamented Bracers","Honor + Marks"],
+                    ["HANDS","Gladiator's Ornamented Gloves","Arena Points"],
+                    ["WAIST","General's Ornamented Belt","Honor + Marks"],
+                    ["LEGS","Gladiator's Ornamented Legplates","Arena Points"],
+                    ["FEET","General's Ornamented Greaves","Honor + Marks"],
+                    ["RING 1","Ring of a Thousand Marks","Honor"],
+                    ["RING 2","Violet Signet of the Grand Restorer","Violet Eye"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","Essence of the Martyr","Badges"],
+                    ["WEAPON","Gladiator's Gavel","Arena Points"],
+                    ["SHIELD","Gladiator's Shield Wall","Arena Points"],
+                    ["LIBRAM","Libram of Mending","Badges"]
+                ]},
+                2:{name:"Season 2",bis:[
+                    ["HEAD","Merciless Gladiator's Ornamented Headcover","Arena Points"],
+                    ["NECK","Veteran's Pendant of Salvation","Honor + Marks"],
+                    ["SHOULDER","Merciless Gladiator's Ornamented Spaulders","Arena Points"],
+                    ["BACK","Sunshower Light Cloak","Tempest Keep"],
+                    ["CHEST","Merciless Gladiator's Ornamented Chestguard","Arena Points"],
+                    ["WRIST","Veteran's Ornamented Bracers","Honor + Marks"],
+                    ["HANDS","Merciless Gladiator's Ornamented Gloves","Arena Points"],
+                    ["WAIST","Veteran's Ornamented Belt","Honor + Marks"],
+                    ["LEGS","Merciless Gladiator's Ornamented Legplates","Arena Points"],
+                    ["FEET","Veteran's Ornamented Greaves","Honor + Marks"],
+                    ["RING 1","Veteran's Band of Salvation","Honor + Marks"],
+                    ["RING 2","Coral Band of the Revived","SSC"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","Essence of the Martyr","Badges"],
+                    ["WEAPON","Merciless Gladiator's Gavel","Arena Points"],
+                    ["SHIELD","Merciless Gladiator's Shield Wall","Arena Points"],
+                    ["LIBRAM","Libram of Mending","Badges"]
+                ]},
+                3:{name:"Season 3",bis:[
+                    ["HEAD","Vengeful Gladiator's Ornamented Headcover","Arena Points"],
+                    ["NECK","Vindicator's Pendant of Salvation","Honor + Marks"],
+                    ["SHOULDER","Vengeful Gladiator's Ornamented Spaulders","Arena Points"],
+                    ["BACK","Kharmaa's Shroud of Hope","Karazhan"],
+                    ["CHEST","Vengeful Gladiator's Ornamented Chestguard","Arena Points"],
+                    ["WRIST","Vindicator's Ornamented Bracers","Honor + Marks"],
+                    ["HANDS","Vengeful Gladiator's Ornamented Gloves","Arena Points"],
+                    ["WAIST","Vindicator's Ornamented Belt","Honor + Marks"],
+                    ["LEGS","Vengeful Gladiator's Ornamented Legplates","Arena Points"],
+                    ["FEET","Vindicator's Ornamented Greaves","Honor + Marks"],
+                    ["RING 1","Band of the Eternal Restorer","Scale of Sands"],
+                    ["RING 2","Blessed Band of Karabor","Black Temple"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","Essence of the Martyr","Badges"],
+                    ["WEAPON","Vengeful Gladiator's Gavel","Arena Points"],
+                    ["SHIELD","Vengeful Gladiator's Shield Wall","Arena Points"],
+                    ["LIBRAM","Blessed Book of Nagrand","Nagaran"]
+                ]},
+                4:{name:"Season 4",bis:[
+                    ["HEAD","Brutal Gladiator's Ornamented Headcover","Arena Points"],
+                    ["NECK","Guardian's Pendant of Salvation","Honor + Marks"],
+                    ["SHOULDER","Brutal Gladiator's Ornamented Spaulders","Arena Points"],
+                    ["BACK","Shroud of Redeemed Souls","Sunwell Plateau"],
+                    ["CHEST","Brutal Gladiator's Ornamented Chestguard","Arena Points"],
+                    ["WRIST","Guardian's Ornamented Bracers","Honor + Marks"],
+                    ["HANDS","Brutal Gladiator's Ornamented Gloves","Arena Points"],
+                    ["WAIST","Guardian's Ornamented Belt","Honor + Marks"],
+                    ["LEGS","Brutal Gladiator's Ornamented Legplates","Arena Points"],
+                    ["FEET","Guardian's Ornamented Greaves","Honor + Marks"],
+                    ["RING 1","Band of the Eternal Restorer","Scale of Sands"],
+                    ["RING 2","Blessed Band of Karabor","Black Temple"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","Essence of the Martyr","Badges"],
+                    ["WEAPON","Hammer of Sanctification","Sunwell Plateau"],
+                    ["SHIELD","Aegis of Angelic Fortune","Sunwell Plateau"],
+                    ["LIBRAM","Blessed Book of Nagrand","Nagaran"]
+                ]}
+            }
+        },
+        retribution:{
+            name:"Retribution",
+            talentString:"5/8/48",
+            primaryStats:"5% Hit > Resilience > Crit > AP > Haste",
+            talents:`5/8/48 - RETRIBUTION BUILD
+
+HOLY (5 points)
+└─ Divine Strength 5/5
+
+PROTECTION (8 points)
+├─ Divinity 5/5
+└─ Precision 3/3
+
+RETRIBUTION (48 points)
+├─ Improved Blessing of Might 2/2
+├─ Benediction 5/5
+├─ Improved Judgements 2/2
+├─ Improved Seal of Crusader 3/3
+├─ Deflection 5/5
+├─ Vindication 3/3
+├─ Conviction 5/5
+├─ Seal of Command 1/1
+├─ Pursuit of Justice 2/2
+├─ Two-Handed Weapon Spec 3/3
+├─ Sanctity Aura 1/1
+├─ Improved Retribution Aura 2/2
+├─ Vengeance 5/5
+├─ Sanctified Retribution 3/3
+├─ Crusade 3/3
+└─ Fanaticism 5/5`,
+            rotation:`OPENER: Judgement of Command > Crusader Strike > Auto attacks
+PRESSURE: CS on CD > Divine Storm > Consecration
+UTILITY: Hammer of Justice stun > Hand of Freedom > Bubble
+KEY: Judgement uptime | CS on CD | Vengeance proc tracking`,
+            macros:`#showtooltip Hammer of Justice
+/cast [target=focus,mod:shift] Hammer of Justice; Hammer of Justice
+
+#showtooltip Crusader Strike
+/cast Crusader Strike
+/startattack
+
+/cast Divine Shield
+/cast Divine Protection
+
+/cast Avenging Wrath`,
+            phases:{
+                1:{name:"Season 1",bis:[
+                    ["HEAD","Gladiator's Scaled Helm","Arena Points"],
+                    ["NECK","Pendant of Triumph","Honor"],
+                    ["SHOULDER","Gladiator's Scaled Shoulders","Arena Points"],
+                    ["BACK","Cloak of the Pit Stalker","Karazhan"],
+                    ["CHEST","Gladiator's Scaled Chestpiece","Arena Points"],
+                    ["WRIST","General's Scaled Bracers","Honor + Marks"],
+                    ["HANDS","Gladiator's Scaled Gauntlets","Arena Points"],
+                    ["WAIST","General's Scaled Belt","Honor + Marks"],
+                    ["LEGS","Gladiator's Scaled Legguards","Arena Points"],
+                    ["FEET","General's Scaled Greaves","Honor + Marks"],
+                    ["RING 1","Ring of a Thousand Marks","Honor"],
+                    ["RING 2","Band of the Exorcist","Lower City"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","Bloodlust Brooch","Badges"],
+                    ["WEAPON","Gladiator's Greatsword","Arena Points"],
+                    ["LIBRAM","Libram of Avengement","Heroic Blood Furnace"]
+                ]},
+                2:{name:"Season 2",bis:[
+                    ["HEAD","Merciless Gladiator's Scaled Helm","Arena Points"],
+                    ["NECK","Veteran's Pendant of Triumph","Honor + Marks"],
+                    ["SHOULDER","Merciless Gladiator's Scaled Shoulders","Arena Points"],
+                    ["BACK","Razor-Scale Battlecloak","SSC"],
+                    ["CHEST","Merciless Gladiator's Scaled Chestpiece","Arena Points"],
+                    ["WRIST","Veteran's Scaled Bracers","Honor + Marks"],
+                    ["HANDS","Merciless Gladiator's Scaled Gauntlets","Arena Points"],
+                    ["WAIST","Veteran's Scaled Belt","Honor + Marks"],
+                    ["LEGS","Merciless Gladiator's Scaled Legguards","Arena Points"],
+                    ["FEET","Veteran's Scaled Greaves","Honor + Marks"],
+                    ["RING 1","Hard Khorium Band","Jewelcrafting"],
+                    ["RING 2","Veteran's Band of Triumph","Honor + Marks"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","Bloodlust Brooch","Badges"],
+                    ["WEAPON","Merciless Gladiator's Greatsword","Arena Points"],
+                    ["LIBRAM","Libram of Avengement","Heroic Blood Furnace"]
+                ]},
+                3:{name:"Season 3",bis:[
+                    ["HEAD","Vengeful Gladiator's Scaled Helm","Arena Points"],
+                    ["NECK","Vindicator's Pendant of Triumph","Honor + Marks"],
+                    ["SHOULDER","Vengeful Gladiator's Scaled Shoulders","Arena Points"],
+                    ["BACK","Razor-Scale Battlecloak","SSC"],
+                    ["CHEST","Vengeful Gladiator's Scaled Chestpiece","Arena Points"],
+                    ["WRIST","Vindicator's Scaled Bracers","Honor + Marks"],
+                    ["HANDS","Vengeful Gladiator's Scaled Gauntlets","Arena Points"],
+                    ["WAIST","Vindicator's Scaled Belt","Honor + Marks"],
+                    ["LEGS","Vengeful Gladiator's Scaled Legguards","Arena Points"],
+                    ["FEET","Vindicator's Scaled Greaves","Honor + Marks"],
+                    ["RING 1","Hard Khorium Band","Jewelcrafting"],
+                    ["RING 2","Vindicator's Band of Triumph","Honor + Marks"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","Berserker's Call","Zul'Aman"],
+                    ["WEAPON","Vengeful Gladiator's Greatsword","Arena Points"],
+                    ["LIBRAM","Libram of Avengement","Heroic Blood Furnace"]
+                ]},
+                4:{name:"Season 4",bis:[
+                    ["HEAD","Brutal Gladiator's Scaled Helm","Arena Points"],
+                    ["NECK","Guardian's Pendant of Triumph","Honor + Marks"],
+                    ["SHOULDER","Brutal Gladiator's Scaled Shoulders","Arena Points"],
+                    ["BACK","Razor-Scale Battlecloak","SSC"],
+                    ["CHEST","Brutal Gladiator's Scaled Chestpiece","Arena Points"],
+                    ["WRIST","Guardian's Scaled Bracers","Honor + Marks"],
+                    ["HANDS","Brutal Gladiator's Scaled Gauntlets","Arena Points"],
+                    ["WAIST","Guardian's Scaled Belt","Honor + Marks"],
+                    ["LEGS","Brutal Gladiator's Scaled Legguards","Arena Points"],
+                    ["FEET","Guardian's Scaled Greaves","Honor + Marks"],
+                    ["RING 1","Hard Khorium Band","Jewelcrafting"],
+                    ["RING 2","Guardian's Band of Triumph","Honor + Marks"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","Berserker's Call","Zul'Aman"],
+                    ["WEAPON","Apolyon, the Soul-Render","Sunwell Plateau"],
+                    ["LIBRAM","Libram of Avengement","Heroic Blood Furnace"]
+                ]}
+            }
+        }
+    }
+},
+
+shaman:{
+    title:"SHAMAN",
+    defaultSpec:"restoration",
+    specs:{
+        restoration:{
+            name:"Restoration",
+            talentString:"0/5/56",
+            primaryStats:"Resilience > Spell Haste > +Healing > Stamina > MP5",
+            talents:`0/5/56 - RESTORATION BUILD
+
+ENHANCEMENT (5 points)
+└─ Ancestral Knowledge 5/5
+
+RESTORATION (56 points)
+├─ Improved Healing Wave 5/5
+├─ Tidal Focus 5/5
+├─ Improved Reincarnation 2/2
+├─ Ancestral Healing 3/3
+├─ Totemic Focus 5/5
+├─ Healing Focus 5/5
+├─ Tidal Mastery 5/5
+├─ Healing Grace 3/3
+├─ Restorative Totems 5/5
+├─ Nature's Swiftness 1/1
+├─ Focused Mind 3/3
+├─ Purification 5/5
+├─ Mana Tide Totem 1/1
+├─ Nature's Guardian 5/5
+├─ Nature's Blessing 3/3
+└─ Earth Shield 1/1`,
+            rotation:`HEALING: Earth Shield on focus > LHW spam > Chain Heal groups
+UTILITY: Purge buffs > Frost Shock kite > Earth Shock interrupt
+TOTEMS: Grounding > Tremor > Earthbind > Mana Tide
+KEY: Totem management > Earth Shield uptime > NS timing`,
+            macros:`#showtooltip Purge
+/cast [target=focus,mod:shift] Purge; Purge
+
 /cast [target=mouseover,exists] Lesser Healing Wave
-/cast [target=party1] Earth Shield`,
-                comps2v2: [["Shaman + Warrior", "8.0/10"]],
-                comps3v3: [["African Turtle Cleave", "8.5/10"]]
-            },
-            mage: {
-                title: "MAGE // FROST PVP",
-                metaTier: "S-Tier (All Brackets)",
-                primaryStats: "Resilience > Hit Cap (6%) > Spell Damage > Spell Crit > Haste",
-                specs: ["18/0/43 FROST", "40/0/21 FIRE"],
-                bis: [
-                    ["HEAD", "Vengeful Gladiator's Silk Cowl", "Arena S4 (1200)", "114 Resil, 88 Stam"],
-                    ["CHEST", "Vengeful Gladiator's Silk Raiment", "Arena S4 (1350)", "114 Resil, 88 Stam"],
-                    ["HANDS", "Vengeful Gladiator's Silk Handguards", "Arena S4 (900)", "76 Resil, 59 Stam"],
-                    ["WEAPON", "Vengeful Gladiator's Spellblade", "Arena S4 (1850)", "268 SP, 42 Resil"]
-                ],
-                talents: `18 / 0 / 43 - FROST BUILD
 
-FROST (43)
-├─ Ice Shards: 5/5
-├─ Piercing Ice: 3/3
-├─ Icy Veins: 1/1
-├─ Shatter: 5/5
-├─ Cold Snap: 1/1
-├─ Ice Block: 1/1
-└─ Water Elemental: 1/1`,
-                rotation: `⚙ OPENER: Frost Nova → Cone of Cold → Deep Freeze → Frostbolt spam
-<br>PRESSURE: Shatter combos (Nova → Frostbolt) | Water Ele Freeze setups
-<br>UTILITY: Polymorph healer | Counterspell on CD | Ice Block survive`,
-                macros: `/cast [target=focus,modifier:shift] Counterspell
-/cast [target=focus,modifier:ctrl] Polymorph
-/cast Icy Veins`,
-                comps2v2: [["Mage + Rogue", "9.5/10"], ["Mage + Priest", "8.5/10"]],
-                comps3v3: [["RMP (Rogue/Mage/Priest)", "10/10"], ["MLD (Mage/Lock/Druid)", "9.5/10"]]
-            },
-            warlock: {
-                title: "WARLOCK // AFFLICTION/DESTRO PVP",
-                metaTier: "S-Tier (All Brackets)",
-                primaryStats: "Resilience > Hit Cap (6%) > Spell Damage > Spell Crit > Haste",
-                specs: ["0/21/40 SL/SL", "0/40/21 DESTRO"],
-                bis: [
-                    ["HEAD", "Vengeful Gladiator's Felweave Cowl", "Arena S4 (1200)", "114 Resil, 88 Stam"],
-                    ["CHEST", "Vengeful Gladiator's Felweave Raiment", "Arena S4 (1350)", "114 Resil, 88 Stam"],
-                    ["HANDS", "Vengeful Gladiator's Felweave Handguards", "Arena S4 (900)", "76 Resil, 59 Stam"],
-                    ["WEAPON", "Vengeful Gladiator's War Staff", "Arena S4 (1850)", "356 SP, 54 Resil"]
-                ],
-                talents: `0 / 21 / 40 - SL/SL BUILD
+/cast [target=party1] Earth Shield
 
-AFFLICTION (40)
-├─ Improved Corruption: 5/5
-├─ Suppression: 5/5
-├─ Fel Concentration: 5/5
-├─ Siphon Life: 1/1
-├─ Shadow Embrace: 5/5
-└─ Unstable Affliction: 1/1
-
-DEMONOLOGY (21)
-├─ Demonic Embrace: 5/5
-├─ Fel Intellect: 3/3
-├─ Fel Stamina: 3/3
-└─ Soul Link: 1/1`,
-                rotation: `⚙ OPENER: Siphon Life → Corruption → Curse of Agony → Unstable Affliction → Fear
-<br>PRESSURE: Maintain DoTs | Death Coil on CD | Drain Life for sustain
-<br>UTILITY: Fel Domination resummon | Spell Lock interrupt`,
-                macros: `/cast [target=focus,modifier:shift] Spell Lock
-/cast [target=focus,modifier:ctrl] Fear
-/cast Fel Domination`,
-                comps2v2: [["Warlock + Druid", "9.5/10"]],
-                comps3v3: [["WLD (War/Lock/Druid)", "9.5/10"], ["MLD (Mage/Lock/Druid)", "9.5/10"]]
-            },
-            hunter: {
-                title: "HUNTER // BEAST MASTERY PVP",
-                metaTier: "S-Tier (3v3) | A-Tier (2v2/5v5)",
-                primaryStats: "Resilience > Hit Cap (5%) > Crit > AP > ArP > Agi",
-                specs: ["41/20/0 BM", "7/31/23 MARKS"],
-                bis: [
-                    ["HEAD", "Vengeful Gladiator's Chain Helm", "Arena S4 (1200)", "114 Resil, 88 Stam"],
-                    ["CHEST", "Vengeful Gladiator's Chain Armor", "Arena S4 (1350)", "114 Resil, 88 Stam"],
-                    ["HANDS", "Vengeful Gladiator's Chain Gauntlets", "Arena S4 (900)", "76 Resil, 59 Stam"],
-                    ["RANGED", "Vengeful Gladiator's Heavy Crossbow", "Arena S4 (1850)", "72 Crit, 137 AP"]
-                ],
-                talents: `41 / 20 / 0 - BM BUILD
-
-BEAST MASTERY (41)
-├─ Improved Aspect of the Hawk: 5/5
-├─ Endurance Training: 5/5
-├─ Ferocity: 5/5
-├─ Intimidation: 1/1
-├─ Unleashed Fury: 5/5
-├─ Bestial Wrath: 1/1
-└─ The Beast Within: 1/1`,
-                rotation: `⚙ OPENER: Hunter's Mark → Bestial Wrath → Kill Command → Steady Shot spam
-<br>PRESSURE: Steady Shot weaving | Multi-Shot for pressure | Arcane Shot instant
-<br>UTILITY: Scatter Shot CC | Freezing Trap peel | Wing Clip kite`,
-                macros: `/cast [target=focus,modifier:shift] Scatter Shot
-/cast [target=focus,modifier:ctrl] Freezing Trap
-/cast Bestial Wrath`,
-                comps2v2: [["Hunter + Druid", "8.5/10"]],
-                comps3v3: [["Beast Cleave (War/Hunt/Druid)", "9.8/10"]]
+/cast Nature's Swiftness
+/cast Healing Wave`,
+            phases:{
+                1:{name:"Season 1",bis:[
+                    ["HEAD","Gladiator's Ringmail Helm","Arena Points"],
+                    ["NECK","Pendant of Salvation","Honor"],
+                    ["SHOULDER","Gladiator's Ringmail Spaulders","Arena Points"],
+                    ["BACK","Stainless Cloak of the Pure Hearted","Karazhan"],
+                    ["CHEST","Gladiator's Ringmail Armor","Arena Points"],
+                    ["WRIST","General's Ringmail Bracers","Honor + Marks"],
+                    ["HANDS","Gladiator's Ringmail Gauntlets","Arena Points"],
+                    ["WAIST","General's Ringmail Belt","Honor + Marks"],
+                    ["LEGS","Gladiator's Ringmail Leggings","Arena Points"],
+                    ["FEET","General's Ringmail Sabatons","Honor + Marks"],
+                    ["RING 1","Naaru Lightwarden's Band","Lower City"],
+                    ["RING 2","Violet Signet of the Grand Restorer","Violet Eye"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","Essence of the Martyr","Badges"],
+                    ["WEAPON","Gladiator's Salvation","Arena Points"],
+                    ["SHIELD","Gladiator's Shield Wall","Arena Points"],
+                    ["TOTEM","Totem of the Thunderhead","The Underbog"]
+                ]},
+                2:{name:"Season 2",bis:[
+                    ["HEAD","Merciless Gladiator's Ringmail Helm","Arena Points"],
+                    ["NECK","Veteran's Pendant of Salvation","Honor + Marks"],
+                    ["SHOULDER","Merciless Gladiator's Ringmail Spaulders","Arena Points"],
+                    ["BACK","Sunshower Light Cloak","Tempest Keep"],
+                    ["CHEST","Merciless Gladiator's Ringmail Armor","Arena Points"],
+                    ["WRIST","Veteran's Ringmail Bracers","Honor + Marks"],
+                    ["HANDS","Merciless Gladiator's Ringmail Gauntlets","Arena Points"],
+                    ["WAIST","Veteran's Ringmail Belt","Honor + Marks"],
+                    ["LEGS","Merciless Gladiator's Ringmail Leggings","Arena Points"],
+                    ["FEET","Veteran's Ringmail Sabatons","Honor + Marks"],
+                    ["RING 1","Veteran's Band of Salvation","Honor + Marks"],
+                    ["RING 2","Ring of Calming Waves","Hyjal Summit"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","Essence of the Martyr","Badges"],
+                    ["WEAPON","Merciless Gladiator's Salvation","Arena Points"],
+                    ["SHIELD","Merciless Gladiator's Shield Wall","Arena Points"],
+                    ["TOTEM","Totem of the Thunderhead","The Underbog"]
+                ]},
+                3:{name:"Season 3",bis:[
+                    ["HEAD","Vengeful Gladiator's Ringmail Helm","Arena Points"],
+                    ["NECK","Vindicator's Pendant of Salvation","Honor + Marks"],
+                    ["SHOULDER","Vengeful Gladiator's Ringmail Spaulders","Arena Points"],
+                    ["BACK","Kharmaa's Shroud of Hope","Karazhan"],
+                    ["CHEST","Vengeful Gladiator's Ringmail Armor","Arena Points"],
+                    ["WRIST","Vindicator's Ringmail Bracers","Honor + Marks"],
+                    ["HANDS","Vengeful Gladiator's Ringmail Gauntlets","Arena Points"],
+                    ["WAIST","Vindicator's Ringmail Belt","Honor + Marks"],
+                    ["LEGS","Vengeful Gladiator's Ringmail Leggings","Arena Points"],
+                    ["FEET","Vindicator's Ringmail Sabatons","Honor + Marks"],
+                    ["RING 1","Band of the Eternal Restorer","Scale of Sands"],
+                    ["RING 2","Blessed Band of Karabor","Black Temple"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","Memento of Tyrande","Black Temple"],
+                    ["WEAPON","Vengeful Gladiator's Salvation","Arena Points"],
+                    ["SHIELD","Vengeful Gladiator's Redoubt","Arena Points"],
+                    ["TOTEM","Totem of the Thunderhead","The Underbog"]
+                ]},
+                4:{name:"Season 4",bis:[
+                    ["HEAD","Brutal Gladiator's Ringmail Helm","Arena Points"],
+                    ["NECK","Guardian's Pendant of Salvation","Honor + Marks"],
+                    ["SHOULDER","Brutal Gladiator's Ringmail Spaulders","Arena Points"],
+                    ["BACK","Cloak of Swift Reprieve","Badges"],
+                    ["CHEST","Brutal Gladiator's Ringmail Armor","Arena Points"],
+                    ["WRIST","Guardian's Ringmail Bracers","Honor + Marks"],
+                    ["HANDS","Brutal Gladiator's Ringmail Gauntlets","Arena Points"],
+                    ["WAIST","Guardian's Ringmail Belt","Honor + Marks"],
+                    ["LEGS","Brutal Gladiator's Ringmail Leggings","Arena Points"],
+                    ["FEET","Guardian's Ringmail Sabatons","Honor + Marks"],
+                    ["RING 1","Guardian's Band of Salvation","Honor + Marks"],
+                    ["RING 2","Band of the Eternal Restorer","Scale of Sands"],
+                    ["TRINKET 1","Vial of the Sunwell","Magisters Terrace"],
+                    ["TRINKET 2","Medallion of the Horde","Honor"],
+                    ["WEAPON","Brutal Gladiator's Salvation","Arena Points"],
+                    ["SHIELD","Brutal Gladiator's Redoubt","Arena Points"],
+                    ["TOTEM","Brutal Gladiator's Totem of the Third Wind","Arena Points"]
+                ]}
             }
-        };
+        },
+        elemental:{
+            name:"Elemental",
+            talentString:"0/10/51",
+            primaryStats:"Resilience > Spell Power > Hit > Crit > Haste > Stamina",
+            talents:`0/10/51 - ELEMENTAL BUILD
 
-        // Render class content
-        function renderClassContent(className) {
-            const data = classData[className];
-            if (!data) return;
-            
-            let bisTable = data.bis.map(row => {
-                const isEnchant = row[0] === '';
-                const itemClass = isEnchant ? 'enchant' : 'item-quality-epic';
-                return `<tr>
-                    <td>${row[0]}</td>
-                    <td class="${itemClass}">${row[1]}</td>
-                    <td>${row[2]}</td>
-                    <td>${row[3]}</td>
-                </tr>`;
-            }).join('');
+ENHANCEMENT (10 points)
+├─ Elemental Weapons 3/3
+├─ Shamanistic Focus 1/1
+├─ Anticipation 5/5
+└─ Flurry 1/5
 
-            let specs = data.specs.map((spec, i) => 
-                `<span class="spec-tab ${i === 0 ? 'active' : ''}">${spec}</span>`
-            ).join('');
+ELEMENTAL (51 points)
+├─ Convection 5/5
+├─ Concussion 5/5
+├─ Call of Flame 3/3
+├─ Elemental Focus 1/1
+├─ Reverberation 5/5
+├─ Call of Thunder 5/5
+├─ Elemental Fury 5/5
+├─ Unrelenting Storm 3/3
+├─ Elemental Precision 3/3
+├─ Lightning Mastery 5/5
+├─ Elemental Mastery 1/1
+├─ Nature's Swiftness 1/1
+├─ Storm Reach 2/2
+├─ Lightning Overload 5/5
+└─ Totem of Wrath 1/1`,
+            rotation:`DPS: Lightning Bolt spam > Chain Lightning 3+ targets > Flame Shock on CD
+UTILITY: Purge buffs > Frost Shock kite > Earth Shock interrupt
+TOTEMS: Grounding > Tremor > Earthbind > Totem of Wrath
+KEY: Mana conservation > Elemental Mastery timing > NS burst`,
+            macros:`#showtooltip Lightning Bolt
+/cast [mod:shift] Chain Lightning; Lightning Bolt
 
-            let comps2v2 = data.comps2v2.map((comp, i) => 
-                `<div class="stat-line">
-                    <span class="stat-label">${i + 1}. ${comp[0]}</span>
-                    <span class="stat-value">META RATING: ${comp[1]}</span>
-                </div>`
-            ).join('');
+#showtooltip Purge
+/cast [target=focus] Purge
 
-            let comps3v3 = data.comps3v3.map((comp, i) => 
-                `<div class="stat-line">
-                    <span class="stat-label">${i + 1}. ${comp[0]}</span>
-                    <span class="stat-value">META RATING: ${comp[1]}</span>
-                </div>`
-            ).join('');
+/cast Elemental Mastery
+/cast Lightning Bolt
 
-            const html = `
-                <div class="command-line">query: ${className}_pvp_bis --bracket=arena</div>
+/cast Nature's Swiftness
+/cast Lightning Bolt`,
+            phases:{
+                1:{name:"Season 1",bis:[
+                    ["HEAD","Gladiator's Mail Helm","Arena Points"],
+                    ["NECK","Adornment of Stolen Souls","Karazhan"],
+                    ["SHOULDER","Gladiator's Mail Spaulders","Arena Points"],
+                    ["BACK","Sergeant's Heavy Cape","Honor"],
+                    ["CHEST","Gladiator's Mail Armor","Arena Points"],
+                    ["WRIST","General's Mail Bracers","Honor + Marks"],
+                    ["HANDS","Gladiator's Mail Gauntlets","Arena Points"],
+                    ["WAIST","General's Mail Girdle","Honor + Marks"],
+                    ["LEGS","Gladiator's Mail Leggings","Arena Points"],
+                    ["FEET","General's Mail Sabatons","Honor + Marks"],
+                    ["RING 1","Ring of Unrelenting Storms","Karazhan"],
+                    ["RING 2","Band of Crimson Fury","Magtheridon"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","The Lightning Capacitor","Karazhan"],
+                    ["WEAPON","Gladiator's Gavel","Arena Points"],
+                    ["OFF-HAND","Gladiator's Barrier","Arena Points"],
+                    ["TOTEM","Totem of the Void","Cache of the Legion"]
+                ]},
+                2:{name:"Season 2",bis:[
+                    ["HEAD","Merciless Gladiator's Mail Helm","Arena Points"],
+                    ["NECK","Pendant of the Lost Ages","Serpentshrine Cavern"],
+                    ["SHOULDER","Merciless Gladiator's Mail Spaulders","Arena Points"],
+                    ["BACK","Brute Cloak of the Ogre-Magi","Gruul's Lair"],
+                    ["CHEST","Merciless Gladiator's Mail Armor","Arena Points"],
+                    ["WRIST","Veteran's Mail Bracers","Honor + Marks"],
+                    ["HANDS","Merciless Gladiator's Mail Gauntlets","Arena Points"],
+                    ["WAIST","Netherstrike Belt","Dragonscale Leatherworking"],
+                    ["LEGS","Merciless Gladiator's Mail Leggings","Arena Points"],
+                    ["FEET","Veteran's Mail Sabatons","Honor + Marks"],
+                    ["RING 1","The Seal of Danzalar","Serpentshrine Cavern"],
+                    ["RING 2","Band of Crimson Fury","Magtheridon"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","Icon of the Silver Crescent","Badges"],
+                    ["WEAPON","Merciless Gladiator's Gavel","Arena Points"],
+                    ["OFF-HAND","Dragonheart Flameshield","Karazhan"],
+                    ["TOTEM","Totem of the Void","Cache of the Legion"]
+                ]},
+                3:{name:"Season 3",bis:[
+                    ["HEAD","Vengeful Gladiator's Mail Helm","Arena Points"],
+                    ["NECK","Pendant of the Lost Ages","Serpentshrine Cavern"],
+                    ["SHOULDER","Vengeful Gladiator's Mail Spaulders","Arena Points"],
+                    ["BACK","Cloak of the Illidari Council","Black Temple"],
+                    ["CHEST","Vengeful Gladiator's Mail Armor / Netherstrike Breastplate","Arena / Dragonscale"],
+                    ["WRIST","Vindicator's Mail Bracers / Netherstrike Bracers","Honor / Dragonscale"],
+                    ["HANDS","Vengeful Gladiator's Mail Gauntlets","Arena Points"],
+                    ["WAIST","Flashfire Girdle / Netherstrike Belt","Black Temple / Dragonscale"],
+                    ["LEGS","Vengeful Gladiator's Mail Leggings","Arena Points"],
+                    ["FEET","Vindicator's Mail Sabatons","Honor + Marks"],
+                    ["RING 1","The Seal of Danzalar","Serpentshrine Cavern"],
+                    ["RING 2","Ring of Ancient Knowledge","Black Temple"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","Hex Shrunken Head / Icon of the Silver Crescent","Zul'Aman / Badges"],
+                    ["WEAPON","Vengeful Gladiator's Gavel / The Maelstrom's Fury","Arena / Black Temple"],
+                    ["OFF-HAND","Antonidas's Aegis of Rapt Concentration","Hyjal Summit"],
+                    ["TOTEM","Totem of Ancestral Guidance","Black Temple"]
+                ]},
+                4:{name:"Season 4",bis:[
+                    ["HEAD","Brutal Gladiator's Mail Helm","Arena Points"],
+                    ["NECK","Guardian's Pendant of Dominance","Honor + Marks"],
+                    ["SHOULDER","Brutal Gladiator's Mail Spaulders","Arena Points"],
+                    ["BACK","Cloak of Arcane Alacrity","Badges"],
+                    ["CHEST","Brutal Gladiator's Mail Armor","Arena Points"],
+                    ["WRIST","Guardian's Mail Bracers","Honor + Marks"],
+                    ["HANDS","Brutal Gladiator's Mail Gauntlets","Arena Points"],
+                    ["WAIST","Skyshatter Cord / Guardian's Mail Girdle","Sunwell / Honor"],
+                    ["LEGS","Brutal Gladiator's Mail Leggings","Arena Points"],
+                    ["FEET","Guardian's Mail Sabatons","Honor + Marks"],
+                    ["RING 1","Ring of Ancient Knowledge","Black Temple"],
+                    ["RING 2","Guardian's Band of Dominance","Honor + Marks"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","Hex Shrunken Head","Zul'Aman"],
+                    ["WEAPON","Brutal Gladiator's Gavel","Arena Points"],
+                    ["OFF-HAND","Brutal Gladiator's Barrier","Arena Points"],
+                    ["TOTEM","Totem of Ancestral Guidance","Black Temple"]
+                ]}
+            }
+        },
+        enhancement:{
+            name:"Enhancement",
+            talentString:"41/20/0",
+            primaryStats:"Resilience > Hit (9%) > Agility > Crit > AP > Stamina",
+            talents:`41/20/0 - ENHANCEMENT BUILD
 
-                <div class="section">
-                    <h2>[ ${data.title} ]</h2>
-                    
-                    <div class="bracket-selector">
-                        <button class="bracket-btn active">2v2</button>
-                        <button class="bracket-btn">3v3</button>
-                        <button class="bracket-btn">5v5</button>
-                        <button class="bracket-btn">BG</button>
-                    </div>
+ENHANCEMENT (41 points)
+├─ Ancestral Knowledge 5/5
+├─ Shield Specialization 3/3
+├─ Elemental Weapons 3/3
+├─ Shamanistic Focus 1/1
+├─ Anticipation 5/5
+├─ Flurry 5/5
+├─ Spirit Weapons 1/1
+├─ Mental Dexterity 3/3
+├─ Unleashed Rage 1/1
+├─ Weapon Mastery 5/5
+├─ Dual Wield Specialization 3/3
+├─ Stormstrike 1/1
+├─ Mental Quickness 3/3
+└─ Shamanistic Rage 1/1
 
-                    <div class="meta-info">
-                        ⚠ META TIER: ${data.metaTier}
-                        <br>PRIMARY STATS: ${data.primaryStats}
-                    </div>
+RESTORATION (20 points)
+├─ Improved Healing Wave 3/3
+├─ Tidal Focus 5/5
+├─ Healing Focus 3/3
+├─ Totemic Focus 5/5
+├─ Nature's Swiftness 1/1
+└─ Mana Tide Totem 1/1`,
+            rotation:`OPENER: Stormstrike > Earth Shock > Flame Shock > autoattack
+DPS: Stormstrike on CD > Shock weave > Windfury procs
+UTILITY: Purge spam > Frost Shock kite > Shamanistic Rage mana
+KEY: Shock weaving > Windfury timing > Totem twisting`,
+            macros:`#showtooltip Stormstrike
+/cast Stormstrike
+/cast Flame Shock
 
-                    <h3>[ SPEC SELECTION ]</h3>
-                    <div style="margin: 10px 0;">
-                        ${specs}
-                    </div>
-                    
-                    <h3>[ BEST IN SLOT - SEASON 4 ]</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>SLOT</th>
-                                <th>ITEM</th>
-                                <th>SOURCE</th>
-                                <th>STATS</th>
-                            </tr>
-                        </thead>
-                        <tbody>${bisTable}</tbody>
-                    </table>
-                </div>
+#showtooltip Purge
+/cast [target=focus,mod:shift] Purge; Purge
 
-                <div class="section">
-                    <h2>[ TALENT BUILD ]</h2>
-                    <div class="talent-tree">${data.talents}</div>
-                </div>
+/cast Shamanistic Rage
 
-                <div class="section">
-                    <h2>[ TOP ARENA COMPOSITIONS ]</h2>
-                    
-                    <h3>2V2 COMPS</h3>
-                    ${comps2v2}
-
-                    <h3>3V3 COMPS</h3>
-                    ${comps3v3}
-                </div>
-
-                <div class="section">
-                    <h2>[ ROTATION & PRIORITIES ]</h2>
-                    
-                    <div class="meta-info">
-                        ${data.rotation}
-                    </div>
-
-                    <h3>[ MACRO SETUP ]</h3>
-                    <div class="talent-tree">${data.macros}</div>
-                </div>
-            `;
-            
-            mainContent.style.opacity = '0.3';
-            setTimeout(() => {
-                mainContent.innerHTML = html;
-                mainContent.style.opacity = '1';
-                
-                // Re-attach bracket button listeners
-                const bracketBtns = document.querySelectorAll('.bracket-btn');
-                bracketBtns.forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        bracketBtns.forEach(b => b.classList.remove('active'));
-                        this.classList.add('active');
-                    });
-                });
-
-                // Re-attach spec tab listeners
-                const specTabs = document.querySelectorAll('.spec-tab');
-                specTabs.forEach(tab => {
-                    tab.addEventListener('click', function() {
-                        specTabs.forEach(t => t.classList.remove('active'));
-                        this.classList.add('active');
-                    });
-                });
-            }, 200);
+/cast Nature's Swiftness
+/cast Healing Wave`,
+            phases:{
+                1:{name:"Season 1",bis:[
+                    ["HEAD","Gladiator's Linked Helm","Arena Points"],
+                    ["NECK","Pendant of the Perilous","Serpentshrine Cavern"],
+                    ["SHOULDER","Gladiator's Linked Spaulders","Arena Points"],
+                    ["BACK","Sergeant's Heavy Cloak","Honor"],
+                    ["CHEST","Gladiator's Linked Armor","Arena Points"],
+                    ["WRIST","General's Linked Bracers","Honor + Marks"],
+                    ["HANDS","Gladiator's Linked Gauntlets","Arena Points"],
+                    ["WAIST","General's Linked Girdle","Honor + Marks"],
+                    ["LEGS","Gladiator's Linked Leggings","Arena Points"],
+                    ["FEET","General's Linked Sabatons","Honor + Marks"],
+                    ["RING 1","Ring of a Thousand Marks","Karazhan"],
+                    ["RING 2","Ring of the Recalcitrant","Magtheridon"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","Dragonspine Trophy","Gruul's Lair"],
+                    ["WEAPON","Gladiator's Cleaver","Arena Points"],
+                    ["SHIELD","Gladiator's Shield Wall","Arena Points"],
+                    ["TOTEM","Totem of the Astral Winds","Heroic Mana Tombs"]
+                ]},
+                2:{name:"Season 2",bis:[
+                    ["HEAD","Merciless Gladiator's Linked Helm","Arena Points"],
+                    ["NECK","Telonicus's Pendant of Mayhem","Tempest Keep"],
+                    ["SHOULDER","Merciless Gladiator's Linked Spaulders","Arena Points"],
+                    ["BACK","Razor-Scale Battlecloak","Serpentshrine Cavern"],
+                    ["CHEST","Merciless Gladiator's Linked Armor","Arena Points"],
+                    ["WRIST","Veteran's Linked Bracers","Honor + Marks"],
+                    ["HANDS","Merciless Gladiator's Linked Gauntlets","Arena Points"],
+                    ["WAIST","Veteran's Linked Girdle","Honor + Marks"],
+                    ["LEGS","Merciless Gladiator's Linked Leggings / Cataclysm Legplates","Arena / SSC"],
+                    ["FEET","Veteran's Linked Sabatons","Honor + Marks"],
+                    ["RING 1","Ancestral Ring of Conquest","Serpentshrine Cavern"],
+                    ["RING 2","Ring of Lethality","Serpentshrine Cavern"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","Tsunami Talisman / Dragonspine Trophy","SSC / Gruul"],
+                    ["WEAPON","Merciless Gladiator's Cleaver / Rod of the Sun King","Arena / Tempest"],
+                    ["SHIELD","Merciless Gladiator's Shield Wall","Arena Points"],
+                    ["TOTEM","Totem of the Astral Winds","Heroic Mana Tombs"]
+                ]},
+                3:{name:"Season 3",bis:[
+                    ["HEAD","Vengeful Gladiator's Linked Helm","Arena Points"],
+                    ["NECK","Telonicus's Pendant of Mayhem","Tempest Keep"],
+                    ["SHOULDER","Vengeful Gladiator's Linked Spaulders","Arena Points"],
+                    ["BACK","Shadowmoon Destroyer's Drape","Black Temple"],
+                    ["CHEST","Vengeful Gladiator's Linked Armor","Arena Points"],
+                    ["WRIST","Vindicator's Linked Bracers","Honor + Marks"],
+                    ["HANDS","Vengeful Gladiator's Linked Gauntlets","Arena Points"],
+                    ["WAIST","Vindicator's Linked Girdle","Honor + Marks"],
+                    ["LEGS","Vengeful Gladiator's Linked Leggings","Arena Points"],
+                    ["FEET","Vindicator's Linked Sabatons","Honor + Marks"],
+                    ["RING 1","Stormrage Signet Ring","Black Temple"],
+                    ["RING 2","Band of the Ranger-General / Signet of Primal Wrath","Tempest / Zul'Aman"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","Madness of the Betrayer / Berserker's Call","Black Temple / Zul'Aman"],
+                    ["WEAPON","Vengeful Gladiator's Cleaver / Syphon of the Nathrezim","Arena / Black Temple"],
+                    ["SHIELD","Vengeful Gladiator's Shield Wall","Arena Points"],
+                    ["TOTEM","Stonebreaker's Totem","Badges"]
+                ]},
+                4:{name:"Season 4",bis:[
+                    ["HEAD","Brutal Gladiator's Linked Helm","Arena Points"],
+                    ["NECK","Guardian's Pendant of Triumph","Honor + Marks"],
+                    ["SHOULDER","Brutal Gladiator's Linked Spaulders","Arena Points"],
+                    ["BACK","Dory's Embrace","Badges"],
+                    ["CHEST","Brutal Gladiator's Linked Armor","Arena Points"],
+                    ["WRIST","Guardian's Linked Bracers","Honor + Marks"],
+                    ["HANDS","Brutal Gladiator's Linked Gauntlets","Arena Points"],
+                    ["WAIST","Guardian's Linked Girdle","Honor + Marks"],
+                    ["LEGS","Brutal Gladiator's Linked Leggings","Arena Points"],
+                    ["FEET","Guardian's Linked Sabatons","Honor + Marks"],
+                    ["RING 1","Band of Ruinous Delight","Sunwell"],
+                    ["RING 2","Guardian's Band of Triumph","Honor + Marks"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","Battlemaster's Determination / Berserker's Call","Honor / Zul'Aman"],
+                    ["WEAPON","Brutal Gladiator's Cleaver / Talon of the Phoenix","Arena / Tempest"],
+                    ["SHIELD","Brutal Gladiator's Shield Wall","Arena Points"],
+                    ["TOTEM","Stonebreaker's Totem","Badges"]
+                ]}
+            }
         }
+    }
+},
 
-        // Hash navigation
-        window.addEventListener('hashchange', function() {
-            const hash = window.location.hash.slice(1); // Remove the #
-            
-            // Check for special pages first
-            if (hash === 'comps') {
-                showComps();
-                return;
+druid:{
+    title:"DRUID",
+    defaultSpec:"feral",
+    specs:{
+        feral:{
+            name:"Feral",
+            talentString:"0/47/14",
+            primaryStats:"Resilience > Agility > Stamina > Crit > AP",
+            talents:`0/47/14 - FERAL BUILD
+
+FERAL (47 points)
+├─ Ferocity 5/5
+├─ Feral Instinct 3/3
+├─ Thick Hide 3/3
+├─ Feral Swiftness 2/2
+├─ Sharpened Claws 3/3
+├─ Predatory Strikes 3/3
+├─ Primal Fury 2/2
+├─ Savage Fury 2/2
+├─ Feral Charge 1/1
+├─ Heart of the Wild 5/5
+├─ Survival of the Fittest 3/3
+├─ Leader of the Pack 1/1
+├─ Improved LoTP 2/2
+├─ Predatory Instincts 5/5
+├─ Mangle 1/1
+├─ Improved Mangle 3/3
+└─ Primal Tenacity 3/3
+
+RESTORATION (14 points)
+├─ Furor 5/5
+├─ Naturalist 5/5
+├─ Natural Shapeshifter 3/3
+└─ Intensity 1/3`,
+            rotation:`OPENER: Pounce > Mangle > Shred > Rip
+PRESSURE: Mangle on CD > Shred > Rip at 5 CP
+CONTROL: Cyclone > Root > Bear Form tank
+KEY: Energy pooling > Combo point management > Form dance`,
+            macros:`#showtooltip Mangle (Cat)
+/cast Mangle (Cat)
+/startattack
+
+#showtooltip Cyclone
+/cast [target=focus,mod:shift] Cyclone; Cyclone
+
+/cast [stance:1] Cat Form; [stance:0] Dire Bear Form
+
+#showtooltip Feral Charge
+/cast [stance:1] Feral Charge; [stance:0] Feral Charge - Bear`,
+            phases:{
+                1:{name:"Season 1",bis:[
+                    ["HEAD","Gladiator's Dragonhide Helm","Arena Points"],
+                    ["NECK","Worgen Claw Necklace","Karazhan"],
+                    ["SHOULDER","Gladiator's Dragonhide Spaulders","Arena Points"],
+                    ["BACK","Sergeant's Heavy Cloak","PvP Vendor"],
+                    ["CHEST","Gladiator's Dragonhide Tunic","Arena Points"],
+                    ["WRIST","Bracers of Maliciousness","Karazhan"],
+                    ["HANDS","Gladiator's Dragonhide Gloves","Arena Points"],
+                    ["WAIST","General's Dragonhide Belt","Honor + Marks"],
+                    ["LEGS","Gladiator's Dragonhide Legguards","Arena Points"],
+                    ["FEET","Nyn'jah's Tabi Boots","Badges"],
+                    ["RING 1","Garona's Signet Ring","Karazhan"],
+                    ["RING 2","Ring of the Recalcitrant","Magtheridon"],
+                    ["TRINKET 1","Bloodlust Brooch","Badges"],
+                    ["TRINKET 2","Medallion of the Horde","Honor"],
+                    ["WEAPON","Terestian's Stranglestaff","Karazhan"],
+                    ["RELIC","Idol of the Raven Goddess","Sethekk Halls"]
+                ]},
+                2:{name:"Season 2",bis:[
+                    ["HEAD","Merciless Gladiator's Dragonhide Helm","Arena Points"],
+                    ["NECK","Telonicus's Pendant of Mayhem","Tempest Keep"],
+                    ["SHOULDER","Merciless Gladiator's Dragonhide Spaulders","Arena Points"],
+                    ["BACK","Thalassian Wildercloak","Tempest Keep"],
+                    ["CHEST","Merciless Gladiator's Dragonhide Tunic","Arena Points"],
+                    ["WRIST","Veteran's Dragonhide Bracers","Honor + Marks"],
+                    ["HANDS","Merciless Gladiator's Dragonhide Gloves","Arena Points"],
+                    ["WAIST","Veteran's Dragonhide Belt","Honor + Marks"],
+                    ["LEGS","Nordrassil Feral-Kilt","SSC"],
+                    ["FEET","Boots of Natural Grace","Leatherworking"],
+                    ["RING 1","Ancestral Ring of Conquest","SSC"],
+                    ["RING 2","Band of the Ranger-General","Tempest Keep"],
+                    ["TRINKET 1","Bloodlust Brooch","Badges"],
+                    ["TRINKET 2","Medallion of the Horde","Honor"],
+                    ["WEAPON","Merciless Gladiator's Staff","Arena Points"],
+                    ["RELIC","Everbloom Idol","Badges"]
+                ]},
+                3:{name:"Season 3",bis:[
+                    ["HEAD","Vengeful Gladiator's Dragonhide Helm","Arena Points"],
+                    ["NECK","Telonicus's Pendant of Mayhem","Tempest Keep"],
+                    ["SHOULDER","Vengeful Gladiator's Dragonhide Spaulders","Arena Points"],
+                    ["BACK","Dory's Embrace","Badges"],
+                    ["CHEST","Vengeful Gladiator's Dragonhide Tunic","Arena Points"],
+                    ["WRIST","Vindicator's Dragonhide Bracers","Honor + Marks"],
+                    ["HANDS","Vengeful Gladiator's Dragonhide Gloves","Arena Points"],
+                    ["WAIST","Vindicator's Dragonhide Belt","Honor + Marks"],
+                    ["LEGS","Nordrassil Feral-Kilt","SSC"],
+                    ["FEET","Boots of Natural Grace","Leatherworking"],
+                    ["RING 1","Stormrage Signet Ring","Black Temple"],
+                    ["RING 2","The 2 Ring","Fishing Daily"],
+                    ["TRINKET 1","Madness of the Betrayer","Black Temple"],
+                    ["TRINKET 2","Medallion of the Horde","Honor"],
+                    ["WEAPON","Vengeful Gladiator's Staff","Arena Points"],
+                    ["RELIC","Idol of the Raven Goddess","Sethekk Halls"]
+                ]},
+                4:{name:"Season 4",bis:[
+                    ["HEAD","Brutal Gladiator's Dragonhide Helm","Arena Points"],
+                    ["NECK","Telonicus's Pendant of Mayhem","Tempest Keep"],
+                    ["SHOULDER","Brutal Gladiator's Dragonhide Spaulders","Arena Points"],
+                    ["BACK","Dory's Embrace","Badges"],
+                    ["CHEST","Brutal Gladiator's Dragonhide Tunic","Arena Points"],
+                    ["WRIST","Guardian's Dragonhide Bracers","Honor + Marks"],
+                    ["HANDS","Brutal Gladiator's Dragonhide Gloves","Arena Points"],
+                    ["WAIST","Guardian's Dragonhide Belt","Honor + Marks"],
+                    ["LEGS","Brutal Gladiator's Dragonhide Legguards","Arena Points"],
+                    ["FEET","Guardian's Leather Boots","Honor + Marks"],
+                    ["RING 1","Stormrage Signet Ring","Black Temple"],
+                    ["RING 2","The 2 Ring","Fishing Daily"],
+                    ["TRINKET 1","Madness of the Betrayer","Black Temple"],
+                    ["TRINKET 2","Battlemaster's Cruelty","Honor + Marks"],
+                    ["WEAPON","Brutal Gladiator's Staff","Arena Points"],
+                    ["RELIC","Idol of the White Stag","Black Temple"]
+                ]}
             }
-            
-            if (hash === 'classes' || hash === '') {
-                // Show default warrior class
-                renderClassContent('warrior');
-                document.querySelectorAll('.class-list li').forEach(li => {
-                    li.classList.remove('active');
-                    if (li.dataset.class === 'warrior') {
-                        li.classList.add('active');
-                    }
-                });
-                return;
+        },
+        restoration:{
+            name:"Restoration",
+            talentString:"8/11/42",
+            primaryStats:"Resilience > Spell Haste > +Healing > Stamina > Int",
+            talents:`8/11/42 - DREAMSTATE BUILD
+
+BALANCE (8 points)
+├─ Starlight Wrath 5/5
+├─ Nature's Grasp 1/1
+└─ Control of Nature 2/3
+
+FERAL (11 points)
+├─ Ferocity 5/5
+├─ Feral Instinct 3/3
+└─ Thick Hide 3/3
+
+RESTORATION (42 points)
+├─ Improved MotW 5/5
+├─ Furor 5/5
+├─ Naturalist 5/5
+├─ Natural Shapeshifter 3/3
+├─ Intensity 3/3
+├─ Subtlety 5/5
+├─ Omen of Clarity 1/1
+├─ Tranquil Spirit 5/5
+├─ Improved Rejuvenation 3/3
+├─ Nature's Swiftness 1/1
+├─ Gift of Nature 5/5
+└─ Swiftmend 1/1`,
+            rotation:`HEALING: HoT Stack (LB x3 + Rejuv + Regrowth) > Swiftmend
+OFFENSE: Cyclone on DPS > Root melee > Moonfire DoT
+UTILITY: Abolish Poison > NS + HT macro > Feral Charge
+KEY: HoT management > Cyclone chains > Form shifting`,
+            macros:`#showtooltip Cyclone
+/cast [target=focus,mod:shift] Cyclone; Cyclone
+
+/cast [target=mouseover,exists] Lifebloom; Lifebloom
+
+/cast [target=party1] Swiftmend
+
+/cancelform
+/cast Nature's Swiftness`,
+            phases:{
+                1:{name:"Season 1",bis:[
+                    ["HEAD","Gladiator's Kodohide Helm","Arena Points"],
+                    ["NECK","Pendant of Salvation","Honor"],
+                    ["SHOULDER","Gladiator's Kodohide Spaulders","Arena Points"],
+                    ["BACK","Stainless Cloak of the Pure Hearted","Karazhan"],
+                    ["CHEST","Gladiator's Kodohide Tunic","Arena Points"],
+                    ["WRIST","General's Kodohide Bracers","Honor + Marks"],
+                    ["HANDS","Gladiator's Kodohide Gloves","Arena Points"],
+                    ["WAIST","General's Kodohide Belt","Honor + Marks"],
+                    ["LEGS","Earthsoul Leggings","Karazhan"],
+                    ["FEET","General's Kodohide Boots","Honor + Marks"],
+                    ["RING 1","Mender's Heart-Ring","Karazhan"],
+                    ["RING 2","Violet Signet of the Grand Restorer","Violet Eye"],
+                    ["TRINKET 1","Essence of the Martyr","Badges"],
+                    ["TRINKET 2","Medallion of the Horde","Honor"],
+                    ["WEAPON","Gladiator's Salvation","Arena Points"],
+                    ["OFF HAND","Gladiator's Reprieve","Arena Points"],
+                    ["RELIC","Idol of the Emerald Queen","Shadow Labyrinth"]
+                ]},
+                2:{name:"Season 2",bis:[
+                    ["HEAD","Merciless Gladiator's Kodohide Helm","Arena Points"],
+                    ["NECK","Veteran's Pendant of Salvation","Honor + Marks"],
+                    ["SHOULDER","Merciless Gladiator's Kodohide Spaulders","Arena Points"],
+                    ["BACK","Sunshower Light Cloak","Tempest Keep"],
+                    ["CHEST","Merciless Gladiator's Kodohide Tunic","Arena Points"],
+                    ["WRIST","Veteran's Kodohide Bracers","Honor + Marks"],
+                    ["HANDS","Merciless Gladiator's Kodohide Gloves","Arena Points"],
+                    ["WAIST","Veteran's Kodohide Belt","Honor + Marks"],
+                    ["LEGS","Merciless Gladiator's Kodohide Legguards","Arena Points"],
+                    ["FEET","Veteran's Kodohide Boots","Honor + Marks"],
+                    ["RING 1","Coral Band of the Revived","SSC"],
+                    ["RING 2","Veteran's Band of Salvation","Honor + Marks"],
+                    ["TRINKET 1","Bangle of Endless Blessings","Botanica"],
+                    ["TRINKET 2","Medallion of the Horde","Honor"],
+                    ["WEAPON","Merciless Gladiator's Salvation","Arena Points"],
+                    ["OFF HAND","Merciless Gladiator's Reprieve","Arena Points"],
+                    ["RELIC","Idol of the Emerald Queen","Shadow Labyrinth"]
+                ]},
+                3:{name:"Season 3",bis:[
+                    ["HEAD","Vengeful Gladiator's Kodohide Helm","Arena Points"],
+                    ["NECK","Vindicator's Pendant of Salvation","Honor + Marks"],
+                    ["SHOULDER","Vengeful Gladiator's Kodohide Spaulders","Arena Points"],
+                    ["BACK","Cloak of Swift Reprieve","Badges"],
+                    ["CHEST","Vengeful Gladiator's Kodohide Tunic","Arena Points"],
+                    ["WRIST","Vindicator's Kodohide Bracers","Honor + Marks"],
+                    ["HANDS","Vengeful Gladiator's Kodohide Gloves","Arena Points"],
+                    ["WAIST","Vindicator's Kodohide Belt","Honor + Marks"],
+                    ["LEGS","Vengeful Gladiator's Kodohide Legguards","Arena Points"],
+                    ["FEET","Vindicator's Kodohide Boots","Honor + Marks"],
+                    ["RING 1","Blessed Band of Karabor","Black Temple"],
+                    ["RING 2","Vindicator's Band of Salvation","Honor + Marks"],
+                    ["TRINKET 1","Memento of Tyrande","Black Temple"],
+                    ["TRINKET 2","Medallion of the Horde","Honor"],
+                    ["WEAPON","Vengeful Gladiator's Salvation","Arena Points"],
+                    ["OFF HAND","Vengeful Gladiator's Reprieve","Arena Points"],
+                    ["RELIC","Idol of the Emerald Queen","Shadow Labyrinth"]
+                ]},
+                4:{name:"Season 4",bis:[
+                    ["HEAD","Brutal Gladiator's Kodohide Helm","Arena Points"],
+                    ["NECK","Guardian's Pendant of Salvation","Honor + Marks"],
+                    ["SHOULDER","Brutal Gladiator's Kodohide Spaulders","Arena Points"],
+                    ["BACK","Cloak of Swift Reprieve","Badges"],
+                    ["CHEST","Brutal Gladiator's Kodohide Tunic","Arena Points"],
+                    ["WRIST","Guardian's Kodohide Bracers","Honor + Marks"],
+                    ["HANDS","Brutal Gladiator's Kodohide Gloves","Arena Points"],
+                    ["WAIST","Guardian's Kodohide Belt","Honor + Marks"],
+                    ["LEGS","Brutal Gladiator's Kodohide Legguards","Arena Points"],
+                    ["FEET","Guardian's Kodohide Boots","Honor + Marks"],
+                    ["RING 1","Band of the Eternal Restorer","Scale of Sands"],
+                    ["RING 2","Guardian's Band of Salvation","Honor + Marks"],
+                    ["TRINKET 1","Medallion of the Horde","Honor"],
+                    ["TRINKET 2","Battlemaster's Perseverance","Honor + Marks"],
+                    ["WEAPON","Brutal Gladiator's Salvation","Arena Points"],
+                    ["OFF HAND","Brutal Gladiator's Reprieve","Arena Points"],
+                    ["RELIC","Idol of the Emerald Queen","Shadow Labyrinth"]
+                ]}
             }
-            
-            if (classData[hash]) {
-                // It's a class name
-                renderClassContent(hash);
-                
-                // Update active class in sidebar
-                document.querySelectorAll('.class-list li').forEach(li => {
-                    li.classList.remove('active');
-                    if (li.dataset.class === hash) {
-                        li.classList.add('active');
-                    }
-                });
-            }
-        });
-
-        // Comps page function
-        function showComps() {
-            const html = `
-                <div class="command-line">query: arena_comps --bracket=all</div>
-
-                <div class="section">
-                    <h2>[ ARENA COMPOSITIONS DATABASE ]</h2>
-                    
-                    <div class="bracket-selector">
-                        <button class="bracket-btn active">2v2</button>
-                        <button class="bracket-btn">3v3</button>
-                        <button class="bracket-btn">5v5</button>
-                    </div>
-
-                    <div class="meta-info">
-                        ⚠ COMPREHENSIVE COMP GUIDE - All viable team compositions for TBC Season 4
-                        <br>Filter by bracket, tier, or class to find your perfect team
-                    </div>
-
-                    <h3>[ TOP S-TIER COMPOSITIONS ]</h3>
-                    
-                    <div class="stat-line">
-                        <span class="stat-label">RMP (Rogue/Mage/Priest)</span>
-                        <span class="stat-value">RATING: 10/10</span>
-                    </div>
-                    <div class="stat-line">
-                        <span class="stat-label">Beast Cleave (War/Hunt/Druid)</span>
-                        <span class="stat-value">RATING: 9.8/10</span>
-                    </div>
-                    <div class="stat-line">
-                        <span class="stat-label">WLD (War/Lock/Druid)</span>
-                        <span class="stat-value">RATING: 9.5/10</span>
-                    </div>
-                    <div class="stat-line">
-                        <span class="stat-label">MLD (Mage/Lock/Druid)</span>
-                        <span class="stat-value">RATING: 9.5/10</span>
-                    </div>
-                    <div class="stat-line">
-                        <span class="stat-label">TSG (War/DK/Pal)</span>
-                        <span class="stat-value">RATING: 9.5/10</span>
-                    </div>
-
-                    <h3>[ FULL DATABASE COMING SOON ]</h3>
-                    <p style="color: var(--text-dim); margin: 20px 0;">
-                        Complete arena compositions database with detailed strategies, counters, and matchup analysis in development.
-                    </p>
-                </div>
-            `;
-            
-            mainContent.style.opacity = '0.3';
-            setTimeout(() => {
-                mainContent.innerHTML = html;
-                mainContent.style.opacity = '1';
-                
-                // Remove active from class list
-                document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
-                
-                // Re-attach bracket button listeners
-                const bracketBtns = document.querySelectorAll('.bracket-btn');
-                bracketBtns.forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        bracketBtns.forEach(b => b.classList.remove('active'));
-                        this.classList.add('active');
-                    });
-                });
-            }, 200);
         }
+    }
+}
+};
 
-        // Sidebar click handler
-        const classList = document.querySelectorAll('.class-list li');
-        classList.forEach(item => {
-            item.addEventListener('click', function() {
-                const className = this.dataset.class;
-                window.location.hash = className; // This triggers hashchange
+function renderClassContent(className){
+    const data=classData[className];
+    if(!data)return;
+
+    currentClass=className;
+    if(!currentSpec||!data.specs[currentSpec]){
+        currentSpec=data.defaultSpec;
+    }
+
+    const specData=data.specs[currentSpec];
+    if(!specData)return;
+
+    if(!specData.phases[currentPhase]){
+        currentPhase=Object.keys(specData.phases)[0];
+    }
+
+    let phaseData=specData.phases[currentPhase];
+
+    let phaseButtons=Object.keys(specData.phases).map(p=>`<button class="phase-btn ${p==currentPhase?'active':''}" data-phase="${p}">${specData.phases[p].name}</button>`).join('');
+
+    let bisTable=phaseData.bis.map(row=>{
+        const itemName=row[1];
+        return `<tr><td>${row[0]}</td><td class="item-quality-epic"><span data-item-name="${itemName}">${itemName}</span></td><td>${row[2]}</td></tr>`;
+    }).join('');
+
+    let specs=Object.entries(data.specs).map(([key,spec])=>`<span class="spec-tab ${key===currentSpec?'active':''}" data-spec="${key}">${spec.name} (${spec.talentString})</span>`).join('');
+
+    const html=`
+        <div class="command-line">query: ${className}_pvp_bis --spec=${currentSpec} --phase=${currentPhase}</div>
+        <div class="section">
+            <h2>[ ${data.title} // ${specData.name.toUpperCase()} PVP ]</h2>
+            <div class="meta-info">
+                PRIMARY STATS: ${specData.primaryStats}
+            </div>
+            <h3>[ SPEC SELECTION ]</h3>
+            <div style="margin:10px 0">${specs}</div>
+            <h3>[ PHASE SELECTOR ]</h3>
+            <div class="phase-selector">${phaseButtons}</div>
+            <h3 id="bis-header">[ BEST IN SLOT - ${phaseData.name} ]</h3>
+            <table>
+                <thead><tr><th>SLOT</th><th>ITEM</th><th>SOURCE</th></tr></thead>
+                <tbody id="bis-table">${bisTable}</tbody>
+            </table>
+        </div>
+        <div class="section">
+            <h2>[ TALENT BUILD ]</h2>
+            <div class="talent-tree">${specData.talents}</div>
+        </div>
+        <div class="section">
+            <h2>[ ROTATION & PRIORITIES ]</h2>
+            <div class="meta-info">${specData.rotation}</div>
+            <h3>[ MACRO SETUP ]</h3>
+            <div class="talent-tree">${specData.macros}</div>
+        </div>
+    `;
+
+    const mainContent=document.getElementById('main-content');
+    mainContent.style.opacity='0.3';
+    setTimeout(()=>{
+        mainContent.innerHTML=html;
+        mainContent.style.opacity='1';
+        processItemLinks();
+
+        document.querySelectorAll('.phase-btn').forEach(btn=>{
+            btn.addEventListener('click',function(){
+                document.querySelectorAll('.phase-btn').forEach(b=>b.classList.remove('active'));
+                this.classList.add('active');
+                const phase=parseInt(this.getAttribute('data-phase'));
+                currentPhase=phase;
+                const pd=specData.phases[phase];
+                document.getElementById('bis-header').textContent=`[ BEST IN SLOT - ${pd.name} ]`;
+                const newBis=pd.bis.map(row=>{
+                    const itemName=row[1];
+                    return `<tr><td>${row[0]}</td><td class="item-quality-epic"><span data-item-name="${itemName}">${itemName}</span></td><td>${row[2]}</td></tr>`;
+                }).join('');
+                document.getElementById('bis-table').innerHTML=newBis;
+                processItemLinks();
             });
         });
 
-        // Load warrior on page load
-        window.addEventListener('DOMContentLoaded', function() {
-            renderClassContent('warrior');
+        document.querySelectorAll('.spec-tab').forEach(tab=>{
+            tab.addEventListener('click',function(){
+                const newSpec=this.getAttribute('data-spec');
+                if(newSpec!==currentSpec){
+                    currentSpec=newSpec;
+                    renderClassContent(currentClass);
+                }
+            });
         });
+    },200);
+}
+
+document.querySelectorAll('.class-list li').forEach(item=>{
+    item.addEventListener('click',function(){
+        document.querySelectorAll('.class-list li').forEach(li=>li.classList.remove('active'));
+        this.classList.add('active');
+        renderClassContent(this.dataset.class);
+    });
+});
+
+window.addEventListener('DOMContentLoaded',()=>renderClassContent('warrior'));
     </script>
 </body>
 </html>
