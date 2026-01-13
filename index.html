@@ -37,9 +37,15 @@
         .stat-line{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dotted var(--text-dim)}
         .stat-label{color:var(--text-dim)}
         .stat-value{color:var(--text-bright);font-weight:600}
+        .item-quality-rare{color:var(--rare)}
+        .item-quality-rare a{color:var(--rare)!important;text-decoration:none;border-bottom:1px dotted var(--rare);transition:all 0.2s ease}
+        .item-quality-rare a:hover{color:var(--text-bright)!important;border-bottom-color:var(--text-bright)}
         .item-quality-epic{color:var(--epic)}
         .item-quality-epic a{color:var(--epic)!important;text-decoration:none;border-bottom:1px dotted var(--epic);transition:all 0.2s ease}
         .item-quality-epic a:hover{color:var(--text-bright)!important;border-bottom-color:var(--text-bright)}
+        .item-quality-legendary{color:var(--legendary)}
+        .item-quality-legendary a{color:var(--legendary)!important;text-decoration:none;border-bottom:1px dotted var(--legendary);transition:all 0.2s ease}
+        .item-quality-legendary a:hover{color:var(--text-bright)!important;border-bottom-color:var(--text-bright)}
         .talent-tree{font-family:'Courier Prime',monospace;font-size:12px;line-height:1.4;background:rgba(255,255,255,0.03);padding:15px;border:1px solid var(--text-dim);margin:10px 0;white-space:pre}
         .meta-info{background:rgba(255,255,0,0.05);border-left:3px solid var(--accent);padding:10px 15px;margin:15px 0;font-size:12px}
         .phase-selector{display:flex;gap:10px;margin:15px 0;flex-wrap:wrap}
@@ -197,6 +203,14 @@ const itemIds={
 };
 
 function getItemId(n){return itemIds[n.toLowerCase()]||null}
+function getItemQuality(itemName){
+    const name=itemName.toLowerCase();
+    const legendaryItems=['warglaive of azzinoth',"thori'dal, the stars' fury",'thunderfury, blessed blade of the windseeker','sulfuras, hand of ragnaros'];
+    const rareItems=[];
+    if(legendaryItems.some(leg=>name.includes(leg)))return 'legendary';
+    if(rareItems.some(rare=>name.includes(rare)))return 'rare';
+    return 'epic';
+}
 function createWowheadLink(n,id){
     if(n.includes(' / ')){
         return n.split(' / ').map(item=>{
@@ -2368,7 +2382,8 @@ function renderClassContent(className){
 
     let bisTable=phaseData.bis.map(row=>{
         const itemName=row[1];
-        return `<tr><td>${row[0]}</td><td class="item-quality-epic"><span data-item-name="${itemName}">${itemName}</span></td><td>${row[2]}</td></tr>`;
+        const quality=getItemQuality(itemName);
+        return `<tr><td>${row[0]}</td><td class="item-quality-${quality}"><span data-item-name="${itemName}">${itemName}</span></td><td>${row[2]}</td></tr>`;
     }).join('');
 
     let specs=Object.entries(data.specs).map(([key,spec])=>`<span class="spec-tab ${key===currentSpec?'active':''}" data-spec="${key}">${spec.name} (${spec.talentString})</span>`).join('');
@@ -2419,7 +2434,8 @@ function renderClassContent(className){
                 document.getElementById('bis-header').textContent=`[ BEST IN SLOT - ${pd.name} ]`;
                 const newBis=pd.bis.map(row=>{
                     const itemName=row[1];
-                    return `<tr><td>${row[0]}</td><td class="item-quality-epic"><span data-item-name="${itemName}">${itemName}</span></td><td>${row[2]}</td></tr>`;
+                    const quality=getItemQuality(itemName);
+                    return `<tr><td>${row[0]}</td><td class="item-quality-${quality}"><span data-item-name="${itemName}">${itemName}</span></td><td>${row[2]}</td></tr>`;
                 }).join('');
                 document.getElementById('bis-table').innerHTML=newBis;
                 processItemLinks();
