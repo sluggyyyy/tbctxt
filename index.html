@@ -10,137 +10,365 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'terminal-bg': '#222222',
+                        'terminal-text': '#ffffff',
+                        'terminal-dim': '#cccccc',
+                        'terminal-accent': '#1eff00',
+                        'wow-rare': '#0070dd',
+                        'wow-epic': '#a335ee',
+                        'wow-legendary': '#ff8000',
+                    },
+                    fontFamily: {
+                        'mono': ['IBM Plex Mono', 'Courier Prime', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#222222;--text:#ffffff;--text-dim:#cccccc;--text-bright:#ffffff;--border:#ffffff;--accent:#1eff00;--error:#ff0000;--rare:#0070dd;--epic:#a335ee;--legendary:#ff8000}
-        body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono','Courier Prime',monospace;line-height:1.6;padding:20px;max-width:1400px;margin:0 auto;font-size:14px}
-        header{border:2px solid var(--border);padding:20px;margin-bottom:20px}
-        .ascii-logo{font-size:10px;line-height:1.2;color:var(--text-bright);white-space:pre;font-family:'Courier Prime',monospace;margin-bottom:10px}
-        h1{color:var(--text-bright);font-size:24px;margin-bottom:10px;text-transform:uppercase;letter-spacing:2px}
-        .tagline{color:var(--text-dim);font-size:12px;margin-bottom:15px}
-        .container{display:grid;grid-template-columns:250px 1fr;gap:20px;margin-bottom:20px}
-        aside{border:1px solid var(--border);padding:15px;height:fit-content}
-        aside h3{color:var(--accent);font-size:14px;margin-bottom:10px;text-transform:uppercase}
-        .class-list{list-style:none}
-        .class-list li{padding:5px 0;cursor:pointer;transition:all 0.2s;border-left:2px solid transparent;padding-left:10px}
-        .class-list li:hover{border-left-color:var(--accent);padding-left:15px;color:var(--text-bright)}
-        .class-list li.active{border-left-color:var(--border);color:var(--text-bright)}
-        main{border:1px solid var(--border);padding:20px}
-        .section{margin-bottom:30px;padding-bottom:20px;border-bottom:1px dashed var(--text-dim)}
-        .section:last-child{border-bottom:none}
-        h2{color:var(--accent);font-size:18px;margin-bottom:15px;text-transform:uppercase;letter-spacing:1px}
-        h3{color:var(--text-bright);font-size:14px;margin:15px 0 10px 0;text-transform:uppercase}
-        table{width:100%;border-collapse:collapse;margin:15px 0;font-size:13px}
-        th{background:var(--text-dim);color:var(--bg);padding:8px;text-align:left;font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:1px}
-        td{padding:8px;border-bottom:1px solid var(--text-dim)}
-        tr:hover{background:rgba(255,255,255,0.05)}
-        .stat-line{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dotted var(--text-dim)}
-        .stat-label{color:var(--text-dim)}
-        .stat-value{color:var(--text-bright);font-weight:600}
-        .item-quality-rare{color:var(--rare)}
-        .item-quality-rare a{color:var(--rare)!important;text-decoration:none;border-bottom:1px dotted var(--rare);transition:all 0.2s ease}
-        .item-quality-rare a:hover{color:var(--text-bright)!important;border-bottom-color:var(--text-bright)}
-        .item-quality-epic{color:var(--epic)}
-        .item-quality-epic a{color:var(--epic)!important;text-decoration:none;border-bottom:1px dotted var(--epic);transition:all 0.2s ease}
-        .item-quality-epic a:hover{color:var(--text-bright)!important;border-bottom-color:var(--text-bright)}
-        .item-quality-legendary{color:var(--legendary)}
-        .item-quality-legendary a{color:var(--legendary)!important;text-decoration:none;border-bottom:1px dotted var(--legendary);transition:all 0.2s ease}
-        .item-quality-legendary a:hover{color:var(--text-bright)!important;border-bottom-color:var(--text-bright)}
-        .talent-tree{font-family:'Courier Prime',monospace;font-size:12px;line-height:1.4;background:rgba(255,255,255,0.03);padding:15px;border:1px solid var(--text-dim);margin:10px 0;white-space:pre}
-        .meta-info{background:rgba(255,255,0,0.05);border-left:3px solid var(--accent);padding:10px 15px;margin:15px 0;font-size:12px}
-        .phase-selector{display:flex;gap:10px;margin:15px 0;flex-wrap:wrap}
-        .phase-btn{background:transparent;border:1px solid var(--border);color:var(--text);padding:8px 15px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:12px;transition:all 0.2s}
-        .phase-btn:hover,.phase-btn.active{background:var(--text);color:var(--bg)}
-        .command-line{color:var(--text-dim);margin:20px 0 10px 0}
-        .command-line:before{content:'$ ';color:var(--accent)}
-        footer{border:1px solid var(--border);padding:15px;text-align:center;font-size:11px;color:var(--text-dim);margin-top:20px}
-        .spec-tab{display:inline-block;padding:5px 10px;margin-right:10px;border:1px solid var(--text-dim);cursor:pointer;transition:all 0.2s;font-size:12px}
-        .spec-tab:hover,.spec-tab.active{border-color:var(--accent);color:var(--accent)}
-        .wowhead-tooltip{background:#222222!important;border:1px solid #ffffff!important;font-family:'IBM Plex Mono',monospace!important;color:#ffffff!important;font-size:12px!important}
-        .wowhead-tooltip .q0,.wowhead-tooltip .q{color:#9d9d9d!important}
-        .wowhead-tooltip .q1{color:#ffffff!important}
-        .wowhead-tooltip .q2{color:#1eff00!important}
-        .wowhead-tooltip .q3{color:#0070dd!important}
-        .wowhead-tooltip .q4{color:#a335ee!important}
-        .wowhead-tooltip .q5{color:#ff8000!important}
-        .wowhead-tooltip table{background:#222222!important;border-color:#ffffff!important}
+        /* ===== GLOBAL MOBILE OPTIMIZATIONS ===== */
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
 
-        @media(max-width:768px){
-            body{padding:8px;font-size:11px;max-width:100%;overflow-x:hidden}
-            .ascii-logo{font-size:5px;line-height:1;margin-bottom:8px}
-            header{padding:10px;border-width:1px}
-            .tagline{font-size:10px;margin-bottom:8px}
-            .container{grid-template-columns:1fr;gap:10px}
-            aside{margin-bottom:10px;padding:10px}
-            aside h3{font-size:12px;margin-bottom:8px}
-            .class-list li{padding:4px 0;padding-left:8px;font-size:12px}
-            .class-list li:hover{padding-left:10px}
-            main{padding:10px;border-width:1px}
-            .command-line{font-size:10px;margin:10px 0 8px 0}
-            .section{margin-bottom:20px;padding-bottom:15px}
-            table{font-size:10px;display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
-            th,td{padding:4px;font-size:10px;white-space:nowrap}
-            th{font-size:9px;letter-spacing:0.5px}
-            h2{font-size:14px;margin-bottom:10px;letter-spacing:0.5px}
-            h3{font-size:12px;margin:10px 0 8px 0}
-            .phase-selector{gap:5px;margin:10px 0}
-            .phase-btn{padding:5px 10px;font-size:10px}
-            .spec-tab{padding:4px 8px;font-size:10px;margin-right:5px}
-            .talent-tree{font-size:8px;padding:8px;line-height:1.3;overflow-x:auto}
-            .meta-info{font-size:10px;padding:8px 10px;margin:10px 0}
-            .stat-line{font-size:10px;padding:4px 0}
-            footer{padding:10px;font-size:9px;border-width:1px}
+        * {
+            -webkit-tap-highlight-color: rgba(30, 255, 0, 0.1);
         }
-        @media(max-width:480px){
-            body{padding:5px;font-size:10px}
-            .ascii-logo{font-size:4px}
-            header{padding:8px}
-            .tagline{font-size:9px}
-            aside{padding:8px}
-            aside h3{font-size:11px}
-            .class-list li{font-size:11px}
-            main{padding:8px}
-            h2{font-size:13px}
-            h3{font-size:11px}
-            table{font-size:9px}
-            th,td{padding:3px;font-size:9px}
-            th{font-size:8px}
-            .phase-btn{padding:4px 8px;font-size:9px}
-            .spec-tab{padding:3px 6px;font-size:9px}
-            .talent-tree{font-size:7px;padding:6px}
-            .meta-info{font-size:9px;padding:6px 8px}
+
+        /* Better scrolling on mobile */
+        .overflow-x-auto {
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: #1eff00 #222222;
         }
+
+        .overflow-x-auto::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .overflow-x-auto::-webkit-scrollbar-track {
+            background: #222222;
+        }
+
+        .overflow-x-auto::-webkit-scrollbar-thumb {
+            background: #1eff00;
+            border-radius: 4px;
+        }
+
+        /* ===== TERMINAL-SPECIFIC STYLES (not in Tailwind) ===== */
+        .ascii-logo {
+            white-space: pre;
+            font-family: 'Courier Prime', monospace;
+            overflow-x: auto;
+        }
+
+        .command-line:before {
+            content: '$ ';
+            color: #1eff00;
+        }
+
+        .class-list li {
+            border-left: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+        .class-list li:hover {
+            border-left-color: #1eff00;
+            padding-left: 1.25rem;
+        }
+        .class-list li.active {
+            border-left-color: #ffffff;
+        }
+
+        /* Prevent text selection on interactive elements (mobile) */
+        .class-list li,
+        .phase-btn,
+        .spec-tab {
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* ===== MOBILE-SPECIFIC OVERRIDES ===== */
+        @media (max-width: 767px) {
+            body {
+                padding: 0.75rem !important;
+                font-size: 0.75rem !important;
+                overflow-x: hidden !important;
+                max-width: 100vw !important;
+            }
+
+            header {
+                padding: 1rem !important;
+                margin-bottom: 1rem !important;
+            }
+
+            .ascii-logo {
+                font-size: 7px !important;
+                line-height: 1.1 !important;
+                margin-bottom: 0.625rem !important;
+            }
+
+            .grid {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+
+            aside {
+                padding: 1rem !important;
+            }
+
+            aside h3 {
+                font-size: 0.8125rem !important;
+            }
+
+            .class-list li {
+                padding: 0.625rem 0 !important;
+                padding-left: 0.75rem !important;
+                font-size: 0.8125rem !important;
+                min-height: 48px !important;
+                display: flex !important;
+                align-items: center !important;
+            }
+
+            main {
+                padding: 1rem !important;
+                overflow-x: hidden !important;
+            }
+
+            /* Dynamic content */
+            .command-line {
+                font-size: 0.6875rem !important;
+                margin: 0.75rem 0 !important;
+                word-break: break-all;
+            }
+
+            h2 {
+                font-size: 1rem !important;
+                margin-bottom: 0.75rem !important;
+            }
+
+            h3 {
+                font-size: 0.8125rem !important;
+                margin: 0.75rem 0 !important;
+            }
+
+            .meta-info {
+                font-size: 0.6875rem !important;
+                padding: 0.625rem 0.75rem !important;
+                margin: 0.75rem 0 !important;
+            }
+
+            /* Buttons and tabs */
+            .phase-btn, .spec-tab {
+                font-size: 0.6875rem !important;
+                padding: 0.5rem 0.75rem !important;
+                min-height: 44px !important;
+            }
+
+            /* Tables - ensure horizontal scroll */
+            .overflow-x-auto {
+                margin-left: -1rem !important;
+                margin-right: -1rem !important;
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+
+            table {
+                font-size: 0.6875rem !important;
+                min-width: 500px !important;
+                display: table !important;
+            }
+
+            th, td {
+                padding: 0.5rem !important;
+                font-size: 0.625rem !important;
+                white-space: nowrap !important;
+            }
+
+            th {
+                font-size: 0.5625rem !important;
+            }
+
+            /* Talent trees and macros */
+            .talent-tree {
+                font-size: 0.5625rem !important;
+                padding: 0.625rem !important;
+                line-height: 1.3 !important;
+                overflow-x: auto !important;
+            }
+
+            footer {
+                padding: 1rem !important;
+                font-size: 0.625rem !important;
+            }
+        }
+
+        @media (max-width: 479px) {
+            body {
+                padding: 0.5rem !important;
+                font-size: 0.6875rem !important;
+            }
+
+            header {
+                padding: 0.75rem !important;
+            }
+
+            .ascii-logo {
+                font-size: 5.5px !important;
+            }
+
+            aside {
+                padding: 0.75rem !important;
+            }
+
+            .class-list li {
+                font-size: 0.75rem !important;
+                min-height: 44px !important;
+                padding-left: 0.625rem !important;
+            }
+
+            main {
+                padding: 0.75rem !important;
+            }
+
+            .overflow-x-auto {
+                margin-left: -0.75rem !important;
+                margin-right: -0.75rem !important;
+                padding-left: 0.75rem !important;
+                padding-right: 0.75rem !important;
+            }
+
+            table {
+                min-width: 450px !important;
+            }
+
+            th, td {
+                padding: 0.375rem !important;
+                font-size: 0.5625rem !important;
+            }
+
+            th {
+                font-size: 0.5rem !important;
+            }
+
+            .talent-tree {
+                font-size: 0.5rem !important;
+                padding: 0.5rem !important;
+            }
+
+            .phase-btn, .spec-tab {
+                font-size: 0.625rem !important;
+                padding: 0.375rem 0.625rem !important;
+            }
+
+            .command-line {
+                font-size: 0.625rem !important;
+            }
+
+            h2 {
+                font-size: 0.875rem !important;
+            }
+
+            h3 {
+                font-size: 0.75rem !important;
+            }
+
+            .meta-info {
+                font-size: 0.625rem !important;
+                padding: 0.5rem 0.625rem !important;
+            }
+        }
+
+        /* ===== ITEM QUALITY COLORS ===== */
+        .item-quality-rare { color: #0070dd; }
+        .item-quality-rare a {
+            color: #0070dd !important;
+            text-decoration: none;
+            border-bottom: 1px dotted #0070dd;
+            transition: all 0.2s ease;
+        }
+        .item-quality-rare a:hover {
+            color: #ffffff !important;
+            border-bottom-color: #ffffff;
+        }
+
+        .item-quality-epic { color: #a335ee; }
+        .item-quality-epic a {
+            color: #a335ee !important;
+            text-decoration: none;
+            border-bottom: 1px dotted #a335ee;
+            transition: all 0.2s ease;
+        }
+        .item-quality-epic a:hover {
+            color: #ffffff !important;
+            border-bottom-color: #ffffff;
+        }
+
+        .item-quality-legendary { color: #ff8000; }
+        .item-quality-legendary a {
+            color: #ff8000 !important;
+            text-decoration: none;
+            border-bottom: 1px dotted #ff8000;
+            transition: all 0.2s ease;
+        }
+        .item-quality-legendary a:hover {
+            color: #ffffff !important;
+            border-bottom-color: #ffffff;
+        }
+
+        /* ===== WOWHEAD TOOLTIP OVERRIDES ===== */
+        .wowhead-tooltip {
+            background: #222222 !important;
+            border: 1px solid #ffffff !important;
+            font-family: 'IBM Plex Mono', monospace !important;
+            color: #ffffff !important;
+            font-size: 12px !important;
+        }
+        .wowhead-tooltip .q0, .wowhead-tooltip .q { color: #9d9d9d !important; }
+        .wowhead-tooltip .q1 { color: #ffffff !important; }
+        .wowhead-tooltip .q2 { color: #1eff00 !important; }
+        .wowhead-tooltip .q3 { color: #0070dd !important; }
+        .wowhead-tooltip .q4 { color: #a335ee !important; }
+        .wowhead-tooltip .q5 { color: #ff8000 !important; }
+        .wowhead-tooltip table { background: #222222 !important; border-color: #ffffff !important; }
     </style>
 </head>
-<body>
-    <header>
-        <div class="ascii-logo">  _____ ____   ____   _        _   
- |_   _| __ ) / ___| | |___  _| |_ 
+<body class="bg-terminal-bg text-terminal-text font-mono leading-relaxed p-5 max-w-screen-xl mx-auto text-sm md:p-3 md:text-xs sm:p-2 sm:text-[11px]">
+    <header class="border-2 border-terminal-text p-5 mb-5 md:border md:p-4 md:mb-4 sm:p-3 sm:mb-3">
+        <div class="ascii-logo text-[10px] leading-[1.15] text-terminal-text mb-3 md:text-[7px] md:mb-2.5 sm:text-[5.5px] sm:leading-[1.1] sm:mb-2">  _____ ____   ____   _        _
+ |_   _| __ ) / ___| | |___  _| |_
    | | |  _ \| |     | __\ \/ / __|
-   | | | |_) | |  _ _| |_ >  <| |_ 
+   | | | |_) | |  _ _| |_ >  <| |_
    |_| |____/ \___(_)\__/_/\_\\__|</div>
-        <div class="tagline">// A Burning Crusade PvP Database - Data sourced from Icy Veins</div>
+        <div class="text-terminal-dim text-xs mb-0 md:text-[11px] sm:text-[10px]">// A Burning Crusade PvP Database - Data sourced from Icy Veins</div>
     </header>
-    <div class="container">
-        <aside>
-            <h3>▼ CLASS SELECT</h3>
-            <ul class="class-list">
-                <li class="active" data-class="warrior">[ WARRIOR ]</li>
-                <li data-class="paladin">[ PALADIN ]</li>
-                <li data-class="hunter">[ HUNTER ]</li>
-                <li data-class="rogue">[ ROGUE ]</li>
-                <li data-class="priest">[ PRIEST ]</li>
-                <li data-class="shaman">[ SHAMAN ]</li>
-                <li data-class="mage">[ MAGE ]</li>
-                <li data-class="warlock">[ WARLOCK ]</li>
-                <li data-class="druid">[ DRUID ]</li>
+    <div class="grid grid-cols-[250px_1fr] gap-5 mb-5 md:grid-cols-1 md:gap-4 md:mb-4 sm:gap-3 sm:mb-3">
+        <aside class="border border-terminal-text p-4 h-fit md:mb-0 md:p-4 sm:p-3">
+            <h3 class="text-terminal-accent text-sm mb-3 uppercase md:text-[13px] md:mb-2.5 sm:text-xs sm:mb-2">▼ CLASS SELECT</h3>
+            <ul class="class-list list-none">
+                <li class="active py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-class="warrior">[ WARRIOR ]</li>
+                <li class="py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-class="paladin">[ PALADIN ]</li>
+                <li class="py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-class="hunter">[ HUNTER ]</li>
+                <li class="py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-class="rogue">[ ROGUE ]</li>
+                <li class="py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-class="priest">[ PRIEST ]</li>
+                <li class="py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-class="shaman">[ SHAMAN ]</li>
+                <li class="py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-class="mage">[ MAGE ]</li>
+                <li class="py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-class="warlock">[ WARLOCK ]</li>
+                <li class="py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-class="druid">[ DRUID ]</li>
             </ul>
         </aside>
-        <main id="main-content"></main>
+        <main id="main-content" class="border border-terminal-text p-5 md:p-4 sm:p-3"></main>
     </div>
-    <footer>
+    <footer class="border border-terminal-text p-4 text-center text-[11px] text-terminal-dim mt-5 md:p-4 md:text-[10px] md:mt-4 sm:p-3 sm:text-[9px] sm:mt-3">
         <div>TBC.TXT // Data sourced from Icy Veins guides</div>
-        <div style="margin-top:5px">NOT affiliated with Blizzard Entertainment // Community Project</div>
+        <div class="mt-1.5 sm:mt-1">NOT affiliated with Blizzard Entertainment // Community Project</div>
     </footer>
     <script>
 const itemIds={
@@ -202,31 +430,73 @@ const itemIds={
 "gladiator's cleaver":28308,"gladiator's barrier":28358,"merciless gladiator's cleaver":31965,"general's mail girdle":28639,"vindicator's linked bracers":33894,"vindicator's linked girdle":33895,"vindicator's linked sabatons":33896,"vindicator's mail bracers":33897,"vindicator's mail sabatons":33899
 };
 
-function getItemId(n){return itemIds[n.toLowerCase()]||null}
-function getItemQuality(itemName){
-    const name=itemName.toLowerCase();
-    const legendaryItems=['warglaive of azzinoth'];
-    const rareItems=[];
-    if(legendaryItems.some(leg=>name.includes(leg)))return 'legendary';
-    if(rareItems.some(rare=>name.includes(rare)))return 'rare';
+// ===== UTILITY FUNCTIONS =====
+function getItemId(itemName) {
+    return itemIds[itemName.toLowerCase()] || null;
+}
+
+function getItemQuality(itemName) {
+    const name = itemName.toLowerCase();
+    const legendaryItems = ['warglaive of azzinoth'];
+
+    if (legendaryItems.some(leg => name.includes(leg))) return 'legendary';
     return 'epic';
 }
-function createWowheadLink(n,id){
-    if(n.includes(' / ')){
-        return n.split(' / ').map(item=>{
-            const itemId=getItemId(item.trim());
-            return itemId?`<a href="https://tbc.wowhead.com/item=${itemId}">${item.trim()}</a>`:`<span class="item-link">${item.trim()}</span>`;
+
+function createWowheadLink(itemName, itemId) {
+    if (itemName.includes(' / ')) {
+        return itemName.split(' / ').map(item => {
+            const id = getItemId(item.trim());
+            return id
+                ? `<a href="https://tbc.wowhead.com/item=${id}">${item.trim()}</a>`
+                : `<span class="item-link">${item.trim()}</span>`;
         }).join(' / ');
     }
-    return id?`<a href="https://tbc.wowhead.com/item=${id}">${n}</a>`:`<span class="item-link">${n}</span>`;
+    return itemId
+        ? `<a href="https://tbc.wowhead.com/item=${itemId}">${itemName}</a>`
+        : `<span class="item-link">${itemName}</span>`;
 }
-function processItemLinks(){document.querySelectorAll('[data-item-name]').forEach(c=>{const n=c.getAttribute('data-item-name');if(n)c.innerHTML=createWowheadLink(n,getItemId(n))});if(typeof $WowheadPower!=='undefined')$WowheadPower.refreshLinks()}
 
-let currentClass='warrior';
-let currentSpec=null;
-let currentPhase=4;
+function processItemLinks() {
+    document.querySelectorAll('[data-item-name]').forEach(element => {
+        const itemName = element.getAttribute('data-item-name');
+        if (itemName) {
+            element.innerHTML = createWowheadLink(itemName, getItemId(itemName));
+        }
+    });
 
-const classData={
+    if (typeof $WowheadPower !== 'undefined') {
+        $WowheadPower.refreshLinks();
+    }
+}
+
+// Helper function to generate item cell HTML (reduces duplication)
+function generateItemCell(itemName) {
+    if (itemName.includes(' / ')) {
+        return itemName.split(' / ').map(item => {
+            const quality = getItemQuality(item.trim());
+            return `<span class="item-quality-${quality}"><span data-item-name="${item.trim()}">${item.trim()}</span></span>`;
+        }).join(' / ');
+    }
+
+    const quality = getItemQuality(itemName);
+    return `<span class="item-quality-${quality}"><span data-item-name="${itemName}">${itemName}</span></span>`;
+}
+
+// Helper function to generate BIS table rows
+function generateBisTable(bisData) {
+    return bisData.map(row =>
+        `<tr class="hover:bg-white/5 transition-colors"><td class="p-2.5 border-b border-terminal-dim whitespace-nowrap md:p-2 sm:p-1.5">${row[0]}</td><td class="p-2.5 border-b border-terminal-dim whitespace-nowrap md:p-2 sm:p-1.5">${generateItemCell(row[1])}</td><td class="p-2.5 border-b border-terminal-dim whitespace-nowrap md:p-2 sm:p-1.5">${row[2]}</td></tr>`
+    ).join('');
+}
+
+// ===== GLOBAL STATE =====
+let currentClass = 'warrior';
+let currentSpec = null;
+let currentPhase = 4;
+
+// ===== CLASS DATA =====
+const classData = {
 warrior:{
     title:"WARRIOR",
     defaultSpec:"arms",
@@ -2360,129 +2630,134 @@ KEY: HoT management > Cyclone chains > Form shifting`,
 }
 };
 
-function renderClassContent(className){
-    const data=classData[className];
-    if(!data)return;
+// ===== MAIN RENDER FUNCTION =====
+const FADE_TRANSITION_MS = 200;
 
-    currentClass=className;
-    if(!currentSpec||!data.specs[currentSpec]){
-        currentSpec=data.defaultSpec;
+function renderClassContent(className) {
+    const data = classData[className];
+    if (!data) return;
+
+    currentClass = className;
+
+    // Set default spec if needed
+    if (!currentSpec || !data.specs[currentSpec]) {
+        currentSpec = data.defaultSpec;
     }
 
-    const specData=data.specs[currentSpec];
-    if(!specData)return;
+    const specData = data.specs[currentSpec];
+    if (!specData) return;
 
-    if(!specData.phases[currentPhase]){
-        currentPhase=Object.keys(specData.phases)[0];
+    // Validate current phase
+    if (!specData.phases[currentPhase]) {
+        currentPhase = Object.keys(specData.phases)[0];
     }
 
-    let phaseData=specData.phases[currentPhase];
+    const phaseData = specData.phases[currentPhase];
 
-    let phaseButtons=Object.keys(specData.phases).map(p=>`<button class="phase-btn ${p==currentPhase?'active':''}" data-phase="${p}">${specData.phases[p].name}</button>`).join('');
+    // Generate UI components
+    const phaseButtons = Object.keys(specData.phases)
+        .map(p => `<button class="phase-btn ${p == currentPhase ? 'bg-terminal-text text-terminal-bg' : 'bg-transparent'} border border-terminal-text text-terminal-text px-4 py-2.5 cursor-pointer font-mono text-xs transition-all select-none hover:bg-terminal-text hover:text-terminal-bg md:px-3.5 md:py-2.5 md:text-[11px] md:min-h-[48px] md:inline-flex md:items-center md:justify-center sm:px-3 sm:py-2 sm:text-[10px] sm:min-h-[44px]" data-phase="${p}">${specData.phases[p].name}</button>`)
+        .join('');
 
-    let bisTable=phaseData.bis.map(row=>{
-        const itemName=row[1];
-        let itemCell;
-        if(itemName.includes(' / ')){
-            const items=itemName.split(' / ').map(item=>{
-                const quality=getItemQuality(item.trim());
-                return `<span class="item-quality-${quality}"><span data-item-name="${item.trim()}">${item.trim()}</span></span>`;
-            }).join(' / ');
-            itemCell=items;
-        }else{
-            const quality=getItemQuality(itemName);
-            itemCell=`<span class="item-quality-${quality}"><span data-item-name="${itemName}">${itemName}</span></span>`;
-        }
-        return `<tr><td>${row[0]}</td><td>${itemCell}</td><td>${row[2]}</td></tr>`;
-    }).join('');
+    const bisTable = generateBisTable(phaseData.bis);
 
-    let specs=Object.entries(data.specs).map(([key,spec])=>`<span class="spec-tab ${key===currentSpec?'active':''}" data-spec="${key}">${spec.name} (${spec.talentString})</span>`).join('');
+    const specs = Object.entries(data.specs)
+        .map(([key, spec]) => `<span class="spec-tab ${key === currentSpec ? 'border-terminal-accent text-terminal-accent' : 'border-terminal-dim'} inline-block py-2 px-3 mr-2.5 border cursor-pointer transition-all text-xs select-none hover:border-terminal-accent hover:text-terminal-accent md:py-2.5 md:px-3 md:text-[11px] md:min-h-[48px] md:inline-flex md:items-center md:mr-2 sm:py-2 sm:px-2.5 sm:text-[10px] sm:mr-1.5 sm:min-h-[44px]" data-spec="${key}">${spec.name} (${spec.talentString})</span>`)
+        .join('');
 
-    const html=`
-        <div class="command-line">query: ${className}_pvp_bis --spec=${currentSpec} --phase=${currentPhase}</div>
-        <div class="section">
-            <h2>[ ${data.title} // ${specData.name.toUpperCase()} PVP ]</h2>
-            <div class="meta-info">
-                PRIMARY STATS: ${specData.primaryStats}
+    const html = `
+        <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">query: ${className}_pvp_bis --spec=${currentSpec} --phase=${currentPhase}</div>
+        <div class="mb-8 pb-5 border-b border-dashed border-terminal-dim last:border-b-0 md:mb-6 md:pb-4 sm:pb-3">
+            <h2 class="text-terminal-accent text-lg mb-4 uppercase tracking-wide md:text-base md:mb-3 md:tracking-wider sm:text-sm sm:tracking-tight">[ ${data.title} // ${specData.name.toUpperCase()} PVP ]</h2>
+            <div class="bg-yellow-500/5 border-l-4 border-terminal-accent px-4 py-2.5 my-4 text-xs md:text-[11px] md:px-3 md:py-2.5 md:my-3 sm:text-[10px] sm:px-2.5 sm:py-2">PRIMARY STATS: ${specData.primaryStats}</div>
+            <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ SPEC SELECTION ]</h3>
+            <div class="my-2.5">${specs}</div>
+            <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ PHASE SELECTOR ]</h3>
+            <div class="flex flex-wrap gap-2.5 my-4 md:gap-2 md:my-3">${phaseButtons}</div>
+            <h3 id="bis-header" class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ BEST IN SLOT - ${phaseData.name} ]</h3>
+            <div class="overflow-x-auto -mx-5 px-5 md:-mx-4 md:px-4 sm:-mx-3 sm:px-3">
+                <table class="w-full border-collapse my-4 text-[13px] min-w-[600px] md:my-3.5 md:text-[11px] sm:my-3 sm:text-[10px] sm:min-w-[500px]">
+                    <thead><tr><th class="bg-terminal-dim text-terminal-bg p-2.5 text-left font-semibold uppercase text-[11px] tracking-widest md:p-2 md:text-[10px] sm:p-1.5 sm:text-[9px] sm:tracking-wide">SLOT</th><th class="bg-terminal-dim text-terminal-bg p-2.5 text-left font-semibold uppercase text-[11px] tracking-widest md:p-2 md:text-[10px] sm:p-1.5 sm:text-[9px] sm:tracking-wide">ITEM</th><th class="bg-terminal-dim text-terminal-bg p-2.5 text-left font-semibold uppercase text-[11px] tracking-widest md:p-2 md:text-[10px] sm:p-1.5 sm:text-[9px] sm:tracking-wide">SOURCE</th></tr></thead>
+                    <tbody id="bis-table">${bisTable}</tbody>
+                </table>
             </div>
-            <h3>[ SPEC SELECTION ]</h3>
-            <div style="margin:10px 0">${specs}</div>
-            <h3>[ PHASE SELECTOR ]</h3>
-            <div class="phase-selector">${phaseButtons}</div>
-            <h3 id="bis-header">[ BEST IN SLOT - ${phaseData.name} ]</h3>
-            <table>
-                <thead><tr><th>SLOT</th><th>ITEM</th><th>SOURCE</th></tr></thead>
-                <tbody id="bis-table">${bisTable}</tbody>
-            </table>
         </div>
-        <div class="section">
-            <h2>[ TALENT BUILD ]</h2>
-            <div class="talent-tree">${specData.talents}</div>
+        <div class="mb-8 pb-5 border-b border-dashed border-terminal-dim last:border-b-0 md:mb-6 md:pb-4">
+            <h2 class="text-terminal-accent text-lg mb-4 uppercase tracking-wide md:text-base md:mb-3 md:tracking-wider sm:text-sm sm:tracking-tight">[ TALENT BUILD ]</h2>
+            <div class="font-['Courier_Prime'] text-xs leading-normal bg-white/[0.03] p-4 border border-terminal-dim my-2.5 whitespace-pre overflow-x-auto [-webkit-overflow-scrolling:touch] md:text-[9px] md:p-2.5 md:leading-snug sm:text-[8px] sm:p-2 sm:leading-tight">${specData.talents}</div>
         </div>
-        <div class="section">
-            <h2>[ ROTATION & PRIORITIES ]</h2>
-            <div class="meta-info">${specData.rotation}</div>
-            <h3>[ MACRO SETUP ]</h3>
-            <div class="talent-tree">${specData.macros}</div>
+        <div class="mb-8 pb-5 border-b border-dashed border-terminal-dim last:border-b-0 md:mb-6 md:pb-4">
+            <h2 class="text-terminal-accent text-lg mb-4 uppercase tracking-wide md:text-base md:mb-3 md:tracking-wider sm:text-sm sm:tracking-tight">[ ROTATION & PRIORITIES ]</h2>
+            <div class="bg-yellow-500/5 border-l-4 border-terminal-accent px-4 py-2.5 my-4 text-xs md:text-[11px] md:px-3 md:py-2.5 md:my-3 sm:text-[10px] sm:px-2.5 sm:py-2">${specData.rotation}</div>
+            <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ MACRO SETUP ]</h3>
+            <div class="font-['Courier_Prime'] text-xs leading-normal bg-white/[0.03] p-4 border border-terminal-dim my-2.5 whitespace-pre overflow-x-auto [-webkit-overflow-scrolling:touch] md:text-[9px] md:p-2.5 md:leading-snug sm:text-[8px] sm:p-2 sm:leading-tight">${specData.macros}</div>
         </div>
     `;
 
-    const mainContent=document.getElementById('main-content');
-    mainContent.style.opacity='0.3';
-    setTimeout(()=>{
-        mainContent.innerHTML=html;
-        mainContent.style.opacity='1';
+    const mainContent = document.getElementById('main-content');
+    mainContent.style.opacity = '0.3';
+
+    setTimeout(() => {
+        mainContent.innerHTML = html;
+        mainContent.style.opacity = '1';
         processItemLinks();
-
-        document.querySelectorAll('.phase-btn').forEach(btn=>{
-            btn.addEventListener('click',function(){
-                document.querySelectorAll('.phase-btn').forEach(b=>b.classList.remove('active'));
-                this.classList.add('active');
-                const phase=parseInt(this.getAttribute('data-phase'));
-                currentPhase=phase;
-                const pd=specData.phases[phase];
-                document.getElementById('bis-header').textContent=`[ BEST IN SLOT - ${pd.name} ]`;
-                const newBis=pd.bis.map(row=>{
-                    const itemName=row[1];
-                    let itemCell;
-                    if(itemName.includes(' / ')){
-                        const items=itemName.split(' / ').map(item=>{
-                            const quality=getItemQuality(item.trim());
-                            return `<span class="item-quality-${quality}"><span data-item-name="${item.trim()}">${item.trim()}</span></span>`;
-                        }).join(' / ');
-                        itemCell=items;
-                    }else{
-                        const quality=getItemQuality(itemName);
-                        itemCell=`<span class="item-quality-${quality}"><span data-item-name="${itemName}">${itemName}</span></span>`;
-                    }
-                    return `<tr><td>${row[0]}</td><td>${itemCell}</td><td>${row[2]}</td></tr>`;
-                }).join('');
-                document.getElementById('bis-table').innerHTML=newBis;
-                processItemLinks();
-            });
-        });
-
-        document.querySelectorAll('.spec-tab').forEach(tab=>{
-            tab.addEventListener('click',function(){
-                const newSpec=this.getAttribute('data-spec');
-                if(newSpec!==currentSpec){
-                    currentSpec=newSpec;
-                    renderClassContent(currentClass);
-                }
-            });
-        });
-    },200);
+        attachEventListeners(specData);
+    }, FADE_TRANSITION_MS);
 }
 
-document.querySelectorAll('.class-list li').forEach(item=>{
-    item.addEventListener('click',function(){
-        document.querySelectorAll('.class-list li').forEach(li=>li.classList.remove('active'));
-        this.classList.add('active');
-        renderClassContent(this.dataset.class);
-    });
-});
+// ===== EVENT LISTENERS =====
+function attachEventListeners(specData) {
+    // Phase button listeners
+    document.querySelectorAll('.phase-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Remove active state from all buttons
+            document.querySelectorAll('.phase-btn').forEach(b => {
+                b.classList.remove('bg-terminal-text', 'text-terminal-bg');
+                b.classList.add('bg-transparent', 'text-terminal-text');
+            });
 
-window.addEventListener('DOMContentLoaded',()=>renderClassContent('warrior'));
+            // Add active state to clicked button
+            this.classList.remove('bg-transparent', 'text-terminal-text');
+            this.classList.add('bg-terminal-text', 'text-terminal-bg');
+
+            const phase = parseInt(this.getAttribute('data-phase'));
+            currentPhase = phase;
+
+            const phaseData = specData.phases[phase];
+            document.getElementById('bis-header').textContent = `[ BEST IN SLOT - ${phaseData.name} ]`;
+            document.getElementById('bis-table').innerHTML = generateBisTable(phaseData.bis);
+            processItemLinks();
+        });
+    });
+
+    // Spec tab listeners
+    document.querySelectorAll('.spec-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            const newSpec = this.getAttribute('data-spec');
+            if (newSpec !== currentSpec) {
+                currentSpec = newSpec;
+                renderClassContent(currentClass);
+            }
+        });
+    });
+}
+
+// ===== INITIALIZATION =====
+function initClassSelector() {
+    document.querySelectorAll('.class-list li').forEach(item => {
+        item.addEventListener('click', function() {
+            document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
+            this.classList.add('active');
+            renderClassContent(this.dataset.class);
+        });
+    });
+}
+
+// Initialize on page load
+window.addEventListener('DOMContentLoaded', () => {
+    initClassSelector();
+    renderClassContent('warrior');
+});
     </script>
 </body>
 </html>
