@@ -4377,6 +4377,7 @@ const questIds = {
     "battle of the crimson watch": 10781,
     "the cipher of damnation": 10588,
     "the cipher of damnation - the third fragment recovered": 10579,
+    "news of victory": 10744,
     // Blade's Edge Mountains
     "the hound-master": 10912,
     "showdown": 10806,
@@ -4386,16 +4387,21 @@ const questIds = {
     "you're hired!": 10186,
     "hitting the motherlode": 10293,
     "dealing with the overmaster": 10318,
+    "turning point": 10507,
     // Hellfire Peninsula
     "cruel's intentions": 10136,
     "overlord": 10400,
     "forge camp: annihilated": 10011,
     "fel embers": 9494,
+    "colossal menace": 10132,
     // Nagrand
     "the ultimate bloodsport": 9852,
+    "there is no hope": 10172,
     // Caverns of Time
     "return to andormu": 10285,
     "hero of the brood": 10298,
+    "sage's pledge": 10463,
+    "restorer's pledge": 10461,
     // Dungeon Quests
     "into the heart of the labyrinth": 10095,
     "the warlord's hideout": 9763,
@@ -4404,13 +4410,16 @@ const questIds = {
     "how to break into the arcatraz": 10704,
     "someone else's hard work pays off": 10218,
     "undercutting the competition": 10165,
+    "everything will be alright": 10164,
+    "terokk's legacy": 11073,
     // Shattrath/Other
     "special delivery to shattrath city": 10280,
     "the vials of eternity": 10445,
     "deathblow to the legion": 10409,
     "the fall of magtheridon": 11002,
     "dissension amongst the ranks...": 10776,
-    "declawing doomclaw": 10235
+    "declawing doomclaw": 10235,
+    "the savior of kalimdor": 8801
 };
 
 function getQuestId(questName) {
@@ -4520,8 +4529,24 @@ function generateSourceCell(source) {
         'Dalliah the Doomsayer': 20885, 'Laj': 17980,
         'Nethermancer Sepethrea': 19221, 'High Botanist Freywinn': 17975,
         'Gezzarak the Huntress': 23163,
-        // Naxxramas (for WOTLK references)
+        // More dungeon bosses
+        'Hungerfen': 17770, 'Ghaz\'an': 18105, 'Anzu': 23035,
+        'Lieutenant Drake': 17848, 'Mechano-Lord Capacitus': 19219,
+        'Mekgineer Steamrigger': 17796, 'Mennu the Betrayer': 17941,
+        'Grand Warlock Nethekurse': 16807, 'Grandmaster Vorpil': 18732,
+        'Darkweaver Syth': 18472, 'Zereketh the Unbound': 20870,
+        'Selin Fireheart': 24723, 'The Maker': 17381,
+        'Wrath-Scryer Soccothrates': 20886,
+        // World bosses / rare spawns
+        'Gurok the Usurper': 18062, 'Ar\'kelos the Guardian': 20798,
+        'Gava\'xi': 18298, 'Coren Direbrew': 23872,
+        // Classic raids (for references)
+        'C\'Thun': 15727, 'Emperor Vek\'nilash': 15275, 'Nefarian': 11583,
+        'Sapphiron': 15989, 'Kel\'Thuzad': 15990,
+        // Naxxramas
         'Patchwerk': 16028, 'Grobbulus': 15931, 'Gluth': 15932,
+        // Karazhan extras
+        'Echo of Medivh': 16816, 'Curator': 15691,
         // Vendors
         'G\'eras': 19321
     };
@@ -4538,7 +4563,7 @@ function generateSourceCell(source) {
 
     // Pattern: "Boss - Zone" or "Boss— Zone" or "Boss - (H) Zone" -> extract just the boss name
     // Handles both hyphens (-) and em-dashes (—)
-    const bossZoneMatch = source.match(/^(.+?)\s*[-—]\s*\(?H?\)?\s*(Karazhan|Gruul's Lair|Magtheridon's Lair|Serpentshrine Cavern|Tempest Keep|Hyjal Summit|Black Temple|Zul'Aman|Sunwell Plateau|The Blood Furnace|Blood Furnace|The Slave Pens|Slave Pens|The Underbog|Underbog|The Steamvault|Steamvault|The Botanica|Botanica|The Mechanar|Mechanar|The Arcatraz|Arcatraz|Shadow Labyrinth|Sethekk Halls|Auchenai Crypts|Auchindoun|Mana.?Tombs|Old Hillsbrad Foothills|The Black Morass|Black Morass|Shattered Halls|Hellfire Ramparts|Ramparts|Magister's Terrace|Terokkar Forest|Netherstorm|Nagrand|Naxxramas|Caverns of Time|Blades? Edge Mountains)$/i);
+    const bossZoneMatch = source.match(/^(.+?)\s*[-—]\s*\(?H?\)?\s*(Karazhan|Gruul's Lair|Magtheridon's Lair|Serpentshrine Cavern|Tempest Keep|Hyjal Summit|Black Temple|Zul'Aman|Sunwell Plateau|The Blood Furnace|Blood Furnace|The Slave Pens|Slave Pens|The Underbog|Underbog|The Steamvault|Steamvault|The Botanica|Botanica|The Mechanar|Mechanar|The Arcatraz|Arcatraz|Shadow Labyrinth|Sethekk Halls|Auchenai Crypts|Auchindoun|Mana.?Tombs|Old Hillsbrad Foothills|The Black Morass|Black Morass|The Shattered Halls|Shattered Halls|Hellfire Ramparts|Ramparts|Magister's Terrace|Magisters' Terrace|Terokkar Forest|Netherstorm|Nagrand|Naxxramas|Caverns of Time|Blades? Edge Mountains|Shadowmoon Valley|Hellfire Peninsula|Tanaris|AQ40|Blackwing Lair|Stratholme|Blackrock Depths|World Boss)$/i);
     if (bossZoneMatch) {
         displayText = bossZoneMatch[1].trim();
         bossName = displayText;
@@ -4670,9 +4695,16 @@ function generateSourceCell(source) {
     }
 
     // Check if the source contains any known NPC name directly
-    for (const [npcName, npcId] of Object.entries(npcMap)) {
-        if (npcId > 0 && source.includes(npcName)) {
-            return `<a href="https://tbc.wowhead.com/npc=${npcId}" class="underline hover:text-terminal-text">${npcName}</a>`;
+    // Sort by name length descending to match longer names first (e.g., "Kael'thas Sunstrider" before "Kael")
+    const sortedNpcs = Object.entries(npcMap).sort((a, b) => b[0].length - a[0].length);
+    for (const [npcName, npcId] of sortedNpcs) {
+        if (npcId > 0) {
+            // Check both with and without escaped apostrophes
+            const sourceNormalized = source.replace(/\\'/g, "'");
+            const npcNameNormalized = npcName.replace(/\\'/g, "'");
+            if (sourceNormalized.includes(npcNameNormalized)) {
+                return `<a href="https://tbc.wowhead.com/npc=${npcId}" class="underline hover:text-terminal-text">${npcNameNormalized}</a>`;
+            }
         }
     }
 
@@ -4691,12 +4723,12 @@ function generateSourceCell(source) {
         }
     }
 
-    // For quest-like sources that don't match NPC patterns, search on wowhead
-    if (!source.match(/^(Crafted|BoE|Unknown|Various|N\/A|Honor|Arena)$/i)) {
-        const questIdSearch = getQuestId(source.replace(/-.*$/, '').trim());
-        if (questIdSearch) {
-            const cleanQuestName = source.replace(/-.*$/, '').trim();
-            return `<a href="https://tbc.wowhead.com/quest=${questIdSearch}" data-wowhead="quest=${questIdSearch}" class="underline hover:text-terminal-text">${cleanQuestName}</a>`;
+    // Check if source contains any known quest name (for contaminated strings)
+    const sourceLower = source.toLowerCase().replace(/\\'/g, "'");
+    for (const [questName, qId] of Object.entries(questIds)) {
+        if (sourceLower.includes(questName)) {
+            const displayQuestName = questName.charAt(0).toUpperCase() + questName.slice(1);
+            return `<a href="https://tbc.wowhead.com/quest=${qId}" data-wowhead="quest=${qId}" class="underline hover:text-terminal-text">${displayQuestName}</a>`;
         }
     }
 
