@@ -4368,6 +4368,56 @@ const talentSpellIds = {
     "sanctified judgement": 31876, "sanctified light": 20359, "survivalist": 19255
 };
 
+// Quest IDs for BIS source linking
+const questIds = {
+    // Shadowmoon Valley
+    "teron gorefiend, i am...": 10645,
+    "akama's promise": 10708,
+    "a job unfinished...": 11041,
+    "battle of the crimson watch": 10781,
+    "the cipher of damnation": 10588,
+    "the cipher of damnation - the third fragment recovered": 10579,
+    // Blade's Edge Mountains
+    "the hound-master": 10912,
+    "showdown": 10806,
+    // Netherstorm
+    "shutting down manaforge ara": 10365,
+    "the flesh lies...": 10345,
+    "you're hired!": 10186,
+    "hitting the motherlode": 10293,
+    "dealing with the overmaster": 10318,
+    // Hellfire Peninsula
+    "cruel's intentions": 10136,
+    "overlord": 10400,
+    "forge camp: annihilated": 10011,
+    "fel embers": 9494,
+    // Nagrand
+    "the ultimate bloodsport": 9852,
+    // Caverns of Time
+    "return to andormu": 10285,
+    "hero of the brood": 10298,
+    // Dungeon Quests
+    "into the heart of the labyrinth": 10095,
+    "the warlord's hideout": 9763,
+    "the soul devices": 10091,
+    "brother against brother": 10097,
+    "how to break into the arcatraz": 10704,
+    "someone else's hard work pays off": 10218,
+    "undercutting the competition": 10165,
+    // Shattrath/Other
+    "special delivery to shattrath city": 10280,
+    "the vials of eternity": 10445,
+    "deathblow to the legion": 10409,
+    "the fall of magtheridon": 11002,
+    "dissension amongst the ranks...": 10776,
+    "declawing doomclaw": 10235
+};
+
+function getQuestId(questName) {
+    const cleanName = questName.toLowerCase().trim().replace(/\\'/g, "'");
+    return questIds[cleanName] || null;
+}
+
 function getTalentSpellId(talentName) {
     // Handle escaped apostrophes from the data (e.g., "Nature\'s Grace" -> "nature's grace")
     const cleanName = talentName.toLowerCase().trim().replace(/\\'/g, "'");
@@ -4416,94 +4466,241 @@ function generateItemCell(itemName) {
     return `<span class="item-quality-${quality}">${link}</span>`;
 }
 
-// Helper function to process source text and create wowhead NPC links
+// Helper function to process source text and create wowhead NPC/quest links
 function generateSourceCell(source) {
-    // Handle Badge of Justice references
-    if (source.includes('Badge of Justice')) {
-        source = source.replace(/(\d+\s*x\s*)?Badge of Justice/gi, match => {
-            return `<a href="https://tbc.wowhead.com/item=29434" data-wowhead="item=29434" class="underline hover:text-terminal-text">${match}</a>`;
-        });
-    }
-
-    // List of known NPCs/bosses to convert to wowhead links
+    // NPC map for boss linking
     const npcMap = {
         // Karazhan
         'Attumen the Huntsman': 16151, 'Moroes': 15687, 'Maiden of Virtue': 16457,
         'Opera Event': 0, 'The Curator': 15691, 'Shade of Aran': 16524,
         'Terestian Illhoof': 15688, 'Netherspite': 15689, 'Chess Event': 0,
-        'Prince Malchezaar': 15690,
-
+        'Prince Malchezaar': 15690, 'Nightbane': 17225,
         // Gruul's Lair
         'High King Maulgar': 18831, 'Gruul the Dragonkiller': 19044,
-
         // Magtheridon's Lair
         'Magtheridon': 17257,
-
         // Serpentshrine Cavern
         'Hydross the Unstable': 21216, 'The Lurker Below': 21217,
         'Leotheras the Blind': 21215, 'Fathom-Lord Karathress': 21214,
         'Morogrim Tidewalker': 21213, 'Lady Vashj': 21212,
-
         // Tempest Keep
         'Al\'ar': 19514, 'Void Reaver': 19516, 'High Astromancer Solarian': 18805,
         'Kael\'thas Sunstrider': 19622,
-
         // Hyjal Summit
         'Rage Winterchill': 17767, 'Anetheron': 17808, 'Kaz\'rogal': 17888,
         'Azgalor': 17842, 'Archimonde': 17968,
-
         // Black Temple
         'High Warlord Naj\'entus': 22887, 'Supremus': 22898,
         'Shade of Akama': 22841, 'Teron Gorefiend': 22871,
         'Gurtogg Bloodboil': 22948, 'Reliquary of Souls': 22856,
-        'Mother Shahraz': 22947, 'Illidari Council': 23426,
+        'Mother Shahraz': 22947, 'Illidari Council': 23426, 'The Illidari Council': 23426,
         'Illidan Stormrage': 22917,
-
-        // Zul\'Aman
+        // Zul'Aman
         'Akil\'zon': 23574, 'Nalorakk': 23576, 'Jan\'alai': 23578,
         'Halazzi': 23577, 'Hex Lord Malacrass': 24239, 'Zul\'jin': 23863,
-
         // World Bosses
         'Doom-Lord Kazzak': 18728, 'Doomwalker': 17711,
-
         // Sunwell Plateau
         'Kalecgos': 24850, 'Brutallus': 24882, 'Felmyst': 25038,
         'Eredar Twins': 25166, 'M\'uru': 25741, 'Kil\'jaeden': 25315,
-
         // Dungeon Bosses
         'Epoch Hunter': 18096, 'Quagmirran': 17942, 'The Black Stalker': 17882,
         'Avatar of the Martyred': 18478, 'Exarch Maladaar': 18373,
         'Talon King Ikiss': 18473, 'Harbinger Skyriss': 20912,
         'Warp Splinter': 17977, 'Aeonus': 17881, 'Blackheart the Inciter': 18667,
-
+        'Temporus': 17880, 'Warlord Kalithresh': 17798, 'Keli\'dan the Breaker': 17377,
+        'Warchief Kargath Bladefist': 16808, 'Pathaleon the Calculator': 19220,
+        'Pandemonius': 18341, 'Tavarok': 18343, 'Ambassador Hellmaw': 18731,
+        'Murmur': 18708, 'Shirrak the Dead Watcher': 18371, 'Broggok': 17380,
+        'Vazruden': 17537, 'Vazruden the Herald': 17537, 'Priestess Delrissa': 24560,
+        'Chrono Lord Deja': 17879, 'Omor the Unscarred': 17308,
+        'Commander Sarannis': 17976, 'Nexus-Prince Shaffar': 18344,
+        'Captain Skarloc': 17862, 'Rokmar the Crackler': 17991,
+        'Warbringer O\'mrogg': 16809, 'Terokk': 21838, 'Yor': 22930,
+        'Dalliah the Doomsayer': 20885, 'Laj': 17980,
+        'Nethermancer Sepethrea': 19221, 'High Botanist Freywinn': 17975,
+        'Gezzarak the Huntress': 23163,
+        // Naxxramas (for WOTLK references)
+        'Patchwerk': 16028, 'Grobbulus': 15931, 'Gluth': 15932,
         // Vendors
         'G\'eras': 19321
     };
 
-    let result = source;
+    // Patterns for non-boss sources (don't need NPC linking)
+    const professionSources = ['Blacksmithing', 'Leatherworking', 'Tailoring', 'Jewelcrafting', 'Engineering', 'Alchemy'];
+    const pvpSources = ['Honor', 'Honor Points', 'Arena', 'Arena Points'];
+    const otherSources = ['BoE World Drop', 'BoE', 'World Drop', 'Crafted', 'N/A', 'Various', 'Vendor', 'PvP'];
 
-    // Replace NPC names with wowhead links using NPC IDs
+    // Extract display text - strip zone/instance info from "Boss - Zone" format
+    let displayText = source;
+    let bossName = null;
+    let questName = null;
+
+    // Pattern: "Boss - Zone" or "Boss— Zone" or "Boss - (H) Zone" -> extract just the boss name
+    // Handles both hyphens (-) and em-dashes (—)
+    const bossZoneMatch = source.match(/^(.+?)\s*[-—]\s*\(?H?\)?\s*(Karazhan|Gruul's Lair|Magtheridon's Lair|Serpentshrine Cavern|Tempest Keep|Hyjal Summit|Black Temple|Zul'Aman|Sunwell Plateau|The Blood Furnace|Blood Furnace|The Slave Pens|Slave Pens|The Underbog|Underbog|The Steamvault|Steamvault|The Botanica|Botanica|The Mechanar|Mechanar|The Arcatraz|Arcatraz|Shadow Labyrinth|Sethekk Halls|Auchenai Crypts|Auchindoun|Mana.?Tombs|Old Hillsbrad Foothills|The Black Morass|Black Morass|Shattered Halls|Hellfire Ramparts|Ramparts|Magister's Terrace|Terokkar Forest|Netherstorm|Nagrand|Naxxramas|Caverns of Time|Blades? Edge Mountains)$/i);
+    if (bossZoneMatch) {
+        displayText = bossZoneMatch[1].trim();
+        bossName = displayText;
+    }
+
+    // Pattern: "(H)Boss-Zone" or "(H) Boss - Zone" or "Boss— HeroicZone" or "Bossin HeroicZone" for heroic dungeons
+    const heroicMatch = source.match(/^\(H\)\s*(.+?)[-–—]\s*(.+)$/) ||
+                        source.match(/^(.+?)[-—]\s*[Hh]eroic\s*(.+)$/) ||
+                        source.match(/^(.+?)in\s*[Hh]eroic(.+)$/);
+    if (heroicMatch) {
+        displayText = heroicMatch[1].trim();
+        bossName = displayText;
+    }
+
+    // Pattern: "Boss—Zone" or "Boss-Zone" (no space) for dungeons -> extract boss name
+    const bossZoneNoSpaceMatch = source.match(/^([A-Z][^-—]+)[-—]([A-Z].+)$/);
+    if (!bossName && bossZoneNoSpaceMatch && !source.includes(' - ') && !source.includes(' — ')) {
+        const potentialBoss = bossZoneNoSpaceMatch[1].trim();
+        if (npcMap[potentialBoss] || npcMap[potentialBoss.replace(/'/g, "\\'")] ) {
+            displayText = potentialBoss;
+            bossName = potentialBoss;
+        }
+    }
+
+    // Pattern: "Boss1,Boss2, orBoss3—Zone" -> extract first boss name
+    // Also handles case where bossZoneMatch succeeded but gave us multiple bosses
+    if (bossName && bossName.includes(',')) {
+        const firstBoss = bossName.split(',')[0].trim();
+        if (npcMap[firstBoss]) {
+            displayText = firstBoss;
+            bossName = firstBoss;
+        }
+    }
+    const multiBossMatch = source.match(/^([A-Z][^,]+),.*[-—](.+)$/);
+    if (!bossName && multiBossMatch) {
+        const firstBoss = multiBossMatch[1].trim();
+        if (npcMap[firstBoss]) {
+            displayText = firstBoss;
+            bossName = firstBoss;
+        }
+    }
+
+    // Pattern: Any source containing "Badge of Justice" with a number -> show badge count
+    const badgeMatch = source.match(/(\d+)\s*x?\s*-?\s*Badge[s]?\s*(of\s*Justice)?/i);
+    if (badgeMatch || source.toLowerCase().includes('badge of justice')) {
+        const count = badgeMatch ? badgeMatch[1] : '';
+        const displayText = count ? `${count} Badges` : 'Badge Vendor';
+        return `<a href="https://tbc.wowhead.com/item=29434" data-wowhead="item=29434" class="underline hover:text-terminal-text">${displayText}</a>`;
+    }
+
+    // Pattern: "Justice Vendor" -> badge vendor
+    if (source.toLowerCase().includes('justice vendor')) {
+        const countMatch = source.match(/(\d+)/);
+        const count = countMatch ? countMatch[1] : '';
+        const displayText = count ? `${count} Badges` : 'Badge Vendor';
+        return `<a href="https://tbc.wowhead.com/item=29434" data-wowhead="item=29434" class="underline hover:text-terminal-text">${displayText}</a>`;
+    }
+
+    // Pattern: "G'eras- X xBadge" -> show badge count
+    const gerasBadgeMatch = source.match(/G'eras\s*-?\s*(\d+)\s*x?\s*Badge/i);
+    if (gerasBadgeMatch) {
+        return `<a href="https://tbc.wowhead.com/item=29434" data-wowhead="item=29434" class="underline hover:text-terminal-text">${gerasBadgeMatch[1]} Badges</a>`;
+    }
+
+    // Pattern: "Exalted - Faction" or "Faction - Exalted/Revered/Honored" (handles both - and —)
+    const repMatch = source.match(/^(Exalted|Revered|Honored|Friendly)\s*[-—]\s*(.+)$/i) || source.match(/^(.+?)\s*[-—]\s*(Exalted|Revered|Honored|Friendly)$/i);
+    if (repMatch) {
+        const faction = repMatch[1].match(/Exalted|Revered|Honored|Friendly/i) ? repMatch[2] : repMatch[1];
+        const standing = repMatch[1].match(/Exalted|Revered|Honored|Friendly/i) ? repMatch[1] : repMatch[2];
+        return `${faction} (${standing})`;
+    }
+
+    // Pattern: "The Aldor- Revered" etc (handles both - and —)
+    const factionRepMatch = source.match(/^(The Aldor|The Scryers|Lower City|Keepers of Time|The Sha'tar|Cenarion Expedition|Honor Hold|Thrallmar|The Violet Eye|The Scale of the Sands|Ashtongue Deathsworn|The Consortium|Kurenai|The Mag'har)\s*[-—]?\s*(Exalted|Revered|Honored|Friendly)$/i);
+    if (factionRepMatch) {
+        return `${factionRepMatch[1]} (${factionRepMatch[2]})`;
+    }
+
+    // Profession sources - just return the profession name (no link)
+    // Handles: "Blacksmithing", "Spellfire Tailoring", "Mooncloth Tailoring", etc.
+    const professionMatch = professionSources.find(p => source.toLowerCase().includes(p.toLowerCase()));
+    if (professionMatch) {
+        // Handle profession specializations: "Spellfire Tailoring", "Mooncloth Tailoring", etc.
+        // Also handle "Item—Tailoring" format
+        const cleanSource = source.split('—')[0].trim();
+        return cleanSource;
+    }
+
+    // PvP sources
+    if (pvpSources.some(p => source.toLowerCase() === p.toLowerCase() || source.toLowerCase().includes(p.toLowerCase()))) {
+        return source;
+    }
+
+    // Other simple sources
+    if (otherSources.some(o => source.toLowerCase().includes(o.toLowerCase()))) {
+        return source;
+    }
+
+    // Pattern: "Trash Mobs in - Zone" or "Trash mobs in - Zone"
+    const trashMatch = source.match(/Trash\s*[Mm]obs?\s*in\s*-?\s*(.+)/i);
+    if (trashMatch) {
+        return `Trash (${trashMatch[1]})`;
+    }
+
+    // Pattern: "Xrd Timed Chest - Zul'Aman"
+    const timedChestMatch = source.match(/(\d+\w*)\s*Timed\s*Chest/i);
+    if (timedChestMatch) {
+        return `${timedChestMatch[1]} Timed Chest`;
+    }
+
+    // Pattern: "Darkmoon Furies Deck" etc
+    if (source.includes('Darkmoon') && source.includes('Deck')) {
+        return source;
+    }
+
+    // If we identified a boss name, try to link it
+    if (bossName) {
+        const npcId = npcMap[bossName] || npcMap[bossName.replace(/'/g, "\\'")] || 0;
+        if (npcId > 0) {
+            return `<a href="https://tbc.wowhead.com/npc=${npcId}" class="underline hover:text-terminal-text">${bossName}</a>`;
+        }
+        // Check if boss name is in npcMap with different quote escaping
+        for (const [npcName, id] of Object.entries(npcMap)) {
+            if (npcName.toLowerCase() === bossName.toLowerCase() && id > 0) {
+                return `<a href="https://tbc.wowhead.com/npc=${id}" class="underline hover:text-terminal-text">${bossName}</a>`;
+            }
+        }
+        return bossName;
+    }
+
+    // Check if the source contains any known NPC name directly
     for (const [npcName, npcId] of Object.entries(npcMap)) {
-        if (npcId > 0 && result.includes(npcName)) {
-            const regex = new RegExp(npcName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
-            result = result.replace(regex, `<a href="https://tbc.wowhead.com/npc=${npcId}" class="underline hover:text-terminal-text">${npcName}</a>`);
+        if (npcId > 0 && source.includes(npcName)) {
+            return `<a href="https://tbc.wowhead.com/npc=${npcId}" class="underline hover:text-terminal-text">${npcName}</a>`;
         }
     }
 
-    // Link quest names to wowhead
-    // If source doesn't contain a known NPC and looks like it could be a quest
-    // Common quest patterns: "Quest: Name", just plain text, etc.
-    if (!result.includes('<a href')) {
-        // Remove "Quest:" prefix if present
-        const questName = result.replace(/^Quest:\s*/i, '').trim();
-        // If it's not empty and not a generic source, make it searchable on wowhead
-        if (questName && !questName.match(/^(Crafted|BoE|Unknown|Various|N\/A)$/i)) {
-            const searchUrl = `https://tbc.wowhead.com/?quest=${encodeURIComponent(questName)}`;
-            result = `<a href="${searchUrl}" class="underline hover:text-terminal-text">${result}</a>`;
+    // Quest handling - check questIds for exact match first
+    const questId = getQuestId(source);
+    if (questId) {
+        return `<a href="https://tbc.wowhead.com/quest=${questId}" data-wowhead="quest=${questId}" class="underline hover:text-terminal-text">${source}</a>`;
+    }
+
+    // Handle quest sources with "/" separator (multiple quest names)
+    if (source.includes('/')) {
+        const firstQuest = source.split('/')[0].trim();
+        const questIdFirst = getQuestId(firstQuest);
+        if (questIdFirst) {
+            return `<a href="https://tbc.wowhead.com/quest=${questIdFirst}" data-wowhead="quest=${questIdFirst}" class="underline hover:text-terminal-text">${firstQuest}</a>`;
         }
     }
 
-    return result;
+    // For quest-like sources that don't match NPC patterns, search on wowhead
+    if (!source.match(/^(Crafted|BoE|Unknown|Various|N\/A|Honor|Arena)$/i)) {
+        const questIdSearch = getQuestId(source.replace(/-.*$/, '').trim());
+        if (questIdSearch) {
+            const cleanQuestName = source.replace(/-.*$/, '').trim();
+            return `<a href="https://tbc.wowhead.com/quest=${questIdSearch}" data-wowhead="quest=${questIdSearch}" class="underline hover:text-terminal-text">${cleanQuestName}</a>`;
+        }
+    }
+
+    return displayText;
 }
 
 // Helper function to generate BIS table rows
@@ -9016,7 +9213,7 @@ priest:{
                     ["NECK","Pendant of Dominance (BEST)","15,300Honor Points— 10 xEye of the Storm Mark of Honor"],
                     ["NECK","Hydra-fang Necklace (OPTION)","Ghaz\'an— (H)Underbog"],
                     ["NECK","Brooch of Heightened Potential (EASY)","Blackheart the Inciter—Shadow Labyrinth"],
-                    ["SHOULDER","Frozen Shadoweave Shoulders (BEST)","Frozen Shadoweave Shoulders—Tailoring"],
+                    ["SHOULDER","Frozen Shadoweave Shoulders (BEST)","Tailoring"],
                     ["SHOULDER","Spaulders of Oblivion (OPTION)","Murmur—Shadow Labyrinth"],
                     ["SHOULDER","Mana-Etched Spaulders (OPTION)","Quagmirran— (H)Slave Pens"],
                     ["SHOULDER","Spaulders of the Torn-heart (EASY)","The Cipher of Damnation - The Third Fragment Recovered"],
@@ -9025,7 +9222,7 @@ priest:{
                     ["CLOAK","Cloak of the Black Void (EASY)","Cloak of the Black Void—Tailoring"],
                     ["CLOAK","Cloak of Entropy (EASY)","BoE World Drop"],
                     ["CLOAK","Warp Infused Drape (OPTION)","Warp Splinter—Botanica"],
-                    ["CHEST","Frozen Shadoweave Robe (BEST)","Frozen Shadoweave Robe—Tailoring"],
+                    ["CHEST","Frozen Shadoweave Robe (BEST)","Tailoring"],
                     ["CHEST","Robe of Oblivion (OPTION)","Murmur—Shadow Labyrinth"],
                     ["CHEST","Mana-Etched Vestments (OPTION)","Epoch Hunter— (H) Old Hillsbrad Foothills"],
                     ["CHEST","Robe of the Crimson Order (EASY)","BoE World Drop"],
@@ -9039,7 +9236,7 @@ priest:{
                     ["LEGS","Breeches of the Occultist (OPTION)","Aeonus— (H)Black Morass"],
                     ["LEGS","Kirin Tor Master\'s Trousers (OPTION)","Murmur— (H)Shadow Labyrinth"],
                     ["LEGS","Khadgar\'s Kilt of Abjuration (OPTION)","Temporus—Black Morass"],
-                    ["BOOTS","Frozen Shadoweave Boots (BEST)","Frozen Shadoweave Boots—Tailoring"],
+                    ["BOOTS","Frozen Shadoweave Boots (BEST)","Tailoring"],
                     ["RING","Seal of the Exorcist (BEST)","Terokkar Forest PvP Vendor"],
                     ["RING","Cobalt Band of Tyrigosa (OPTION)","Nexus-Prince Shaffar— (H)Mana Tombs"],
                     ["RING","Seer\'s Signet (OPTION)","The Scryers- Exalted"],
@@ -13464,7 +13661,7 @@ warlock:{
                     ["NECK","Brooch of Heightened Potential (BEST)","Blackheart the Inciter—Shadow Labyrinth"],
                     ["NECK","Amulet of Vek\'nilash (OPTION)","Emperor Vek\'nilash—AQ40"],
                     ["NECK","Hydra-fang Necklace (OPTION)","Ghaz\'an— HeroicThe Underbog"],
-                    ["SHOULDER","Frozen Shadoweave Shoulders (BEST)","Frozen Shadoweave Shoulders—Tailoring"],
+                    ["SHOULDER","Frozen Shadoweave Shoulders (BEST)","Tailoring"],
                     ["SHOULDER","Mantle of Three Terrors (OPTION)","Chrono Lord Deja—The Black Morass"],
                     ["SHOULDER","Spaulders of the Torn-heart (OPTION)","The Cipher of Damnation - The Third Fragment Recovered"],
                     ["SHOULDER","Plagueheart Shoulderpads (OPTION)","Patchwerk,Grobbulus, orGluth—Naxxramas"],
@@ -13472,7 +13669,7 @@ warlock:{
                     ["CLOAK","Cloak of Entropy (EASY)","BoE World Drop"],
                     ["CLOAK","Cloak of the Necropolis (OPTION)","Sapphiron—Naxxramas"],
                     ["CLOAK","Cloak of the Devoured (OPTION)","C\'Thun—AQ40"],
-                    ["CHEST","Frozen Shadoweave Robe (BEST)","Frozen Shadoweave Robe—Tailoring"],
+                    ["CHEST","Frozen Shadoweave Robe (BEST)","Tailoring"],
                     ["CHEST","Auchenai Anchorite\'s Robe (OPTION)","Everything Will Be Alright"],
                     ["CHEST","Robe of Oblivion (OPTION)","Murmur—Shadow Labyrinth"],
                     ["CHEST","Robe of the Crimson Order (EASY)","BoE World Drop"],
@@ -13488,7 +13685,7 @@ warlock:{
                     ["LEGS","Breeches of the Occultist (OPTION)","Aeonus— HeroicThe Black Morass"],
                     ["LEGS","Trousers of Oblivion (OPTION)","Talon King Ikiss—Sethekk Halls"],
                     ["LEGS","Khadgar\'s Kilt of Abjuration (OPTION)","Temporus—Black Morass"],
-                    ["BOOTS","Frozen Shadoweave Boots (BEST)","Frozen Shadoweave Boots—Tailoring"],
+                    ["BOOTS","Frozen Shadoweave Boots (BEST)","Tailoring"],
                     ["BOOTS","Sigil-Laced Boots (EASY)","Harbinger Skyriss—The Arcatraz"],
                     ["RING","Seal of the Exorcist (BEST)","Terokkar Forest PvP Vendor"],
                     ["RING","Ring of the Fallen God (OPTION)","The Savior of Kalimdor"],
@@ -13763,7 +13960,7 @@ warlock:{
                     ["NECK","Brooch of Heightened Potential (BEST)","Blackheart the Inciter—Shadow Labyrinth"],
                     ["NECK","Amulet of Vek\'nilash (OPTION)","Emperor Vek\'nilash—AQ40"],
                     ["NECK","Hydra-fang Necklace (OPTION)","Ghaz\'an— HeroicThe Underbog"],
-                    ["SHOULDER","Frozen Shadoweave Shoulders (BEST)","Frozen Shadoweave Shoulders—Tailoring"],
+                    ["SHOULDER","Frozen Shadoweave Shoulders (BEST)","Tailoring"],
                     ["SHOULDER","Mantle of Three Terrors (OPTION)","Chrono Lord Deja—The Black Morass"],
                     ["SHOULDER","Spaulders of the Torn-heart (OPTION)","The Cipher of Damnation - The Third Fragment Recovered"],
                     ["SHOULDER","Plagueheart Shoulderpads (OPTION)","Patchwerk,Grobbulus, orGluth—Naxxramas"],
@@ -13771,7 +13968,7 @@ warlock:{
                     ["CLOAK","Cloak of Entropy (EASY)","BoE World Drop"],
                     ["CLOAK","Cloak of the Necropolis (OPTION)","Sapphiron—Naxxramas"],
                     ["CLOAK","Cloak of the Devoured (OPTION)","C\'Thun—AQ40"],
-                    ["CHEST","Frozen Shadoweave Robe (BEST)","Frozen Shadoweave Robe—Tailoring"],
+                    ["CHEST","Frozen Shadoweave Robe (BEST)","Tailoring"],
                     ["CHEST","Auchenai Anchorite\'s Robe (OPTION)","Everything Will Be Alright"],
                     ["CHEST","Robe of Oblivion (OPTION)","Murmur—Shadow Labyrinth"],
                     ["CHEST","Robe of the Crimson Order (EASY)","BoE World Drop"],
@@ -13787,7 +13984,7 @@ warlock:{
                     ["LEGS","Breeches of the Occultist (OPTION)","Aeonus— HeroicThe Black Morass"],
                     ["LEGS","Trousers of Oblivion (OPTION)","Talon King Ikiss—Sethekk Halls"],
                     ["LEGS","Khadgar\'s Kilt of Abjuration (OPTION)","Temporus—Black Morass"],
-                    ["BOOTS","Frozen Shadoweave Boots (BEST)","Frozen Shadoweave Boots—Tailoring"],
+                    ["BOOTS","Frozen Shadoweave Boots (BEST)","Tailoring"],
                     ["BOOTS","Sigil-Laced Boots (EASY)","Harbinger Skyriss—The Arcatraz"],
                     ["RING","Seal of the Exorcist (BEST)","Terokkar Forest PvP Vendor"],
                     ["RING","Ring of the Fallen God (OPTION)","The Savior of Kalimdor"],
@@ -14118,7 +14315,7 @@ warlock:{
                     ["NECK","Brooch of Heightened Potential (BEST)","Blackheart the Inciter—Shadow Labyrinth"],
                     ["NECK","Amulet of Vek\'nilash (OPTION)","Emperor Vek\'nilash—AQ40"],
                     ["NECK","Hydra-fang Necklace (OPTION)","Ghaz\'an— HeroicThe Underbog"],
-                    ["SHOULDER","Frozen Shadoweave Shoulders (BEST)","Frozen Shadoweave Shoulders—Tailoring"],
+                    ["SHOULDER","Frozen Shadoweave Shoulders (BEST)","Tailoring"],
                     ["SHOULDER","Mantle of Three Terrors (OPTION)","Chrono Lord Deja—The Black Morass"],
                     ["SHOULDER","Spaulders of the Torn-heart (OPTION)","The Cipher of Damnation - The Third Fragment Recovered"],
                     ["SHOULDER","Plagueheart Shoulderpads (OPTION)","Patchwerk,Grobbulus, orGluth—Naxxramas"],
@@ -14126,7 +14323,7 @@ warlock:{
                     ["CLOAK","Cloak of Entropy (EASY)","BoE World Drop"],
                     ["CLOAK","Cloak of the Necropolis (OPTION)","Sapphiron—Naxxramas"],
                     ["CLOAK","Cloak of the Devoured (OPTION)","C\'Thun—AQ40"],
-                    ["CHEST","Frozen Shadoweave Robe (BEST)","Frozen Shadoweave Robe—Tailoring"],
+                    ["CHEST","Frozen Shadoweave Robe (BEST)","Tailoring"],
                     ["CHEST","Spellfire Robe (BEST)","Spellfire Robe—Tailoring"],
                     ["CHEST","Auchenai Anchorite\'s Robe (OPTION)","Everything Will Be Alright"],
                     ["CHEST","Robe of Oblivion (OPTION)","Murmur—Shadow Labyrinth"],
@@ -14145,7 +14342,7 @@ warlock:{
                     ["LEGS","Breeches of the Occultist (OPTION)","Aeonus— HeroicThe Black Morass"],
                     ["LEGS","Trousers of Oblivion (OPTION)","Talon King Ikiss—Sethekk Halls"],
                     ["LEGS","Khadgar\'s Kilt of Abjuration (OPTION)","Temporus—Black Morass"],
-                    ["BOOTS","Frozen Shadoweave Boots (BEST)","Frozen Shadoweave Boots—Tailoring"],
+                    ["BOOTS","Frozen Shadoweave Boots (BEST)","Tailoring"],
                     ["BOOTS","Sigil-Laced Boots (EASY)","Harbinger Skyriss—The Arcatraz"],
                     ["BOOTS","Shattrath Jumpers (EASY)","Into the Heart of the Labyrinth"],
                     ["RING","Seal of the Exorcist (BEST)","Terokkar Forest PvP Vendor"],
