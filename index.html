@@ -16234,9 +16234,23 @@ function renderRecipesContent() {
 
         for (const recipe of category.recipes) {
             const priority = priorityLabels[recipe.priority] || priorityLabels.medium;
+
+            // Handle recipe name with tooltip - some items like head/shoulder enchants don't have craftable spell IDs
+            let recipeName;
+            if (recipe.itemId) {
+                // Use item tooltip
+                recipeName = `<a href="https://tbc.wowhead.com/item=${recipe.itemId}" data-wowhead="item=${recipe.itemId}" class="text-terminal-accent hover:text-terminal-text">${recipe.name}</a>`;
+            } else if (recipe.spellId && recipe.spellId > 0) {
+                // Use spell tooltip
+                recipeName = `<a href="https://tbc.wowhead.com/spell=${recipe.spellId}" data-wowhead="spell=${recipe.spellId}" class="text-terminal-accent hover:text-terminal-text">${recipe.name}</a>`;
+            } else {
+                // No tooltip, just plain text
+                recipeName = `<span class="text-terminal-accent">${recipe.name}</span>`;
+            }
+
             html += `
                 <tr class="border-b border-terminal-dim border-opacity-30 hover:bg-terminal-dim hover:bg-opacity-10">
-                    <td class="p-2.5 md:p-2 sm:p-1.5"><a href="https://tbc.wowhead.com/spell=${recipe.spellId}" data-wowhead="spell=${recipe.spellId}" class="text-terminal-accent hover:text-terminal-text">${recipe.name}</a></td>
+                    <td class="p-2.5 md:p-2 sm:p-1.5">${recipeName}</td>
                     <td class="p-2.5 text-terminal-dim md:p-2 sm:p-1.5">${recipe.source}</td>
                     <td class="p-2.5 md:p-2 sm:p-1.5"><span class="px-2 py-0.5 text-[10px] font-semibold ${priority.class}">${priority.text}</span></td>
                     <td class="p-2.5 text-terminal-dim italic md:p-2 sm:p-1.5">${recipe.notes}</td>
