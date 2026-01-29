@@ -349,9 +349,6 @@
    | | | |_) | |  _ _| |_ >  <| |_
    |_| |____/ \___(_)\__ /_/\_\\__|</div>
         <div class="text-terminal-dim text-xs mb-0 md:text-[11px] sm:text-[10px]">// A Burning Crusade PvE Database</div>
-        <div class="mt-3 md:mt-2 sm:mt-2">
-            <a href="recipes.html" class="text-terminal-accent hover:text-terminal-text underline text-xs md:text-[11px] sm:text-[10px]">🏭 View Important Profession Recipes →</a>
-        </div>
     </header>
     <div class="grid grid-cols-[250px_1fr] gap-5 mb-5 md:grid-cols-1 md:gap-4 md:mb-4 sm:gap-3 sm:mb-3">
         <aside class="border border-terminal-text p-4 h-fit md:mb-0 md:p-4 sm:p-3">
@@ -366,6 +363,10 @@
                 <li class="py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-class="mage">[ MAGE ]</li>
                 <li class="py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-class="warlock">[ WARLOCK ]</li>
                 <li class="py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-class="druid">[ DRUID ]</li>
+            </ul>
+            <h3 class="text-terminal-accent text-sm mb-3 mt-5 uppercase md:text-[13px] md:mb-2.5 md:mt-4 sm:text-xs sm:mb-2 sm:mt-3">&#9660; MISC</h3>
+            <ul class="class-list list-none">
+                <li class="py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="recipes">[ RECIPES ]</li>
             </ul>
         </aside>
         <main id="main-content" class="border border-terminal-text p-5 md:p-4 sm:p-3"></main>
@@ -15600,7 +15601,678 @@ mage:{
 
 };
 
+// ===== PROFESSION RECIPES DATA =====
+const recipesData = {
+    blacksmithing: {
+        title: "Blacksmithing",
+        categories: {
+            weaponsmithing: {
+                name: "Weaponsmithing",
+                recipes: [
+                    { name: "Lionheart Champion", spellId: 36122, source: "Drop - Vashj/Kael'thas", priority: "high", notes: "BiS 2H weapon through T5, worth getting early" },
+                    { name: "Dragonstrike", spellId: 36125, source: "Drop - Vashj/Kael'thas", priority: "high", notes: "BiS 1H for Enhancement Shamans in T5" },
+                    { name: "Dragonmaw", spellId: 36124, source: "Drop - Vashj/Kael'thas", priority: "high", notes: "Great DPS 1H weapon" },
+                    { name: "Lionheart Executioner", spellId: 36133, source: "Drop - BT/Hyjal", priority: "high", notes: "T6 upgrade to Lionheart Champion" },
+                    { name: "Wicked Edge of the Planes", spellId: 36135, source: "Drop - BT/Hyjal", priority: "medium", notes: "T6 dagger option" },
+                    { name: "Blazefury", spellId: 36131, source: "Drop - BT/Hyjal", priority: "medium", notes: "T6 1H sword with fire damage" },
+                    { name: "Eternium Runed Blade", spellId: 34542, source: "Trainer", priority: "high", notes: "Pre-raid BiS caster sword" },
+                    { name: "Fel Edged Battleaxe", spellId: 34541, source: "Trainer", priority: "medium", notes: "Pre-raid option for plate DPS" },
+                    { name: "Runic Hammer", spellId: 34543, source: "Trainer", priority: "medium", notes: "Pre-raid 1H mace option" },
+                ]
+            },
+            armorsmithing: {
+                name: "Armorsmithing",
+                recipes: [
+                    { name: "Bulwark of Kings", spellId: 36134, source: "Drop - BT/Hyjal", priority: "high", notes: "Excellent tank shield" },
+                    { name: "Bulwark of the Ancient Kings", spellId: 36136, source: "Drop - Sunwell", priority: "high", notes: "Best crafted tank shield in TBC" },
+                    { name: "Ragesteel Helm", spellId: 36256, source: "Trainer", priority: "medium", notes: "Pre-raid BiS for many DPS specs" },
+                    { name: "Ragesteel Breastplate", spellId: 36257, source: "Trainer", priority: "medium", notes: "Pre-raid BiS chest" },
+                    { name: "Ragesteel Gloves", spellId: 36258, source: "Trainer", priority: "medium", notes: "Pre-raid BiS gloves for DPS" },
+                    { name: "Ragesteel Shoulders", spellId: 36259, source: "Trainer", priority: "medium", notes: "Pre-raid BiS shoulders for DPS" },
+                    { name: "Black Felsteel Bracers", spellId: 36262, source: "Vendor - Shattrath", priority: "medium", notes: "Pre-raid BiS bracers for DPS" },
+                    { name: "Belt of the Guardian", spellId: 36130, source: "Drop - BT/Hyjal", priority: "high", notes: "BiS tank belt for most of TBC" },
+                    { name: "Red Belt of Battle", spellId: 36129, source: "Drop - BT/Hyjal", priority: "high", notes: "BiS DPS plate belt" },
+                    { name: "Red Havoc Boots", spellId: 36128, source: "Drop - BT/Hyjal", priority: "high", notes: "BiS DPS plate boots" },
+                    { name: "Boots of the Protector", spellId: 36126, source: "Drop - BT/Hyjal", priority: "high", notes: "BiS tank boots" },
+                    { name: "Helm of the Stalwart Defender", spellId: 36257, source: "Trainer", priority: "high", notes: "Pre-raid BiS tank helm" },
+                    { name: "Felsteel Helm", spellId: 29545, source: "Trainer", priority: "medium", notes: "Pre-raid tank helm option" },
+                    { name: "Felsteel Gloves", spellId: 29548, source: "Trainer", priority: "medium", notes: "Pre-raid BiS tank gloves" },
+                    { name: "Felsteel Leggings", spellId: 29549, source: "Trainer", priority: "medium", notes: "Pre-raid BiS tank legs" },
+                    { name: "Bracers of the Green Fortress", spellId: 36389, source: "Trainer", priority: "high", notes: "Pre-raid BiS tank bracers" },
+                    { name: "Felfury Gauntlets", spellId: 29550, source: "Trainer", priority: "medium", notes: "Pre-raid DPS gloves option" },
+                    { name: "Blessed Bracers", spellId: 34533, source: "Trainer", priority: "high", notes: "Pre-raid BiS healer bracers" },
+                    { name: "Hard Khorium Battlefists", spellId: 41134, source: "Drop - BT/Hyjal", priority: "high", notes: "T6 tank gloves" },
+                ]
+            },
+            goldmaking: {
+                name: "Goldmaking",
+                recipes: [
+                    { name: "Adamantite Weightstone", spellId: 29657, source: "Trainer", priority: "high", notes: "High demand consumable for melee" },
+                    { name: "Adamantite Sharpening Stone", spellId: 29656, source: "Trainer", priority: "high", notes: "High demand consumable for melee" },
+                    { name: "Felsteel Shield Spike", spellId: 29656, source: "Vendor - Honor Hold/Thrallmar", priority: "medium", notes: "Tank shield spike, steady seller" },
+                    { name: "Adamantite Rod", spellId: 32655, source: "Trainer", priority: "medium", notes: "Required for enchanters, steady seller" },
+                    { name: "Eternium Rod", spellId: 32656, source: "Trainer", priority: "medium", notes: "Required for enchanters, steady seller" },
+                ]
+            }
+        }
+    },
+    tailoring: {
+        title: "Tailoring",
+        categories: {
+            shadoweave: {
+                name: "Shadoweave (Shadow Priest/Warlock)",
+                recipes: [
+                    { name: "Frozen Shadoweave Vest", spellId: 36315, source: "Drop - Murmur (Shadow Labyrinth)", priority: "high", notes: "BiS shadow damage chest through early phases" },
+                    { name: "Frozen Shadoweave Shoulders", spellId: 36316, source: "Drop - Grandmaster Vorpil (Shadow Labyrinth)", priority: "high", notes: "BiS shadow damage shoulders" },
+                    { name: "Frozen Shadoweave Boots", spellId: 36317, source: "Drop - Blackheart the Inciter (Shadow Labyrinth)", priority: "high", notes: "Completes the shadow set" },
+                ]
+            },
+            spellfire: {
+                name: "Spellfire (Fire/Arcane Mage)",
+                recipes: [
+                    { name: "Spellfire Belt", spellId: 36318, source: "World Drop", priority: "high", notes: "BiS fire/arcane damage belt" },
+                    { name: "Spellfire Gloves", spellId: 36319, source: "World Drop", priority: "high", notes: "BiS fire/arcane damage gloves" },
+                    { name: "Spellfire Robe", spellId: 36320, source: "Quest - Becoming a Spellfire Tailor", priority: "high", notes: "BiS fire/arcane damage chest, spec requirement" },
+                ]
+            },
+            mooncloth: {
+                name: "Primal Mooncloth (Healer)",
+                recipes: [
+                    { name: "Primal Mooncloth Belt", spellId: 26754, source: "Vendor - Aldor/Scryer", priority: "high", notes: "BiS healer belt through T5" },
+                    { name: "Primal Mooncloth Shoulders", spellId: 26756, source: "Vendor - Aldor/Scryer", priority: "high", notes: "BiS healer shoulders through T5" },
+                    { name: "Primal Mooncloth Robe", spellId: 26760, source: "Quest - Becoming a Mooncloth Tailor", priority: "high", notes: "BiS healer chest, spec requirement" },
+                ]
+            },
+            general: {
+                name: "General/Utility",
+                recipes: [
+                    { name: "Spellstrike Hood", spellId: 31455, source: "Drop - Dalliah (Arcatraz)", priority: "high", notes: "BiS caster DPS helm for most specs" },
+                    { name: "Spellstrike Pants", spellId: 31454, source: "Drop - Murmur (Shadow Labyrinth)", priority: "high", notes: "BiS caster DPS legs for most specs" },
+                    { name: "Whitemend Hood", spellId: 31456, source: "Drop - High Botanist Freywinn (Botanica)", priority: "high", notes: "BiS healer helm through T5" },
+                    { name: "Whitemend Pants", spellId: 31459, source: "Drop - Pathaleon (Mechanar)", priority: "high", notes: "BiS healer legs through T5" },
+                    { name: "Belt of Blasting", spellId: 36316, source: "Drop - BT/Hyjal", priority: "high", notes: "BiS caster DPS belt" },
+                    { name: "Boots of Blasting", spellId: 36318, source: "Drop - BT/Hyjal", priority: "high", notes: "BiS caster DPS boots" },
+                    { name: "Belt of the Long Road", spellId: 36315, source: "Drop - BT/Hyjal", priority: "high", notes: "BiS healer belt in T6" },
+                    { name: "Boots of the Long Road", spellId: 36317, source: "Drop - BT/Hyjal", priority: "high", notes: "BiS healer boots in T6" },
+                    { name: "Bracers of Havok", spellId: 31434, source: "Drop - Various TK/SSC", priority: "high", notes: "Pre-raid BiS caster bracers" },
+                    { name: "Bracers of Nimble Thought", spellId: 46129, source: "Drop - Sunwell", priority: "high", notes: "BiS caster bracers in Sunwell" },
+                    { name: "Mantle of Nimble Thought", spellId: 46130, source: "Drop - Sunwell", priority: "high", notes: "BiS caster shoulders in Sunwell" },
+                    { name: "Swiftheal Wraps", spellId: 46131, source: "Drop - Sunwell", priority: "high", notes: "BiS healer bracers in Sunwell" },
+                    { name: "Sunfire Robe", spellId: 46128, source: "Drop - Sunwell", priority: "high", notes: "BiS caster chest in Sunwell" },
+                    { name: "Sunfire Handwraps", spellId: 46129, source: "Drop - Sunwell", priority: "high", notes: "BiS caster gloves in Sunwell" },
+                    { name: "Robe of Eternal Light", spellId: 46130, source: "Drop - Sunwell", priority: "high", notes: "BiS healer chest in Sunwell" },
+                    { name: "Hands of Eternal Light", spellId: 46131, source: "Drop - Sunwell", priority: "high", notes: "BiS healer gloves in Sunwell" },
+                    { name: "Girdle of Ruination", spellId: 31440, source: "Drop - TK/SSC", priority: "high", notes: "Pre-raid BiS caster belt option" },
+                    { name: "Vengeance Wrap", spellId: 31441, source: "Drop - Various Heroics", priority: "high", notes: "Pre-raid BiS DPS cloak" },
+                    { name: "Cloak of Eternity", spellId: 31442, source: "Drop - Various Heroics", priority: "high", notes: "Pre-raid BiS tank cloak" },
+                    { name: "Cloak of the Black Void", spellId: 31438, source: "Trainer", priority: "medium", notes: "Pre-raid caster cloak option" },
+                    { name: "White Remedy Cape", spellId: 31437, source: "Trainer", priority: "medium", notes: "Pre-raid healer cloak option" },
+                    { name: "Primal Mooncloth", spellId: 26751, source: "Trainer", priority: "medium", notes: "Cooldown material, used for many recipes" },
+                    { name: "Shadowcloth", spellId: 36686, source: "Trainer", priority: "medium", notes: "Cooldown material, required for Shadoweave" },
+                    { name: "Spellcloth", spellId: 31373, source: "Trainer", priority: "medium", notes: "Cooldown material, required for Spellfire" },
+                ]
+            },
+            spellthread: {
+                name: "Spellthread (Leg Enchants)",
+                recipes: [
+                    { name: "Runic Spellthread", spellId: 31431, source: "Reputation - Aldor (Exalted)", priority: "high", notes: "BiS caster leg enchant (+35 spell damage, +20 stam)" },
+                    { name: "Golden Spellthread", spellId: 31430, source: "Reputation - Scryers (Exalted)", priority: "high", notes: "BiS healer leg enchant (+66 healing, +20 stam)" },
+                    { name: "Mystic Spellthread", spellId: 31432, source: "Reputation - Aldor (Honored)", priority: "medium", notes: "Budget caster leg enchant" },
+                    { name: "Silver Spellthread", spellId: 31433, source: "Reputation - Scryers (Honored)", priority: "medium", notes: "Budget healer leg enchant" },
+                ]
+            },
+            goldmaking: {
+                name: "Goldmaking",
+                recipes: [
+                    { name: "Shadowcloth", spellId: 36686, source: "Trainer", priority: "high", notes: "Cooldown cloth - sell or use, high profit" },
+                    { name: "Spellcloth", spellId: 31373, source: "Trainer", priority: "high", notes: "Cooldown cloth - sell or use, high profit" },
+                    { name: "Primal Mooncloth", spellId: 26751, source: "Trainer", priority: "high", notes: "Cooldown cloth - sell or use, high profit" },
+                    { name: "Netherweave Bag", spellId: 26746, source: "Trainer", priority: "high", notes: "16-slot bag, always in demand" },
+                    { name: "Imbued Netherweave Bag", spellId: 26749, source: "Trainer", priority: "medium", notes: "18-slot bag, steady seller" },
+                    { name: "Primal Mooncloth Bag", spellId: 26752, source: "Drop - Various", priority: "medium", notes: "20-slot bag, premium seller" },
+                ]
+            }
+        }
+    },
+    leatherworking: {
+        title: "Leatherworking",
+        categories: {
+            drums: {
+                name: "Drums (ESSENTIAL)",
+                recipes: [
+                    { name: "Drums of Battle", spellId: 35543, source: "Trainer", priority: "high", notes: "REQUIRED for all LWers in raids, +80 haste to party" },
+                    { name: "Drums of War", spellId: 35544, source: "Trainer", priority: "high", notes: "Alternative drums, +60 AP to party" },
+                    { name: "Drums of Restoration", spellId: 35538, source: "Trainer", priority: "medium", notes: "Mana restore drums for healers" },
+                    { name: "Drums of Panic", spellId: 35540, source: "Trainer", priority: "low", notes: "AoE fear for emergencies" },
+                ]
+            },
+            legarmor: {
+                name: "Leg Armor Kits",
+                recipes: [
+                    { name: "Nethercobra Leg Armor", spellId: 35549, source: "Reputation - Cenarion Expedition (Honored)", priority: "high", notes: "BiS leg enchant for DPS (50 AP, 12 crit)" },
+                    { name: "Nethercleft Leg Armor", spellId: 35554, source: "Reputation - Cenarion Expedition (Honored)", priority: "high", notes: "BiS leg enchant for tanks (40 stam, 12 agi)" },
+                    { name: "Cobrahide Leg Armor", spellId: 35536, source: "Reputation - Cenarion Expedition (Friendly)", priority: "medium", notes: "Budget DPS leg enchant (40 AP, 10 crit)" },
+                    { name: "Clefthide Leg Armor", spellId: 35535, source: "Reputation - Cenarion Expedition (Friendly)", priority: "medium", notes: "Budget tank leg enchant (30 stam, 10 agi)" },
+                ]
+            },
+            leather: {
+                name: "Leather Gear",
+                recipes: [
+                    { name: "Primalstrike Vest", spellId: 35574, source: "Drop - The Maker (Hellfire Ramparts Heroic)", priority: "high", notes: "Pre-raid BiS for feral DPS" },
+                    { name: "Primalstrike Bracers", spellId: 35575, source: "Drop - Coilfang Reservoir", priority: "high", notes: "Pre-raid BiS bracers for feral" },
+                    { name: "Primalstrike Belt", spellId: 35576, source: "Drop - Coilfang Reservoir", priority: "high", notes: "Pre-raid BiS belt for feral" },
+                    { name: "Fel Leather Gloves", spellId: 35530, source: "Drop - Various Heroics", priority: "high", notes: "Pre-raid BiS gloves for rogues/feral" },
+                    { name: "Fel Leather Boots", spellId: 35531, source: "Drop - Various Heroics", priority: "high", notes: "Pre-raid BiS boots for rogues/feral" },
+                    { name: "Fel Leather Leggings", spellId: 35529, source: "Drop - Various Heroics", priority: "high", notes: "Pre-raid BiS legs for rogues/feral" },
+                    { name: "Windhawk Hauberk", spellId: 35587, source: "Drop - Coilfang Reservoir", priority: "high", notes: "Great healing chest piece" },
+                    { name: "Windhawk Bracers", spellId: 35588, source: "Drop - Coilfang Reservoir", priority: "high", notes: "Great healing bracers" },
+                    { name: "Windhawk Belt", spellId: 35589, source: "Drop - Coilfang Reservoir", priority: "high", notes: "Great healing belt" },
+                    { name: "Wolfshead Helm", spellId: 10621, source: "Trainer", priority: "high", notes: "BiS helm for feral DPS (energy on shift)" },
+                    { name: "Heavy Clefthoof Vest", spellId: 35540, source: "Trainer", priority: "high", notes: "Pre-raid BiS chest for feral tank" },
+                    { name: "Heavy Clefthoof Leggings", spellId: 35541, source: "Trainer", priority: "high", notes: "Pre-raid BiS legs for feral tank" },
+                    { name: "Heavy Clefthoof Boots", spellId: 35542, source: "Trainer", priority: "high", notes: "Pre-raid BiS boots for feral tank" },
+                    { name: "Gloves of the Living Touch", spellId: 35558, source: "Drop - Various", priority: "high", notes: "Pre-raid BiS healer gloves" },
+                    { name: "Carapace of Sun and Shadow", spellId: 46132, source: "Drop - Sunwell", priority: "high", notes: "BiS rogue chest in Sunwell" },
+                    { name: "Belt of Deep Shadow", spellId: 46133, source: "Drop - Sunwell", priority: "high", notes: "BiS rogue belt in Sunwell" },
+                    { name: "Boots of Utter Darkness", spellId: 46134, source: "Drop - Sunwell", priority: "high", notes: "BiS rogue boots in Sunwell" },
+                    { name: "Bracers of Renewed Life", spellId: 46135, source: "Drop - Sunwell", priority: "high", notes: "BiS healer bracers in Sunwell" },
+                    { name: "Boots of Natural Grace", spellId: 46136, source: "Drop - Sunwell", priority: "high", notes: "BiS feral boots in Sunwell" },
+                    { name: "Gloves of Immortal Dusk", spellId: 46137, source: "Drop - Sunwell", priority: "high", notes: "BiS rogue gloves in Sunwell" },
+                    { name: "Shoulderpads of Renewed Life", spellId: 46138, source: "Drop - Sunwell", priority: "high", notes: "BiS healer shoulders in Sunwell" },
+                    { name: "Swiftstrike Shoulders", spellId: 46139, source: "Drop - Sunwell", priority: "high", notes: "BiS melee leather shoulders" },
+                    { name: "Bindings of Lightning Reflexes", spellId: 46140, source: "Drop - Sunwell", priority: "high", notes: "BiS melee leather bracers" },
+                    { name: "Living Earth Bindings", spellId: 46141, source: "Drop - Sunwell", priority: "high", notes: "BiS healer leather bracers" },
+                ]
+            },
+            mail: {
+                name: "Mail Gear",
+                recipes: [
+                    { name: "Ebon Netherscale Breastplate", spellId: 35580, source: "Drop - Various", priority: "high", notes: "Pre-raid BiS chest for Enhancement Shaman" },
+                    { name: "Ebon Netherscale Belt", spellId: 35581, source: "Drop - Various", priority: "high", notes: "Pre-raid BiS belt for Enhancement Shaman" },
+                    { name: "Ebon Netherscale Bracers", spellId: 35582, source: "Drop - Various", priority: "high", notes: "Pre-raid BiS bracers for Enhancement Shaman" },
+                    { name: "Netherstrike Breastplate", spellId: 35583, source: "Drop - Various", priority: "high", notes: "Pre-raid BiS chest for Elemental Shaman" },
+                    { name: "Netherstrike Belt", spellId: 35584, source: "Drop - Various", priority: "high", notes: "Pre-raid BiS belt for Elemental Shaman" },
+                    { name: "Netherstrike Bracers", spellId: 35585, source: "Drop - Various", priority: "high", notes: "Pre-raid BiS bracers for Elemental Shaman" },
+                    { name: "Felstalker Bracers", spellId: 35532, source: "Drop - Various Heroics", priority: "high", notes: "Pre-raid BiS bracers for hunters" },
+                    { name: "Netherdrake Gloves", spellId: 35533, source: "Drop - Various Heroics", priority: "high", notes: "Pre-raid BiS gloves for hunters" },
+                    { name: "Windslayer Wraps", spellId: 35534, source: "Drop - Various Heroics", priority: "medium", notes: "Pre-raid DPS gloves option" },
+                    { name: "Cobrascale Gloves", spellId: 35535, source: "Drop - Various Heroics", priority: "medium", notes: "Pre-raid DPS gloves option" },
+                    { name: "Sun-Drenched Scale Chestguard", spellId: 46142, source: "Drop - Sunwell", priority: "high", notes: "BiS healer mail chest in Sunwell" },
+                    { name: "Sun-Drenched Scale Gloves", spellId: 46143, source: "Drop - Sunwell", priority: "high", notes: "BiS healer mail gloves in Sunwell" },
+                    { name: "Leather Chestguard of the Sun", spellId: 46144, source: "Drop - Sunwell", priority: "high", notes: "BiS healer leather chest in Sunwell" },
+                    { name: "Leather Gauntlets of the Sun", spellId: 46145, source: "Drop - Sunwell", priority: "high", notes: "BiS healer leather gloves in Sunwell" },
+                ]
+            },
+            goldmaking: {
+                name: "Goldmaking",
+                recipes: [
+                    { name: "Drums of Battle", spellId: 35543, source: "Trainer", priority: "high", notes: "High demand raid consumable, steady profit" },
+                    { name: "Nethercobra Leg Armor", spellId: 35549, source: "Reputation - Cenarion Expedition", priority: "high", notes: "High demand leg enchant, great profit" },
+                    { name: "Nethercleft Leg Armor", spellId: 35554, source: "Reputation - Cenarion Expedition", priority: "high", notes: "High demand leg enchant, great profit" },
+                    { name: "Heavy Knothide Leather", spellId: 32455, source: "Trainer", priority: "medium", notes: "Convert regular leather for profit" },
+                    { name: "Riding Crop", spellId: 32461, source: "Drop - Various", priority: "medium", notes: "Mount speed trinket, steady seller" },
+                ]
+            }
+        }
+    },
+    alchemy: {
+        title: "Alchemy",
+        categories: {
+            flasks: {
+                name: "Flasks",
+                recipes: [
+                    { name: "Flask of Blinding Light", spellId: 28549, source: "Drop - Alchemy Lab (Botanica)", priority: "high", notes: "Primary caster DPS flask" },
+                    { name: "Flask of Pure Death", spellId: 28550, source: "Drop - Alchemy Lab (Shadow Labyrinth)", priority: "high", notes: "Warlock/Shadow Priest flask" },
+                    { name: "Flask of Relentless Assault", spellId: 28551, source: "Drop - Alchemy Lab (Steamvault)", priority: "high", notes: "Primary melee/hunter DPS flask" },
+                    { name: "Flask of Mighty Restoration", spellId: 28552, source: "Drop - Alchemy Lab (Underbog)", priority: "high", notes: "Healer flask" },
+                    { name: "Flask of Fortification", spellId: 28553, source: "Drop - Alchemy Lab (Slave Pens)", priority: "high", notes: "Tank flask" },
+                    { name: "Flask of Chromatic Wonder", spellId: 42736, source: "Reputation - Violet Eye (Honored)", priority: "medium", notes: "Budget all-purpose flask" },
+                ]
+            },
+            potions: {
+                name: "Important Potions/Elixirs",
+                recipes: [
+                    { name: "Haste Potion", spellId: 28493, source: "Trainer", priority: "high", notes: "Critical raid consumable for DPS" },
+                    { name: "Destruction Potion", spellId: 28508, source: "Drop - Various Outland dungeons", priority: "high", notes: "Caster DPS potion (+120 spell damage)" },
+                    { name: "Ironshield Potion", spellId: 28515, source: "Drop - Various Outland dungeons", priority: "high", notes: "Tank potion (+2500 armor)" },
+                    { name: "Super Mana Potion", spellId: 28499, source: "Trainer", priority: "high", notes: "Essential for casters/healers" },
+                    { name: "Super Healing Potion", spellId: 28495, source: "Trainer", priority: "high", notes: "Emergency healing" },
+                    { name: "Elixir of Major Agility", spellId: 28497, source: "Trainer", priority: "medium", notes: "DPS elixir for rogues/hunters" },
+                    { name: "Elixir of Major Strength", spellId: 28491, source: "Trainer", priority: "medium", notes: "DPS elixir for warriors/paladins" },
+                    { name: "Elixir of Draenic Wisdom", spellId: 28501, source: "Trainer", priority: "medium", notes: "Budget healer elixir" },
+                    { name: "Elixir of Major Mageblood", spellId: 28503, source: "Trainer", priority: "medium", notes: "Mp5 elixir for healers" },
+                    { name: "Elixir of Major Defense", spellId: 28502, source: "Trainer", priority: "medium", notes: "Tank armor elixir" },
+                ]
+            },
+            transmutes: {
+                name: "Transmutes",
+                recipes: [
+                    { name: "Transmute: Primal Might", spellId: 29688, source: "Trainer", priority: "high", notes: "Cooldown, required for many crafted items" },
+                    { name: "Transmute: Earthstorm Diamond", spellId: 32765, source: "Trainer", priority: "medium", notes: "Cooldown, creates meta gems" },
+                    { name: "Transmute: Skyfire Diamond", spellId: 32766, source: "Trainer", priority: "medium", notes: "Cooldown, creates meta gems" },
+                    { name: "Transmute: Primal Fire to Earth", spellId: 28566, source: "Trainer", priority: "low", notes: "No cooldown primal conversion" },
+                    { name: "Transmute: Primal Water to Air", spellId: 28567, source: "Trainer", priority: "low", notes: "No cooldown primal conversion" },
+                    { name: "Transmute: Primal Air to Fire", spellId: 28568, source: "Trainer", priority: "low", notes: "No cooldown primal conversion" },
+                    { name: "Transmute: Primal Earth to Water", spellId: 28569, source: "Trainer", priority: "low", notes: "No cooldown primal conversion" },
+                    { name: "Transmute: Primal Shadow to Water", spellId: 28570, source: "Trainer", priority: "low", notes: "No cooldown primal conversion" },
+                    { name: "Transmute: Primal Life to Earth", spellId: 28571, source: "Trainer", priority: "low", notes: "No cooldown primal conversion" },
+                ]
+            },
+            stones: {
+                name: "Alchemist Stones (BoP)",
+                recipes: [
+                    { name: "Alchemist's Stone", spellId: 17632, source: "Trainer", priority: "high", notes: "Required for upgrades, good trinket" },
+                    { name: "Sorcerer's Alchemist Stone", spellId: 47050, source: "Shattered Sun Offensive (Exalted)", priority: "high", notes: "BiS caster DPS trinket option" },
+                    { name: "Redeemer's Alchemist Stone", spellId: 47049, source: "Shattered Sun Offensive (Exalted)", priority: "high", notes: "BiS healer trinket option" },
+                    { name: "Assassin's Alchemist Stone", spellId: 47048, source: "Shattered Sun Offensive (Exalted)", priority: "high", notes: "BiS melee DPS trinket option" },
+                    { name: "Guardian's Alchemist Stone", spellId: 47051, source: "Shattered Sun Offensive (Exalted)", priority: "high", notes: "BiS tank trinket option" },
+                ]
+            },
+            goldmaking: {
+                name: "Goldmaking",
+                recipes: [
+                    { name: "Transmute: Primal Might", spellId: 29688, source: "Trainer", priority: "high", notes: "Daily cooldown, 100-300g profit per transmute" },
+                    { name: "Transmute: Earthstorm Diamond", spellId: 32765, source: "Trainer", priority: "high", notes: "Shares CD with Primal Might, often more profit" },
+                    { name: "Transmute: Skyfire Diamond", spellId: 32766, source: "Trainer", priority: "high", notes: "Shares CD with Primal Might, often more profit" },
+                    { name: "Flask of Relentless Assault", spellId: 28551, source: "Drop - Alchemy Lab", priority: "high", notes: "High demand flask, great for raid nights" },
+                    { name: "Super Mana Potion", spellId: 28499, source: "Trainer", priority: "high", notes: "Constant demand from casters/healers" },
+                    { name: "Haste Potion", spellId: 28493, source: "Trainer", priority: "high", notes: "High demand from all DPS players" },
+                    { name: "Major Arcane Protection Potion", spellId: 28538, source: "Drop - Arcane mobs", priority: "medium", notes: "Required for certain raid bosses" },
+                    { name: "Major Shadow Protection Potion", spellId: 28537, source: "Drop - Shadow mobs", priority: "medium", notes: "Required for certain raid bosses" },
+                    { name: "Major Nature Protection Potion", spellId: 28539, source: "Drop - Nature mobs", priority: "medium", notes: "Required for certain raid bosses" },
+                    { name: "Major Fire Protection Potion", spellId: 28540, source: "Drop - Fire mobs", priority: "medium", notes: "Required for certain raid bosses" },
+                    { name: "Major Frost Protection Potion", spellId: 28541, source: "Drop - Frost mobs", priority: "medium", notes: "Required for certain raid bosses" },
+                ]
+            }
+        }
+    },
+    enchanting: {
+        title: "Enchanting",
+        categories: {
+            weapon: {
+                name: "Weapon Enchants",
+                recipes: [
+                    { name: "Enchant Weapon - Mongoose", spellId: 27984, source: "Drop - Moroes (Karazhan)", priority: "high", notes: "Top weapon enchant for fast weapons" },
+                    { name: "Enchant Weapon - Executioner", spellId: 42974, source: "Drop - World Drop", priority: "high", notes: "Top weapon enchant for melee DPS (Phase 3+)" },
+                    { name: "Enchant Weapon - Major Spellpower", spellId: 27982, source: "Drop - World Drop", priority: "high", notes: "BiS weapon enchant for casters" },
+                    { name: "Enchant Weapon - Major Healing", spellId: 34010, source: "Reputation - Sha'tar (Revered)", priority: "high", notes: "BiS weapon enchant for healers" },
+                    { name: "Enchant Weapon - Soulfrost", spellId: 27981, source: "Reputation - Violet Eye (Exalted)", priority: "high", notes: "Shadow/Frost caster enchant" },
+                    { name: "Enchant Weapon - Sunfire", spellId: 27982, source: "Reputation - Violet Eye (Exalted)", priority: "high", notes: "Fire/Arcane caster enchant" },
+                    { name: "Enchant Weapon - Greater Agility", spellId: 27977, source: "Trainer", priority: "high", notes: "BiS 1H weapon enchant for hunters/rogues" },
+                    { name: "Enchant 2H Weapon - Savagery", spellId: 27977, source: "Drop - World Drop", priority: "high", notes: "BiS 2H enchant for melee DPS (+70 AP)" },
+                    { name: "Enchant 2H Weapon - Major Agility", spellId: 27977, source: "Trainer", priority: "high", notes: "BiS 2H enchant for hunters (+35 agi)" },
+                ]
+            },
+            armor: {
+                name: "Armor Enchants",
+                recipes: [
+                    { name: "Enchant Chest - Exceptional Stats", spellId: 27960, source: "Reputation - Sha'tar (Honored)", priority: "high", notes: "BiS chest enchant for most classes (+6 all stats)" },
+                    { name: "Enchant Chest - Exceptional Health", spellId: 27957, source: "Reputation - Cenarion Expedition (Honored)", priority: "high", notes: "BiS chest enchant for tanks (+150 HP)" },
+                    { name: "Enchant Chest - Restore Mana Prime", spellId: 27958, source: "Trainer", priority: "medium", notes: "Healer chest enchant option (+6 mp5)" },
+                    { name: "Enchant Chest - Major Spirit", spellId: 33990, source: "Trainer", priority: "medium", notes: "Healer chest enchant option (+15 spirit)" },
+                    { name: "Enchant Gloves - Major Spellpower", spellId: 33997, source: "Reputation - Keepers of Time (Exalted)", priority: "high", notes: "BiS glove enchant for casters (+20 spell damage)" },
+                    { name: "Enchant Gloves - Major Strength", spellId: 33995, source: "Vendor - Shattrath", priority: "high", notes: "BiS glove enchant for strength DPS (+15 str)" },
+                    { name: "Enchant Gloves - Superior Agility", spellId: 25080, source: "Trainer", priority: "high", notes: "BiS glove enchant for agi DPS (+15 agi)" },
+                    { name: "Enchant Gloves - Major Healing", spellId: 33999, source: "Reputation - Sha'tar (Revered)", priority: "high", notes: "BiS glove enchant for healers (+35 healing)" },
+                    { name: "Enchant Gloves - Threat", spellId: 25073, source: "Trainer", priority: "high", notes: "BiS glove enchant for tanks (+2% threat)" },
+                    { name: "Enchant Bracer - Spellpower", spellId: 27917, source: "Drop - World Drop", priority: "high", notes: "BiS bracer enchant for casters (+15 spell damage)" },
+                    { name: "Enchant Bracer - Superior Healing", spellId: 27911, source: "Trainer", priority: "high", notes: "BiS bracer enchant for healers (+30 healing)" },
+                    { name: "Enchant Bracer - Brawn", spellId: 27899, source: "Vendor - Shattrath", priority: "medium", notes: "Bracer enchant for strength DPS (+12 str)" },
+                    { name: "Enchant Bracer - Assault", spellId: 34002, source: "Trainer", priority: "high", notes: "BiS bracer enchant for agi DPS (+24 AP)" },
+                    { name: "Enchant Bracer - Fortitude", spellId: 27914, source: "Trainer", priority: "high", notes: "BiS bracer enchant for tanks (+12 stam)" },
+                    { name: "Enchant Boots - Cat's Swiftness", spellId: 34007, source: "Reputation - Cenarion Expedition (Exalted)", priority: "high", notes: "BiS boot enchant for DPS (+6 agi + run speed)" },
+                    { name: "Enchant Boots - Boar's Speed", spellId: 34008, source: "Reputation - Cenarion Expedition (Exalted)", priority: "high", notes: "BiS boot enchant for tanks (+9 stam + run speed)" },
+                    { name: "Enchant Boots - Dexterity", spellId: 27951, source: "Trainer", priority: "medium", notes: "Alternative boot enchant for agi DPS (+12 agi)" },
+                    { name: "Enchant Boots - Fortitude", spellId: 27950, source: "Trainer", priority: "medium", notes: "Alternative boot enchant for tanks (+12 stam)" },
+                    { name: "Enchant Cloak - Greater Agility", spellId: 34004, source: "Trainer", priority: "high", notes: "BiS cloak enchant for agi DPS (+12 agi)" },
+                    { name: "Enchant Cloak - Subtlety", spellId: 25084, source: "Trainer", priority: "high", notes: "BiS cloak enchant for threat reduction (-2% threat)" },
+                    { name: "Enchant Cloak - Spell Penetration", spellId: 34003, source: "Trainer", priority: "medium", notes: "Cloak enchant for PvP casters (+20 spell pen)" },
+                    { name: "Enchant Cloak - Dodge", spellId: 25086, source: "Trainer", priority: "high", notes: "BiS cloak enchant for tanks (+12 dodge)" },
+                    { name: "Enchant Cloak - Major Armor", spellId: 27961, source: "Trainer", priority: "medium", notes: "Tank cloak enchant option (+120 armor)" },
+                    { name: "Enchant Cloak - Greater Shadow Resistance", spellId: 34006, source: "Trainer", priority: "medium", notes: "Situational cloak enchant (+15 shadow res)" },
+                    { name: "Enchant Shield - Major Stamina", spellId: 27945, source: "Trainer", priority: "high", notes: "BiS shield enchant for tanks (+18 stam)" },
+                    { name: "Enchant Shield - Intellect", spellId: 27945, source: "Trainer", priority: "high", notes: "BiS shield enchant for casters (+12 int)" },
+                ]
+            },
+            rings: {
+                name: "Ring Enchants (Enchanters Only)",
+                recipes: [
+                    { name: "Enchant Ring - Spellpower", spellId: 27924, source: "Trainer (Enchanting 360+)", priority: "high", notes: "Exclusive ring enchant (+12 spell damage)" },
+                    { name: "Enchant Ring - Stats", spellId: 27927, source: "Trainer (Enchanting 360+)", priority: "high", notes: "Exclusive ring enchant (+4 all stats)" },
+                    { name: "Enchant Ring - Striking", spellId: 27920, source: "Trainer (Enchanting 360+)", priority: "high", notes: "Exclusive ring enchant (+2 weapon damage)" },
+                    { name: "Enchant Ring - Healing Power", spellId: 27926, source: "Trainer (Enchanting 360+)", priority: "high", notes: "Exclusive ring enchant (+20 healing)" },
+                ]
+            },
+            headshoulders: {
+                name: "Head/Shoulder Enchants (Inscription Alternatives)",
+                recipes: [
+                    { name: "Glyph of Ferocity", spellId: 0, source: "Reputation - Cenarion Expedition (Revered)", priority: "high", notes: "BiS head enchant for physical DPS (+34 AP, +16 hit)" },
+                    { name: "Glyph of the Defender", spellId: 0, source: "Reputation - Keepers of Time (Revered)", priority: "high", notes: "BiS head enchant for tanks (+16 def, +17 dodge)" },
+                    { name: "Glyph of Renewal", spellId: 0, source: "Reputation - Honor Hold/Thrallmar (Revered)", priority: "high", notes: "BiS head enchant for healers (+35 healing, +7 mp5)" },
+                    { name: "Glyph of Power", spellId: 0, source: "Reputation - Sha'tar (Revered)", priority: "high", notes: "BiS head enchant for caster DPS (+22 spell damage, +14 hit)" },
+                    { name: "Glyph of the Gladiator", spellId: 0, source: "Reputation - Thrallmar/Honor Hold (Exalted)", priority: "medium", notes: "Tank head enchant option (+18 stam, +20 resilience)" },
+                    { name: "Might of the Scourge", spellId: 0, source: "Zul'Aman - Hex Lord Malacrass", priority: "high", notes: "BiS shoulder enchant for physical DPS (+26 AP, +14 crit)" },
+                    { name: "Fortitude of the Scourge", spellId: 0, source: "Zul'Aman - Hex Lord Malacrass", priority: "high", notes: "BiS shoulder enchant for tanks (+16 stam, +100 armor)" },
+                    { name: "Resilience of the Scourge", spellId: 0, source: "Zul'Aman - Hex Lord Malacrass", priority: "high", notes: "BiS shoulder enchant for healers (+31 healing, +5 mp5)" },
+                    { name: "Power of the Scourge", spellId: 0, source: "Zul'Aman - Hex Lord Malacrass", priority: "high", notes: "BiS shoulder enchant for caster DPS (+15 spell damage, +14 crit)" },
+                    { name: "Greater Inscription of Discipline", spellId: 0, source: "Reputation - Aldor (Exalted)", priority: "high", notes: "BiS shoulder enchant for casters (+18 spell damage, +10 crit)" },
+                    { name: "Greater Inscription of the Oracle", spellId: 0, source: "Reputation - Aldor (Exalted)", priority: "high", notes: "BiS shoulder enchant for healers (+22 healing, +6 mp5)" },
+                    { name: "Greater Inscription of the Knight", spellId: 0, source: "Reputation - Aldor (Exalted)", priority: "high", notes: "BiS shoulder enchant for tanks (+15 dodge, +10 def)" },
+                ]
+            },
+            goldmaking: {
+                name: "Goldmaking",
+                recipes: [
+                    { name: "Enchant Weapon - Mongoose", spellId: 27984, source: "Drop - Moroes (Karazhan)", priority: "high", notes: "Very high demand, 50-100g profit per enchant" },
+                    { name: "Enchant Weapon - Major Spellpower", spellId: 27982, source: "Drop - World Drop", priority: "high", notes: "High demand from casters" },
+                    { name: "Enchant Weapon - Executioner", spellId: 42974, source: "Drop - World Drop", priority: "high", notes: "High demand in later phases" },
+                    { name: "Enchant Chest - Exceptional Stats", spellId: 27960, source: "Reputation - Sha'tar", priority: "high", notes: "Universal demand, steady seller" },
+                    { name: "Enchant Boots - Cat's Swiftness", spellId: 34007, source: "Reputation - Cenarion Expedition", priority: "high", notes: "High demand from all DPS" },
+                    { name: "Enchant Boots - Boar's Speed", spellId: 34008, source: "Reputation - Cenarion Expedition", priority: "high", notes: "High demand from tanks" },
+                    { name: "Enchant Bracer - Spellpower", spellId: 27917, source: "Drop - World Drop", priority: "high", notes: "High demand from casters" },
+                    { name: "Large Prismatic Shard", spellId: 28022, source: "Trainer", priority: "medium", notes: "Convert Small Prismatic Shards for profit" },
+                    { name: "Void Shatter", spellId: 45765, source: "Shattered Sun Offensive", priority: "medium", notes: "Convert Void Crystals to Large Prismatics" },
+                ]
+            }
+        }
+    },
+    jewelcrafting: {
+        title: "Jewelcrafting",
+        categories: {
+            meta: {
+                name: "Meta Gem Cuts",
+                recipes: [
+                    { name: "Relentless Earthstorm Diamond", spellId: 32871, source: "World Drop", priority: "high", notes: "BiS meta for melee DPS (12 agi + 3% crit damage)" },
+                    { name: "Chaotic Skyfire Diamond", spellId: 32872, source: "Vendor - Consortium (Honored)", priority: "high", notes: "BiS meta for casters (12 crit rating + 3% crit damage)" },
+                    { name: "Insightful Earthstorm Diamond", spellId: 32870, source: "Vendor - Consortium (Honored)", priority: "high", notes: "BiS meta for healers (12 int + mana restore proc)" },
+                    { name: "Brutal Earthstorm Diamond", spellId: 32867, source: "Vendor - Consortium (Revered)", priority: "medium", notes: "Alternative meta for melee (18 agi + stun resist)" },
+                    { name: "Thundering Skyfire Diamond", spellId: 32873, source: "World Drop", priority: "medium", notes: "Haste proc meta gem" },
+                    { name: "Powerful Earthstorm Diamond", spellId: 32869, source: "Vendor - Consortium (Honored)", priority: "high", notes: "BiS meta for tanks (18 stam + 5% stun resist)" },
+                    { name: "Swift Skyfire Diamond", spellId: 32874, source: "Vendor - Consortium (Honored)", priority: "medium", notes: "Alternative meta with run speed" },
+                    { name: "Mystical Skyfire Diamond", spellId: 32875, source: "World Drop", priority: "medium", notes: "Chance to reduce casting time" },
+                    { name: "Ember Skyfire Diamond", spellId: 32876, source: "World Drop", priority: "medium", notes: "Alternative caster meta (+14 spell damage, +2% int)" },
+                    { name: "Bracing Earthstorm Diamond", spellId: 32868, source: "World Drop", priority: "medium", notes: "Healer meta option (+26 healing, -2% threat)" },
+                ]
+            },
+            red: {
+                name: "Red Gems",
+                recipes: [
+                    { name: "Runed Living Ruby", spellId: 31085, source: "Trainer", priority: "high", notes: "+9 spell damage" },
+                    { name: "Delicate Living Ruby", spellId: 31084, source: "Trainer", priority: "high", notes: "+8 agility" },
+                    { name: "Bold Living Ruby", spellId: 31083, source: "Trainer", priority: "high", notes: "+8 strength" },
+                    { name: "Teardrop Living Ruby", spellId: 31087, source: "Trainer", priority: "high", notes: "+18 healing" },
+                    { name: "Runed Crimson Spinel", spellId: 39706, source: "Drop - BT/Hyjal/Sunwell", priority: "high", notes: "+12 spell damage (epic)" },
+                    { name: "Delicate Crimson Spinel", spellId: 39705, source: "Drop - BT/Hyjal/Sunwell", priority: "high", notes: "+10 agility (epic)" },
+                    { name: "Bold Crimson Spinel", spellId: 39707, source: "Drop - BT/Hyjal/Sunwell", priority: "high", notes: "+10 strength (epic)" },
+                    { name: "Teardrop Crimson Spinel", spellId: 39708, source: "Drop - BT/Hyjal/Sunwell", priority: "high", notes: "+22 healing (epic)" },
+                ]
+            },
+            yellow: {
+                name: "Yellow Gems",
+                recipes: [
+                    { name: "Rigid Dawnstone", spellId: 31089, source: "Trainer", priority: "high", notes: "+8 hit rating" },
+                    { name: "Smooth Dawnstone", spellId: 31090, source: "Trainer", priority: "high", notes: "+8 crit rating" },
+                    { name: "Brilliant Dawnstone", spellId: 31091, source: "Trainer", priority: "high", notes: "+8 intellect" },
+                    { name: "Mystic Dawnstone", spellId: 31088, source: "Trainer", priority: "medium", notes: "+8 resilience (PvP)" },
+                    { name: "Rigid Lionseye", spellId: 39714, source: "Drop - BT/Hyjal/Sunwell", priority: "high", notes: "+10 hit rating (epic)" },
+                    { name: "Smooth Lionseye", spellId: 39713, source: "Drop - BT/Hyjal/Sunwell", priority: "high", notes: "+10 crit rating (epic)" },
+                    { name: "Quick Lionseye", spellId: 39712, source: "Drop - BT/Hyjal/Sunwell", priority: "high", notes: "+10 haste rating (epic)" },
+                    { name: "Brilliant Lionseye", spellId: 39711, source: "Drop - BT/Hyjal/Sunwell", priority: "medium", notes: "+10 intellect (epic)" },
+                ]
+            },
+            blue: {
+                name: "Blue Gems",
+                recipes: [
+                    { name: "Solid Star of Elune", spellId: 31092, source: "Trainer", priority: "high", notes: "+12 stamina" },
+                    { name: "Sparkling Star of Elune", spellId: 31093, source: "Trainer", priority: "medium", notes: "+8 spirit" },
+                    { name: "Lustrous Star of Elune", spellId: 31094, source: "Trainer", priority: "medium", notes: "+4 mp5" },
+                    { name: "Solid Empyrean Sapphire", spellId: 39715, source: "Drop - BT/Hyjal/Sunwell", priority: "high", notes: "+15 stamina (epic)" },
+                    { name: "Sparkling Empyrean Sapphire", spellId: 39716, source: "Drop - BT/Hyjal/Sunwell", priority: "medium", notes: "+10 spirit (epic)" },
+                ]
+            },
+            orange: {
+                name: "Orange Gems (Red/Yellow)",
+                recipes: [
+                    { name: "Inscribed Noble Topaz", spellId: 31098, source: "Trainer", priority: "high", notes: "+4 str, +4 crit" },
+                    { name: "Potent Noble Topaz", spellId: 31099, source: "Trainer", priority: "high", notes: "+4 spell damage, +4 crit" },
+                    { name: "Glinting Noble Topaz", spellId: 31101, source: "Trainer", priority: "high", notes: "+4 agi, +4 hit" },
+                    { name: "Veiled Noble Topaz", spellId: 31100, source: "Trainer", priority: "high", notes: "+4 spell damage, +4 hit" },
+                    { name: "Wicked Noble Topaz", spellId: 31097, source: "Trainer", priority: "medium", notes: "+4 AP, +4 crit" },
+                    { name: "Luminous Noble Topaz", spellId: 31102, source: "Trainer", priority: "high", notes: "+9 healing, +4 int" },
+                    { name: "Inscribed Pyrestone", spellId: 39717, source: "Drop - BT/Hyjal/Sunwell", priority: "high", notes: "+5 str, +5 crit (epic)" },
+                    { name: "Potent Pyrestone", spellId: 39718, source: "Drop - BT/Hyjal/Sunwell", priority: "high", notes: "+5 spell damage, +5 crit (epic)" },
+                    { name: "Reckless Pyrestone", spellId: 39719, source: "Drop - BT/Hyjal/Sunwell", priority: "high", notes: "+5 spell damage, +5 haste (epic)" },
+                    { name: "Veiled Pyrestone", spellId: 39720, source: "Drop - BT/Hyjal/Sunwell", priority: "high", notes: "+5 spell damage, +5 hit (epic)" },
+                    { name: "Glinting Pyrestone", spellId: 39721, source: "Drop - BT/Hyjal/Sunwell", priority: "high", notes: "+5 agi, +5 hit (epic)" },
+                    { name: "Wicked Pyrestone", spellId: 39722, source: "Drop - BT/Hyjal/Sunwell", priority: "medium", notes: "+5 AP, +5 crit (epic)" },
+                    { name: "Luminous Pyrestone", spellId: 39723, source: "Drop - BT/Hyjal/Sunwell", priority: "high", notes: "+11 healing, +5 int (epic)" },
+                ]
+            },
+            purple: {
+                name: "Purple Gems (Red/Blue)",
+                recipes: [
+                    { name: "Shifting Nightseye", spellId: 31103, source: "Trainer", priority: "high", notes: "+4 agi, +6 stam" },
+                    { name: "Sovereign Nightseye", spellId: 31104, source: "Trainer", priority: "high", notes: "+4 str, +6 stam" },
+                    { name: "Glowing Nightseye", spellId: 31105, source: "Trainer", priority: "high", notes: "+4 spell damage, +6 stam" },
+                    { name: "Royal Nightseye", spellId: 31106, source: "Trainer", priority: "high", notes: "+9 healing, +2 mp5" },
+                    { name: "Purified Shadow Pearl", spellId: 31107, source: "Trainer", priority: "high", notes: "+9 healing, +4 spirit" },
+                    { name: "Shifting Shadowsong Amethyst", spellId: 39724, source: "Drop - BT/Hyjal/Sunwell", priority: "high", notes: "+5 agi, +7 stam (epic)" },
+                    { name: "Sovereign Shadowsong Amethyst", spellId: 39725, source: "Drop - BT/Hyjal/Sunwell", priority: "high", notes: "+5 str, +7 stam (epic)" },
+                    { name: "Glowing Shadowsong Amethyst", spellId: 39726, source: "Drop - BT/Hyjal/Sunwell", priority: "high", notes: "+5 spell damage, +7 stam (epic)" },
+                    { name: "Royal Shadowsong Amethyst", spellId: 39727, source: "Drop - BT/Hyjal/Sunwell", priority: "high", notes: "+11 healing, +2 mp5 (epic)" },
+                    { name: "Purified Shadowsong Amethyst", spellId: 39728, source: "Drop - BT/Hyjal/Sunwell", priority: "high", notes: "+11 healing, +5 spirit (epic)" },
+                ]
+            },
+            green: {
+                name: "Green Gems (Yellow/Blue)",
+                recipes: [
+                    { name: "Jagged Talasite", spellId: 31108, source: "Trainer", priority: "high", notes: "+4 crit, +6 stam" },
+                    { name: "Enduring Talasite", spellId: 31109, source: "Trainer", priority: "high", notes: "+4 def, +6 stam" },
+                    { name: "Steady Talasite", spellId: 31110, source: "Trainer", priority: "medium", notes: "+4 resilience, +6 stam" },
+                    { name: "Dazzling Talasite", spellId: 31111, source: "Trainer", priority: "medium", notes: "+4 int, +2 mp5" },
+                    { name: "Jagged Seaspray Emerald", spellId: 39729, source: "Drop - BT/Hyjal/Sunwell", priority: "high", notes: "+5 crit, +7 stam (epic)" },
+                    { name: "Enduring Seaspray Emerald", spellId: 39730, source: "Drop - BT/Hyjal/Sunwell", priority: "high", notes: "+5 def, +7 stam (epic)" },
+                    { name: "Steady Seaspray Emerald", spellId: 39731, source: "Drop - BT/Hyjal/Sunwell", priority: "medium", notes: "+5 resilience, +7 stam (epic)" },
+                ]
+            },
+            trinkets: {
+                name: "JC Trinkets/Necklaces",
+                recipes: [
+                    { name: "Braided Eternium Chain", spellId: 31072, source: "Drop - Various", priority: "high", notes: "Pre-raid BiS neck for feral DPS" },
+                    { name: "Hard Khorium Choker", spellId: 31073, source: "Drop - BT/Hyjal", priority: "high", notes: "BiS neck for rogues/feral" },
+                    { name: "Hard Khorium Band", spellId: 31074, source: "Drop - BT/Hyjal", priority: "high", notes: "BiS ring for rogues/feral" },
+                    { name: "Pendant of Sunfire", spellId: 31075, source: "Drop - Sunwell", priority: "high", notes: "BiS caster neck in Sunwell" },
+                    { name: "Amulet of Flowing Life", spellId: 31076, source: "Drop - Sunwell", priority: "high", notes: "BiS healer neck in Sunwell" },
+                    { name: "Ring of Flowing Life", spellId: 31077, source: "Drop - Sunwell", priority: "high", notes: "BiS healer ring in Sunwell" },
+                    { name: "Loop of Forged Power", spellId: 31078, source: "Drop - Sunwell", priority: "high", notes: "BiS caster ring in Sunwell" },
+                    { name: "Clutch of Demise", spellId: 31079, source: "Drop - Sunwell", priority: "high", notes: "BiS melee neck in Sunwell" },
+                ]
+            },
+            jconly: {
+                name: "JC-Only Gems",
+                recipes: [
+                    { name: "Crimson Sun", spellId: 31087, source: "Vendor - Shattrath (BoP)", priority: "high", notes: "+24 healing, JC only" },
+                    { name: "Don Julio's Heart", spellId: 31085, source: "Vendor - Shattrath (BoP)", priority: "high", notes: "+14 spell damage, JC only" },
+                    { name: "Falling Star", spellId: 31086, source: "Vendor - Shattrath (BoP)", priority: "high", notes: "+18 stamina, JC only" },
+                    { name: "Stone of Blades", spellId: 31084, source: "Vendor - Shattrath (BoP)", priority: "high", notes: "+12 crit rating, JC only" },
+                ]
+            },
+            goldmaking: {
+                name: "Goldmaking",
+                recipes: [
+                    { name: "Runed Living Ruby", spellId: 31085, source: "Trainer", priority: "high", notes: "Highest demand gem, always profitable" },
+                    { name: "Delicate Living Ruby", spellId: 31084, source: "Trainer", priority: "high", notes: "High demand from rogues/hunters" },
+                    { name: "Solid Star of Elune", spellId: 31092, source: "Trainer", priority: "high", notes: "High demand from tanks" },
+                    { name: "Chaotic Skyfire Diamond", spellId: 32872, source: "Vendor - Consortium", priority: "high", notes: "High profit meta gem" },
+                    { name: "Relentless Earthstorm Diamond", spellId: 32871, source: "World Drop", priority: "high", notes: "High profit meta gem" },
+                    { name: "Insightful Earthstorm Diamond", spellId: 32870, source: "Vendor - Consortium", priority: "high", notes: "High profit meta gem for healers" },
+                    { name: "Daily JC Designs", spellId: 0, source: "JC Daily Quest", priority: "high", notes: "Do daily for new design tokens" },
+                ]
+            }
+        }
+    },
+    engineering: {
+        title: "Engineering",
+        categories: {
+            goggles: {
+                name: "Engineering Goggles (BoP)",
+                recipes: [
+                    { name: "Tankatronic Goggles", spellId: 30574, source: "Vendor - Area 52", priority: "high", notes: "Pre-raid BiS helm for tanks" },
+                    { name: "Destruction Holo-gogs", spellId: 30575, source: "Vendor - Area 52", priority: "high", notes: "Pre-raid BiS helm for casters" },
+                    { name: "Surestrike Goggles v2.0", spellId: 30573, source: "Vendor - Area 52", priority: "high", notes: "Pre-raid BiS helm for hunters/rogues" },
+                    { name: "Powerheal 4000 Lens", spellId: 30576, source: "Vendor - Area 52", priority: "high", notes: "Pre-raid BiS helm for healers" },
+                    { name: "Gadgetstorm Goggles", spellId: 41311, source: "Trainer", priority: "high", notes: "Pre-raid BiS helm for elemental shaman" },
+                    { name: "Living Replicator Specs", spellId: 41312, source: "Trainer", priority: "high", notes: "Pre-raid BiS helm for resto shaman" },
+                    { name: "Magnified Moon Specs", spellId: 41313, source: "Trainer", priority: "high", notes: "Pre-raid BiS helm for moonkin" },
+                    { name: "Annihilator Holo-Gogs", spellId: 41314, source: "Trainer", priority: "high", notes: "Pre-raid BiS helm for fire mage" },
+                    { name: "Wonderheal XT40 Shades", spellId: 41320, source: "Trainer", priority: "high", notes: "T6 equivalent healer goggles" },
+                    { name: "Quad Deathblow X44 Goggles", spellId: 41318, source: "Drop - Sunwell trash", priority: "high", notes: "BiS helm for hunters in Sunwell" },
+                    { name: "Hyper-Magnified Moon Specs", spellId: 41319, source: "Drop - Sunwell trash", priority: "high", notes: "BiS helm for moonkin in Sunwell" },
+                    { name: "Lightning Etched Specs", spellId: 41316, source: "Drop - Sunwell trash", priority: "high", notes: "BiS helm for elemental shaman in Sunwell" },
+                    { name: "Primal-Attuned Goggles", spellId: 41317, source: "Drop - Sunwell trash", priority: "high", notes: "BiS helm for resto druid in Sunwell" },
+                    { name: "Hard Khorium Goggles", spellId: 41315, source: "Drop - Sunwell trash", priority: "high", notes: "Tank goggles in Sunwell" },
+                ]
+            },
+            scopes: {
+                name: "Scopes (Ranged Weapon Enchants)",
+                recipes: [
+                    { name: "Stabilized Eternium Scope", spellId: 30332, source: "Trainer", priority: "high", notes: "BiS ranged enchant (+28 crit rating)" },
+                    { name: "Khorium Scope", spellId: 30329, source: "Trainer", priority: "medium", notes: "Budget ranged enchant (+12 damage)" },
+                    { name: "Adamantite Scope", spellId: 30328, source: "Trainer", priority: "low", notes: "Cheap ranged enchant (+10 damage)" },
+                ]
+            },
+            combat: {
+                name: "Combat Items",
+                recipes: [
+                    { name: "Adamantite Grenade", spellId: 30560, source: "Trainer", priority: "high", notes: "AoE damage + stun for raids/PvP" },
+                    { name: "Super Sapper Charge", spellId: 30558, source: "Trainer (Goblin only)", priority: "high", notes: "High AoE damage for trash" },
+                    { name: "Goblin Rocket Launcher", spellId: 30563, source: "Trainer (Goblin only)", priority: "medium", notes: "Ranged stun trinket" },
+                    { name: "Gnomish Poultryizer", spellId: 30568, source: "Trainer (Gnomish only)", priority: "medium", notes: "Polymorph trinket" },
+                    { name: "Fel Iron Bomb", spellId: 30310, source: "Trainer", priority: "medium", notes: "Budget AoE bomb" },
+                ]
+            },
+            utility: {
+                name: "Utility Items",
+                recipes: [
+                    { name: "Zapthrottle Mote Extractor", spellId: 30548, source: "Trainer", priority: "high", notes: "Extract motes from clouds for gold making" },
+                    { name: "Field Repair Bot 110G", spellId: 30549, source: "Trainer", priority: "high", notes: "Raid repair bot, very useful" },
+                    { name: "Mana Potion Injector", spellId: 30551, source: "Trainer", priority: "medium", notes: "Saves bag space on mana pots" },
+                    { name: "Healing Potion Injector", spellId: 30550, source: "Trainer", priority: "medium", notes: "Saves bag space on healing pots" },
+                    { name: "Flying Machine", spellId: 30556, source: "Trainer", priority: "medium", notes: "Budget flying mount" },
+                    { name: "Turbo-Charged Flying Machine", spellId: 30557, source: "Trainer", priority: "medium", notes: "Epic flying mount" },
+                ]
+            },
+            guns: {
+                name: "Guns/Ranged",
+                recipes: [
+                    { name: "Adamantite Rifle", spellId: 30313, source: "Trainer", priority: "high", notes: "Pre-raid BiS gun for hunters" },
+                    { name: "Ornate Khorium Rifle", spellId: 30315, source: "Vendor - Area 52", priority: "high", notes: "Great gun upgrade" },
+                    { name: "Gyro-Balanced Khorium Destroyer", spellId: 41307, source: "Drop - Sunwell trash", priority: "high", notes: "BiS gun in Sunwell" },
+                ]
+            },
+            goldmaking: {
+                name: "Goldmaking",
+                recipes: [
+                    { name: "Zapthrottle Mote Extractor", spellId: 30548, source: "Trainer", priority: "high", notes: "Farm motes from clouds - 100-200g/hr" },
+                    { name: "Stabilized Eternium Scope", spellId: 30332, source: "Trainer", priority: "high", notes: "High demand from hunters" },
+                    { name: "Adamantite Grenade", spellId: 30560, source: "Trainer", priority: "medium", notes: "Sell to PvP players and raiders" },
+                    { name: "Khorium Power Core", spellId: 30309, source: "Trainer", priority: "medium", notes: "Material for other recipes, steady seller" },
+                    { name: "Felsteel Stabilizer", spellId: 30307, source: "Trainer", priority: "medium", notes: "Material for other recipes, steady seller" },
+                ]
+            }
+        }
+    }
+};
 
+// ===== RECIPES RENDER FUNCTION =====
+let currentProfession = 'blacksmithing'; // Track current profession
+
+function renderRecipesContent() {
+    currentClass = null; // Clear class selection when viewing recipes
+
+    // Remove active class from all class list items
+    document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
+    // Add active to recipes link
+    const recipesLink = document.querySelector('.class-list li[data-view="recipes"]');
+    if (recipesLink) recipesLink.classList.add('active');
+
+    const priorityLabels = {
+        high: { text: 'PRIORITY', class: 'bg-red-600 text-white' },
+        medium: { text: 'GOOD', class: 'bg-yellow-500 text-black' },
+        low: { text: 'OPTIONAL', class: 'bg-green-500 text-black' }
+    };
+
+    const profession = recipesData[currentProfession];
+    if (!profession) return;
+
+    let html = `
+        <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">query: profession_recipes --profession=${currentProfession}</div>
+        <h2 class="text-terminal-accent text-lg mb-4 uppercase tracking-wide md:text-base md:mb-3 md:tracking-wider sm:text-sm sm:tracking-tight">[ ${profession.title.toUpperCase()} // TBC ]</h2>
+        <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">Essential ${profession.title} recipes to prioritize for raiding and gold making</p>
+
+        <div class="flex flex-wrap gap-2 mb-6 md:gap-1.5 md:mb-4 sm:mb-3">
+            ${Object.keys(recipesData).map(prof => `<button class="profession-btn ${prof === currentProfession ? 'bg-terminal-text text-terminal-bg' : 'bg-transparent'} border border-terminal-text text-terminal-text px-4 py-2.5 cursor-pointer font-mono text-xs transition-all select-none hover:bg-terminal-text hover:text-terminal-bg md:px-3.5 md:py-2.5 md:text-[11px] md:min-h-[48px] md:inline-flex md:items-center md:justify-center sm:px-3 sm:py-2 sm:text-[10px] sm:min-h-[44px]" data-profession="${prof}">${recipesData[prof].title}</button>`).join('')}
+        </div>
+    `;
+
+    for (const [catKey, category] of Object.entries(profession.categories)) {
+        html += `
+            <div class="mb-6 last:mb-0">
+                <h4 class="text-terminal-text text-sm mb-3 md:text-xs">// ${category.name}</h4>
+                <div class="overflow-x-auto -mx-5 px-5 md:-mx-4 md:px-4 sm:-mx-3 sm:px-3">
+                    <table class="w-full border-collapse text-[13px] min-w-[700px] md:text-[11px] sm:text-[10px] sm:min-w-[600px]">
+                        <thead>
+                            <tr>
+                                <th class="bg-terminal-dim text-terminal-bg p-2.5 text-left font-semibold uppercase text-[11px] tracking-widest md:p-2 md:text-[10px] sm:p-1.5 sm:text-[9px]">RECIPE</th>
+                                <th class="bg-terminal-dim text-terminal-bg p-2.5 text-left font-semibold uppercase text-[11px] tracking-widest md:p-2 md:text-[10px] sm:p-1.5 sm:text-[9px]">SOURCE</th>
+                                <th class="bg-terminal-dim text-terminal-bg p-2.5 text-left font-semibold uppercase text-[11px] tracking-widest md:p-2 md:text-[10px] sm:p-1.5 sm:text-[9px]">PRIORITY</th>
+                                <th class="bg-terminal-dim text-terminal-bg p-2.5 text-left font-semibold uppercase text-[11px] tracking-widest md:p-2 md:text-[10px] sm:p-1.5 sm:text-[9px]">NOTES</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        `;
+
+        for (const recipe of category.recipes) {
+            const priority = priorityLabels[recipe.priority] || priorityLabels.medium;
+            html += `
+                <tr class="border-b border-terminal-dim border-opacity-30 hover:bg-terminal-dim hover:bg-opacity-10">
+                    <td class="p-2.5 md:p-2 sm:p-1.5"><a href="https://tbc.wowhead.com/spell=${recipe.spellId}" data-wowhead="spell=${recipe.spellId}" class="text-terminal-accent hover:text-terminal-text">${recipe.name}</a></td>
+                    <td class="p-2.5 text-terminal-dim md:p-2 sm:p-1.5">${recipe.source}</td>
+                    <td class="p-2.5 md:p-2 sm:p-1.5"><span class="px-2 py-0.5 text-[10px] font-semibold ${priority.class}">${priority.text}</span></td>
+                    <td class="p-2.5 text-terminal-dim italic md:p-2 sm:p-1.5">${recipe.notes}</td>
+                </tr>
+            `;
+        }
+
+        html += `
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    }
+
+    const mainContent = document.getElementById('main-content');
+    mainContent.style.opacity = '0.3';
+
+    setTimeout(() => {
+        mainContent.innerHTML = html;
+        mainContent.style.opacity = '1';
+
+        // Add event listeners to profession buttons
+        document.querySelectorAll('.profession-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentProfession = btn.dataset.profession;
+                renderRecipesContent();
+            });
+        });
+
+        // Reinitialize wowhead tooltips
+        if (typeof $WowheadPower !== 'undefined' && $WowheadPower.refreshLinks) {
+            $WowheadPower.refreshLinks();
+        }
+    }, FADE_TRANSITION_MS);
+}
 
 
 
@@ -15762,7 +16434,13 @@ function initClassSelector() {
         item.addEventListener('click', function() {
             document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
             this.classList.add('active');
-            renderClassContent(this.dataset.class);
+
+            // Check if this is the recipes view or a class view
+            if (this.dataset.view === 'recipes') {
+                renderRecipesContent();
+            } else if (this.dataset.class) {
+                renderClassContent(this.dataset.class);
+            }
         });
     });
 }
