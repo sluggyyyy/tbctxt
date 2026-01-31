@@ -4859,6 +4859,22 @@ warrior:{
     specs:{
         arms:{
             name:"Arms",
+            rotation:{
+                description:"Arms is primarily a PvP spec in TBC but brings Blood Frenzy raid debuff. Uses 2H weapons with Mortal Strike.",
+                priority:[
+                    {name:"Mortal Strike",spellId:30330,description:"Use on cooldown - primary damage ability"},
+                    {name:"Whirlwind",spellId:25231,description:"Use on cooldown for additional damage"},
+                    {name:"Execute",spellId:25236,description:"Spam below 20% HP for massive damage"},
+                    {name:"Slam",spellId:25242,description:"Use between MS cooldowns if you have swing timer addon"},
+                    {name:"Heroic Strike",spellId:29707,description:"Dump excess rage when abilities on CD"}
+                ],
+                cooldowns:[
+                    {name:"Death Wish",spellId:12292,description:"Use with Heroism or execute phase"},
+                    {name:"Sweeping Strikes",spellId:12328,description:"Use before Whirlwind for AoE - hits additional target"},
+                    {name:"Bladestorm",spellId:46924,description:"Major AoE cooldown if specced"}
+                ],
+                notes:"Blood Frenzy debuff increases all physical damage to target by 4%. Keep Battle Shout up. Slam requires swing timer to use effectively without clipping auto-attacks."
+            },
             talents:[
                 {
                     name:"Build 1 (33/28/0)",
@@ -5284,6 +5300,22 @@ warrior:{
         },
         fury:{
             name:"Fury",
+            rotation:{
+                description:"Fury Warriors use a priority system rather than a fixed rotation. Dual-wield for maximum DPS.",
+                priority:[
+                    {name:"Bloodthirst",spellId:30335,description:"Use on cooldown - your highest priority ability"},
+                    {name:"Whirlwind",spellId:25231,description:"Use on cooldown when Bloodthirst is unavailable"},
+                    {name:"Execute",spellId:25236,description:"Use below 20% HP as filler between BT/WW cooldowns"},
+                    {name:"Heroic Strike",spellId:29707,description:"Dump excess rage (60+) when other abilities on CD"},
+                    {name:"Hamstring",spellId:7373,description:"Only when excess rage and nothing else available"}
+                ],
+                cooldowns:[
+                    {name:"Death Wish",spellId:12292,description:"Use with Heroism/Bloodlust or during Execute phase for 20% damage boost"},
+                    {name:"Recklessness",spellId:1719,description:"Stack with Death Wish and trinkets for burst windows"},
+                    {name:"Berserker Rage",spellId:18499,description:"Use on CD for rage generation and fear immunity"}
+                ],
+                notes:"Keep Battle Shout or Commanding Shout up at all times. Heroic Strike removes dual-wield miss penalty while queued - use liberally at high rage. For AoE: prioritize Whirlwind and use Cleave instead of Heroic Strike."
+            },
             talents:[
                 {
                     name:"Build 1 (21/40/0)",
@@ -5576,6 +5608,22 @@ warrior:{
         },
         protection:{
             name:"Protection",
+            rotation:{
+                description:"Protection Warriors focus on threat generation and damage mitigation. Stance dance for abilities when safe.",
+                priority:[
+                    {name:"Shield Slam",spellId:30356,description:"Highest threat ability - use on cooldown"},
+                    {name:"Revenge",spellId:30357,description:"Very cheap, high threat per rage - use when proc'd"},
+                    {name:"Devastate",spellId:30022,description:"Filler ability, applies Sunder Armor stacks"},
+                    {name:"Heroic Strike",spellId:29707,description:"Queue on every auto attack when rage allows"},
+                    {name:"Shield Block",spellId:2565,description:"Use frequently for mitigation and Revenge procs"}
+                ],
+                cooldowns:[
+                    {name:"Shield Wall",spellId:871,description:"40% damage reduction - save for emergency or planned damage"},
+                    {name:"Last Stand",spellId:12975,description:"30% max HP boost - use when taking heavy damage"},
+                    {name:"Spell Reflection",spellId:23920,description:"Reflect next spell - great for caster mobs"}
+                ],
+                notes:"Keep Demoralizing Shout and Thunder Clap up on all mobs. For AoE: Thunder Clap on CD, tab-Devastate to spread threat. Stance dance to Battle Stance for Challenging Shout if needed."
+            },
             talents:[
                 {
                     name:"Build 1 (0/0/30)",
@@ -5894,6 +5942,28 @@ rogue:{
     specs:{
         combat:{
             name:"All",
+            rotation:{
+                description:"Combat Rogues are the top melee DPS in TBC. Focus on keeping Slice and Dice up while maximizing finisher damage.",
+                priority:[
+                    {name:"Slice and Dice",spellId:6774,description:"ALWAYS keep up - #1 priority. Start with 1 CP S&D"},
+                    {name:"Expose Armor",spellId:26866,description:"5 CP if assigned (no Sunder warrior)"},
+                    {name:"Rupture",spellId:26867,description:"5 CP - keep up on boss for sustained damage"},
+                    {name:"Sinister Strike",spellId:26862,description:"Combo point builder - spam between finishers"},
+                    {name:"Eviscerate",spellId:26865,description:"5 CP when S&D and Rupture have time remaining"}
+                ],
+                opener:[
+                    {name:"Sinister Strike",spellId:26862},
+                    {name:"Slice and Dice",spellId:6774},
+                    {name:"Sinister Strike x5",spellId:26862},
+                    {name:"Rupture/Expose Armor",spellId:26867}
+                ],
+                cooldowns:[
+                    {name:"Blade Flurry",spellId:13877,description:"Attacks hit additional target - use on CD or save for adds"},
+                    {name:"Adrenaline Rush",spellId:13750,description:"100% energy regen for 15s - use with Heroism"},
+                    {name:"Thistle Tea",description:"Instant 100 energy - use during Adrenaline Rush"}
+                ],
+                notes:"Energy ticker addon is essential - never cap energy above 80. 1 CP S&D opener, then 5 CP finishers. Combat Swords or Combat Fists depending on weapon availability. Keep poisons up: Instant on MH, Deadly on OH."
+            },
             talents:[
                 {
                     name:"Build 1 (20/41/0)",
@@ -6827,6 +6897,22 @@ hunter:{
     specs:{
         beast_mastery:{
             name:"Beast Mastery",
+            rotation:{
+                description:"BM Hunters focus on pet damage and steady shot weaving. Most popular raiding spec in TBC.",
+                priority:[
+                    {name:"Kill Command",spellId:34026,description:"Use immediately when it procs - 100% uptime possible"},
+                    {name:"Steady Shot",spellId:34120,description:"Weave between Auto Shots (1:1 rotation)"},
+                    {name:"Auto Shot",spellId:75,description:"Never clip your Auto Shot - use swing timer"},
+                    {name:"Multi-Shot",spellId:27021,description:"Use on CD in raids if mana allows"},
+                    {name:"Arcane Shot",spellId:27019,description:"Only with Aspect mastery or excess mana"}
+                ],
+                cooldowns:[
+                    {name:"Bestial Wrath",spellId:19574,description:"Save for Heroism/Bloodlust for max damage"},
+                    {name:"Rapid Fire",spellId:3045,description:"Stack with Bestial Wrath and Heroism"},
+                    {name:"Intimidation",spellId:19577,description:"Pet stun - use for utility"}
+                ],
+                notes:"1:1 ROTATION: Auto Shot → Steady Shot → Auto Shot → Steady Shot. Use swing timer addon. Kill Command is off GCD - use instantly when available. Keep pet alive with Mend Pet. Aspect of the Hawk for DPS."
+            },
             talents:[
                 {
                     name:"Build 1 (41/20/0)",
@@ -7099,6 +7185,21 @@ hunter:{
         },
         marksmanship:{
             name:"Marksmanship",
+            rotation:{
+                description:"MM Hunters bring Trueshot Aura for physical DPS. Higher personal damage potential than BM at high gear levels.",
+                priority:[
+                    {name:"Steady Shot",spellId:34120,description:"Weave between Auto Shots"},
+                    {name:"Auto Shot",spellId:75,description:"Never clip - highest priority"},
+                    {name:"Arcane Shot",spellId:27019,description:"Use on CD with 5pc T6 bonus"},
+                    {name:"Multi-Shot",spellId:27021,description:"Use on CD for extra damage"},
+                    {name:"Kill Command",spellId:34026,description:"Use when proc'd if talented"}
+                ],
+                cooldowns:[
+                    {name:"Rapid Fire",spellId:3045,description:"Use with Heroism for burst phase"},
+                    {name:"Readiness",spellId:23989,description:"Resets all cooldowns - double Rapid Fire"}
+                ],
+                notes:"Trueshot Aura gives 125 AP to party. Similar rotation to BM but without Bestial Wrath. Use Aimed Shot if moving or for opening burst. 1:1 or 1:1.5 shot rotation depending on haste."
+            },
             talents:[
                 {
                     name:"Build 1 (14/44/3)",
@@ -7371,6 +7472,21 @@ hunter:{
         },
         survival:{
             name:"Survival",
+            rotation:{
+                description:"Survival Hunters bring Expose Weakness debuff, buffing all physical DPS in the raid. Support spec.",
+                priority:[
+                    {name:"Steady Shot",spellId:34120,description:"Main shot - weave with Auto Shot"},
+                    {name:"Auto Shot",spellId:75,description:"Never clip auto shots"},
+                    {name:"Arcane Shot",spellId:27019,description:"Use for Expose Weakness procs"},
+                    {name:"Multi-Shot",spellId:27021,description:"Use on CD"},
+                    {name:"Raptor Strike",spellId:27014,description:"Only if in melee range"}
+                ],
+                cooldowns:[
+                    {name:"Rapid Fire",spellId:3045,description:"Use with Heroism"},
+                    {name:"Readiness",spellId:23989,description:"Reset all CDs for double Rapid Fire"}
+                ],
+                notes:"EXPOSE WEAKNESS: Crits apply debuff giving AP equal to 25% of your Agility to all attackers. Stack Agility gear. One SV hunter per raid for the debuff. Lower personal DPS but huge raid benefit."
+            },
             talents:[
                 {
                     name:"Build 1 (0/0/35)",
@@ -7605,6 +7721,22 @@ paladin:{
     specs:{
         holy:{
             name:"Holy",
+            rotation:{
+                description:"Holy Paladins are single-target healing specialists with powerful cooldowns and buffs.",
+                priority:[
+                    {name:"Flash of Light",spellId:27137,description:"Primary heal - fast, efficient, spammable"},
+                    {name:"Holy Light",spellId:27136,description:"Big heal for tank damage spikes"},
+                    {name:"Holy Shock",spellId:33074,description:"Instant heal - use on CD for Holy Shock build"},
+                    {name:"Cleanse",spellId:4987,description:"Remove poison, disease, and magic effects"},
+                    {name:"Blessing of Light",spellId:27144,description:"Keep on tank for boosted healing"}
+                ],
+                cooldowns:[
+                    {name:"Divine Favor",spellId:20216,description:"Next heal is guaranteed crit - pair with Holy Light"},
+                    {name:"Divine Illumination",spellId:31842,description:"50% mana cost reduction for 15s - use during high damage"},
+                    {name:"Lay on Hands",spellId:27154,description:"Emergency full heal on tank"}
+                ],
+                notes:"Keep Blessing of Light on tanks, Blessing of Wisdom/Salvation on raid. Use Seal of Wisdom and judge for mana return. Pre-cast Holy Light for predictable damage."
+            },
             talents:[
                 {
                     name:"Build 1 (45/11/5)",
@@ -7882,6 +8014,22 @@ paladin:{
         },
         protection:{
             name:"Protection",
+            rotation:{
+                description:"Protection Paladins excel at AoE tanking with Consecration and Holy Shield. Mana-based threat generation.",
+                priority:[
+                    {name:"Holy Shield",spellId:27179,description:"Keep up at all times - blocks and deals damage"},
+                    {name:"Consecration",spellId:27173,description:"Primary AoE threat - use on CD"},
+                    {name:"Avenger's Shield",spellId:32700,description:"Ranged pull and threat - use on CD"},
+                    {name:"Judgement",spellId:20271,description:"Judge Righteousness for single target threat"},
+                    {name:"Exorcism",spellId:27138,description:"Use against Undead/Demons for extra threat"}
+                ],
+                cooldowns:[
+                    {name:"Ardent Defender",spellId:31858,description:"Passive - reduces damage below 35% HP"},
+                    {name:"Divine Shield",spellId:642,description:"Emergency immunity - drops threat, use carefully"},
+                    {name:"Blessing of Protection",spellId:10278,description:"Save raid members from physical damage"}
+                ],
+                notes:"Use Seal of Righteousness or Seal of Vengeance for single target. Seal of Wisdom for mana-intensive fights. Spiritual Attunement returns mana when healed - take damage to generate mana. Best AoE tank in TBC."
+            },
             talents:[
                 {
                     name:"Build 1 (0/49/12)",
@@ -8265,6 +8413,21 @@ paladin:{
         },
         retribution:{
             name:"Retribution",
+            rotation:{
+                description:"Retribution Paladins use Seal twisting for maximum DPS. Brings Sanctity Aura and Judgement of the Crusader for raid.",
+                priority:[
+                    {name:"Crusader Strike",spellId:35395,description:"Use on cooldown - refreshes Judgements"},
+                    {name:"Judgement",spellId:20271,description:"Use on CD - off the GCD so weave between abilities"},
+                    {name:"Seal of Blood",spellId:31892,description:"Maintain for auto-attack procs (Horde)"},
+                    {name:"Seal of Command",spellId:20920,description:"For Seal twisting or if no Blood (Alliance)"},
+                    {name:"Hammer of Wrath",spellId:27180,description:"Execute ability below 20% - use on CD"},
+                    {name:"Consecration",spellId:27173,description:"Use for AoE or if mana allows on single target"}
+                ],
+                cooldowns:[
+                    {name:"Avenging Wrath",spellId:31884,description:"30% damage increase for 20s - use with Heroism"}
+                ],
+                notes:"SEAL TWISTING: Cast Seal of Blood ~0.4s before melee swing while Seal of Command is active to proc both seals. Keep Judgement of Crusader up if no other Ret. Use Sanctity Aura for 10% Holy damage increase to raid."
+            },
             talents:[
                 {
                     name:"Build 1 (0/0/39)",
@@ -8506,6 +8669,23 @@ priest:{
     specs:{
         holy:{
             name:"Holy",
+            rotation:{
+                description:"Holy Priests are versatile healers with strong single-target and AoE healing options.",
+                priority:[
+                    {name:"Prayer of Mending",spellId:33076,description:"Cast on tank on CD - bounces on damage taken"},
+                    {name:"Circle of Healing",spellId:34866,description:"Instant AoE heal - use for group damage"},
+                    {name:"Flash Heal",spellId:25235,description:"Fast efficient heal for spot healing"},
+                    {name:"Greater Heal",spellId:25213,description:"Big heal for tank damage"},
+                    {name:"Renew",spellId:25222,description:"HoT - keep on tank or raid as needed"},
+                    {name:"Prayer of Healing",spellId:25218,description:"Group AoE heal when CoH on CD"}
+                ],
+                cooldowns:[
+                    {name:"Inner Focus",spellId:14751,description:"Free spell + 25% crit - use with Greater Heal"},
+                    {name:"Pain Suppression",spellId:33206,description:"40% damage reduction on target (if Disc)"},
+                    {name:"Guardian Spirit",spellId:47788,description:"Prevents death (if talented)"}
+                ],
+                notes:"Keep Prayer of Mending bouncing. Use Binding Heal when you need healing too. Downrank heals for mana efficiency. Keep Power Word: Fortitude and Divine Spirit on raid."
+            },
             talents:[
                 {
                     name:"Build 1 (41/20/0)",
@@ -9167,6 +9347,21 @@ priest:{
         },
         shadow:{
             name:"Shadow",
+            rotation:{
+                description:"Shadow Priests provide mana regeneration to their party via Vampiric Touch. Essential support class.",
+                priority:[
+                    {name:"Vampiric Touch",spellId:34917,description:"MUST keep up - returns mana to party on damage"},
+                    {name:"Shadow Word: Pain",spellId:25368,description:"Highest damage per cast time - never let fall off"},
+                    {name:"Mind Blast",spellId:25375,description:"Use on CD - high damage nuke"},
+                    {name:"Shadow Word: Death",spellId:32996,description:"Execute - use on CD, watch your health"},
+                    {name:"Mind Flay",spellId:25387,description:"Filler spell - clip if MB or SW:D ready"}
+                ],
+                cooldowns:[
+                    {name:"Shadowfiend",spellId:34433,description:"Mana regen pet - use when below 50% mana"},
+                    {name:"Inner Focus",spellId:14751,description:"Free spell - use with Mind Blast"}
+                ],
+                notes:"VAMPIRIC TOUCH returns 5% of shadow damage as mana to party - you're brought for this. Keep VT and SW:P up 100%. One Shadow Priest per healer/caster group. Shadow Weaving debuff increases shadow damage for Warlocks."
+            },
             talents:[
                 {
                     name:"Build 1 (0/0/35)",
@@ -9425,6 +9620,21 @@ shaman:{
     specs:{
         elemental:{
             name:"Elemental",
+            rotation:{
+                description:"Elemental Shamans bring Totem of Wrath for caster groups. Simple rotation focused on Lightning Bolt.",
+                priority:[
+                    {name:"Lightning Bolt",spellId:25449,description:"Primary nuke - spam between other abilities"},
+                    {name:"Chain Lightning",spellId:25442,description:"Use with Elemental Mastery or on multiple targets"},
+                    {name:"Flame Shock",spellId:25457,description:"Only when movement required"},
+                    {name:"Earth Shock",spellId:25454,description:"Interrupt or when Lightning Bolt not possible"}
+                ],
+                cooldowns:[
+                    {name:"Elemental Mastery",spellId:16166,description:"Next spell instant + guaranteed crit - use with CL"},
+                    {name:"Heroism",spellId:32182,description:"Raid cooldown - coordinate with raid leader"},
+                    {name:"Bloodlust",spellId:2825,description:"Horde version of Heroism"}
+                ],
+                notes:"TOTEM OF WRATH: 3% spell hit and crit to party. Place totems before pull. Use Wrath of Air Totem for caster group. Mana Spring in healer group. Lightning Bolt spam is 90% of your damage."
+            },
             talents:[
                 {
                     name:"Build 1 (41/0/20)",
@@ -9842,6 +10052,21 @@ shaman:{
         },
         enhancement:{
             name:"Enhancement",
+            rotation:{
+                description:"Enhancement Shamans bring Windfury Totem and Unleashed Rage for melee groups. Totem twisting for max DPS.",
+                priority:[
+                    {name:"Stormstrike",spellId:17364,description:"Use on CD - applies Nature damage debuff"},
+                    {name:"Earth Shock",spellId:25454,description:"Use after Stormstrike for bonus damage"},
+                    {name:"Flame Shock",spellId:25457,description:"Keep DoT up between shocks"},
+                    {name:"Shamanistic Rage",spellId:30823,description:"Use on CD for mana and damage reduction"}
+                ],
+                cooldowns:[
+                    {name:"Heroism",spellId:32182,description:"Raid cooldown - coordinate with raid"},
+                    {name:"Bloodlust",spellId:2825,description:"Horde version"},
+                    {name:"Shamanistic Rage",spellId:30823,description:"30% damage reduction + mana regen"}
+                ],
+                notes:"TOTEM TWISTING: Drop Windfury, wait 9 seconds, drop Grace of Air, repeat. Both buffs stay active. Unleashed Rage gives 10% AP to party on crits. Use slow weapons (2.6+ speed) for bigger Windfury hits."
+            },
             talents:[
                 {
                     name:"Build 1 (17/44/0)",
@@ -10382,6 +10607,22 @@ shaman:{
         },
         restoration:{
             name:"Restoration",
+            rotation:{
+                description:"Resto Shamans excel at group healing with Chain Heal. Bring totems and Heroism/Bloodlust.",
+                priority:[
+                    {name:"Chain Heal",spellId:25423,description:"Primary heal - bounces to 2 additional targets"},
+                    {name:"Lesser Healing Wave",spellId:25420,description:"Fast single target heal"},
+                    {name:"Healing Wave",spellId:25396,description:"Big heal for heavy tank damage"},
+                    {name:"Earth Shield",spellId:32594,description:"Keep on tank - heals when hit"},
+                    {name:"Riptide",spellId:61301,description:"Instant HoT + boosts next Chain Heal (if talented)"}
+                ],
+                cooldowns:[
+                    {name:"Nature's Swiftness",spellId:16188,description:"Instant cast next spell - use with Healing Wave"},
+                    {name:"Mana Tide Totem",spellId:16190,description:"Party mana regen - use at 50% mana"},
+                    {name:"Heroism",spellId:32182,description:"Raid cooldown"}
+                ],
+                notes:"Earth Shield on main tank always. Chain Heal on melee clump for maximum bounces. Mana Spring Totem for healers, Wrath of Air for casters. Downrank Chain Heal for mana efficiency."
+            },
             talents:[
                 {
                     name:"Build 1 (8/0/53)",
@@ -11027,6 +11268,21 @@ druid:{
     specs:{
         balance:{
             name:"Balance",
+            rotation:{
+                description:"Balance Druids (Moonkins) bring 5% spell crit aura and Faerie Fire. Starfire spam rotation.",
+                priority:[
+                    {name:"Faerie Fire",spellId:27013,description:"Keep debuff on boss (-610 armor)"},
+                    {name:"Moonfire",spellId:26988,description:"Keep DoT up, refresh at end"},
+                    {name:"Insect Swarm",spellId:27013,description:"Keep up if moving, otherwise skip for mana"},
+                    {name:"Starfire",spellId:26986,description:"SPAM - main damage spell"},
+                    {name:"Wrath",spellId:26985,description:"Only for movement or very short fights"}
+                ],
+                cooldowns:[
+                    {name:"Force of Nature",spellId:33831,description:"Summon 3 Treants - use when they'll survive"},
+                    {name:"Innervate",spellId:29166,description:"400% mana regen - use on yourself or healer"}
+                ],
+                notes:"Moonkin Aura gives 5% spell crit to party - always be in caster group. Faerie Fire is essential for physical DPS. If mana is an issue, drop DoTs and just spam Starfire. Use Hurricane for AoE."
+            },
             talents:[
                 {
                     name:"Build 1 (48/0/13)",
@@ -11534,6 +11790,20 @@ druid:{
         },
         feral_dps:{
             name:"Feral (DPS)",
+            rotation:{
+                description:"Feral Cat DPS requires complex rotation with powershifting. Brings Leader of the Pack crit aura.",
+                priority:[
+                    {name:"Mangle (Cat)",spellId:33983,description:"Keep debuff up - increases bleed damage"},
+                    {name:"Rip",spellId:27008,description:"5 CP finisher - keep up on long fights"},
+                    {name:"Shred",spellId:27002,description:"Main combo point builder - must be behind target"},
+                    {name:"Ferocious Bite",spellId:31018,description:"5 CP finisher if target dying before Rip ends"},
+                    {name:"Tiger's Fury",spellId:9846,description:"Only use at 100 energy before gaining more"}
+                ],
+                cooldowns:[
+                    {name:"Berserk",spellId:50334,description:"Reduces ability costs - use with Heroism (if talented)"}
+                ],
+                notes:"POWERSHIFTING: Shift out and back to Cat Form for instant energy from Furor talent. Requires Wolfshead Helm. Very complex rotation - use addon like Feral by Night. Leader of the Pack gives 5% crit to party."
+            },
             talents:[
                 {
                     name:"Build 1 (0/44/17)",
@@ -12124,6 +12394,22 @@ druid:{
         },
         feral_tank:{
             name:"Feral (Tank)",
+            rotation:{
+                description:"Feral Bear tanks have high HP and armor but limited cooldowns. Great off-tanks and DPS hybrids.",
+                priority:[
+                    {name:"Mangle (Bear)",spellId:33987,description:"Highest threat ability - use on CD"},
+                    {name:"Lacerate",spellId:33745,description:"Stack to 5, refresh before falling off"},
+                    {name:"Swipe",spellId:26997,description:"Use for AoE threat on multiple mobs"},
+                    {name:"Maul",spellId:26996,description:"Queue on every auto attack if rage allows"},
+                    {name:"Faerie Fire (Feral)",spellId:27011,description:"Keep debuff up for armor reduction"}
+                ],
+                cooldowns:[
+                    {name:"Frenzied Regeneration",spellId:22896,description:"Convert rage to healing - use when low HP"},
+                    {name:"Barkskin",spellId:22812,description:"20% damage reduction - use preemptively (drops form)"},
+                    {name:"Enrage",spellId:5229,description:"Generate rage before pull"}
+                ],
+                notes:"No Shield Block equivalent - avoid crushing blows via pure armor and HP. Leader of the Pack gives 5% crit to party. Can easily swap to Cat for DPS when not tanking. Stack armor and HP."
+            },
             talents:[
                 {
                     name:"Build 1 (0/44/17)",
@@ -12714,6 +13000,22 @@ druid:{
         },
         restoration:{
             name:"Restoration",
+            rotation:{
+                description:"Resto Druids are HoT-focused healers. Excellent tank healers and raid healers with Lifebloom.",
+                priority:[
+                    {name:"Lifebloom",spellId:33763,description:"Stack 3x on tank, let bloom or refresh at 1s"},
+                    {name:"Rejuvenation",spellId:26982,description:"HoT for raid healing - spread on raid"},
+                    {name:"Regrowth",spellId:26980,description:"Direct heal + HoT - use for burst healing"},
+                    {name:"Healing Touch",spellId:26979,description:"Big slow heal - rarely used"},
+                    {name:"Swiftmend",spellId:18562,description:"Instant heal consuming Rejuv/Regrowth HoT"}
+                ],
+                cooldowns:[
+                    {name:"Nature's Swiftness",spellId:17116,description:"Instant cast next spell - pair with HT"},
+                    {name:"Innervate",spellId:29166,description:"Massive mana regen - use on self or healers"},
+                    {name:"Tranquility",spellId:26983,description:"Channeled AoE heal - emergency button"}
+                ],
+                notes:"LIFEBLOOM ROLLING: Stack 3x Lifebloom on tank, refresh at 1 second to keep bloom heal and mana return. Tree of Life form reduces mana costs. Use HoTs preemptively - you're a proactive healer."
+            },
             talents:[
                 {
                     name:"Build 1 (0/0/61)",
@@ -13438,6 +13740,22 @@ warlock:{
     specs:{
         affliction:{
             name:"Affliction",
+            rotation:{
+                description:"Affliction Warlocks maintain multiple DoTs for sustained damage. Brings Malediction for caster debuff.",
+                priority:[
+                    {name:"Curse of Doom",spellId:30910,description:"Use on long fights (60s duration)"},
+                    {name:"Curse of Agony",spellId:27218,description:"Use on shorter fights or if assigned"},
+                    {name:"Corruption",spellId:27216,description:"Keep up 100% - high damage DoT"},
+                    {name:"Unstable Affliction",spellId:30405,description:"Keep up - dispel protection + damage"},
+                    {name:"Siphon Life",spellId:30911,description:"Keep up when Shadow Vuln active"},
+                    {name:"Immolate",spellId:27215,description:"Keep up for extra DoT damage"},
+                    {name:"Shadow Bolt",spellId:27209,description:"Filler between DoT refreshes"}
+                ],
+                cooldowns:[
+                    {name:"Demonic Sacrifice",spellId:18788,description:"Sacrifice Succubus for 15% Shadow damage (if specced)"}
+                ],
+                notes:"Malediction (Curse of Elements) increases spell damage taken by 3% - one Warlock should keep this up. Refresh DoTs before they fall off. Life Tap for mana. Dark Pact if using Imp."
+            },
             talents:[
                 {
                     name:"Build 1 (43/0/18)",
@@ -13868,6 +14186,21 @@ warlock:{
         },
         demonology:{
             name:"Demonology",
+            rotation:{
+                description:"Demonology Warlocks use the Felguard pet for damage. Strong AoE with Seed of Corruption.",
+                priority:[
+                    {name:"Curse of Doom",spellId:30910,description:"Use on long boss fights"},
+                    {name:"Corruption",spellId:27216,description:"Keep up on target"},
+                    {name:"Immolate",spellId:27215,description:"Keep up for DoT damage"},
+                    {name:"Shadow Bolt",spellId:27209,description:"Main filler nuke"},
+                    {name:"Incinerate",spellId:32231,description:"Alternative filler if Fire specced"}
+                ],
+                cooldowns:[
+                    {name:"Demonic Empowerment",spellId:47193,description:"Boost Felguard damage"},
+                    {name:"Soul Link",spellId:19028,description:"Passive 20% damage shared with pet - keep pet alive"}
+                ],
+                notes:"Felguard does good damage - keep it alive and on target. Soul Link makes you tanky. Good for dungeons and AoE with Seed of Corruption. Life Tap for mana, Fel Armor for damage."
+            },
             talents:[
                 {
                     name:"Build 1 (1/41/19)",
@@ -14167,6 +14500,19 @@ warlock:{
         },
         destruction:{
             name:"Destruction",
+            rotation:{
+                description:"Destruction Warlocks have the simplest rotation - Shadow Bolt spam. Highest single-target DPS spec.",
+                priority:[
+                    {name:"Curse of Doom",spellId:30910,description:"Use on boss fights (60s duration)"},
+                    {name:"Curse of Elements",spellId:27228,description:"If no Affliction lock, apply for raid"},
+                    {name:"Immolate",spellId:27215,description:"Keep up for Conflagrate proc"},
+                    {name:"Shadow Bolt",spellId:27209,description:"SPAM - 90%+ of your damage"}
+                ],
+                cooldowns:[
+                    {name:"Demonic Sacrifice",spellId:18788,description:"Sacrifice Succubus for 15% Shadow damage"}
+                ],
+                notes:"Simple rotation: Keep curse up, spam Shadow Bolt. Sacrifice Succubus for 15% shadow damage boost. ISB (Improved Shadow Bolt) debuff increases shadow damage for all Warlocks - coordinate. Life Tap for mana."
+            },
             talents:[
                 {
                     name:"Build 1 (0/19/35)",
@@ -14534,6 +14880,21 @@ mage:{
     specs:{
         arcane:{
             name:"Arcane",
+            rotation:{
+                description:"Arcane Mages have the highest burst DPS in TBC but are mana-intensive. Requires good mana management.",
+                priority:[
+                    {name:"Arcane Blast",spellId:30451,description:"Spam during burn phase (3 stacks then frostbolt)"},
+                    {name:"Frostbolt",spellId:27072,description:"Filler during mana conservation phase"},
+                    {name:"Arcane Missiles",spellId:27075,description:"Use Missile Barrage procs if talented"}
+                ],
+                cooldowns:[
+                    {name:"Arcane Power",spellId:12042,description:"30% damage boost - use with Icy Veins"},
+                    {name:"Presence of Mind",spellId:12043,description:"Instant cast next spell - pair with Arcane Blast"},
+                    {name:"Icy Veins",spellId:12472,description:"20% haste - stack with Arcane Power"},
+                    {name:"Cold Snap",spellId:11958,description:"Resets Icy Veins - double IV window"}
+                ],
+                notes:"BURN PHASE: Pop all CDs, spam Arcane Blast until OOM. CONSERVE PHASE: 3x Arcane Blast → 3x Frostbolt rotation. Use Mage Armor for mana regen. Evocate when safe. Super Mana Potion on CD."
+            },
             talents:[
                 {
                     name:"Build 1 (40/0/21)",
@@ -14907,6 +15268,20 @@ mage:{
         },
         fire:{
             name:"Fire",
+            rotation:{
+                description:"Fire Mages have consistent damage with simple rotation. Gains power with Molten Fury below 20%.",
+                priority:[
+                    {name:"Scorch",spellId:27074,description:"Apply 5 stacks of Improved Scorch debuff first"},
+                    {name:"Fireball",spellId:27070,description:"Main nuke - spam after Scorch stacks"},
+                    {name:"Fire Blast",spellId:27079,description:"Instant - use while moving"}
+                ],
+                cooldowns:[
+                    {name:"Combustion",spellId:11129,description:"Crit boost - use when Heroism/below 20%"},
+                    {name:"Icy Veins",spellId:12472,description:"20% haste - use with Combustion"},
+                    {name:"Cold Snap",spellId:11958,description:"Resets Icy Veins for double haste"}
+                ],
+                notes:"Keep 5 stacks of Improved Scorch debuff up (coordinate with other Fire mages). Molten Fury gives 20% damage boost below 20% HP - save cooldowns for this. Use Molten Armor for crit."
+            },
             talents:[
                 {
                     name:"Build 1 (13/45/3)",
@@ -15355,6 +15730,21 @@ mage:{
         },
         frost:{
             name:"Frost",
+            rotation:{
+                description:"Frost is primarily a PvP/leveling spec in TBC but viable for AoE farming and early progression.",
+                priority:[
+                    {name:"Frostbolt",spellId:27072,description:"Main nuke - spam for single target"},
+                    {name:"Ice Lance",spellId:30455,description:"Use on Fingers of Frost procs"},
+                    {name:"Cone of Cold",spellId:27087,description:"AoE - use for Blizzard kiting"},
+                    {name:"Blizzard",spellId:27085,description:"AoE channeled - use for dungeon farming"}
+                ],
+                cooldowns:[
+                    {name:"Icy Veins",spellId:12472,description:"20% haste - use on CD"},
+                    {name:"Cold Snap",spellId:11958,description:"Resets all Frost CDs including Ice Block"},
+                    {name:"Summon Water Elemental",spellId:31687,description:"45s pet - use on CD for damage"}
+                ],
+                notes:"Lower raid DPS than Fire/Arcane but excellent AoE and survivability. Water Elemental does good damage - keep it alive. Use for dungeons and AoE farming. Ice Armor for PvP."
+            },
             talents:[
                 {
                     name:"Build 1 (13/0/25)",
@@ -17352,6 +17742,86 @@ function renderClassContent(className) {
         `;
     }
 
+    // Generate rotation section
+    let rotationHtml = '';
+    if (specData.rotation) {
+        const rot = specData.rotation;
+
+        // Priority list
+        let priorityHtml = '';
+        if (rot.priority && rot.priority.length > 0) {
+            const priorityList = rot.priority.map((ability, idx) => {
+                const abilityLink = ability.spellId
+                    ? `<a href="https://tbc.wowhead.com/spell=${ability.spellId}" data-wowhead="spell=${ability.spellId}" class="text-terminal-accent hover:text-terminal-text">${ability.name}</a>`
+                    : `<span class="text-terminal-accent">${ability.name}</span>`;
+                return `<tr class="border-b border-terminal-dim border-opacity-30">
+                    <td class="p-2 md:p-1.5 sm:p-1 text-terminal-accent whitespace-nowrap">${idx + 1}.</td>
+                    <td class="p-2 md:p-1.5 sm:p-1 whitespace-nowrap">${abilityLink}</td>
+                    <td class="p-2 text-terminal-dim md:p-1.5 sm:p-1">${ability.description}</td>
+                </tr>`;
+            }).join('');
+            priorityHtml = `
+                <h4 class="text-terminal-accent text-xs uppercase mb-2 mt-4 md:text-[11px] md:mb-1.5 sm:text-[10px]">// Priority</h4>
+                <div class="overflow-x-auto -mx-4 px-4 md:-mx-3 md:px-3 sm:-mx-2.5 sm:px-2.5">
+                    <table class="w-full border-collapse text-xs min-w-[400px] md:text-[11px] sm:text-[10px]">
+                        <thead><tr>
+                            <th class="bg-terminal-dim text-terminal-bg p-2 text-left font-semibold uppercase text-[10px] tracking-wider md:p-1.5 md:text-[9px] sm:p-1 sm:text-[8px] w-8">#</th>
+                            <th class="bg-terminal-dim text-terminal-bg p-2 text-left font-semibold uppercase text-[10px] tracking-wider md:p-1.5 md:text-[9px] sm:p-1 sm:text-[8px]">ABILITY</th>
+                            <th class="bg-terminal-dim text-terminal-bg p-2 text-left font-semibold uppercase text-[10px] tracking-wider md:p-1.5 md:text-[9px] sm:p-1 sm:text-[8px]">USAGE</th>
+                        </tr></thead>
+                        <tbody>${priorityList}</tbody>
+                    </table>
+                </div>`;
+        }
+
+        // Opener section
+        let openerHtml = '';
+        if (rot.opener && rot.opener.length > 0) {
+            const openerList = rot.opener.map(ability => {
+                const abilityLink = ability.spellId
+                    ? `<a href="https://tbc.wowhead.com/spell=${ability.spellId}" data-wowhead="spell=${ability.spellId}" class="text-terminal-accent hover:text-terminal-text">${ability.name}</a>`
+                    : `<span class="text-terminal-accent">${ability.name}</span>`;
+                return abilityLink;
+            }).join(' → ');
+            openerHtml = `
+                <h4 class="text-terminal-accent text-xs uppercase mb-2 mt-4 md:text-[11px] md:mb-1.5 sm:text-[10px]">// Opener</h4>
+                <div class="bg-terminal-bg/50 border border-terminal-dim p-3 text-xs md:text-[11px] sm:text-[10px]">${openerList}</div>`;
+        }
+
+        // Cooldowns section
+        let cooldownsHtml = '';
+        if (rot.cooldowns && rot.cooldowns.length > 0) {
+            const cdList = rot.cooldowns.map(cd => {
+                const cdLink = cd.spellId
+                    ? `<a href="https://tbc.wowhead.com/spell=${cd.spellId}" data-wowhead="spell=${cd.spellId}" class="text-terminal-accent hover:text-terminal-text">${cd.name}</a>`
+                    : `<span class="text-terminal-accent">${cd.name}</span>`;
+                return `<div class="mb-2"><span class="text-terminal-text">•</span> ${cdLink}: <span class="text-terminal-dim">${cd.description}</span></div>`;
+            }).join('');
+            cooldownsHtml = `
+                <h4 class="text-terminal-accent text-xs uppercase mb-2 mt-4 md:text-[11px] md:mb-1.5 sm:text-[10px]">// Cooldowns</h4>
+                <div class="bg-terminal-bg/50 border border-terminal-dim p-3 text-xs md:text-[11px] sm:text-[10px]">${cdList}</div>`;
+        }
+
+        // Notes section
+        let notesHtml = '';
+        if (rot.notes) {
+            notesHtml = `
+                <h4 class="text-terminal-accent text-xs uppercase mb-2 mt-4 md:text-[11px] md:mb-1.5 sm:text-[10px]">// Notes</h4>
+                <div class="bg-terminal-bg/50 border border-terminal-dim p-3 text-xs text-terminal-dim md:text-[11px] sm:text-[10px]">${rot.notes}</div>`;
+        }
+
+        rotationHtml = `
+            <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ ROTATION ]</h3>
+            <div class="border border-terminal-dim p-4 my-4 md:p-3 sm:p-2.5">
+                ${rot.description ? `<p class="text-terminal-dim text-xs mb-3 md:text-[11px] sm:text-[10px]">${rot.description}</p>` : ''}
+                ${priorityHtml}
+                ${openerHtml}
+                ${cooldownsHtml}
+                ${notesHtml}
+            </div>
+        `;
+    }
+
     const specs = Object.entries(data.specs)
         .map(([key, spec]) => `<span class="spec-tab ${key === currentSpec ? 'border-terminal-accent text-terminal-accent' : 'border-terminal-dim'} inline-block py-2 px-3 mr-2.5 border cursor-pointer transition-all text-xs select-none hover:border-terminal-accent hover:text-terminal-accent md:py-2.5 md:px-3 md:text-[11px] md:min-h-[48px] md:inline-flex md:items-center md:mr-2 sm:py-2 sm:px-2.5 sm:text-[10px] sm:mr-1.5 sm:min-h-[44px]" data-spec="${key}">${spec.name}</span>`)
         .join('');
@@ -17372,6 +17842,7 @@ function renderClassContent(className) {
                 </table>
             </div>
             ${gemsHtml}
+            ${rotationHtml}
             ${talentsHtml}
         </div>
     `;
