@@ -1395,15 +1395,16 @@ const GEAR_SLOTS = ['HELM', 'NECK', 'SHOULDER', 'CLOAK', 'CHEST', 'WRIST', 'HAND
 
 // Find item ID from name (case-insensitive, partial match)
 function findItemId(itemName) {
+    if (!itemIds || typeof itemIds !== 'object') return null;
     const lower = itemName.toLowerCase().trim();
     if (!lower) return null;
     // Exact match first
-    for (const [name, id] of Object.entries(itemIds)) {
-        if (name.toLowerCase() === lower) return id;
+    for (const name in itemIds) {
+        if (name.toLowerCase() === lower) return itemIds[name];
     }
-    // Partial match
-    for (const [name, id] of Object.entries(itemIds)) {
-        if (name.toLowerCase().includes(lower) || lower.includes(name.toLowerCase())) return id;
+    // Partial match - item name contains search term
+    for (const name in itemIds) {
+        if (name.toLowerCase().includes(lower)) return itemIds[name];
     }
     return null;
 }
@@ -1429,7 +1430,8 @@ function getPreRaidBisList(className, specName) {
     if (!cls || !cls.specs || !cls.specs[specName]) return [];
     const spec = cls.specs[specName];
     if (!spec.phases) return [];
-    const preRaidPhase = spec.phases.find(p => p.name === 'PreRaid');
+    // phases is an object with keys "0", "1", etc.
+    const preRaidPhase = Object.values(spec.phases).find(p => p.name === 'PreRaid');
     return preRaidPhase?.bis || [];
 }
 
