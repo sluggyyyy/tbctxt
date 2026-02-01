@@ -38,43 +38,35 @@
             scroll-behavior: smooth;
             -webkit-text-size-adjust: 100%;
         }
-
         * {
             -webkit-tap-highlight-color: rgba(30, 255, 0, 0.1);
         }
-
         /* Better scrolling on mobile */
         .overflow-x-auto {
             -webkit-overflow-scrolling: touch;
             scrollbar-width: thin;
             scrollbar-color: #1eff00 #222222;
         }
-
         .overflow-x-auto::-webkit-scrollbar {
             height: 8px;
         }
-
         .overflow-x-auto::-webkit-scrollbar-track {
             background: #222222;
         }
-
         .overflow-x-auto::-webkit-scrollbar-thumb {
             background: #1eff00;
             border-radius: 4px;
         }
-
         /* ===== TERMINAL-SPECIFIC STYLES (not in Tailwind) ===== */
         .ascii-logo {
             white-space: pre;
             font-family: 'Courier Prime', monospace;
             overflow-x: auto;
         }
-
         .command-line:before {
             content: '$ ';
             color: #1eff00;
         }
-
         .class-list li {
             border-left: 2px solid transparent;
             transition: all 0.2s ease;
@@ -86,7 +78,6 @@
         .class-list li.active {
             border-left-color: #ffffff;
         }
-
         /* Prevent text selection on interactive elements (mobile) */
         .class-list li,
         .phase-btn,
@@ -94,7 +85,6 @@
             -webkit-user-select: none;
             user-select: none;
         }
-
         /* ===== MOBILE-SPECIFIC OVERRIDES ===== */
         @media (max-width: 767px) {
             body {
@@ -103,31 +93,25 @@
                 overflow-x: hidden !important;
                 max-width: 100vw !important;
             }
-
             header {
                 padding: 1rem !important;
                 margin-bottom: 1rem !important;
             }
-
             .ascii-logo {
                 font-size: 7px !important;
                 line-height: 1.1 !important;
                 margin-bottom: 0.625rem !important;
             }
-
             .grid {
                 grid-template-columns: 1fr !important;
                 gap: 1rem !important;
             }
-
             aside {
                 padding: 1rem !important;
             }
-
             aside h3 {
                 font-size: 0.8125rem !important;
             }
-
             .class-list li {
                 padding: 0.625rem 0 !important;
                 padding-left: 0.75rem !important;
@@ -136,42 +120,35 @@
                 display: flex !important;
                 align-items: center !important;
             }
-
             main {
                 padding: 1rem !important;
                 overflow-x: hidden !important;
             }
-
             /* Dynamic content */
             .command-line {
                 font-size: 0.6875rem !important;
                 margin: 0.75rem 0 !important;
                 word-break: break-all;
             }
-
             h2 {
                 font-size: 1rem !important;
                 margin-bottom: 0.75rem !important;
             }
-
             h3 {
                 font-size: 0.8125rem !important;
                 margin: 0.75rem 0 !important;
             }
-
             .meta-info {
                 font-size: 0.6875rem !important;
                 padding: 0.625rem 0.75rem !important;
                 margin: 0.75rem 0 !important;
             }
-
             /* Buttons and tabs */
             .phase-btn, .spec-tab {
                 font-size: 0.6875rem !important;
                 padding: 0.5rem 0.75rem !important;
                 min-height: 44px !important;
             }
-
             /* Tables - ensure horizontal scroll */
             .overflow-x-auto {
                 margin-left: -1rem !important;
@@ -179,24 +156,20 @@
                 padding-left: 1rem !important;
                 padding-right: 1rem !important;
             }
-
             table {
                 font-size: 0.6875rem !important;
                 min-width: 500px !important;
                 display: table !important;
             }
-
             th, td {
                 padding: 0.5rem !important;
                 font-size: 0.625rem !important;
                 white-space: nowrap !important;
                 text-align: justify !important;
             }
-
             th {
                 font-size: 0.5625rem !important;
             }
-
             /* Talent trees and macros */
             .talent-tree {
                 font-size: 0.5625rem !important;
@@ -204,89 +177,71 @@
                 line-height: 1.3 !important;
                 overflow-x: auto !important;
             }
-
             footer {
                 padding: 1rem !important;
                 font-size: 0.625rem !important;
             }
         }
-
         @media (max-width: 479px) {
             body {
                 padding: 0.5rem !important;
                 font-size: 0.6875rem !important;
             }
-
             header {
                 padding: 0.75rem !important;
             }
-
             .ascii-logo {
                 font-size: 5.5px !important;
             }
-
             aside {
                 padding: 0.75rem !important;
             }
-
             .class-list li {
                 font-size: 0.75rem !important;
                 min-height: 44px !important;
                 padding-left: 0.625rem !important;
             }
-
             main {
                 padding: 0.75rem !important;
             }
-
             .overflow-x-auto {
                 margin-left: -0.75rem !important;
                 margin-right: -0.75rem !important;
                 padding-left: 0.75rem !important;
                 padding-right: 0.75rem !important;
             }
-
             table {
                 min-width: 450px !important;
             }
-
             th, td {
                 padding: 0.375rem !important;
                 font-size: 0.5625rem !important;
             }
-
             th {
                 font-size: 0.5rem !important;
             }
-
             .talent-tree {
                 font-size: 0.5rem !important;
                 padding: 0.5rem !important;
             }
-
             .phase-btn, .spec-tab {
                 font-size: 0.625rem !important;
                 padding: 0.375rem 0.625rem !important;
             }
-
             .command-line {
                 font-size: 0.625rem !important;
             }
-
             h2 {
                 font-size: 0.875rem !important;
             }
-
             h3 {
                 font-size: 0.75rem !important;
             }
-
             .meta-info {
                 font-size: 0.625rem !important;
                 padding: 0.5rem 0.625rem !important;
             }
         }
-
         /* ===== ITEM QUALITY COLORS ===== */
         .item-quality-rare { color: #0070dd; }
         .item-quality-rare a {
@@ -299,7 +254,6 @@
             color: #ffffff !important;
             border-bottom-color: #ffffff;
         }
-
         .item-quality-epic { color: #a335ee; }
         .item-quality-epic a {
             color: #a335ee !important;
@@ -311,7 +265,6 @@
             color: #ffffff !important;
             border-bottom-color: #ffffff;
         }
-
         .item-quality-legendary { color: #ff8000; }
         .item-quality-legendary a {
             color: #ff8000 !important;
@@ -323,7 +276,6 @@
             color: #ffffff !important;
             border-bottom-color: #ffffff;
         }
-
         /* ===== WOWHEAD TOOLTIP OVERRIDES ===== */
         .wowhead-tooltip {
             background: #222222 !important;
@@ -386,8 +338,6 @@ let raidsData = {};
 let enchantSpellIds = {};
 let talentSpellIds = {};
 let questIds = {};
-
-// ===== GLOBAL STATE =====
 let currentClass = 'warrior';
 let currentSpec = null;
 let currentPhase = 4;
@@ -395,8 +345,6 @@ let currentRaid = 'karazhan';
 let currentRaidPhase = 'phase1';
 let currentProfession = 'blacksmithing';
 const FADE_TRANSITION_MS = 200;
-
-// ===== LOADING INDICATOR =====
 function showLoading() {
     document.getElementById('main-content').innerHTML = `
         <div class="text-terminal-dim text-center py-10">
@@ -405,17 +353,13 @@ function showLoading() {
         </div>
     `;
 }
-
-// ===== LOAD ALL JSON DATA =====
 async function loadAllData() {
     showLoading();
-
     async function fetchJSON(url) {
         const res = await fetch(url);
         if (!res.ok) throw new Error(`Failed to load ${url}: ${res.status}`);
         return res.json();
     }
-
     try {
         const [items, classes, recipes, raids, reference] = await Promise.all([
             fetchJSON('data/itemIds.json'),
@@ -424,7 +368,6 @@ async function loadAllData() {
             fetchJSON('data/raidsData.json'),
             fetchJSON('data/referenceData.json')
         ]);
-
         itemIds = items;
         classData = classes;
         recipesData = recipes;
@@ -432,14 +375,12 @@ async function loadAllData() {
         enchantSpellIds = reference.enchantSpellIds;
         talentSpellIds = reference.talentSpellIds;
         questIds = reference.questIds;
-
         console.log('Data loaded:', {
             items: Object.keys(itemIds).length,
             classes: Object.keys(classData).length,
             professions: Object.keys(recipesData).length,
             raidPhases: Object.keys(raidsData).length
         });
-
         // Initialize the app
         initClassSelector();
         renderClassContent('warrior');
@@ -454,20 +395,15 @@ async function loadAllData() {
         `;
     }
 }
-
-// ===== UTILITY FUNCTIONS =====
 function stripPriorityLabel(itemName) {
     return itemName.replace(/\s*\((BEST|RECOMMENDED|GOOD|OPTION|ALTERNATIVE|EASY|HARD)\)\s*$/i, '').trim();
 }
-
 function getPriorityLabel(itemName) {
     const match = itemName.match(/\((BEST|RECOMMENDED|GOOD|OPTION|ALTERNATIVE|EASY|HARD)\)\s*$/i);
     return match ? match[1].toUpperCase() : null;
 }
-
 function getPriorityBadge(label) {
     if (!label) return '';
-
     const badgeMap = {
         'BEST': { text: 'PRIORITY', class: 'text-red-400' },
         'RECOMMENDED': { text: 'GOOD', class: 'text-yellow-400' },
@@ -477,26 +413,20 @@ function getPriorityBadge(label) {
         'EASY': { text: 'EASY', class: 'text-blue-400' },
         'HARD': { text: 'HARD', class: 'text-purple-400' }
     };
-
     const badge = badgeMap[label];
     if (!badge) return '';
-
     return `<span class="ml-2 text-[10px] font-semibold ${badge.class}">[${badge.text}]</span>`;
 }
-
 function getItemId(itemName) {
     const cleanName = stripPriorityLabel(itemName);
     return itemIds[cleanName.toLowerCase()] || null;
 }
-
 function getItemQuality(itemName) {
     const cleanName = stripPriorityLabel(itemName);
     const name = cleanName.toLowerCase();
-
     // Legendary items
     const legendaryItems = ['warglaive of azzinoth', 'thori\'al', 'sulfuras'];
     if (legendaryItems.some(leg => name.includes(leg))) return 'legendary';
-
     // Rare (blue) items - mostly pre-raid dungeon drops, badges, some crafted
     const rareKeywords = [
         'badge of justice',
@@ -534,7 +464,6 @@ function getItemQuality(itemName) {
         'time-shifted',
         'phoenix-wing'
     ];
-
     // Check if it's a known epic crafted item
     const epicCraftedKeywords = [
         'primalstrike',
@@ -552,54 +481,43 @@ function getItemQuality(itemName) {
         'whitemend',
         'primal mooncloth'
     ];
-
     if (epicCraftedKeywords.some(keyword => name.includes(keyword))) return 'epic';
     if (rareKeywords.some(keyword => name.includes(keyword))) return 'rare';
-
     // Default to epic for raid items
     return 'epic';
 }
-
 function processItemLinks() {
     if (typeof $WowheadPower !== 'undefined') {
         $WowheadPower.refreshLinks();
     }
 }
-
 // Helper function to generate item cell HTML (reduces duplication)
 // Spell IDs for enchants (TBC wowhead uses spells, not items for enchants)
-
 function getEnchantSpellId(itemName) {
     const cleanName = stripPriorityLabel(itemName).toLowerCase();
     return enchantSpellIds[cleanName] || null;
 }
-
 function getTalentSpellId(talentName) {
     const cleanName = talentName.toLowerCase().trim().replace(/\\'/g, "'");
     return talentSpellIds[cleanName] || null;
 }
-
 function getQuestId(questName) {
     const cleanName = questName.toLowerCase().trim().replace(/\\'/g, "'");
     return questIds[cleanName] || null;
 }
-
 function getQuestId(questName) {
     const cleanName = questName.toLowerCase().trim().replace(/\\'/g, "'");
     return questIds[cleanName] || null;
 }
-
 function getTalentSpellId(talentName) {
     // Handle escaped apostrophes from the data (e.g., "Nature\'s Grace" -> "nature's grace")
     const cleanName = talentName.toLowerCase().trim().replace(/\\'/g, "'");
     return talentSpellIds[cleanName] || null;
 }
-
 function getEnchantSpellId(itemName) {
     const cleanName = stripPriorityLabel(itemName).toLowerCase();
     return enchantSpellIds[cleanName] || null;
 }
-
 function generateItemCell(itemName) {
     if (itemName.includes(' / ')) {
         return itemName.split(' / ').map(item => {
@@ -622,7 +540,6 @@ function generateItemCell(itemName) {
             return `<span class="item-quality-${quality}">${link}${priorityBadge}</span>`;
         }).join(' / ');
     }
-
     const quality = getItemQuality(itemName);
     const displayName = stripPriorityLabel(itemName);
     const priorityLabel = getPriorityLabel(itemName);
@@ -640,7 +557,6 @@ function generateItemCell(itemName) {
     }
     return `<span class="item-quality-${quality}">${link}${priorityBadge}</span>`;
 }
-
 // Helper function to process source text and create wowhead NPC/quest links
 function generateSourceCell(source) {
     // NPC map for boss linking
@@ -716,17 +632,14 @@ function generateSourceCell(source) {
         // Vendors
         'G\'eras': 19321
     };
-
     // Patterns for non-boss sources (don't need NPC linking)
     const professionSources = ['Blacksmithing', 'Leatherworking', 'Tailoring', 'Jewelcrafting', 'Engineering', 'Alchemy'];
     const pvpSources = ['Honor', 'Honor Points', 'Arena', 'Arena Points'];
     const otherSources = ['BoE World Drop', 'BoE', 'World Drop', 'Crafted', 'N/A', 'Various', 'Vendor', 'PvP'];
-
     // Extract display text - strip zone/instance info from "Boss - Zone" format
     let displayText = source;
     let bossName = null;
     let questName = null;
-
     // Pattern: "Boss - Zone" or "Boss— Zone" or "Boss - (H) Zone" -> extract just the boss name
     // Handles both hyphens (-) and em-dashes (—)
     const bossZoneMatch = source.match(/^(.+?)\s*[-—]\s*\(?H?\)?\s*(Karazhan|Gruul's Lair|Magtheridon's Lair|Serpentshrine Cavern|Tempest Keep|Hyjal Summit|Black Temple|Zul'Aman|Sunwell Plateau|The Blood Furnace|Blood Furnace|The Slave Pens|Slave Pens|The Underbog|Underbog|The Steamvault|Steamvault|The Botanica|Botanica|The Mechanar|Mechanar|The Arcatraz|Arcatraz|Shadow Labyrinth|Sethekk Halls|Auchenai Crypts|Auchindoun|Mana.?Tombs|Old Hillsbrad Foothills|The Black Morass|Black Morass|The Shattered Halls|Shattered Halls|Hellfire Ramparts|Ramparts|Magister's Terrace|Magisters' Terrace|Terokkar Forest|Netherstorm|Nagrand|Naxxramas|Caverns of Time|Blades? Edge Mountains|Shadowmoon Valley|Hellfire Peninsula|Tanaris|AQ40|Blackwing Lair|Stratholme|Blackrock Depths|World Boss)$/i);
@@ -734,7 +647,6 @@ function generateSourceCell(source) {
         displayText = bossZoneMatch[1].trim();
         bossName = displayText;
     }
-
     // Pattern: "(H)Boss-Zone" or "(H) Boss - Zone" or "Boss— HeroicZone" or "Bossin HeroicZone" for heroic dungeons
     const heroicMatch = source.match(/^\(H\)\s*(.+?)[-–—]\s*(.+)$/) ||
                         source.match(/^(.+?)[-—]\s*[Hh]eroic\s*(.+)$/) ||
@@ -743,7 +655,6 @@ function generateSourceCell(source) {
         displayText = heroicMatch[1].trim();
         bossName = displayText;
     }
-
     // Pattern: "Boss—Zone" or "Boss-Zone" (no space) for dungeons -> extract boss name
     const bossZoneNoSpaceMatch = source.match(/^([A-Z][^-—]+)[-—]([A-Z].+)$/);
     if (!bossName && bossZoneNoSpaceMatch && !source.includes(' - ') && !source.includes(' — ')) {
@@ -753,7 +664,6 @@ function generateSourceCell(source) {
             bossName = potentialBoss;
         }
     }
-
     // Pattern: "Boss1,Boss2, orBoss3—Zone" -> extract first boss name
     // Also handles case where bossZoneMatch succeeded but gave us multiple bosses
     if (bossName && bossName.includes(',')) {
@@ -771,7 +681,6 @@ function generateSourceCell(source) {
             bossName = firstBoss;
         }
     }
-
     // Pattern: Any source containing "Badge of Justice" with a number -> show badge count
     const badgeMatch = source.match(/(\d+)\s*x?\s*-?\s*Badge[s]?\s*(of\s*Justice)?/i);
     if (badgeMatch || source.toLowerCase().includes('badge of justice')) {
@@ -779,7 +688,6 @@ function generateSourceCell(source) {
         const displayText = count ? `${count} Badges` : 'Badge Vendor';
         return `<a href="https://tbc.wowhead.com/item=29434" data-wowhead="item=29434" class="underline hover:text-terminal-text">${displayText}</a>`;
     }
-
     // Pattern: "Justice Vendor" -> badge vendor
     if (source.toLowerCase().includes('justice vendor')) {
         const countMatch = source.match(/(\d+)/);
@@ -787,13 +695,11 @@ function generateSourceCell(source) {
         const displayText = count ? `${count} Badges` : 'Badge Vendor';
         return `<a href="https://tbc.wowhead.com/item=29434" data-wowhead="item=29434" class="underline hover:text-terminal-text">${displayText}</a>`;
     }
-
     // Pattern: "G'eras- X xBadge" -> show badge count
     const gerasBadgeMatch = source.match(/G'eras\s*-?\s*(\d+)\s*x?\s*Badge/i);
     if (gerasBadgeMatch) {
         return `<a href="https://tbc.wowhead.com/item=29434" data-wowhead="item=29434" class="underline hover:text-terminal-text">${gerasBadgeMatch[1]} Badges</a>`;
     }
-
     // Pattern: "Exalted - Faction" or "Faction - Exalted/Revered/Honored" (handles both - and —)
     const repMatch = source.match(/^(Exalted|Revered|Honored|Friendly)\s*[-—]\s*(.+)$/i) || source.match(/^(.+?)\s*[-—]\s*(Exalted|Revered|Honored|Friendly)$/i);
     if (repMatch) {
@@ -801,13 +707,11 @@ function generateSourceCell(source) {
         const standing = repMatch[1].match(/Exalted|Revered|Honored|Friendly/i) ? repMatch[1] : repMatch[2];
         return `${faction} (${standing})`;
     }
-
     // Pattern: "The Aldor- Revered" etc (handles both - and —)
     const factionRepMatch = source.match(/^(The Aldor|The Scryers|Lower City|Keepers of Time|The Sha'tar|Cenarion Expedition|Honor Hold|Thrallmar|The Violet Eye|The Scale of the Sands|Ashtongue Deathsworn|The Consortium|Kurenai|The Mag'har)\s*[-—]?\s*(Exalted|Revered|Honored|Friendly)$/i);
     if (factionRepMatch) {
         return `${factionRepMatch[1]} (${factionRepMatch[2]})`;
     }
-
     // Profession sources - just return the profession name (no link)
     // Handles: "Blacksmithing", "Spellfire Tailoring", "Mooncloth Tailoring", etc.
     const professionMatch = professionSources.find(p => source.toLowerCase().includes(p.toLowerCase()));
@@ -817,46 +721,38 @@ function generateSourceCell(source) {
         const cleanSource = source.split('—')[0].trim();
         return cleanSource;
     }
-
     // PvP sources
     if (pvpSources.some(p => source.toLowerCase() === p.toLowerCase() || source.toLowerCase().includes(p.toLowerCase()))) {
         return source;
     }
-
     // Other simple sources
     if (otherSources.some(o => source.toLowerCase().includes(o.toLowerCase()))) {
         return source;
     }
-
     // Pattern: "Trash Mobs in - Zone" or "Trash mobs in - Zone"
     const trashMatch = source.match(/Trash\s*[Mm]obs?\s*in\s*-?\s*(.+)/i);
     if (trashMatch) {
         return `Trash (${trashMatch[1]})`;
     }
-
     // Pattern: "Xrd Timed Chest - Zul'Aman"
     const timedChestMatch = source.match(/(\d+\w*)\s*Timed\s*Chest/i);
     if (timedChestMatch) {
         return `${timedChestMatch[1]} Timed Chest`;
     }
-
     // Pattern: "Darkmoon Furies Deck" etc
     if (source.includes('Darkmoon') && source.includes('Deck')) {
         return source;
     }
-
     // Pattern: "Zul'Aman" - timed chest rewards
     if (source === 'Zul\'Aman' || source === 'Zul\\\'Aman') {
         return `<a href="https://tbc.wowhead.com/zone=3805" data-wowhead="zone=3805" class="underline hover:text-terminal-text">Zul\'Aman</a>`;
     }
-
     // Quest handling - check questIds FIRST before boss name matching
     // This prevents "Teron Gorefiend, I am..." from matching the boss "Teron Gorefiend"
     const questId = getQuestId(source);
     if (questId) {
         return `<a href="https://tbc.wowhead.com/quest=${questId}" data-wowhead="quest=${questId}" class="underline hover:text-terminal-text">${source}</a>`;
     }
-
     // Handle quest sources with "/" separator (multiple quest names)
     if (source.includes('/')) {
         const firstQuest = source.split('/')[0].trim();
@@ -865,7 +761,6 @@ function generateSourceCell(source) {
             return `<a href="https://tbc.wowhead.com/quest=${questIdFirst}" data-wowhead="quest=${questIdFirst}" class="underline hover:text-terminal-text">${firstQuest}</a>`;
         }
     }
-
     // Check if source contains any known quest name (for contaminated strings)
     const sourceLower = source.toLowerCase().replace(/\\'/g, "'");
     for (const [questName, qId] of Object.entries(questIds)) {
@@ -874,7 +769,6 @@ function generateSourceCell(source) {
             return `<a href="https://tbc.wowhead.com/quest=${qId}" data-wowhead="quest=${qId}" class="underline hover:text-terminal-text">${displayQuestName}</a>`;
         }
     }
-
     // If we identified a boss name, try to link it
     if (bossName) {
         const npcId = npcMap[bossName] || npcMap[bossName.replace(/'/g, "\\'")] || 0;
@@ -889,7 +783,6 @@ function generateSourceCell(source) {
         }
         return bossName;
     }
-
     // Check if the source contains any known NPC name directly
     // Sort by name length descending to match longer names first (e.g., "Kael'thas Sunstrider" before "Kael")
     const sortedNpcs = Object.entries(npcMap).sort((a, b) => b[0].length - a[0].length);
@@ -903,10 +796,8 @@ function generateSourceCell(source) {
             }
         }
     }
-
     return displayText;
 }
-
 // Helper function to generate BIS table rows
 function generateBisTable(bisData, specData) {
     // Group items by slot
@@ -918,10 +809,8 @@ function generateBisTable(bisData, specData) {
         }
         groupedBySlot[slot].push({item: row[1], source: row[2]});
     });
-
     // Get enchants from specData
     const enchants = specData.enchants || {};
-
     // Mapping between bis slot names and enchant slot names
     const slotMapping = {
         'HELM': ['Head', 'Helm'],
@@ -951,16 +840,13 @@ function generateBisTable(bisData, specData) {
         'RANGED': ['Ranged Weapon'],
         'RANGED WEAPON': ['Ranged Weapon']
     };
-
     // Generate table rows with grouped items
     return Object.entries(groupedBySlot).map(([slot, items]) => {
         const itemsHtml = items.map(i => generateItemCell(i.item)).join('<br>');
         const sourcesHtml = items.map(i => generateSourceCell(i.source)).join('<br>');
-
         // Find matching enchant for this slot
         let enchantHtml = '';
         const possibleEnchantKeys = slotMapping[slot] || [slot];
-
         for (const possibleKey of possibleEnchantKeys) {
             const enchantKey = Object.keys(enchants).find(key =>
                 key.toLowerCase() === possibleKey.toLowerCase()
@@ -970,51 +856,37 @@ function generateBisTable(bisData, specData) {
                 break;
             }
         }
-
         if (!enchantHtml) {
             enchantHtml = '<span class="text-terminal-dim">-</span>';
         }
-
         return `<tr class="hover:bg-white/5 transition-colors"><td class="p-2.5 border-b border-terminal-dim whitespace-nowrap md:p-2 sm:p-1.5">${slot}</td><td class="p-2.5 border-b border-terminal-dim md:p-2 sm:p-1.5">${itemsHtml}</td><td class="p-2.5 border-b border-terminal-dim md:p-2 sm:p-1.5">${enchantHtml}</td><td class="p-2.5 border-b border-terminal-dim md:p-2 sm:p-1.5">${sourcesHtml}</td></tr>`;
     }).join('');
 }
-
-// ===== RAIDS RENDER FUNCTION =====
 function renderRaidsContent() {
     currentClass = null;
-
-    // Remove active class from all items
     document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
     const raidsLink = document.querySelector('.class-list li[data-view="raids"]');
     if (raidsLink) raidsLink.classList.add('active');
-
     const phaseData = raidsData[currentRaidPhase];
     if (!phaseData) return;
-
     const raidData = phaseData.raids[currentRaid];
-
     // Build phase buttons
     const phaseButtons = Object.entries(raidsData).map(([key, phase]) =>
         `<button class="raid-phase-btn ${key === currentRaidPhase ? 'bg-terminal-text text-terminal-bg' : 'bg-transparent'} border border-terminal-text text-terminal-text px-4 py-2.5 cursor-pointer font-mono text-xs transition-all select-none hover:bg-terminal-text hover:text-terminal-bg md:px-3.5 md:py-2.5 md:text-[11px] md:min-h-[48px] md:inline-flex md:items-center md:justify-center sm:px-3 sm:py-2 sm:text-[10px] sm:min-h-[44px]" data-phase="${key}">${phase.name}</button>`
     ).join('');
-
     // Build raid buttons for current phase
     const raidButtons = Object.entries(phaseData.raids).map(([key, raid]) =>
         `<button class="raid-btn ${key === currentRaid ? 'bg-terminal-accent text-terminal-bg' : 'bg-transparent'} border border-terminal-accent text-terminal-accent px-3 py-2 cursor-pointer font-mono text-xs transition-all select-none hover:bg-terminal-accent hover:text-terminal-bg md:px-3 md:py-2 md:text-[11px] sm:px-2.5 sm:py-1.5 sm:text-[10px]" data-raid="${key}">${raid.name} (${raid.size})</button>`
     ).join('');
-
     let html = `
         <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">query: tbc_raids --phase=${currentRaidPhase} --raid=${currentRaid}</div>
         <h2 class="text-terminal-accent text-lg mb-4 uppercase tracking-wide md:text-base md:mb-3 md:tracking-wider sm:text-sm sm:tracking-tight">[ TBC RAID GUIDES ]</h2>
         <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">Boss strategies and ability breakdowns for all TBC raids</p>
-
         <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ PHASE SELECTION ]</h3>
         <div class="flex flex-wrap gap-2 mb-4 md:gap-1.5 md:mb-3 sm:mb-2">${phaseButtons}</div>
-
         <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ RAIDS - ${phaseData.name.toUpperCase()} ]</h3>
         <div class="flex flex-wrap gap-2 mb-6 md:gap-1.5 md:mb-4 sm:mb-3">${raidButtons}</div>
     `;
-
     if (raidData) {
         html += `
             <div class="border border-terminal-dim p-4 mb-6 md:p-3 md:mb-4 sm:p-2.5 sm:mb-3">
@@ -1026,18 +898,15 @@ function renderRaidsContent() {
                 </div>
             </div>
         `;
-
         // Boss list
         for (const boss of raidData.bosses) {
             const bossLink = boss.npcId
                 ? `<a href="https://tbc.wowhead.com/npc=${boss.npcId}" data-wowhead="npc=${boss.npcId}" class="text-wow-epic hover:text-terminal-text text-base md:text-sm sm:text-xs">${boss.name}</a>`
                 : `<span class="text-wow-epic text-base md:text-sm sm:text-xs">${boss.name}</span>`;
-
             html += `
                 <div class="mb-6 border border-terminal-dim border-opacity-50 p-4 md:mb-4 md:p-3 sm:mb-3 sm:p-2.5">
                     <h4 class="mb-3 md:mb-2 sm:mb-1.5">${bossLink}</h4>
                     <p class="text-terminal-dim text-xs mb-3 md:text-[11px] md:mb-2 sm:text-[10px]">${boss.description}</p>
-
                     <div class="mb-3 md:mb-2">
                         <h5 class="text-terminal-text text-xs uppercase mb-2 md:text-[11px] md:mb-1.5 sm:text-[10px]">// Abilities</h5>
                         <div class="overflow-x-auto -mx-4 px-4 md:-mx-3 md:px-3 sm:-mx-2.5 sm:px-2.5">
@@ -1050,12 +919,10 @@ function renderRaidsContent() {
                                 </thead>
                                 <tbody>
             `;
-
             for (const ability of boss.abilities) {
                 const abilityLink = ability.spellId
                     ? `<a href="https://tbc.wowhead.com/spell=${ability.spellId}" data-wowhead="spell=${ability.spellId}" class="text-terminal-accent hover:text-terminal-text">${ability.name}</a>`
                     : `<span class="text-terminal-accent">${ability.name}</span>`;
-
                 html += `
                     <tr class="border-b border-terminal-dim border-opacity-30">
                         <td class="p-2 md:p-1.5 sm:p-1 whitespace-nowrap">${abilityLink}</td>
@@ -1063,13 +930,11 @@ function renderRaidsContent() {
                     </tr>
                 `;
             }
-
             html += `
                                 </tbody>
                             </table>
                         </div>
                     </div>
-
                     <div class="bg-terminal-bg/50 border border-terminal-accent border-opacity-30 p-3 md:p-2.5 sm:p-2">
                         <h5 class="text-terminal-accent text-xs uppercase mb-1.5 md:text-[11px] md:mb-1 sm:text-[10px]">// Strategy</h5>
                         <p class="text-terminal-dim text-xs leading-relaxed md:text-[11px] sm:text-[10px]">${boss.strategy}</p>
@@ -1078,14 +943,11 @@ function renderRaidsContent() {
             `;
         }
     }
-
     const mainContent = document.getElementById('main-content');
     mainContent.style.opacity = '0.3';
-
     setTimeout(() => {
         mainContent.innerHTML = html;
         mainContent.style.opacity = '1';
-
         // Add event listeners to phase buttons
         document.querySelectorAll('.raid-phase-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -1096,7 +958,6 @@ function renderRaidsContent() {
                 renderRaidsContent();
             });
         });
-
         // Add event listeners to raid buttons
         document.querySelectorAll('.raid-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -1104,43 +965,32 @@ function renderRaidsContent() {
                 renderRaidsContent();
             });
         });
-
         // Reinitialize wowhead tooltips
         if (typeof $WowheadPower !== 'undefined' && $WowheadPower.refreshLinks) {
             $WowheadPower.refreshLinks();
         }
     }, 200);
 }
-
-// ===== RECIPES RENDER FUNCTION =====
 function renderRecipesContent() {
-    currentClass = null; // Clear class selection when viewing recipes
-
-    // Remove active class from all class list items
+    currentClass = null; 
     document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
-    // Add active to recipes link
     const recipesLink = document.querySelector('.class-list li[data-view="recipes"]');
     if (recipesLink) recipesLink.classList.add('active');
-
     const priorityLabels = {
         high: { text: 'PRIORITY', class: 'text-red-400' },
         medium: { text: 'GOOD', class: 'text-yellow-400' },
         low: { text: 'OPTIONAL', class: 'text-green-400' }
     };
-
     const profession = recipesData[currentProfession];
     if (!profession) return;
-
     let html = `
         <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">query: profession_recipes --profession=${currentProfession}</div>
         <h2 class="text-terminal-accent text-lg mb-4 uppercase tracking-wide md:text-base md:mb-3 md:tracking-wider sm:text-sm sm:tracking-tight">[ ${profession.title.toUpperCase()} // TBC ]</h2>
         <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">Essential ${profession.title} recipes to prioritize for raiding and gold making</p>
-
         <div class="flex flex-wrap gap-2 mb-6 md:gap-1.5 md:mb-4 sm:mb-3">
             ${Object.keys(recipesData).map(prof => `<button class="profession-btn ${prof === currentProfession ? 'bg-terminal-text text-terminal-bg' : 'bg-transparent'} border border-terminal-text text-terminal-text px-4 py-2.5 cursor-pointer font-mono text-xs transition-all select-none hover:bg-terminal-text hover:text-terminal-bg md:px-3.5 md:py-2.5 md:text-[11px] md:min-h-[48px] md:inline-flex md:items-center md:justify-center sm:px-3 sm:py-2 sm:text-[10px] sm:min-h-[44px]" data-profession="${prof}">${recipesData[prof].title}</button>`).join('')}
         </div>
     `;
-
     for (const [catKey, category] of Object.entries(profession.categories)) {
         html += `
             <div class="mb-6 last:mb-0">
@@ -1157,10 +1007,8 @@ function renderRecipesContent() {
                         </thead>
                         <tbody>
         `;
-
         for (const recipe of category.recipes) {
             const priority = priorityLabels[recipe.priority] || priorityLabels.medium;
-
             // Handle recipe name with tooltip - some items like head/shoulder enchants don't have craftable spell IDs
             let recipeName;
             if (recipe.itemId) {
@@ -1173,7 +1021,6 @@ function renderRecipesContent() {
                 // No tooltip, just plain text
                 recipeName = `<span class="text-terminal-accent">${recipe.name}</span>`;
             }
-
             html += `
                 <tr class="border-b border-terminal-dim border-opacity-30 hover:bg-terminal-dim hover:bg-opacity-10">
                     <td class="p-2.5 md:p-2 sm:p-1.5">${recipeName}</td>
@@ -1183,7 +1030,6 @@ function renderRecipesContent() {
                 </tr>
             `;
         }
-
         html += `
                         </tbody>
                     </table>
@@ -1191,14 +1037,11 @@ function renderRecipesContent() {
             </div>
         `;
     }
-
     const mainContent = document.getElementById('main-content');
     mainContent.style.opacity = '0.3';
-
     setTimeout(() => {
         mainContent.innerHTML = html;
         mainContent.style.opacity = '1';
-
         // Add event listeners to profession buttons
         document.querySelectorAll('.profession-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -1206,64 +1049,43 @@ function renderRecipesContent() {
                 renderRecipesContent();
             });
         });
-
         // Reinitialize wowhead tooltips
         if (typeof $WowheadPower !== 'undefined' && $WowheadPower.refreshLinks) {
             $WowheadPower.refreshLinks();
         }
     }, FADE_TRANSITION_MS);
 }
-
-
-
-
-
-
-
-
-// ===== MAIN RENDER FUNCTION =====
 function renderClassContent(className) {
     const data = classData[className];
     if (!data) return;
-
     currentClass = className;
-
     // Set default spec if needed
     if (!currentSpec || !data.specs[currentSpec]) {
         currentSpec = data.defaultSpec;
     }
-
     const specData = data.specs[currentSpec];
     if (!specData) return;
-
     // Validate current phase
     if (!specData.phases[currentPhase]) {
         currentPhase = Object.keys(specData.phases)[0];
     }
-
     const phaseData = specData.phases[currentPhase];
-
     // Generate UI components
     const phaseButtons = Object.keys(specData.phases)
         .map(p => `<button class="phase-btn ${p == currentPhase ? 'bg-terminal-text text-terminal-bg' : 'bg-transparent'} border border-terminal-text text-terminal-text px-4 py-2.5 cursor-pointer font-mono text-xs transition-all select-none hover:bg-terminal-text hover:text-terminal-bg md:px-3.5 md:py-2.5 md:text-[11px] md:min-h-[48px] md:inline-flex md:items-center md:justify-center sm:px-3 sm:py-2 sm:text-[10px] sm:min-h-[44px]" data-phase="${p}">${specData.phases[p].name}</button>`)
         .join('');
-
     const bisTable = generateBisTable(phaseData.bis, specData);
-
     // Generate talents tree
     let talentsHtml = '';
     if (specData.talents && specData.talents.length > 0) {
         const buildsList = specData.talents.map((build, buildIdx) => {
             const buildPrefix = buildIdx === specData.talents.length - 1 ? '└──' : '├──';
             let buildHtml = `${buildPrefix} ${build.name}\n`;
-
             build.trees.forEach((tree, treeIdx) => {
                 if (tree.talents.length === 0) return;
-
                 const treeIndent = buildIdx === specData.talents.length - 1 ? '    ' : '│   ';
                 const treePrefix = treeIdx === build.trees.length - 1 ? '└──' : '├──';
                 buildHtml += `${treeIndent}${treePrefix} ${tree.name}:\n`;
-
                 tree.talents.forEach((talent, talentIdx) => {
                     const talentIndent = treeIdx === build.trees.length - 1 ? '    ' : '│   ';
                     const talentPrefix = talentIdx === tree.talents.length - 1 ? '    └──' : '    ├──';
@@ -1274,16 +1096,13 @@ function renderClassContent(className) {
                     buildHtml += `${treeIndent}${talentPrefix} ${talentLink}: ${talent.points}/${talent.max}\n`;
                 });
             });
-
             return buildHtml;
         }).join('\n');
-
         talentsHtml = `
             <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ TALENT BUILDS ]</h3>
             <div class="talent-tree bg-terminal-bg/30 border border-terminal-dim p-4 my-4 font-mono text-xs leading-relaxed md:text-[11px] md:p-3 sm:text-[10px] sm:p-2.5" style="white-space: pre-wrap;">${buildsList}</div>
         `;
     }
-
     // Generate gems section
     let gemsHtml = '';
     if (specData.gems && specData.gems.length > 0) {
@@ -1293,12 +1112,10 @@ function renderClassContent(className) {
             <div class="bg-terminal-bg/30 border border-terminal-dim p-4 my-4 font-mono text-xs leading-relaxed md:text-[11px] md:p-3 sm:text-[10px] sm:p-2.5">${gemsList}</div>
         `;
     }
-
     // Generate rotation section
     let rotationHtml = '';
     if (specData.rotation) {
         const rot = specData.rotation;
-
         // Priority list
         let priorityHtml = '';
         if (rot.priority && rot.priority.length > 0) {
@@ -1325,7 +1142,6 @@ function renderClassContent(className) {
                     </table>
                 </div>`;
         }
-
         // Opener section
         let openerHtml = '';
         if (rot.opener && rot.opener.length > 0) {
@@ -1339,7 +1155,6 @@ function renderClassContent(className) {
                 <h4 class="text-terminal-accent text-xs uppercase mb-2 mt-4 md:text-[11px] md:mb-1.5 sm:text-[10px]">// Opener</h4>
                 <div class="bg-terminal-bg/50 border border-terminal-dim p-3 text-xs md:text-[11px] sm:text-[10px]">${openerList}</div>`;
         }
-
         // Cooldowns section
         let cooldownsHtml = '';
         if (rot.cooldowns && rot.cooldowns.length > 0) {
@@ -1353,7 +1168,6 @@ function renderClassContent(className) {
                 <h4 class="text-terminal-accent text-xs uppercase mb-2 mt-4 md:text-[11px] md:mb-1.5 sm:text-[10px]">// Cooldowns</h4>
                 <div class="bg-terminal-bg/50 border border-terminal-dim p-3 text-xs md:text-[11px] sm:text-[10px]">${cdList}</div>`;
         }
-
         // Notes section
         let notesHtml = '';
         if (rot.notes) {
@@ -1361,7 +1175,6 @@ function renderClassContent(className) {
                 <h4 class="text-terminal-accent text-xs uppercase mb-2 mt-4 md:text-[11px] md:mb-1.5 sm:text-[10px]">// Notes</h4>
                 <div class="bg-terminal-bg/50 border border-terminal-dim p-3 text-xs text-terminal-dim md:text-[11px] sm:text-[10px]">${rot.notes}</div>`;
         }
-
         rotationHtml = `
             <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ ROTATION ]</h3>
             <div class="border border-terminal-dim p-4 my-4 md:p-3 sm:p-2.5">
@@ -1373,11 +1186,9 @@ function renderClassContent(className) {
             </div>
         `;
     }
-
     const specs = Object.entries(data.specs)
         .map(([key, spec]) => `<span class="spec-tab ${key === currentSpec ? 'border-terminal-accent text-terminal-accent' : 'border-terminal-dim'} inline-block py-2 px-3 mr-2.5 border cursor-pointer transition-all text-xs select-none hover:border-terminal-accent hover:text-terminal-accent md:py-2.5 md:px-3 md:text-[11px] md:min-h-[48px] md:inline-flex md:items-center md:mr-2 sm:py-2 sm:px-2.5 sm:text-[10px] sm:mr-1.5 sm:min-h-[44px]" data-spec="${key}">${spec.name}</span>`)
         .join('');
-
     const html = `
         <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">query: ${className}_pve_bis --spec=${currentSpec} --phase=${currentPhase}</div>
         <div class="mb-8 pb-5 border-b border-dashed border-terminal-dim last:border-b-0 md:mb-6 md:pb-4 sm:pb-3">
@@ -1398,10 +1209,8 @@ function renderClassContent(className) {
             ${talentsHtml}
         </div>
     `;
-
     const mainContent = document.getElementById('main-content');
     mainContent.style.opacity = '0.3';
-
     setTimeout(() => {
         mainContent.innerHTML = html;
         mainContent.style.opacity = '1';
@@ -1409,8 +1218,6 @@ function renderClassContent(className) {
         attachEventListeners(specData);
     }, FADE_TRANSITION_MS);
 }
-
-// ===== EVENT LISTENERS =====
 function attachEventListeners(specData) {
     // Phase button listeners
     document.querySelectorAll('.phase-btn').forEach(btn => {
@@ -1420,21 +1227,17 @@ function attachEventListeners(specData) {
                 b.classList.remove('bg-terminal-text', 'text-terminal-bg');
                 b.classList.add('bg-transparent', 'text-terminal-text');
             });
-
             // Add active state to clicked button
             this.classList.remove('bg-transparent', 'text-terminal-text');
             this.classList.add('bg-terminal-text', 'text-terminal-bg');
-
             const phase = parseInt(this.getAttribute('data-phase'));
             currentPhase = phase;
-
             const phaseData = specData.phases[phase];
             document.getElementById('bis-header').textContent = `[ BEST IN SLOT - ${phaseData.name} ]`;
             document.getElementById('bis-table').innerHTML = generateBisTable(phaseData.bis, specData);
             processItemLinks();
         });
     });
-
     // Spec tab listeners
     document.querySelectorAll('.spec-tab').forEach(tab => {
         tab.addEventListener('click', function() {
@@ -1446,26 +1249,21 @@ function attachEventListeners(specData) {
         });
     });
 }
-
-// ===== API DOCUMENTATION =====
 function renderApiDocs() {
     currentClass = null;
     document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
     const apiLink = document.querySelector('.class-list li[data-view="api"]');
     if (apiLink) apiLink.classList.add('active');
-
     const html = `
         <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">man tbc-api</div>
         <h2 class="text-terminal-accent text-lg mb-4 uppercase tracking-wide md:text-base md:mb-3 sm:text-sm">[ TBC.TXT API DOCUMENTATION ]</h2>
         <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">REST API for accessing TBC PvE data in your own applications</p>
-
         <div class="border border-terminal-dim p-4 mb-6 md:p-3 md:mb-4 sm:p-2.5 sm:mb-3">
             <h3 class="text-terminal-accent text-sm mb-3 md:text-xs">// Quick Start</h3>
             <pre class="bg-terminal-bg/50 p-3 text-xs text-terminal-text overflow-x-auto md:text-[11px] sm:text-[10px]"><code>cd api
 go run main.go
 # Server runs on http://localhost:8080</code></pre>
         </div>
-
         <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ ENDPOINTS ]</h3>
         <div class="overflow-x-auto -mx-5 px-5 md:-mx-4 md:px-4 sm:-mx-3 sm:px-3">
             <table class="w-full border-collapse text-[13px] min-w-[600px] md:text-[11px] sm:text-[10px]">
@@ -1490,7 +1288,6 @@ go run main.go
                 </tbody>
             </table>
         </div>
-
         <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ EXAMPLE USAGE ]</h3>
         <div class="border border-terminal-dim p-4 mb-4 md:p-3 sm:p-2.5">
             <h4 class="text-terminal-accent text-xs mb-2">// JavaScript</h4>
@@ -1499,7 +1296,6 @@ const fury = await response.json();
 console.log(fury.rotation);      // Rotation priority
 console.log(fury.phases[1].bis); // Phase 1 BiS gear</code></pre>
         </div>
-
         <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ DATA FILES ]</h3>
         <p class="text-terminal-dim text-xs mb-3 md:text-[11px] sm:text-[10px]">Raw JSON files available in <code class="text-terminal-accent">/data/</code>:</p>
         <ul class="text-terminal-dim text-xs list-none space-y-1 md:text-[11px] sm:text-[10px]">
@@ -1509,12 +1305,10 @@ console.log(fury.phases[1].bis); // Phase 1 BiS gear</code></pre>
             <li>• <code class="text-terminal-accent">recipesData.json</code> - Profession recipes (81 KB)</li>
             <li>• <code class="text-terminal-accent">referenceData.json</code> - Enchants, talents, quests (19 KB)</li>
         </ul>
-
         <div class="mt-6 p-4 border border-terminal-accent border-opacity-30 bg-terminal-bg/50 md:mt-4 md:p-3 sm:mt-3 sm:p-2.5">
             <p class="text-terminal-dim text-xs md:text-[11px] sm:text-[10px]">CORS enabled on all endpoints. Read-only, no authentication required.</p>
         </div>
     `;
-
     const mainContent = document.getElementById('main-content');
     mainContent.style.opacity = '0.3';
     setTimeout(() => {
@@ -1522,14 +1316,11 @@ console.log(fury.phases[1].bis); // Phase 1 BiS gear</code></pre>
         mainContent.style.opacity = '1';
     }, 200);
 }
-
-// ===== INITIALIZATION =====
 function initClassSelector() {
     document.querySelectorAll('.class-list li').forEach(item => {
         item.addEventListener('click', function() {
             document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
             this.classList.add('active');
-
             if (this.dataset.view === 'recipes') {
                 renderRecipesContent();
             } else if (this.dataset.view === 'raids') {
@@ -1542,8 +1333,6 @@ function initClassSelector() {
         });
     });
 }
-
-// ===== START APP =====
 window.addEventListener('DOMContentLoaded', loadAllData);
     </script>
 </body>
