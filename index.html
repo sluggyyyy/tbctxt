@@ -1389,9 +1389,23 @@ let preRaidClass = 'warrior';
 let preRaidSpecName = null;
 let preRaidGearText = '';
 let preRaidDebounceTimer = null;
+let selectedPhase = '1'; // Default to Phase 1 (Karazhan)
+
+// Phase definitions
+const PHASES = [
+    { key: '0', name: 'Pre-Raid', shortName: 'PreRaid' },
+    { key: '1', name: 'Phase 1 (Karazhan/Gruul/Mag)', shortName: 'Phase 1' },
+    { key: '2', name: 'Phase 2 (SSC/TK)', shortName: 'Phase 2' },
+    { key: '3', name: 'Phase 3 (Hyjal/BT)', shortName: 'Phase 3' },
+    { key: '4', name: 'Phase 4 (ZA)', shortName: 'Phase 4' },
+    { key: '5', name: 'Phase 5 (Sunwell)', shortName: 'Phase 5' }
+];
 
 // Gear slots for scoring
 const GEAR_SLOTS = ['HELM', 'NECK', 'SHOULDER', 'CLOAK', 'CHEST', 'WRIST', 'HANDS', 'WAIST', 'LEGS', 'FEET', 'RING', 'TRINKET', 'MAINHAND', 'OFFHAND', 'RANGED'];
+
+// Cache for calculated BiS stats per phase/spec
+let bisStatsCache = {};
 
 // Find item ID from name (case-insensitive, partial match)
 function findItemId(itemName) {
@@ -1424,15 +1438,97 @@ function getRatingWeight(bisEntry) {
     return 0.5;
 }
 
-// Get PreRaid BiS list for a class/spec
-function getPreRaidBisList(className, specName) {
+// Get BiS list for a class/spec/phase
+function getPhaseBisList(className, specName, phaseKey) {
     const cls = classData[className];
     if (!cls || !cls.specs || !cls.specs[specName]) return [];
     const spec = cls.specs[specName];
     if (!spec.phases) return [];
     // phases is an object with keys "0", "1", etc.
-    const preRaidPhase = Object.values(spec.phases).find(p => p.name === 'PreRaid');
-    return preRaidPhase?.bis || [];
+    const phase = spec.phases[phaseKey];
+    return phase?.bis || [];
+}
+
+// Legacy function for compatibility
+function getPreRaidBisList(className, specName) {
+    return getPhaseBisList(className, specName, '0');
+}
+
+// Calculate total BiS stats for a phase by fetching all BiS items
+async function calculatePhaseBisStats(className, specName, phaseKey) {
+    const cacheKey = `${className}-${specName}-${phaseKey}`;
+    if (bisStatsCache[cacheKey]) return bisStatsCache[cacheKey];
+
+    const bisList = getPhaseBisList(className, specName, phaseKey);
+    if (bisList.length === 0) return null;
+
+    // Get only BEST items for each slot
+    const bestBySlot = {};
+    for (const [slot, itemName, source] of bisList) {
+        if (itemName.includes('(BEST)') || !bestBySlot[slot]) {
+            const cleanName = cleanItemName(itemName);
+            const itemId = findItemId(cleanName);
+            if (itemId) {
+                bestBySlot[slot] = { itemId, name: cleanName };
+            }
+        }
+    }
+
+    // Fetch stats for each item
+    const statsArray = [];
+    for (const slot in bestBySlot) {
+        const { itemId } = bestBySlot[slot];
+        if (fetchedItemStats[itemId]) {
+            statsArray.push(fetchedItemStats[itemId]);
+        } else {
+            const stats = await fetchItemStats(itemId);
+            fetchedItemStats[itemId] = stats;
+            statsArray.push(stats);
+        }
+    }
+
+    const totalStats = sumStats(statsArray);
+    bisStatsCache[cacheKey] = totalStats;
+    return totalStats;
+}
+
+// Get status based on stat comparison to BiS
+function getStatStatus(userValue, bisValue, prevBisValue) {
+    if (bisValue === 0) return { status: '-', class: 'text-terminal-dim' };
+
+    const percent = (userValue / bisValue) * 100;
+
+    if (percent >= 100) {
+        return { status: 'BiS', class: 'text-wow-legendary' };
+    } else if (percent >= 90) {
+        return { status: 'GOOD', class: 'text-terminal-accent' };
+    } else if (prevBisValue && userValue >= prevBisValue * 0.8) {
+        return { status: 'PREPARED', class: 'text-yellow-400' };
+    } else {
+        return { status: 'LOW', class: 'text-red-400' };
+    }
+}
+
+// Get overall readiness status
+function getOverallStatus(userStats, bisStats, prevBisStats) {
+    const keyStats = ['stamina', 'hit', 'crit', 'attackpower', 'spelldamage', 'healing', 'defense'];
+    let bisCount = 0, goodCount = 0, preparedCount = 0, totalRelevant = 0;
+
+    for (const stat of keyStats) {
+        if (bisStats[stat] > 0) {
+            totalRelevant++;
+            const percent = (userStats[stat] / bisStats[stat]) * 100;
+            if (percent >= 100) bisCount++;
+            else if (percent >= 90) goodCount++;
+            else if (prevBisStats && userStats[stat] >= prevBisStats[stat] * 0.8) preparedCount++;
+        }
+    }
+
+    if (totalRelevant === 0) return { status: 'NO DATA', class: 'text-terminal-dim' };
+    if (bisCount === totalRelevant) return { status: 'BiS', class: 'text-wow-legendary' };
+    if (bisCount + goodCount >= totalRelevant * 0.8) return { status: 'GOOD', class: 'text-terminal-accent' };
+    if (bisCount + goodCount + preparedCount >= totalRelevant * 0.6) return { status: 'PREPARED', class: 'text-yellow-400' };
+    return { status: 'UNDERGEARED', class: 'text-red-400' };
 }
 
 // Parse gear list and match against BiS
@@ -1624,8 +1720,8 @@ async function fetchAllItemStats(itemIds) {
     updateStatsDisplay();
 }
 
-// Update the stats display
-function updateStatsDisplay() {
+// Update the stats display with phase-based BiS comparison
+async function updateStatsDisplay() {
     const statsDiv = document.getElementById('total-stats');
     const readinessDiv = document.getElementById('stat-readiness');
     if (!statsDiv) return;
@@ -1648,69 +1744,111 @@ function updateStatsDisplay() {
         return;
     }
 
-    const total = sumStats(itemStats);
+    const userTotal = sumStats(itemStats);
 
-    // Display key stats
-    const relevantStats = [
-        { key: 'stamina', label: 'Stamina', color: 'text-red-400' },
-        { key: 'intellect', label: 'Intellect', color: 'text-blue-400' },
-        { key: 'strength', label: 'Strength', color: 'text-orange-400' },
-        { key: 'agility', label: 'Agility', color: 'text-green-400' },
-        { key: 'hit', label: 'Hit Rating', color: 'text-yellow-400' },
-        { key: 'crit', label: 'Crit Rating', color: 'text-yellow-400' },
-        { key: 'attackpower', label: 'Attack Power', color: 'text-orange-400' },
-        { key: 'spelldamage', label: 'Spell Damage', color: 'text-purple-400' },
-        { key: 'healing', label: 'Healing', color: 'text-green-400' },
-        { key: 'defense', label: 'Defense', color: 'text-blue-400' },
-        { key: 'armor', label: 'Armor', color: 'text-gray-400' },
-        { key: 'mp5', label: 'MP5', color: 'text-blue-400' }
-    ].filter(s => total[s.key] > 0);
+    // Get BiS stats for selected phase and previous phase
+    const bisStats = await calculatePhaseBisStats(preRaidClass, preRaidSpecName, selectedPhase);
+    const prevPhaseKey = String(Math.max(0, parseInt(selectedPhase) - 1));
+    const prevBisStats = prevPhaseKey !== selectedPhase ? await calculatePhaseBisStats(preRaidClass, preRaidSpecName, prevPhaseKey) : null;
 
-    statsDiv.innerHTML = `
-        <div class="grid grid-cols-3 gap-2 text-xs md:grid-cols-2">
-            ${relevantStats.map(s => `
-                <div class="flex justify-between">
-                    <span class="text-terminal-dim">${s.label}:</span>
-                    <span class="${s.color}">${total[s.key]}</span>
+    // Key stats to display with comparison
+    const statDefs = [
+        { key: 'stamina', label: 'Stamina' },
+        { key: 'intellect', label: 'Intellect' },
+        { key: 'strength', label: 'Strength' },
+        { key: 'agility', label: 'Agility' },
+        { key: 'hit', label: 'Hit Rating' },
+        { key: 'crit', label: 'Crit Rating' },
+        { key: 'haste', label: 'Haste' },
+        { key: 'expertise', label: 'Expertise' },
+        { key: 'attackpower', label: 'Attack Power' },
+        { key: 'armorpen', label: 'Armor Pen' },
+        { key: 'spelldamage', label: 'Spell Damage' },
+        { key: 'spellhit', label: 'Spell Hit' },
+        { key: 'spellcrit', label: 'Spell Crit' },
+        { key: 'healing', label: 'Healing' },
+        { key: 'mp5', label: 'MP5' },
+        { key: 'defense', label: 'Defense' },
+        { key: 'dodge', label: 'Dodge' },
+        { key: 'parry', label: 'Parry' },
+        { key: 'armor', label: 'Armor' }
+    ];
+
+    // Filter to only show stats that are relevant (user has or BiS has)
+    const relevantStats = statDefs.filter(s =>
+        userTotal[s.key] > 0 || (bisStats && bisStats[s.key] > 0)
+    );
+
+    // Build stats comparison table
+    let statsHtml = `<div class="space-y-1 text-xs">`;
+    for (const s of relevantStats) {
+        const userVal = userTotal[s.key] || 0;
+        const bisVal = bisStats ? (bisStats[s.key] || 0) : 0;
+        const prevVal = prevBisStats ? (prevBisStats[s.key] || 0) : 0;
+        const status = getStatStatus(userVal, bisVal, prevVal);
+
+        statsHtml += `
+            <div class="flex items-center justify-between">
+                <span class="text-terminal-dim">${s.label}:</span>
+                <div class="flex items-center gap-2">
+                    <span class="text-terminal-text">${userVal}</span>
+                    ${bisVal > 0 ? `<span class="text-terminal-dim">/ ${bisVal}</span>` : ''}
+                    <span class="${status.class} text-[10px] font-bold w-16 text-right">${status.status}</span>
                 </div>
-            `).join('')}
-        </div>
-    `;
+            </div>
+        `;
+    }
+    statsHtml += `</div>`;
+    statsDiv.innerHTML = statsHtml;
 
-    // Calculate raid readiness based on stats
-    if (readinessDiv) {
-        const role = detectRole(total);
-        let readinessHtml = `<h4 class="text-terminal-text text-xs uppercase mb-2">Raid Readiness (${role})</h4>`;
+    // Calculate overall readiness
+    if (readinessDiv && bisStats) {
+        const overall = getOverallStatus(userTotal, bisStats, prevBisStats);
+        const phaseName = PHASES.find(p => p.key === selectedPhase)?.shortName || `Phase ${selectedPhase}`;
 
-        for (const [raidKey, raidReqs] of Object.entries(RAID_REQUIREMENTS)) {
-            const reqs = raidReqs[role] || raidReqs.melee;
-            let metCount = 0;
-            let totalReqs = 0;
+        let readinessHtml = `
+            <div class="mb-4">
+                <div class="flex items-center justify-between mb-2">
+                    <h4 class="text-terminal-text text-xs uppercase">${phaseName} Readiness</h4>
+                    <span class="${overall.class} text-sm font-bold">[${overall.status}]</span>
+                </div>
+        `;
 
-            for (const [stat, required] of Object.entries(reqs)) {
-                totalReqs++;
-                if (total[stat] >= required) metCount++;
+        // Progress bar based on key stats
+        const keyStats = ['stamina', 'hit', 'crit', 'attackpower', 'spelldamage', 'healing', 'defense'];
+        let totalPct = 0, statCount = 0;
+        for (const stat of keyStats) {
+            if (bisStats[stat] > 0) {
+                totalPct += Math.min((userTotal[stat] / bisStats[stat]) * 100, 100);
+                statCount++;
             }
-
-            const pct = Math.round((metCount / totalReqs) * 100);
-            const status = pct >= 100 ? 'READY' : pct >= 75 ? 'CLOSE' : 'NOT READY';
-            const statusClass = pct >= 100 ? 'text-terminal-accent' : pct >= 75 ? 'text-yellow-400' : 'text-red-400';
-            const barColor = pct >= 100 ? 'bg-terminal-accent' : pct >= 75 ? 'bg-yellow-500' : 'bg-red-500';
-
-            readinessHtml += `
-                <div class="mb-2">
-                    <div class="flex justify-between text-xs mb-1">
-                        <span class="text-terminal-dim">${raidKey.toUpperCase()}</span>
-                        <span class="${statusClass}">${status}</span>
-                    </div>
-                    <div class="h-2 bg-terminal-dim/20 border border-terminal-dim/50">
-                        <div class="${barColor} h-full" style="width: ${pct}%"></div>
-                    </div>
-                </div>
-            `;
         }
+        const avgPct = statCount > 0 ? Math.round(totalPct / statCount) : 0;
+        const barColor = avgPct >= 100 ? 'bg-wow-legendary' : avgPct >= 90 ? 'bg-terminal-accent' : avgPct >= 80 ? 'bg-yellow-500' : 'bg-red-500';
+
+        readinessHtml += `
+                <div class="flex items-center gap-3">
+                    <div class="flex-1 h-3 bg-terminal-dim/20 border border-terminal-dim/50">
+                        <div class="${barColor} h-full transition-all" style="width: ${avgPct}%"></div>
+                    </div>
+                    <span class="text-terminal-text text-sm font-bold w-12 text-right">${avgPct}%</span>
+                </div>
+            </div>
+
+            <div class="border-t border-terminal-dim/30 pt-3 mt-3">
+                <h5 class="text-terminal-dim text-[10px] uppercase mb-2">// Status Legend</h5>
+                <div class="grid grid-cols-2 gap-1 text-[10px]">
+                    <div><span class="text-wow-legendary font-bold">BiS</span> = At or above phase BiS</div>
+                    <div><span class="text-terminal-accent font-bold">GOOD</span> = Within 10% of BiS</div>
+                    <div><span class="text-yellow-400 font-bold">PREPARED</span> = Within 20% of prev tier</div>
+                    <div><span class="text-red-400 font-bold">LOW</span> = Below prepared threshold</div>
+                </div>
+            </div>
+        `;
 
         readinessDiv.innerHTML = readinessHtml;
+    } else if (readinessDiv) {
+        readinessDiv.innerHTML = '<span class="text-terminal-dim text-xs">No BiS data available for this phase/spec</span>';
     }
 }
 
@@ -1875,12 +2013,14 @@ function renderPreRaidChecker() {
         preRaidSpecName = classData[preRaidClass]?.defaultSpec || specs[0];
     }
 
-    const html = `
-        <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">./preraid-checker --class=${preRaidClass} --spec=${preRaidSpecName}</div>
-        <h2 class="text-terminal-accent text-lg mb-2 uppercase tracking-wide md:text-base sm:text-sm">[ PRE-RAID GEAR CHECKER ]</h2>
-        <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">Paste your gear list to check if you're ready for Karazhan</p>
+    const phaseName = PHASES.find(p => p.key === selectedPhase)?.name || 'Phase 1';
 
-        <div class="grid grid-cols-2 gap-4 mb-6 md:grid-cols-1">
+    const html = `
+        <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">./gear-checker --class=${preRaidClass} --spec=${preRaidSpecName} --phase=${selectedPhase}</div>
+        <h2 class="text-terminal-accent text-lg mb-2 uppercase tracking-wide md:text-base sm:text-sm">[ GEAR CHECKER ]</h2>
+        <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">Paste your gear list to compare against BiS for any raid tier</p>
+
+        <div class="grid grid-cols-3 gap-4 mb-6 md:grid-cols-1">
             <div>
                 <label class="text-terminal-dim text-xs block mb-2">CLASS</label>
                 <select id="preraid-class" class="w-full bg-terminal-bg border border-terminal-text text-terminal-text px-3 py-2 text-xs font-mono cursor-pointer">
@@ -1891,6 +2031,12 @@ function renderPreRaidChecker() {
                 <label class="text-terminal-dim text-xs block mb-2">SPEC</label>
                 <select id="preraid-spec" class="w-full bg-terminal-bg border border-terminal-text text-terminal-text px-3 py-2 text-xs font-mono cursor-pointer">
                     ${specs.map(s => `<option value="${s}" ${s === preRaidSpecName ? 'selected' : ''}>${classData[preRaidClass]?.specs[s]?.title || s}</option>`).join('')}
+                </select>
+            </div>
+            <div>
+                <label class="text-terminal-dim text-xs block mb-2">COMPARE TO PHASE</label>
+                <select id="phase-select" class="w-full bg-terminal-bg border border-terminal-accent text-terminal-accent px-3 py-2 text-xs font-mono cursor-pointer">
+                    ${PHASES.map(p => `<option value="${p.key}" ${p.key === selectedPhase ? 'selected' : ''}>${p.name}</option>`).join('')}
                 </select>
             </div>
         </div>
@@ -1950,7 +2096,31 @@ Wastewalker Shoulderpads
         // Spec selector change
         document.getElementById('preraid-spec').addEventListener('change', (e) => {
             preRaidSpecName = e.target.value;
+            bisStatsCache = {}; // Clear cache when spec changes
             updateGearPreview();
+        });
+
+        // Phase selector change
+        document.getElementById('phase-select').addEventListener('change', (e) => {
+            selectedPhase = e.target.value;
+            bisStatsCache = {}; // Clear cache when phase changes
+            updateStatsDisplay();
+        });
+
+        // Fetch stats button
+        document.getElementById('fetch-stats-btn').addEventListener('click', async () => {
+            const gearText = document.getElementById('gear-input')?.value || '';
+            const lines = gearText.split('\n').map(l => l.trim()).filter(l => l);
+            const itemIdsToFetch = [];
+
+            for (const line of lines) {
+                const itemId = findItemId(line);
+                if (itemId) itemIdsToFetch.push(itemId);
+            }
+
+            if (itemIdsToFetch.length > 0) {
+                await fetchAllItemStats(itemIdsToFetch);
+            }
         });
 
         // Gear input with debounce
