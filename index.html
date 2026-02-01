@@ -320,6 +320,7 @@
             <ul class="class-list list-none">
                 <li class="py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="recipes">[ RECIPES ]</li>
                 <li class="py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="raids">[ RAIDS ]</li>
+                <li class="py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="preraid">[ PRE-RAID ]</li>
             </ul>
         </aside>
         <main id="main-content" class="border border-terminal-text p-5 md:p-4 sm:p-3"></main>
@@ -344,6 +345,10 @@ let currentPhase = 4;
 let currentRaid = 'karazhan';
 let currentRaidPhase = 'phase1';
 let currentProfession = 'blacksmithing';
+let preRaidClass = 'warrior';
+let preRaidSpec = null;
+let preRaidGearInput = '';
+let preRaidResults = null;
 const FADE_TRANSITION_MS = 200;
 function showLoading() {
     document.getElementById('main-content').innerHTML = `
@@ -1249,6 +1254,262 @@ function attachEventListeners(specData) {
         });
     });
 }
+function findItemId(itemName) {
+    const normalized = itemName.toLowerCase().trim();
+    if (itemIds[normalized]) return itemIds[normalized];
+    for (const [name, id] of Object.entries(itemIds)) {
+        if (name.toLowerCase() === normalized) return id;
+    }
+    for (const [name, id] of Object.entries(itemIds)) {
+        if (name.toLowerCase().includes(normalized) || normalized.includes(name.toLowerCase())) {
+            return id;
+        }
+    }
+    return null;
+}
+function getPreRaidBisList(className, specName) {
+    const cls = classData[className];
+    if (!cls || !cls.specs || !cls.specs[specName]) return [];
+    const spec = cls.specs[specName];
+    if (!spec.phases || !spec.phases['0']) return [];
+    return spec.phases['0'].bis || [];
+}
+let preRaidDebounceTimer = null;
+function updateGearPreview() {
+    clearTimeout(preRaidDebounceTimer);
+    preRaidDebounceTimer = setTimeout(() => {
+        const textarea = document.getElementById('preraid-gear-input');
+        const preview = document.getElementById('preraid-gear-preview');
+        if (!textarea || !preview) return;
+        const text = textarea.value;
+        preRaidGearInput = text;
+        const lines = text.split('\n').filter(l => l.trim());
+        if (lines.length === 0) {
+            preview.innerHTML = '<span class="text-terminal-dim">Items will appear here as you type...</span>';
+            return;
+        }
+        const previewHtml = lines.map(line => {
+            const itemId = findItemId(line.trim());
+            if (itemId) {
+                return `<div class="py-1"><a href="https://tbc.wowhead.com/item=${itemId}" data-wowhead="item=${itemId}" class="text-wow-epic hover:text-terminal-accent">${line.trim()}</a> <span class="text-terminal-accent text-[10px]">[OK]</span></div>`;
+            }
+            return `<div class="py-1"><span class="text-red-400">${line.trim()}</span> <span class="text-red-400 text-[10px]">[NOT FOUND]</span></div>`;
+        }).join('');
+        preview.innerHTML = previewHtml;
+        if (typeof $WowheadPower !== 'undefined') {
+            $WowheadPower.refreshLinks();
+        }
+    }, 300);
+}
+function calculatePreRaidReadiness() {
+    const cls = preRaidClass;
+    const spec = preRaidSpec || classData[cls]?.defaultSpec;
+    if (!spec) return;
+    const bisList = getPreRaidBisList(cls, spec);
+    if (bisList.length === 0) {
+        preRaidResults = { error: 'No BiS data found for this spec' };
+        renderPreRaidResults();
+        return;
+    }
+    const userItems = preRaidGearInput.split('\n').filter(l => l.trim()).map(l => l.trim().toLowerCase());
+    const slotResults = {};
+    const slots = ['HELM', 'NECK', 'SHOULDER', 'CLOAK', 'CHEST', 'BRACER', 'GLOVES', 'BELT', 'LEGS', 'BOOTS', 'RING', 'TRINKET', 'WEAPON', 'RANGED', 'OFFHAND', 'SHIELD', 'RELIC', 'TOTEM', 'IDOL', 'LIBRAM'];
+    slots.forEach(slot => {
+        const bisItems = bisList.filter(b => b[0] === slot);
+        if (bisItems.length === 0) return;
+        slotResults[slot] = {
+            bisItems: bisItems.map(b => ({ name: b[1], source: b[2] })),
+            userHas: null,
+            matched: false
+        };
+        for (const userItem of userItems) {
+            for (const bisItem of bisItems) {
+                const bisName = bisItem[1].replace(/\s*\([^)]*\)\s*$/, '').toLowerCase();
+                if (userItem.includes(bisName) || bisName.includes(userItem)) {
+                    slotResults[slot].userHas = userItem;
+                    slotResults[slot].matched = true;
+                    break;
+                }
+            }
+            if (slotResults[slot].matched) break;
+        }
+    });
+    const totalSlots = Object.keys(slotResults).length;
+    const matchedSlots = Object.values(slotResults).filter(s => s.matched).length;
+    const score = totalSlots > 0 ? Math.round((matchedSlots / totalSlots) * 100) : 0;
+    const raidReadiness = [
+        { name: 'Karazhan', minScore: 60, icon: '10' },
+        { name: "Gruul's Lair", minScore: 70, icon: '25' },
+        { name: 'Magtheridon', minScore: 70, icon: '25' },
+        { name: 'SSC / TK', minScore: 80, icon: '25' },
+        { name: 'Hyjal / BT', minScore: 90, icon: '25' },
+        { name: 'Sunwell', minScore: 95, icon: '25' }
+    ];
+    preRaidResults = {
+        className: cls,
+        specName: spec,
+        score,
+        matchedSlots,
+        totalSlots,
+        slotResults,
+        raidReadiness: raidReadiness.map(r => ({
+            ...r,
+            ready: score >= r.minScore,
+            status: score >= r.minScore ? 'READY' : score >= r.minScore - 15 ? 'CLOSE' : 'NOT READY'
+        }))
+    };
+    renderPreRaidResults();
+}
+function renderPreRaidResults() {
+    const resultsDiv = document.getElementById('preraid-results');
+    if (!resultsDiv || !preRaidResults) return;
+    if (preRaidResults.error) {
+        resultsDiv.innerHTML = `<div class="text-red-400 p-4 border border-red-400">${preRaidResults.error}</div>`;
+        return;
+    }
+    const { score, matchedSlots, totalSlots, slotResults, raidReadiness, className, specName } = preRaidResults;
+    const barWidth = Math.min(score, 100);
+    const barColor = score >= 80 ? 'bg-terminal-accent' : score >= 60 ? 'bg-yellow-500' : 'bg-red-500';
+    let html = `
+        <div class="mb-6">
+            <h3 class="text-terminal-text text-sm mb-3 uppercase">[ OVERALL SCORE: ${className.toUpperCase()} ${specName.toUpperCase()} ]</h3>
+            <div class="flex items-center gap-4 mb-2">
+                <div class="flex-1 h-6 bg-terminal-dim/20 border border-terminal-dim">
+                    <div class="${barColor} h-full transition-all" style="width: ${barWidth}%"></div>
+                </div>
+                <span class="text-terminal-accent text-lg font-bold">${score}%</span>
+            </div>
+            <div class="text-terminal-dim text-xs">${matchedSlots} / ${totalSlots} BiS slots filled</div>
+        </div>
+        <div class="mb-6">
+            <h3 class="text-terminal-text text-sm mb-3 uppercase">[ RAID READINESS ]</h3>
+            <div class="space-y-2">
+                ${raidReadiness.map(r => {
+                    const statusClass = r.status === 'READY' ? 'text-terminal-accent' : r.status === 'CLOSE' ? 'text-yellow-500' : 'text-red-400';
+                    const fillWidth = Math.min((score / r.minScore) * 100, 100);
+                    return `
+                        <div class="flex items-center gap-3">
+                            <span class="w-28 text-xs text-terminal-dim">${r.name}</span>
+                            <div class="flex-1 h-3 bg-terminal-dim/20 border border-terminal-dim/50">
+                                <div class="${r.ready ? 'bg-terminal-accent' : 'bg-terminal-dim/50'} h-full" style="width: ${fillWidth}%"></div>
+                            </div>
+                            <span class="${statusClass} text-xs font-bold w-20 text-right">[${r.status}]</span>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        </div>
+        <div class="mb-6">
+            <h3 class="text-terminal-text text-sm mb-3 uppercase">[ GEAR BREAKDOWN ]</h3>
+            <div class="overflow-x-auto -mx-5 px-5">
+                <table class="w-full border-collapse text-xs min-w-[500px]">
+                    <thead>
+                        <tr>
+                            <th class="bg-terminal-dim text-terminal-bg p-2 text-left font-semibold uppercase text-[10px]">SLOT</th>
+                            <th class="bg-terminal-dim text-terminal-bg p-2 text-left font-semibold uppercase text-[10px]">STATUS</th>
+                            <th class="bg-terminal-dim text-terminal-bg p-2 text-left font-semibold uppercase text-[10px]">BIS ITEM(S)</th>
+                            <th class="bg-terminal-dim text-terminal-bg p-2 text-left font-semibold uppercase text-[10px]">SOURCE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${Object.entries(slotResults).map(([slot, data]) => {
+                            const statusIcon = data.matched ? '<span class="text-terminal-accent">[OK]</span>' : '<span class="text-red-400">[NEED]</span>';
+                            const bisItemsHtml = data.bisItems.map(item => {
+                                const cleanName = item.name.replace(/\s*\([^)]*\)\s*$/, '');
+                                const itemId = findItemId(cleanName);
+                                if (itemId) {
+                                    return `<a href="https://tbc.wowhead.com/item=${itemId}" data-wowhead="item=${itemId}" class="text-wow-epic hover:text-terminal-accent">${cleanName}</a>`;
+                                }
+                                return `<span class="text-terminal-text">${cleanName}</span>`;
+                            }).join('<br>');
+                            const sourcesHtml = data.bisItems.map(item => `<span class="text-terminal-dim">${item.source}</span>`).join('<br>');
+                            return `
+                                <tr class="border-b border-terminal-dim/30 hover:bg-white/5">
+                                    <td class="p-2 text-terminal-text whitespace-nowrap">${slot}</td>
+                                    <td class="p-2">${statusIcon}</td>
+                                    <td class="p-2">${bisItemsHtml}</td>
+                                    <td class="p-2">${sourcesHtml}</td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    `;
+    resultsDiv.innerHTML = html;
+    if (typeof $WowheadPower !== 'undefined') {
+        $WowheadPower.refreshLinks();
+    }
+}
+function renderPreRaidChecker() {
+    currentClass = null;
+    document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
+    const preRaidLink = document.querySelector('.class-list li[data-view="preraid"]');
+    if (preRaidLink) preRaidLink.classList.add('active');
+    const classes = Object.keys(classData);
+    const specs = classData[preRaidClass]?.specs ? Object.keys(classData[preRaidClass].specs) : [];
+    if (!preRaidSpec && specs.length > 0) {
+        preRaidSpec = classData[preRaidClass]?.defaultSpec || specs[0];
+    }
+    const html = `
+        <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">./preraid-checker --class=${preRaidClass}</div>
+        <h2 class="text-terminal-accent text-lg mb-2 uppercase tracking-wide md:text-base sm:text-sm">[ PRE-RAID CHECKER ]</h2>
+        <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">Check if your gear is ready for TBC raids</p>
+        <div class="flex flex-wrap gap-4 mb-6 md:gap-3 md:mb-4">
+            <div>
+                <label class="text-terminal-dim text-xs block mb-2">CLASS</label>
+                <select id="preraid-class-select" class="bg-terminal-bg border border-terminal-text text-terminal-text px-3 py-2 text-xs font-mono cursor-pointer">
+                    ${classes.map(c => `<option value="${c}" ${c === preRaidClass ? 'selected' : ''}>${c.toUpperCase()}</option>`).join('')}
+                </select>
+            </div>
+            <div>
+                <label class="text-terminal-dim text-xs block mb-2">SPEC</label>
+                <select id="preraid-spec-select" class="bg-terminal-bg border border-terminal-text text-terminal-text px-3 py-2 text-xs font-mono cursor-pointer">
+                    ${specs.map(s => `<option value="${s}" ${s === preRaidSpec ? 'selected' : ''}>${s.toUpperCase()}</option>`).join('')}
+                </select>
+            </div>
+        </div>
+        <div class="mb-6 md:mb-4">
+            <label class="text-terminal-dim text-xs block mb-2">PASTE YOUR GEAR (one item per line)</label>
+            <textarea id="preraid-gear-input" class="w-full h-40 bg-terminal-bg border border-terminal-text text-terminal-text p-3 text-xs font-mono resize-y" placeholder="Helm of the Fallen Hero&#10;Choker of Vile Intent&#10;Pauldrons of the Fallen Hero&#10;...">${preRaidGearInput}</textarea>
+        </div>
+        <div class="mb-6 md:mb-4">
+            <label class="text-terminal-dim text-xs block mb-2">[ RECOGNIZED ITEMS ]</label>
+            <div id="preraid-gear-preview" class="border border-terminal-dim p-3 min-h-[60px] text-xs max-h-48 overflow-y-auto">
+                <span class="text-terminal-dim">Items will appear here as you type...</span>
+            </div>
+        </div>
+        <button id="preraid-check-btn" class="bg-terminal-accent text-terminal-bg px-6 py-3 font-mono text-sm font-bold cursor-pointer hover:bg-terminal-text transition-colors">
+            [ CHECK READINESS ]
+        </button>
+        <div id="preraid-results" class="mt-8"></div>
+    `;
+    const mainContent = document.getElementById('main-content');
+    mainContent.style.opacity = '0.3';
+    setTimeout(() => {
+        mainContent.innerHTML = html;
+        mainContent.style.opacity = '1';
+        document.getElementById('preraid-class-select').addEventListener('change', (e) => {
+            preRaidClass = e.target.value;
+            preRaidSpec = classData[preRaidClass]?.defaultSpec || Object.keys(classData[preRaidClass]?.specs || {})[0];
+            preRaidResults = null;
+            renderPreRaidChecker();
+        });
+        document.getElementById('preraid-spec-select').addEventListener('change', (e) => {
+            preRaidSpec = e.target.value;
+            preRaidResults = null;
+        });
+        document.getElementById('preraid-gear-input').addEventListener('input', updateGearPreview);
+        document.getElementById('preraid-check-btn').addEventListener('click', calculatePreRaidReadiness);
+        if (preRaidGearInput) {
+            updateGearPreview();
+        }
+        if (preRaidResults) {
+            renderPreRaidResults();
+        }
+    }, FADE_TRANSITION_MS);
+}
 function renderApiDocs() {
     currentClass = null;
     document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
@@ -1323,6 +1584,8 @@ function initClassSelector() {
                 renderRecipesContent();
             } else if (this.dataset.view === 'raids') {
                 renderRaidsContent();
+            } else if (this.dataset.view === 'preraid') {
+                renderPreRaidChecker();
             } else if (this.dataset.view === 'api') {
                 renderApiDocs();
             } else if (this.dataset.class) {
