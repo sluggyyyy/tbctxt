@@ -345,9 +345,7 @@ let currentPhase = 4;
 let currentRaid = 'karazhan';
 let currentRaidPhase = 'phase1';
 let currentProfession = 'blacksmithing';
-let preRaidClass = 'warrior';
-let preRaidSpec = null;
-let preRaidGearInput = '';
+let preRaidSpec = 'melee';
 let preRaidResults = null;
 const FADE_TRANSITION_MS = 200;
 function showLoading() {
@@ -893,33 +891,131 @@ function renderRaidsContent() {
         <div class="flex flex-wrap gap-2 mb-6 md:gap-1.5 md:mb-4 sm:mb-3">${raidButtons}</div>
     `;
     if (raidData) {
+        // Raid overview section
         html += `
             <div class="border border-terminal-dim p-4 mb-6 md:p-3 md:mb-4 sm:p-2.5 sm:mb-3">
-                <h3 class="text-terminal-accent text-base mb-2 md:text-sm sm:text-xs">${raidData.name}</h3>
-                <div class="text-terminal-dim text-xs space-y-1 md:text-[11px] sm:text-[10px]">
-                    <div><span class="text-terminal-text">Size:</span> ${raidData.size} players</div>
-                    <div><span class="text-terminal-text">Location:</span> ${raidData.location}</div>
-                    <div><span class="text-terminal-text">Attunement:</span> ${raidData.attunement}</div>
+                <h3 class="text-terminal-accent text-base mb-3 md:text-sm sm:text-xs">${raidData.name}${raidData.shortName ? ` (${raidData.shortName})` : ''}</h3>
+                <p class="text-terminal-dim text-xs mb-4 leading-relaxed md:text-[11px] md:mb-3 sm:text-[10px]">${raidData.description || ''}</p>
+                <div class="grid grid-cols-2 gap-4 text-xs md:grid-cols-1 md:gap-2 md:text-[11px] sm:text-[10px]">
+                    <div class="space-y-1.5">
+                        <div><span class="text-terminal-text">Size:</span> <span class="text-terminal-dim">${raidData.size} players</span></div>
+                        <div><span class="text-terminal-text">Location:</span> <span class="text-terminal-dim">${raidData.location}</span></div>
+                        <div><span class="text-terminal-text">Attunement:</span> <span class="text-terminal-dim">${raidData.attunement}</span></div>
+                        ${raidData.tierTokens ? `<div><span class="text-terminal-text">Tier Tokens:</span> <span class="text-terminal-dim">${raidData.tierTokens}</span></div>` : ''}
+                    </div>
                 </div>
             </div>
         `;
-        // Boss list
+
+        // Recommended composition section
+        if (raidData.recommendedComposition) {
+            const comp = raidData.recommendedComposition;
+            html += `
+                <div class="border border-terminal-accent border-opacity-30 p-4 mb-6 md:p-3 md:mb-4 sm:p-2.5 sm:mb-3">
+                    <h4 class="text-terminal-accent text-sm mb-3 uppercase md:text-xs sm:text-[11px]">// Recommended Raid Composition</h4>
+                    <div class="flex flex-wrap gap-4 mb-3 text-xs md:gap-3 md:text-[11px] sm:gap-2 sm:text-[10px]">
+                        <div class="bg-blue-900 bg-opacity-30 px-3 py-1.5 border border-blue-500 border-opacity-50">
+                            <span class="text-blue-400">TANKS:</span> <span class="text-terminal-text">${comp.tanks}</span>
+                        </div>
+                        <div class="bg-green-900 bg-opacity-30 px-3 py-1.5 border border-green-500 border-opacity-50">
+                            <span class="text-green-400">HEALERS:</span> <span class="text-terminal-text">${comp.healers}</span>
+                        </div>
+                        <div class="bg-red-900 bg-opacity-30 px-3 py-1.5 border border-red-500 border-opacity-50">
+                            <span class="text-red-400">DPS:</span> <span class="text-terminal-text">${comp.dps}</span>
+                        </div>
+                    </div>
+                    ${comp.notes ? `<p class="text-terminal-dim text-xs leading-relaxed md:text-[11px] sm:text-[10px]">${comp.notes}</p>` : ''}
+                </div>
+            `;
+        }
+
+        // Minimum gear requirements section
+        if (raidData.minimumGear) {
+            const gear = raidData.minimumGear;
+            html += `
+                <div class="border border-yellow-500 border-opacity-30 p-4 mb-6 md:p-3 md:mb-4 sm:p-2.5 sm:mb-3">
+                    <h4 class="text-yellow-400 text-sm mb-3 uppercase md:text-xs sm:text-[11px]">// Minimum Gear Requirements</h4>
+                    <div class="space-y-2 text-xs md:text-[11px] sm:text-[10px]">
+                        ${gear.tanks ? `<div><span class="text-blue-400">Tanks:</span> <span class="text-terminal-dim">${gear.tanks}</span></div>` : ''}
+                        ${gear.healers ? `<div><span class="text-green-400">Healers:</span> <span class="text-terminal-dim">${gear.healers}</span></div>` : ''}
+                        ${gear.dps ? `<div><span class="text-red-400">DPS:</span> <span class="text-terminal-dim">${gear.dps}</span></div>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Attunement steps section
+        if (raidData.attunementSteps && raidData.attunementSteps.length > 0) {
+            html += `
+                <div class="border border-purple-500 border-opacity-30 p-4 mb-6 md:p-3 md:mb-4 sm:p-2.5 sm:mb-3">
+                    <h4 class="text-purple-400 text-sm mb-3 uppercase md:text-xs sm:text-[11px]">// Attunement Guide</h4>
+                    <div class="space-y-1.5 text-xs md:text-[11px] sm:text-[10px]">
+                        ${raidData.attunementSteps.map(step => `<div class="text-terminal-dim">${step}</div>`).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        // Boss list header
+        html += `<h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ BOSS ENCOUNTERS ]</h3>`;
+
+        // Difficulty badge colors
+        const difficultyColors = {
+            'Easy': 'bg-green-900 border-green-500 text-green-400',
+            'Medium': 'bg-yellow-900 border-yellow-500 text-yellow-400',
+            'Hard': 'bg-red-900 border-red-500 text-red-400',
+            'Very Hard': 'bg-purple-900 border-purple-500 text-purple-400'
+        };
+
         for (const boss of raidData.bosses) {
             const bossLink = boss.npcId
                 ? `<a href="https://tbc.wowhead.com/npc=${boss.npcId}" data-wowhead="npc=${boss.npcId}" class="text-wow-epic hover:text-terminal-text text-base md:text-sm sm:text-xs">${boss.name}</a>`
                 : `<span class="text-wow-epic text-base md:text-sm sm:text-xs">${boss.name}</span>`;
+
+            const difficultyBadge = boss.difficulty
+                ? `<span class="ml-3 px-2 py-0.5 text-[10px] uppercase border bg-opacity-30 ${difficultyColors[boss.difficulty] || difficultyColors['Medium']}">${boss.difficulty}</span>`
+                : '';
+
             html += `
                 <div class="mb-6 border border-terminal-dim border-opacity-50 p-4 md:mb-4 md:p-3 sm:mb-3 sm:p-2.5">
-                    <h4 class="mb-3 md:mb-2 sm:mb-1.5">${bossLink}</h4>
-                    <p class="text-terminal-dim text-xs mb-3 md:text-[11px] md:mb-2 sm:text-[10px]">${boss.description}</p>
+                    <h4 class="mb-3 md:mb-2 sm:mb-1.5 flex items-center flex-wrap gap-2">${bossLink}${difficultyBadge}</h4>
+                    <p class="text-terminal-dim text-xs mb-3 leading-relaxed md:text-[11px] md:mb-2 sm:text-[10px]">${boss.description}</p>
+            `;
+
+            // Phase breakdown section
+            if (boss.phaseBreakdown && boss.phaseBreakdown.length > 0) {
+                html += `
+                    <div class="border border-cyan-500 border-opacity-30 p-3 mb-3 md:p-2.5 md:mb-2 sm:p-2">
+                        <h5 class="text-cyan-400 text-xs uppercase mb-2 md:text-[11px] md:mb-1.5 sm:text-[10px]">// Phase Breakdown</h5>
+                        <div class="space-y-1.5 text-xs md:text-[11px] sm:text-[10px]">
+                            ${boss.phaseBreakdown.map(phase => `<div class="text-terminal-dim">${phase}</div>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Guest list section (for Moroes)
+            if (boss.guestList && boss.guestList.length > 0) {
+                html += `
+                    <div class="border border-orange-500 border-opacity-30 p-3 mb-3 md:p-2.5 md:mb-2 sm:p-2">
+                        <h5 class="text-orange-400 text-xs uppercase mb-2 md:text-[11px] md:mb-1.5 sm:text-[10px]">// Possible Dinner Guests (4 spawn randomly)</h5>
+                        <div class="grid grid-cols-2 gap-1.5 text-xs md:grid-cols-1 md:text-[11px] sm:text-[10px]">
+                            ${boss.guestList.map(guest => `<div class="text-terminal-dim">• ${guest}</div>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Abilities table with handling column
+            html += `
                     <div class="mb-3 md:mb-2">
                         <h5 class="text-terminal-text text-xs uppercase mb-2 md:text-[11px] md:mb-1.5 sm:text-[10px]">// Abilities</h5>
                         <div class="overflow-x-auto -mx-4 px-4 md:-mx-3 md:px-3 sm:-mx-2.5 sm:px-2.5">
-                            <table class="w-full border-collapse text-xs min-w-[500px] md:text-[11px] sm:text-[10px] sm:min-w-[400px]">
+                            <table class="w-full border-collapse text-xs min-w-[700px] md:text-[11px] sm:text-[10px] sm:min-w-[500px]">
                                 <thead>
                                     <tr>
-                                        <th class="bg-terminal-dim text-terminal-bg p-2 text-left font-semibold uppercase text-[10px] tracking-wider md:p-1.5 md:text-[9px] sm:p-1 sm:text-[8px]">ABILITY</th>
-                                        <th class="bg-terminal-dim text-terminal-bg p-2 text-left font-semibold uppercase text-[10px] tracking-wider md:p-1.5 md:text-[9px] sm:p-1 sm:text-[8px]">DESCRIPTION</th>
+                                        <th class="bg-terminal-dim text-terminal-bg p-2 text-left font-semibold uppercase text-[10px] tracking-wider md:p-1.5 md:text-[9px] sm:p-1 sm:text-[8px] w-[15%]">ABILITY</th>
+                                        <th class="bg-terminal-dim text-terminal-bg p-2 text-left font-semibold uppercase text-[10px] tracking-wider md:p-1.5 md:text-[9px] sm:p-1 sm:text-[8px] w-[35%]">DESCRIPTION</th>
+                                        <th class="bg-terminal-dim text-terminal-bg p-2 text-left font-semibold uppercase text-[10px] tracking-wider md:p-1.5 md:text-[9px] sm:p-1 sm:text-[8px] w-[50%]">HOW TO HANDLE</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -930,8 +1026,9 @@ function renderRaidsContent() {
                     : `<span class="text-terminal-accent">${ability.name}</span>`;
                 html += `
                     <tr class="border-b border-terminal-dim border-opacity-30">
-                        <td class="p-2 md:p-1.5 sm:p-1 whitespace-nowrap">${abilityLink}</td>
-                        <td class="p-2 text-terminal-dim md:p-1.5 sm:p-1">${ability.description}</td>
+                        <td class="p-2 md:p-1.5 sm:p-1 whitespace-nowrap align-top">${abilityLink}</td>
+                        <td class="p-2 text-terminal-dim md:p-1.5 sm:p-1 align-top">${ability.description}</td>
+                        <td class="p-2 text-green-400 text-opacity-80 md:p-1.5 sm:p-1 align-top">${ability.handling || '-'}</td>
                     </tr>
                 `;
             }
@@ -940,10 +1037,41 @@ function renderRaidsContent() {
                             </table>
                         </div>
                     </div>
-                    <div class="bg-terminal-bg/50 border border-terminal-accent border-opacity-30 p-3 md:p-2.5 sm:p-2">
+            `;
+
+            // Strategy section
+            html += `
+                    <div class="bg-terminal-bg/50 border border-terminal-accent border-opacity-30 p-3 mb-3 md:p-2.5 md:mb-2 sm:p-2">
                         <h5 class="text-terminal-accent text-xs uppercase mb-1.5 md:text-[11px] md:mb-1 sm:text-[10px]">// Strategy</h5>
                         <p class="text-terminal-dim text-xs leading-relaxed md:text-[11px] sm:text-[10px]">${boss.strategy}</p>
                     </div>
+            `;
+
+            // Common mistakes section
+            if (boss.commonMistakes && boss.commonMistakes.length > 0) {
+                html += `
+                    <div class="border border-red-500 border-opacity-30 p-3 mb-3 md:p-2.5 md:mb-2 sm:p-2">
+                        <h5 class="text-red-400 text-xs uppercase mb-2 md:text-[11px] md:mb-1.5 sm:text-[10px]">// Common Mistakes to Avoid</h5>
+                        <div class="space-y-1 text-xs md:text-[11px] sm:text-[10px]">
+                            ${boss.commonMistakes.map(mistake => `<div class="text-terminal-dim">⚠ ${mistake}</div>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Loot highlights section
+            if (boss.lootHighlights && boss.lootHighlights.length > 0) {
+                html += `
+                    <div class="border border-wow-epic border-opacity-30 p-3 md:p-2.5 sm:p-2">
+                        <h5 class="text-wow-epic text-xs uppercase mb-2 md:text-[11px] md:mb-1.5 sm:text-[10px]">// Notable Loot</h5>
+                        <div class="flex flex-wrap gap-2 text-xs md:text-[11px] sm:text-[10px]">
+                            ${boss.lootHighlights.map(item => `<span class="text-terminal-dim bg-terminal-dim bg-opacity-20 px-2 py-0.5">${item}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += `
                 </div>
             `;
         }
@@ -1254,230 +1382,184 @@ function attachEventListeners(specData) {
         });
     });
 }
-function findItemId(itemName) {
-    const normalized = itemName.toLowerCase().trim();
-    if (itemIds[normalized]) return itemIds[normalized];
-    for (const [name, id] of Object.entries(itemIds)) {
-        if (name.toLowerCase() === normalized) return id;
+const RAID_STAT_REQUIREMENTS = {
+    tank: {
+        karazhan: { hp: 12000, armor: 12000, defense: 490, dodge: 15, parry: 10 },
+        gruul: { hp: 14000, armor: 14000, defense: 490, dodge: 18, parry: 12 },
+        magtheridon: { hp: 14000, armor: 14000, defense: 490, dodge: 18, parry: 12 },
+        ssc_tk: { hp: 16000, armor: 16000, defense: 490, dodge: 22, parry: 14 },
+        hyjal_bt: { hp: 18000, armor: 18000, defense: 490, dodge: 25, parry: 16 },
+        sunwell: { hp: 20000, armor: 20000, defense: 490, dodge: 28, parry: 18 }
+    },
+    melee: {
+        karazhan: { hp: 7000, hit: 95, ap: 1400, crit: 20, expertise: 10 },
+        gruul: { hp: 8000, hit: 142, ap: 1600, crit: 22, expertise: 15 },
+        magtheridon: { hp: 8000, hit: 142, ap: 1600, crit: 22, expertise: 15 },
+        ssc_tk: { hp: 9000, hit: 142, ap: 1800, crit: 25, expertise: 18 },
+        hyjal_bt: { hp: 10000, hit: 142, ap: 2000, crit: 28, expertise: 20 },
+        sunwell: { hp: 11000, hit: 142, ap: 2200, crit: 30, expertise: 23 }
+    },
+    caster: {
+        karazhan: { hp: 6000, mana: 7000, hit: 76, spellpower: 700, crit: 15, haste: 0 },
+        gruul: { hp: 7000, mana: 8000, hit: 126, spellpower: 850, crit: 18, haste: 50 },
+        magtheridon: { hp: 7000, mana: 8000, hit: 126, spellpower: 850, crit: 18, haste: 50 },
+        ssc_tk: { hp: 8000, mana: 9000, hit: 126, spellpower: 1000, crit: 22, haste: 100 },
+        hyjal_bt: { hp: 9000, mana: 10000, hit: 126, spellpower: 1150, crit: 25, haste: 150 },
+        sunwell: { hp: 10000, mana: 11000, hit: 126, spellpower: 1300, crit: 28, haste: 200 }
+    },
+    healer: {
+        karazhan: { hp: 6000, mana: 8000, mp5: 50, spellpower: 1000, crit: 10, haste: 0 },
+        gruul: { hp: 7000, mana: 9000, mp5: 70, spellpower: 1200, crit: 12, haste: 50 },
+        magtheridon: { hp: 7000, mana: 9000, mp5: 70, spellpower: 1200, crit: 12, haste: 50 },
+        ssc_tk: { hp: 8000, mana: 10000, mp5: 90, spellpower: 1400, crit: 15, haste: 100 },
+        hyjal_bt: { hp: 9000, mana: 11000, mp5: 110, spellpower: 1600, crit: 18, haste: 150 },
+        sunwell: { hp: 10000, mana: 12000, mp5: 130, spellpower: 1800, crit: 20, haste: 200 }
+    },
+    ranged: {
+        karazhan: { hp: 6500, hit: 95, rap: 1200, crit: 18, haste: 0 },
+        gruul: { hp: 7500, hit: 142, rap: 1400, crit: 20, haste: 50 },
+        magtheridon: { hp: 7500, hit: 142, rap: 1400, crit: 20, haste: 50 },
+        ssc_tk: { hp: 8500, hit: 142, rap: 1600, crit: 23, haste: 100 },
+        hyjal_bt: { hp: 9500, hit: 142, rap: 1800, crit: 26, haste: 150 },
+        sunwell: { hp: 10500, hit: 142, rap: 2000, crit: 29, haste: 200 }
     }
-    for (const [name, id] of Object.entries(itemIds)) {
-        if (name.toLowerCase().includes(normalized) || normalized.includes(name.toLowerCase())) {
-            return id;
-        }
-    }
-    return null;
-}
-function getPreRaidBisList(className, specName) {
-    const cls = classData[className];
-    if (!cls || !cls.specs || !cls.specs[specName]) return [];
-    const spec = cls.specs[specName];
-    if (!spec.phases || !spec.phases['0']) return [];
-    return spec.phases['0'].bis || [];
-}
-let preRaidDebounceTimer = null;
-function updateGearPreview() {
-    clearTimeout(preRaidDebounceTimer);
-    preRaidDebounceTimer = setTimeout(() => {
-        const textarea = document.getElementById('preraid-gear-input');
-        const preview = document.getElementById('preraid-gear-preview');
-        if (!textarea || !preview) return;
-        const text = textarea.value;
-        preRaidGearInput = text;
-        const lines = text.split('\n').filter(l => l.trim());
-        if (lines.length === 0) {
-            preview.innerHTML = '<span class="text-terminal-dim">Items will appear here as you type...</span>';
-            return;
-        }
-        const previewHtml = lines.map(line => {
-            const itemId = findItemId(line.trim());
-            if (itemId) {
-                return `<div class="py-1"><a href="https://tbc.wowhead.com/item=${itemId}" data-wowhead="item=${itemId}" class="text-wow-epic hover:text-terminal-accent">${line.trim()}</a> <span class="text-terminal-accent text-[10px]">[OK]</span></div>`;
-            }
-            return `<div class="py-1"><span class="text-red-400">${line.trim()}</span> <span class="text-red-400 text-[10px]">[NOT FOUND]</span></div>`;
-        }).join('');
-        preview.innerHTML = previewHtml;
-        if (typeof $WowheadPower !== 'undefined') {
-            $WowheadPower.refreshLinks();
-        }
-    }, 300);
-}
-function calculatePreRaidReadiness() {
-    const cls = preRaidClass;
-    const spec = preRaidSpec || classData[cls]?.defaultSpec;
-    if (!spec) return;
-    const bisList = getPreRaidBisList(cls, spec);
-    if (bisList.length === 0) {
-        preRaidResults = { error: 'No BiS data found for this spec' };
-        renderPreRaidResults();
+};
+const ROLE_STAT_LABELS = {
+    tank: { hp: 'Health', armor: 'Armor', defense: 'Defense', dodge: 'Dodge %', parry: 'Parry %' },
+    melee: { hp: 'Health', hit: 'Hit Rating', ap: 'Attack Power', crit: 'Crit %', expertise: 'Expertise' },
+    caster: { hp: 'Health', mana: 'Mana', hit: 'Spell Hit', spellpower: 'Spell Power', crit: 'Spell Crit %', haste: 'Haste Rating' },
+    healer: { hp: 'Health', mana: 'Mana', mp5: 'MP5', spellpower: 'Healing Power', crit: 'Spell Crit %', haste: 'Haste Rating' },
+    ranged: { hp: 'Health', hit: 'Hit Rating', rap: 'Ranged AP', crit: 'Crit %', haste: 'Haste Rating' }
+};
+const RAIDS_LIST = [
+    { key: 'karazhan', name: 'Karazhan', size: 10 },
+    { key: 'gruul', name: "Gruul's Lair", size: 25 },
+    { key: 'magtheridon', name: 'Magtheridon', size: 25 },
+    { key: 'ssc_tk', name: 'SSC / TK', size: 25 },
+    { key: 'hyjal_bt', name: 'Hyjal / BT', size: 25 },
+    { key: 'sunwell', name: 'Sunwell', size: 25 }
+];
+function calculateStatReadiness() {
+    const role = preRaidSpec;
+    if (!role || !RAID_STAT_REQUIREMENTS[role]) {
+        preRaidResults = { error: 'Please select a role' };
+        renderStatResults();
         return;
     }
-    const userItems = preRaidGearInput.split('\n').filter(l => l.trim()).map(l => l.trim().toLowerCase());
-    const slotResults = {};
-    const slots = ['HELM', 'NECK', 'SHOULDER', 'CLOAK', 'CHEST', 'BRACER', 'GLOVES', 'BELT', 'LEGS', 'BOOTS', 'RING', 'TRINKET', 'WEAPON', 'RANGED', 'OFFHAND', 'SHIELD', 'RELIC', 'TOTEM', 'IDOL', 'LIBRAM'];
-    slots.forEach(slot => {
-        const bisItems = bisList.filter(b => b[0] === slot);
-        if (bisItems.length === 0) return;
-        slotResults[slot] = {
-            bisItems: bisItems.map(b => ({ name: b[1], source: b[2] })),
-            userHas: null,
-            matched: false
-        };
-        for (const userItem of userItems) {
-            for (const bisItem of bisItems) {
-                const bisName = bisItem[1].replace(/\s*\([^)]*\)\s*$/, '').toLowerCase();
-                if (userItem.includes(bisName) || bisName.includes(userItem)) {
-                    slotResults[slot].userHas = userItem;
-                    slotResults[slot].matched = true;
-                    break;
-                }
-            }
-            if (slotResults[slot].matched) break;
-        }
+    const stats = {};
+    const statKeys = Object.keys(ROLE_STAT_LABELS[role]);
+    statKeys.forEach(key => {
+        const input = document.getElementById(`stat-${key}`);
+        stats[key] = input ? parseFloat(input.value) || 0 : 0;
     });
-    const totalSlots = Object.keys(slotResults).length;
-    const matchedSlots = Object.values(slotResults).filter(s => s.matched).length;
-    const score = totalSlots > 0 ? Math.round((matchedSlots / totalSlots) * 100) : 0;
-    const raidReadiness = [
-        { name: 'Karazhan', minScore: 60, icon: '10' },
-        { name: "Gruul's Lair", minScore: 70, icon: '25' },
-        { name: 'Magtheridon', minScore: 70, icon: '25' },
-        { name: 'SSC / TK', minScore: 80, icon: '25' },
-        { name: 'Hyjal / BT', minScore: 90, icon: '25' },
-        { name: 'Sunwell', minScore: 95, icon: '25' }
-    ];
-    preRaidResults = {
-        className: cls,
-        specName: spec,
-        score,
-        matchedSlots,
-        totalSlots,
-        slotResults,
-        raidReadiness: raidReadiness.map(r => ({
-            ...r,
-            ready: score >= r.minScore,
-            status: score >= r.minScore ? 'READY' : score >= r.minScore - 15 ? 'CLOSE' : 'NOT READY'
-        }))
-    };
-    renderPreRaidResults();
+    const raidResults = RAIDS_LIST.map(raid => {
+        const reqs = RAID_STAT_REQUIREMENTS[role][raid.key];
+        const statResults = {};
+        let totalScore = 0;
+        let statCount = 0;
+        statKeys.forEach(key => {
+            const req = reqs[key] || 0;
+            const val = stats[key] || 0;
+            const pct = req > 0 ? Math.min((val / req) * 100, 100) : 100;
+            statResults[key] = { value: val, required: req, percent: pct, met: val >= req };
+            totalScore += pct;
+            statCount++;
+        });
+        const avgScore = statCount > 0 ? Math.round(totalScore / statCount) : 0;
+        const allMet = Object.values(statResults).every(s => s.met);
+        return {
+            ...raid,
+            statResults,
+            score: avgScore,
+            ready: allMet,
+            status: allMet ? 'READY' : avgScore >= 80 ? 'CLOSE' : 'NOT READY'
+        };
+    });
+    preRaidResults = { role, stats, raidResults };
+    renderStatResults();
 }
-function renderPreRaidResults() {
+function renderStatResults() {
     const resultsDiv = document.getElementById('preraid-results');
     if (!resultsDiv || !preRaidResults) return;
     if (preRaidResults.error) {
         resultsDiv.innerHTML = `<div class="text-red-400 p-4 border border-red-400">${preRaidResults.error}</div>`;
         return;
     }
-    const { score, matchedSlots, totalSlots, slotResults, raidReadiness, className, specName } = preRaidResults;
-    const barWidth = Math.min(score, 100);
-    const barColor = score >= 80 ? 'bg-terminal-accent' : score >= 60 ? 'bg-yellow-500' : 'bg-red-500';
+    const { role, raidResults } = preRaidResults;
+    const statLabels = ROLE_STAT_LABELS[role];
     let html = `
         <div class="mb-6">
-            <h3 class="text-terminal-text text-sm mb-3 uppercase">[ OVERALL SCORE: ${className.toUpperCase()} ${specName.toUpperCase()} ]</h3>
-            <div class="flex items-center gap-4 mb-2">
-                <div class="flex-1 h-6 bg-terminal-dim/20 border border-terminal-dim">
-                    <div class="${barColor} h-full transition-all" style="width: ${barWidth}%"></div>
-                </div>
-                <span class="text-terminal-accent text-lg font-bold">${score}%</span>
-            </div>
-            <div class="text-terminal-dim text-xs">${matchedSlots} / ${totalSlots} BiS slots filled</div>
-        </div>
-        <div class="mb-6">
-            <h3 class="text-terminal-text text-sm mb-3 uppercase">[ RAID READINESS ]</h3>
-            <div class="space-y-2">
-                ${raidReadiness.map(r => {
+            <h3 class="text-terminal-text text-sm mb-3 uppercase">[ RAID READINESS - ${role.toUpperCase()} ]</h3>
+            <div class="space-y-3">
+                ${raidResults.map(r => {
                     const statusClass = r.status === 'READY' ? 'text-terminal-accent' : r.status === 'CLOSE' ? 'text-yellow-500' : 'text-red-400';
-                    const fillWidth = Math.min((score / r.minScore) * 100, 100);
+                    const barColor = r.ready ? 'bg-terminal-accent' : r.score >= 80 ? 'bg-yellow-500' : 'bg-red-500';
                     return `
-                        <div class="flex items-center gap-3">
-                            <span class="w-28 text-xs text-terminal-dim">${r.name}</span>
-                            <div class="flex-1 h-3 bg-terminal-dim/20 border border-terminal-dim/50">
-                                <div class="${r.ready ? 'bg-terminal-accent' : 'bg-terminal-dim/50'} h-full" style="width: ${fillWidth}%"></div>
+                        <div class="border border-terminal-dim/30 p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-terminal-text text-xs font-bold">${r.name} <span class="text-terminal-dim">(${r.size})</span></span>
+                                <span class="${statusClass} text-xs font-bold">[${r.status}]</span>
                             </div>
-                            <span class="${statusClass} text-xs font-bold w-20 text-right">[${r.status}]</span>
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="flex-1 h-2 bg-terminal-dim/20 border border-terminal-dim/50">
+                                    <div class="${barColor} h-full" style="width: ${r.score}%"></div>
+                                </div>
+                                <span class="text-terminal-dim text-xs w-12 text-right">${r.score}%</span>
+                            </div>
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-2 text-[10px]">
+                                ${Object.entries(r.statResults).map(([key, s]) => {
+                                    const icon = s.met ? '<span class="text-terminal-accent">✓</span>' : '<span class="text-red-400">✗</span>';
+                                    const valClass = s.met ? 'text-terminal-accent' : 'text-red-400';
+                                    return `<div class="flex items-center gap-1">
+                                        ${icon}
+                                        <span class="text-terminal-dim">${statLabels[key]}:</span>
+                                        <span class="${valClass}">${s.value}</span>
+                                        <span class="text-terminal-dim">/ ${s.required}</span>
+                                    </div>`;
+                                }).join('')}
+                            </div>
                         </div>
                     `;
                 }).join('')}
             </div>
         </div>
-        <div class="mb-6">
-            <h3 class="text-terminal-text text-sm mb-3 uppercase">[ GEAR BREAKDOWN ]</h3>
-            <div class="overflow-x-auto -mx-5 px-5">
-                <table class="w-full border-collapse text-xs min-w-[500px]">
-                    <thead>
-                        <tr>
-                            <th class="bg-terminal-dim text-terminal-bg p-2 text-left font-semibold uppercase text-[10px]">SLOT</th>
-                            <th class="bg-terminal-dim text-terminal-bg p-2 text-left font-semibold uppercase text-[10px]">STATUS</th>
-                            <th class="bg-terminal-dim text-terminal-bg p-2 text-left font-semibold uppercase text-[10px]">BIS ITEM(S)</th>
-                            <th class="bg-terminal-dim text-terminal-bg p-2 text-left font-semibold uppercase text-[10px]">SOURCE</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${Object.entries(slotResults).map(([slot, data]) => {
-                            const statusIcon = data.matched ? '<span class="text-terminal-accent">[OK]</span>' : '<span class="text-red-400">[NEED]</span>';
-                            const bisItemsHtml = data.bisItems.map(item => {
-                                const cleanName = item.name.replace(/\s*\([^)]*\)\s*$/, '');
-                                const itemId = findItemId(cleanName);
-                                if (itemId) {
-                                    return `<a href="https://tbc.wowhead.com/item=${itemId}" data-wowhead="item=${itemId}" class="text-wow-epic hover:text-terminal-accent">${cleanName}</a>`;
-                                }
-                                return `<span class="text-terminal-text">${cleanName}</span>`;
-                            }).join('<br>');
-                            const sourcesHtml = data.bisItems.map(item => `<span class="text-terminal-dim">${item.source}</span>`).join('<br>');
-                            return `
-                                <tr class="border-b border-terminal-dim/30 hover:bg-white/5">
-                                    <td class="p-2 text-terminal-text whitespace-nowrap">${slot}</td>
-                                    <td class="p-2">${statusIcon}</td>
-                                    <td class="p-2">${bisItemsHtml}</td>
-                                    <td class="p-2">${sourcesHtml}</td>
-                                </tr>
-                            `;
-                        }).join('')}
-                    </tbody>
-                </table>
-            </div>
-        </div>
     `;
     resultsDiv.innerHTML = html;
-    if (typeof $WowheadPower !== 'undefined') {
-        $WowheadPower.refreshLinks();
-    }
 }
 function renderPreRaidChecker() {
     currentClass = null;
     document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
     const preRaidLink = document.querySelector('.class-list li[data-view="preraid"]');
     if (preRaidLink) preRaidLink.classList.add('active');
-    const classes = Object.keys(classData);
-    const specs = classData[preRaidClass]?.specs ? Object.keys(classData[preRaidClass].specs) : [];
-    if (!preRaidSpec && specs.length > 0) {
-        preRaidSpec = classData[preRaidClass]?.defaultSpec || specs[0];
+    const roles = ['tank', 'melee', 'caster', 'healer', 'ranged'];
+    if (!preRaidSpec || !roles.includes(preRaidSpec)) {
+        preRaidSpec = 'melee';
     }
+    const statLabels = ROLE_STAT_LABELS[preRaidSpec];
+    const karaReqs = RAID_STAT_REQUIREMENTS[preRaidSpec].karazhan;
     const html = `
-        <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">./preraid-checker --class=${preRaidClass}</div>
+        <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">./preraid-checker --role=${preRaidSpec}</div>
         <h2 class="text-terminal-accent text-lg mb-2 uppercase tracking-wide md:text-base sm:text-sm">[ PRE-RAID CHECKER ]</h2>
-        <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">Check if your gear is ready for TBC raids</p>
-        <div class="flex flex-wrap gap-4 mb-6 md:gap-3 md:mb-4">
-            <div>
-                <label class="text-terminal-dim text-xs block mb-2">CLASS</label>
-                <select id="preraid-class-select" class="bg-terminal-bg border border-terminal-text text-terminal-text px-3 py-2 text-xs font-mono cursor-pointer">
-                    ${classes.map(c => `<option value="${c}" ${c === preRaidClass ? 'selected' : ''}>${c.toUpperCase()}</option>`).join('')}
-                </select>
-            </div>
-            <div>
-                <label class="text-terminal-dim text-xs block mb-2">SPEC</label>
-                <select id="preraid-spec-select" class="bg-terminal-bg border border-terminal-text text-terminal-text px-3 py-2 text-xs font-mono cursor-pointer">
-                    ${specs.map(s => `<option value="${s}" ${s === preRaidSpec ? 'selected' : ''}>${s.toUpperCase()}</option>`).join('')}
-                </select>
+        <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">Enter your character stats to check raid readiness</p>
+        <div class="mb-6 md:mb-4">
+            <label class="text-terminal-dim text-xs block mb-2">ROLE</label>
+            <div class="flex flex-wrap gap-2">
+                ${roles.map(r => `
+                    <button class="role-btn ${r === preRaidSpec ? 'bg-terminal-text text-terminal-bg' : 'bg-transparent text-terminal-text'} border border-terminal-text px-4 py-2 text-xs font-mono cursor-pointer transition-all hover:bg-terminal-text hover:text-terminal-bg" data-role="${r}">
+                        [ ${r.toUpperCase()} ]
+                    </button>
+                `).join('')}
             </div>
         </div>
         <div class="mb-6 md:mb-4">
-            <label class="text-terminal-dim text-xs block mb-2">PASTE YOUR GEAR (one item per line)</label>
-            <textarea id="preraid-gear-input" class="w-full h-40 bg-terminal-bg border border-terminal-text text-terminal-text p-3 text-xs font-mono resize-y" placeholder="Helm of the Fallen Hero&#10;Choker of Vile Intent&#10;Pauldrons of the Fallen Hero&#10;...">${preRaidGearInput}</textarea>
-        </div>
-        <div class="mb-6 md:mb-4">
-            <label class="text-terminal-dim text-xs block mb-2">[ RECOGNIZED ITEMS ]</label>
-            <div id="preraid-gear-preview" class="border border-terminal-dim p-3 min-h-[60px] text-xs max-h-48 overflow-y-auto">
-                <span class="text-terminal-dim">Items will appear here as you type...</span>
+            <label class="text-terminal-dim text-xs block mb-3">YOUR STATS <span class="text-terminal-accent">(unbuffed)</span></label>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                ${Object.entries(statLabels).map(([key, label]) => `
+                    <div>
+                        <label class="text-terminal-dim text-[10px] block mb-1">${label} <span class="text-terminal-accent">(Kara: ${karaReqs[key]}+)</span></label>
+                        <input type="number" id="stat-${key}" class="w-full bg-terminal-bg border border-terminal-text text-terminal-text px-3 py-2 text-xs font-mono" placeholder="${karaReqs[key]}" value="">
+                    </div>
+                `).join('')}
             </div>
         </div>
         <button id="preraid-check-btn" class="bg-terminal-accent text-terminal-bg px-6 py-3 font-mono text-sm font-bold cursor-pointer hover:bg-terminal-text transition-colors">
@@ -1490,23 +1572,16 @@ function renderPreRaidChecker() {
     setTimeout(() => {
         mainContent.innerHTML = html;
         mainContent.style.opacity = '1';
-        document.getElementById('preraid-class-select').addEventListener('change', (e) => {
-            preRaidClass = e.target.value;
-            preRaidSpec = classData[preRaidClass]?.defaultSpec || Object.keys(classData[preRaidClass]?.specs || {})[0];
-            preRaidResults = null;
-            renderPreRaidChecker();
+        document.querySelectorAll('.role-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                preRaidSpec = btn.dataset.role;
+                preRaidResults = null;
+                renderPreRaidChecker();
+            });
         });
-        document.getElementById('preraid-spec-select').addEventListener('change', (e) => {
-            preRaidSpec = e.target.value;
-            preRaidResults = null;
-        });
-        document.getElementById('preraid-gear-input').addEventListener('input', updateGearPreview);
-        document.getElementById('preraid-check-btn').addEventListener('click', calculatePreRaidReadiness);
-        if (preRaidGearInput) {
-            updateGearPreview();
-        }
-        if (preRaidResults) {
-            renderPreRaidResults();
+        document.getElementById('preraid-check-btn').addEventListener('click', calculateStatReadiness);
+        if (preRaidResults && preRaidResults.role === preRaidSpec) {
+            renderStatResults();
         }
     }, FADE_TRANSITION_MS);
 }
