@@ -1006,7 +1006,8 @@ function renderRaidsContent() {
             }
 
             // Abilities table with handling column
-            html += `
+            if (boss.abilities && boss.abilities.length > 0) {
+                html += `
                     <div class="mb-3 md:mb-2">
                         <h5 class="text-terminal-text text-xs uppercase mb-2 md:text-[11px] md:mb-1.5 sm:text-[10px]">// Abilities</h5>
                         <div class="overflow-x-auto -mx-4 px-4 md:-mx-3 md:px-3 sm:-mx-2.5 sm:px-2.5">
@@ -1019,33 +1020,36 @@ function renderRaidsContent() {
                                     </tr>
                                 </thead>
                                 <tbody>
-            `;
-            for (const ability of boss.abilities) {
-                const abilityLink = ability.spellId
-                    ? `<a href="https://tbc.wowhead.com/spell=${ability.spellId}" data-wowhead="spell=${ability.spellId}" class="text-terminal-accent hover:text-terminal-text">${ability.name}</a>`
-                    : `<span class="text-terminal-accent">${ability.name}</span>`;
-                html += `
-                    <tr class="border-b border-terminal-dim border-opacity-30">
-                        <td class="p-2 md:p-1.5 sm:p-1 whitespace-nowrap align-top">${abilityLink}</td>
-                        <td class="p-2 text-terminal-dim md:p-1.5 sm:p-1 align-top">${ability.description}</td>
-                        <td class="p-2 text-green-400 text-opacity-80 md:p-1.5 sm:p-1 align-top">${ability.handling || '-'}</td>
-                    </tr>
                 `;
-            }
-            html += `
+                for (const ability of boss.abilities) {
+                    const abilityLink = ability.spellId
+                        ? `<a href="https://tbc.wowhead.com/spell=${ability.spellId}" data-wowhead="spell=${ability.spellId}" class="text-terminal-accent hover:text-terminal-text">${ability.name}</a>`
+                        : `<span class="text-terminal-accent">${ability.name}</span>`;
+                    html += `
+                        <tr class="border-b border-terminal-dim border-opacity-30">
+                            <td class="p-2 md:p-1.5 sm:p-1 whitespace-nowrap align-top">${abilityLink}</td>
+                            <td class="p-2 text-terminal-dim md:p-1.5 sm:p-1 align-top">${ability.description}</td>
+                            <td class="p-2 text-green-400 text-opacity-80 md:p-1.5 sm:p-1 align-top">${ability.handling || '-'}</td>
+                        </tr>
+                    `;
+                }
+                html += `
                                 </tbody>
                             </table>
                         </div>
                     </div>
-            `;
+                `;
+            }
 
             // Strategy section
-            html += `
+            if (boss.strategy) {
+                html += `
                     <div class="bg-terminal-bg/50 border border-terminal-accent border-opacity-30 p-3 mb-3 md:p-2.5 md:mb-2 sm:p-2">
                         <h5 class="text-terminal-accent text-xs uppercase mb-1.5 md:text-[11px] md:mb-1 sm:text-[10px]">// Strategy</h5>
                         <p class="text-terminal-dim text-xs leading-relaxed md:text-[11px] sm:text-[10px]">${boss.strategy}</p>
                     </div>
-            `;
+                `;
+            }
 
             // Common mistakes section
             if (boss.commonMistakes && boss.commonMistakes.length > 0) {
