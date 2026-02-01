@@ -1695,29 +1695,47 @@ async function fetchItemStats(itemId) {
             $WowheadPower.refreshLinks();
         }
 
-        // Wait for Wowhead to fetch and check their cache
-        setTimeout(() => {
-            let stats = { stamina: 0, intellect: 0, strength: 0, agility: 0, spirit: 0, armor: 0, defense: 0, dodge: 0, parry: 0, block: 0, hit: 0, crit: 0, haste: 0, expertise: 0, attackpower: 0, armorpen: 0, spellhit: 0, spellcrit: 0, spellhaste: 0, spelldamage: 0, healing: 0, mp5: 0 };
+        // Retry logic for waiting on Wowhead data
+        let attempts = 0;
+        const maxAttempts = 5;
+        const checkInterval = 400;
 
-            // Try to get tooltip from Wowhead's cache
+        const checkForStats = () => {
+            attempts++;
+            let stats = { stamina: 0, intellect: 0, strength: 0, agility: 0, spirit: 0, armor: 0, defense: 0, dodge: 0, parry: 0, block: 0, hit: 0, crit: 0, haste: 0, expertise: 0, attackpower: 0, armorpen: 0, spellhit: 0, spellcrit: 0, spellhaste: 0, spelldamage: 0, healing: 0, mp5: 0 };
+            let found = false;
+
+            // Try to get tooltip from Wowhead's cache - check multiple cache locations
             if (typeof whTooltips !== 'undefined' && whTooltips.aT) {
-                const cached = whTooltips.aT[`item:${itemId}`] || whTooltips.aT[itemId];
+                const cached = whTooltips.aT[`item:${itemId}`] || whTooltips.aT[itemId] || whTooltips.aT[`${itemId}`];
                 if (cached) {
                     stats = parseTooltipStats(cached);
+                    found = true;
                 }
             }
 
             // Also check $WowheadPower cache
-            if (typeof $WowheadPower !== 'undefined' && $WowheadPower.items && $WowheadPower.items[itemId]) {
+            if (!found && typeof $WowheadPower !== 'undefined' && $WowheadPower.items && $WowheadPower.items[itemId]) {
                 const itemData = $WowheadPower.items[itemId];
                 if (itemData.tooltip) {
                     stats = parseTooltipStats(itemData.tooltip);
+                    found = true;
                 }
             }
 
-            document.body.removeChild(tempDiv);
-            resolve(stats);
-        }, 500);
+            // Check if we got any stats or should retry
+            const hasStats = Object.values(stats).some(v => v > 0);
+            if (hasStats || attempts >= maxAttempts) {
+                document.body.removeChild(tempDiv);
+                resolve(stats);
+            } else {
+                // Retry after a delay
+                setTimeout(checkForStats, checkInterval);
+            }
+        };
+
+        // Start checking after initial delay
+        setTimeout(checkForStats, 300);
     });
 }
 
@@ -1731,19 +1749,25 @@ async function fetchAllItemStats(itemIds) {
     statsFetchInProgress = true;
 
     const statusDiv = document.getElementById('stats-status');
-    if (statusDiv) statusDiv.innerHTML = '<span class="text-yellow-400">Loading item stats from Wowhead...</span>';
+    try {
+        if (statusDiv) statusDiv.innerHTML = '<span class="text-yellow-400">Loading item stats from Wowhead...</span>';
 
-    for (const itemId of itemIds) {
-        if (!fetchedItemStats[itemId]) {
-            fetchedItemStats[itemId] = await fetchItemStats(itemId);
+        for (const itemId of itemIds) {
+            if (!fetchedItemStats[itemId]) {
+                fetchedItemStats[itemId] = await fetchItemStats(itemId);
+            }
         }
+
+        if (statusDiv) statusDiv.innerHTML = '<span class="text-terminal-accent">Stats loaded!</span>';
+
+        // Recalculate and display
+        await updateStatsDisplay();
+    } catch (err) {
+        console.error('Error fetching item stats:', err);
+        if (statusDiv) statusDiv.innerHTML = '<span class="text-red-400">Error loading stats</span>';
+    } finally {
+        statsFetchInProgress = false;
     }
-
-    statsFetchInProgress = false;
-    if (statusDiv) statusDiv.innerHTML = '<span class="text-terminal-accent">Stats loaded!</span>';
-
-    // Recalculate and display
-    updateStatsDisplay();
 }
 
 // Update the stats display with phase-based BiS comparison
@@ -1889,7 +1913,6 @@ function detectRole(stats) {
 // Update gear preview with Wowhead tooltips
 function updateGearPreview() {
     const previewDiv = document.getElementById('gear-preview');
-    const resultsDiv = document.getElementById('preraid-results');
     if (!previewDiv) return;
 
     const gearText = document.getElementById('gear-input')?.value || '';
@@ -1897,7 +1920,6 @@ function updateGearPreview() {
 
     if (!gearText.trim()) {
         previewDiv.innerHTML = '<span class="text-terminal-dim">Items will appear here as you type...</span>';
-        if (resultsDiv) resultsDiv.innerHTML = '';
         return;
     }
 
@@ -1918,108 +1940,6 @@ function updateGearPreview() {
     // Refresh Wowhead tooltips
     if (typeof $WowheadPower !== 'undefined' && $WowheadPower.refreshLinks) {
         $WowheadPower.refreshLinks();
-    }
-
-    // Update results
-    renderGearResults(matchResults, bisList);
-}
-
-// Render gear check results
-function renderGearResults(matchResults, bisList) {
-    const resultsDiv = document.getElementById('preraid-results');
-    if (!resultsDiv) return;
-
-    if (matchResults.length === 0) {
-        resultsDiv.innerHTML = '';
-        return;
-    }
-
-    const score = calculateGearReadiness(matchResults);
-    const bisMatches = matchResults.filter(r => r.bisMatch).length;
-    const recognized = matchResults.filter(r => r.found).length;
-    const total = matchResults.length;
-
-    // Determine status
-    let status, statusClass, barColor;
-    if (score >= 70) {
-        status = 'READY FOR KARAZHAN';
-        statusClass = 'text-terminal-accent';
-        barColor = 'bg-terminal-accent';
-    } else if (score >= 50) {
-        status = 'ALMOST THERE';
-        statusClass = 'text-yellow-400';
-        barColor = 'bg-yellow-500';
-    } else {
-        status = 'NEEDS MORE GEAR';
-        statusClass = 'text-red-400';
-        barColor = 'bg-red-500';
-    }
-
-    // Find missing BiS slots
-    const filledSlots = new Set(matchResults.filter(r => r.slot).map(r => r.slot));
-    const missingSlots = GEAR_SLOTS.filter(s => !filledSlots.has(s));
-
-    // Get suggestions for missing slots
-    const suggestions = [];
-    for (const slot of missingSlots.slice(0, 5)) {
-        const slotItems = bisList.filter(b => b[0] === slot);
-        if (slotItems.length > 0) {
-            const best = slotItems.find(b => b[1].includes('(BEST)')) || slotItems[0];
-            suggestions.push({ slot, item: cleanItemName(best[1]), source: best[2] });
-        }
-    }
-
-    let html = `
-        <div class="border border-terminal-dim p-4 mb-4">
-            <div class="flex items-center justify-between mb-3">
-                <h3 class="text-terminal-text text-sm uppercase">Gear Analysis</h3>
-                <span class="${statusClass} text-sm font-bold">[${status}]</span>
-            </div>
-            <div class="flex items-center gap-3 mb-4">
-                <div class="flex-1 h-3 bg-terminal-dim/20 border border-terminal-dim/50">
-                    <div class="${barColor} h-full transition-all" style="width: ${score}%"></div>
-                </div>
-                <span class="text-terminal-text text-sm font-bold w-16 text-right">${score}%</span>
-            </div>
-            <div class="grid grid-cols-3 gap-4 text-xs">
-                <div>
-                    <span class="text-terminal-dim">BiS Matches:</span>
-                    <span class="text-terminal-accent ml-1">${bisMatches}</span>
-                </div>
-                <div>
-                    <span class="text-terminal-dim">Items Found:</span>
-                    <span class="text-terminal-text ml-1">${recognized}/${total}</span>
-                </div>
-                <div>
-                    <span class="text-terminal-dim">Slots Filled:</span>
-                    <span class="text-terminal-text ml-1">${filledSlots.size}/${GEAR_SLOTS.length}</span>
-                </div>
-            </div>
-        </div>
-    `;
-
-    if (suggestions.length > 0) {
-        html += `
-            <div class="border border-yellow-500/30 p-4">
-                <h4 class="text-yellow-400 text-xs uppercase mb-3">// Suggested Upgrades</h4>
-                <div class="space-y-2 text-xs">
-                    ${suggestions.map(s => {
-                        const itemId = findItemId(s.item);
-                        const itemLink = itemId
-                            ? `<a href="https://tbc.wowhead.com/item=${itemId}" data-wowhead="item=${itemId}" class="text-wow-rare hover:text-terminal-text">${s.item}</a>`
-                            : `<span class="text-wow-rare">${s.item}</span>`;
-                        return `<div><span class="text-terminal-dim">${s.slot}:</span> ${itemLink} <span class="text-terminal-dim">- ${s.source}</span></div>`;
-                    }).join('')}
-                </div>
-            </div>
-        `;
-    }
-
-    resultsDiv.innerHTML = html;
-
-    // Refresh tooltips for suggestions
-    if (typeof $WowheadPower !== 'undefined' && $WowheadPower.refreshLinks) {
-        setTimeout(() => $WowheadPower.refreshLinks(), 100);
     }
 }
 
@@ -2102,8 +2022,6 @@ Wastewalker Shoulderpads
                 </div>
             </div>
         </div>
-
-        <div id="preraid-results"></div>
     `;
 
     const mainContent = document.getElementById('main-content');
@@ -2120,17 +2038,27 @@ Wastewalker Shoulderpads
         });
 
         // Spec selector change
-        document.getElementById('preraid-spec').addEventListener('change', (e) => {
+        document.getElementById('preraid-spec').addEventListener('change', async (e) => {
             preRaidSpecName = e.target.value;
             bisStatsCache = {}; // Clear cache when spec changes
             updateGearPreview();
+            // Also update stats display if we have stats calculated
+            await updateStatsDisplay();
         });
 
         // Phase selector change
-        document.getElementById('phase-select').addEventListener('change', (e) => {
+        document.getElementById('phase-select').addEventListener('change', async (e) => {
             selectedPhase = e.target.value;
             bisStatsCache = {}; // Clear cache when phase changes
-            updateStatsDisplay();
+
+            // Show loading status
+            const statusDiv = document.getElementById('stats-status');
+            if (statusDiv) statusDiv.innerHTML = '<span class="text-yellow-400">Recalculating for new phase...</span>';
+
+            // Recalculate stats for the new phase
+            await updateStatsDisplay();
+
+            if (statusDiv) statusDiv.innerHTML = '<span class="text-terminal-accent">Phase updated!</span>';
         });
 
         // Fetch stats button
@@ -2145,7 +2073,12 @@ Wastewalker Shoulderpads
             }
 
             if (itemIdsToFetch.length > 0) {
+                // Clear BiS cache to force recalculation for current phase
+                bisStatsCache = {};
                 await fetchAllItemStats(itemIdsToFetch);
+            } else {
+                const statusDiv = document.getElementById('stats-status');
+                if (statusDiv) statusDiv.innerHTML = '<span class="text-red-400">No valid items found</span>';
             }
         });
 
