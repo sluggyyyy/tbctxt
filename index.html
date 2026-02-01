@@ -1591,6 +1591,32 @@ const RAID_REQUIREMENTS = {
     }
 };
 
+// Calculate readiness score based on BiS matches
+function calculateGearReadiness(matchResults) {
+    if (matchResults.length === 0) return 0;
+
+    // Count BiS matches by slot
+    const slotsFilled = {};
+
+    for (const result of matchResults) {
+        if (result.slot && result.rating) {
+            // Take the best rating for each slot
+            if (!slotsFilled[result.slot] || slotsFilled[result.slot] < result.rating) {
+                slotsFilled[result.slot] = result.rating;
+            }
+        }
+    }
+
+    // Calculate score based on slots filled
+    const filledSlots = Object.keys(slotsFilled).length;
+    const totalSlots = 15; // Approximate total gear slots
+    const avgRating = filledSlots > 0 ? Object.values(slotsFilled).reduce((a, b) => a + b, 0) / filledSlots : 0;
+
+    // Score = coverage * quality
+    const coverage = Math.min(filledSlots / totalSlots, 1);
+    return Math.round(coverage * avgRating * 100);
+}
+
 // Parse stats from Wowhead tooltip HTML
 function parseTooltipStats(tooltipHtml) {
     const stats = {
