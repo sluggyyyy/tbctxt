@@ -1473,31 +1473,253 @@ function parseAndMatchGear(gearText, bisList) {
     return results;
 }
 
-// Calculate readiness score
-function calculateGearReadiness(matchResults) {
-    if (matchResults.length === 0) return 0;
+// Stat requirements for raids (unbuffed minimums)
+const RAID_REQUIREMENTS = {
+    karazhan: {
+        tank: { stamina: 400, defense: 490, armor: 12000 },
+        melee: { stamina: 250, hit: 95, attackpower: 1400, crit: 20 },
+        caster: { stamina: 200, spellhit: 76, spelldamage: 700, intellect: 300 },
+        healer: { stamina: 200, healing: 1000, mp5: 50, intellect: 350 }
+    },
+    gruul: {
+        tank: { stamina: 500, defense: 490, armor: 14000 },
+        melee: { stamina: 300, hit: 142, attackpower: 1600, crit: 22 },
+        caster: { stamina: 250, spellhit: 126, spelldamage: 900, intellect: 350 },
+        healer: { stamina: 250, healing: 1200, mp5: 70, intellect: 400 }
+    },
+    ssc_tk: {
+        tank: { stamina: 600, defense: 490, armor: 16000 },
+        melee: { stamina: 350, hit: 142, attackpower: 1800, crit: 25 },
+        caster: { stamina: 300, spellhit: 126, spelldamage: 1100, intellect: 400 },
+        healer: { stamina: 300, healing: 1500, mp5: 90, intellect: 450 }
+    }
+};
 
-    // Count BiS matches by slot
-    const slotsFilled = {};
-    let totalScore = 0;
+// Parse stats from Wowhead tooltip HTML
+function parseTooltipStats(tooltipHtml) {
+    const stats = {
+        stamina: 0, intellect: 0, strength: 0, agility: 0, spirit: 0,
+        armor: 0, defense: 0, dodge: 0, parry: 0, block: 0,
+        hit: 0, crit: 0, haste: 0, expertise: 0, attackpower: 0, armorpen: 0,
+        spellhit: 0, spellcrit: 0, spellhaste: 0, spelldamage: 0, healing: 0, mp5: 0
+    };
+    if (!tooltipHtml) return stats;
 
-    for (const result of matchResults) {
-        if (result.slot && result.rating) {
-            // Take the best rating for each slot
-            if (!slotsFilled[result.slot] || slotsFilled[result.slot] < result.rating) {
-                slotsFilled[result.slot] = result.rating;
-            }
+    // Common stat patterns in Wowhead tooltips
+    const patterns = [
+        { regex: /\+(\d+)\s*Stamina/gi, stat: 'stamina' },
+        { regex: /\+(\d+)\s*Intellect/gi, stat: 'intellect' },
+        { regex: /\+(\d+)\s*Strength/gi, stat: 'strength' },
+        { regex: /\+(\d+)\s*Agility/gi, stat: 'agility' },
+        { regex: /\+(\d+)\s*Spirit/gi, stat: 'spirit' },
+        { regex: /(\d+)\s*Armor(?!\s*Penetration)/gi, stat: 'armor' },
+        { regex: /\+(\d+)\s*Defense\s*Rating/gi, stat: 'defense' },
+        { regex: /\+(\d+)\s*Dodge\s*Rating/gi, stat: 'dodge' },
+        { regex: /\+(\d+)\s*Parry\s*Rating/gi, stat: 'parry' },
+        { regex: /\+(\d+)\s*Block\s*Rating/gi, stat: 'block' },
+        { regex: /\+(\d+)\s*Hit\s*Rating/gi, stat: 'hit' },
+        { regex: /\+(\d+)\s*Critical\s*Strike\s*Rating/gi, stat: 'crit' },
+        { regex: /\+(\d+)\s*Haste\s*Rating/gi, stat: 'haste' },
+        { regex: /\+(\d+)\s*Expertise\s*Rating/gi, stat: 'expertise' },
+        { regex: /\+(\d+)\s*Attack\s*Power/gi, stat: 'attackpower' },
+        { regex: /\+(\d+)\s*Armor\s*Penetration/gi, stat: 'armorpen' },
+        { regex: /\+(\d+)\s*Spell\s*Hit\s*Rating/gi, stat: 'spellhit' },
+        { regex: /\+(\d+)\s*Spell\s*Critical\s*Strike/gi, stat: 'spellcrit' },
+        { regex: /\+(\d+)\s*Spell\s*Haste/gi, stat: 'spellhaste' },
+        { regex: /\+(\d+)\s*Spell\s*Damage/gi, stat: 'spelldamage' },
+        { regex: /\+(\d+)\s*Damage\s*and\s*Healing/gi, stat: 'spelldamage' },
+        { regex: /\+(\d+)\s*Healing/gi, stat: 'healing' },
+        { regex: /(\d+)\s*Mana\s*per\s*5/gi, stat: 'mp5' },
+        { regex: /\+(\d+)\s*mana\s*every\s*5/gi, stat: 'mp5' }
+    ];
+
+    for (const { regex, stat } of patterns) {
+        let match;
+        while ((match = regex.exec(tooltipHtml)) !== null) {
+            stats[stat] += parseInt(match[1], 10);
         }
     }
 
-    // Calculate score based on slots filled
-    const filledSlots = Object.keys(slotsFilled).length;
-    const totalSlots = 15; // Approximate total gear slots
-    const avgRating = filledSlots > 0 ? Object.values(slotsFilled).reduce((a, b) => a + b, 0) / filledSlots : 0;
+    return stats;
+}
 
-    // Score = coverage * quality
-    const coverage = Math.min(filledSlots / totalSlots, 1);
-    return Math.round(coverage * avgRating * 100);
+// Sum stats from multiple items
+function sumStats(statsArray) {
+    const total = {
+        stamina: 0, intellect: 0, strength: 0, agility: 0, spirit: 0,
+        armor: 0, defense: 0, dodge: 0, parry: 0, block: 0,
+        hit: 0, crit: 0, haste: 0, expertise: 0, attackpower: 0, armorpen: 0,
+        spellhit: 0, spellcrit: 0, spellhaste: 0, spelldamage: 0, healing: 0, mp5: 0
+    };
+    for (const stats of statsArray) {
+        for (const key in total) {
+            total[key] += stats[key] || 0;
+        }
+    }
+    return total;
+}
+
+// Fetch tooltip from Wowhead and parse stats
+async function fetchItemStats(itemId) {
+    return new Promise((resolve) => {
+        // Create a temporary hidden element to trigger Wowhead tooltip
+        const tempDiv = document.createElement('div');
+        tempDiv.style.cssText = 'position:absolute;left:-9999px;top:-9999px;';
+        tempDiv.innerHTML = `<a href="https://tbc.wowhead.com/item=${itemId}" data-wowhead="item=${itemId}">temp</a>`;
+        document.body.appendChild(tempDiv);
+
+        // Refresh to load tooltip
+        if (typeof $WowheadPower !== 'undefined') {
+            $WowheadPower.refreshLinks();
+        }
+
+        // Wait for Wowhead to fetch and check their cache
+        setTimeout(() => {
+            let stats = { stamina: 0, intellect: 0, strength: 0, agility: 0, spirit: 0, armor: 0, defense: 0, dodge: 0, parry: 0, block: 0, hit: 0, crit: 0, haste: 0, expertise: 0, attackpower: 0, armorpen: 0, spellhit: 0, spellcrit: 0, spellhaste: 0, spelldamage: 0, healing: 0, mp5: 0 };
+
+            // Try to get tooltip from Wowhead's cache
+            if (typeof whTooltips !== 'undefined' && whTooltips.aT) {
+                const cached = whTooltips.aT[`item:${itemId}`] || whTooltips.aT[itemId];
+                if (cached) {
+                    stats = parseTooltipStats(cached);
+                }
+            }
+
+            // Also check $WowheadPower cache
+            if (typeof $WowheadPower !== 'undefined' && $WowheadPower.items && $WowheadPower.items[itemId]) {
+                const itemData = $WowheadPower.items[itemId];
+                if (itemData.tooltip) {
+                    stats = parseTooltipStats(itemData.tooltip);
+                }
+            }
+
+            document.body.removeChild(tempDiv);
+            resolve(stats);
+        }, 500);
+    });
+}
+
+// Global storage for fetched item stats
+let fetchedItemStats = {};
+let statsFetchInProgress = false;
+
+// Fetch all item stats and update display
+async function fetchAllItemStats(itemIds) {
+    if (statsFetchInProgress) return;
+    statsFetchInProgress = true;
+
+    const statusDiv = document.getElementById('stats-status');
+    if (statusDiv) statusDiv.innerHTML = '<span class="text-yellow-400">Loading item stats from Wowhead...</span>';
+
+    for (const itemId of itemIds) {
+        if (!fetchedItemStats[itemId]) {
+            fetchedItemStats[itemId] = await fetchItemStats(itemId);
+        }
+    }
+
+    statsFetchInProgress = false;
+    if (statusDiv) statusDiv.innerHTML = '<span class="text-terminal-accent">Stats loaded!</span>';
+
+    // Recalculate and display
+    updateStatsDisplay();
+}
+
+// Update the stats display
+function updateStatsDisplay() {
+    const statsDiv = document.getElementById('total-stats');
+    const readinessDiv = document.getElementById('stat-readiness');
+    if (!statsDiv) return;
+
+    // Get all item IDs from the current gear list
+    const gearText = document.getElementById('gear-input')?.value || '';
+    const lines = gearText.split('\n').map(l => l.trim()).filter(l => l);
+    const itemStats = [];
+
+    for (const line of lines) {
+        const itemId = findItemId(line);
+        if (itemId && fetchedItemStats[itemId]) {
+            itemStats.push(fetchedItemStats[itemId]);
+        }
+    }
+
+    if (itemStats.length === 0) {
+        statsDiv.innerHTML = '<span class="text-terminal-dim">No stats calculated yet</span>';
+        if (readinessDiv) readinessDiv.innerHTML = '';
+        return;
+    }
+
+    const total = sumStats(itemStats);
+
+    // Display key stats
+    const relevantStats = [
+        { key: 'stamina', label: 'Stamina', color: 'text-red-400' },
+        { key: 'intellect', label: 'Intellect', color: 'text-blue-400' },
+        { key: 'strength', label: 'Strength', color: 'text-orange-400' },
+        { key: 'agility', label: 'Agility', color: 'text-green-400' },
+        { key: 'hit', label: 'Hit Rating', color: 'text-yellow-400' },
+        { key: 'crit', label: 'Crit Rating', color: 'text-yellow-400' },
+        { key: 'attackpower', label: 'Attack Power', color: 'text-orange-400' },
+        { key: 'spelldamage', label: 'Spell Damage', color: 'text-purple-400' },
+        { key: 'healing', label: 'Healing', color: 'text-green-400' },
+        { key: 'defense', label: 'Defense', color: 'text-blue-400' },
+        { key: 'armor', label: 'Armor', color: 'text-gray-400' },
+        { key: 'mp5', label: 'MP5', color: 'text-blue-400' }
+    ].filter(s => total[s.key] > 0);
+
+    statsDiv.innerHTML = `
+        <div class="grid grid-cols-3 gap-2 text-xs md:grid-cols-2">
+            ${relevantStats.map(s => `
+                <div class="flex justify-between">
+                    <span class="text-terminal-dim">${s.label}:</span>
+                    <span class="${s.color}">${total[s.key]}</span>
+                </div>
+            `).join('')}
+        </div>
+    `;
+
+    // Calculate raid readiness based on stats
+    if (readinessDiv) {
+        const role = detectRole(total);
+        let readinessHtml = `<h4 class="text-terminal-text text-xs uppercase mb-2">Raid Readiness (${role})</h4>`;
+
+        for (const [raidKey, raidReqs] of Object.entries(RAID_REQUIREMENTS)) {
+            const reqs = raidReqs[role] || raidReqs.melee;
+            let metCount = 0;
+            let totalReqs = 0;
+
+            for (const [stat, required] of Object.entries(reqs)) {
+                totalReqs++;
+                if (total[stat] >= required) metCount++;
+            }
+
+            const pct = Math.round((metCount / totalReqs) * 100);
+            const status = pct >= 100 ? 'READY' : pct >= 75 ? 'CLOSE' : 'NOT READY';
+            const statusClass = pct >= 100 ? 'text-terminal-accent' : pct >= 75 ? 'text-yellow-400' : 'text-red-400';
+            const barColor = pct >= 100 ? 'bg-terminal-accent' : pct >= 75 ? 'bg-yellow-500' : 'bg-red-500';
+
+            readinessHtml += `
+                <div class="mb-2">
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="text-terminal-dim">${raidKey.toUpperCase()}</span>
+                        <span class="${statusClass}">${status}</span>
+                    </div>
+                    <div class="h-2 bg-terminal-dim/20 border border-terminal-dim/50">
+                        <div class="${barColor} h-full" style="width: ${pct}%"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        readinessDiv.innerHTML = readinessHtml;
+    }
+}
+
+// Detect role based on stats
+function detectRole(stats) {
+    if (stats.defense > 100 || stats.parry > 50 || stats.dodge > 50) return 'tank';
+    if (stats.healing > stats.spelldamage && stats.healing > 0) return 'healer';
+    if (stats.spelldamage > 200 || stats.spellhit > 50) return 'caster';
+    return 'melee';
 }
 
 // Update gear preview with Wowhead tooltips
@@ -1681,10 +1903,31 @@ Wastewalker Shoulderpads
 ...">${preRaidGearText}</textarea>
         </div>
 
-        <div class="mb-6">
+        <div class="mb-4">
             <label class="text-terminal-dim text-xs block mb-2">RECOGNIZED ITEMS</label>
             <div id="gear-preview" class="border border-terminal-dim/50 p-3 min-h-[60px] text-xs max-h-60 overflow-y-auto">
                 <span class="text-terminal-dim">Items will appear here as you type...</span>
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <button id="fetch-stats-btn" class="bg-terminal-accent text-terminal-bg px-6 py-2 font-mono text-xs font-bold cursor-pointer hover:bg-terminal-text transition-colors">
+                [ CALCULATE STATS FROM WOWHEAD ]
+            </button>
+            <span id="stats-status" class="ml-3 text-xs"></span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mb-6 md:grid-cols-1">
+            <div class="border border-terminal-dim/50 p-4">
+                <h4 class="text-terminal-text text-xs uppercase mb-3">// Total Gear Stats</h4>
+                <div id="total-stats">
+                    <span class="text-terminal-dim text-xs">Click "Calculate Stats" to fetch item stats from Wowhead</span>
+                </div>
+            </div>
+            <div class="border border-terminal-dim/50 p-4">
+                <div id="stat-readiness">
+                    <span class="text-terminal-dim text-xs">Raid readiness will appear after stats are calculated</span>
+                </div>
             </div>
         </div>
 
