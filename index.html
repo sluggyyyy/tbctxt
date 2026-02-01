@@ -368,6 +368,7 @@
             <ul class="class-list list-none">
                 <li class="py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="recipes">[ RECIPES ]</li>
                 <li class="py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="raids">[ RAIDS ]</li>
+                <li class="py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="api">[ API ]</li>
             </ul>
         </aside>
         <main id="main-content" class="border border-terminal-text p-5 md:p-4 sm:p-3"></main>
@@ -375,6 +376,7 @@
     <footer class="border border-terminal-text p-4 text-center text-[11px] text-terminal-dim mt-5 md:p-4 md:text-[10px] md:mt-4 sm:p-3 sm:text-[9px] sm:mt-3">
         <div>TBC.TXT // PvE Database</div>
         <div class="mt-1.5 sm:mt-1">NOT affiliated with Blizzard Entertainment // Community Project</div>
+        <div class="mt-2 sm:mt-1.5"><a href="#" onclick="renderApiDocs(); return false;" class="text-terminal-accent hover:text-terminal-text underline">[ API Documentation ]</a></div>
     </footer>
     <script>
 // ===== GLOBAL DATA (loaded from JSON) =====
@@ -1446,6 +1448,82 @@ function attachEventListeners(specData) {
     });
 }
 
+// ===== API DOCUMENTATION =====
+function renderApiDocs() {
+    currentClass = null;
+    document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
+    const apiLink = document.querySelector('.class-list li[data-view="api"]');
+    if (apiLink) apiLink.classList.add('active');
+
+    const html = `
+        <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">man tbc-api</div>
+        <h2 class="text-terminal-accent text-lg mb-4 uppercase tracking-wide md:text-base md:mb-3 sm:text-sm">[ TBC.TXT API DOCUMENTATION ]</h2>
+        <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">REST API for accessing TBC PvE data in your own applications</p>
+
+        <div class="border border-terminal-dim p-4 mb-6 md:p-3 md:mb-4 sm:p-2.5 sm:mb-3">
+            <h3 class="text-terminal-accent text-sm mb-3 md:text-xs">// Quick Start</h3>
+            <pre class="bg-terminal-bg/50 p-3 text-xs text-terminal-text overflow-x-auto md:text-[11px] sm:text-[10px]"><code>cd api
+go run main.go
+# Server runs on http://localhost:8080</code></pre>
+        </div>
+
+        <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ ENDPOINTS ]</h3>
+        <div class="overflow-x-auto -mx-5 px-5 md:-mx-4 md:px-4 sm:-mx-3 sm:px-3">
+            <table class="w-full border-collapse text-[13px] min-w-[600px] md:text-[11px] sm:text-[10px]">
+                <thead>
+                    <tr>
+                        <th class="bg-terminal-dim text-terminal-bg p-2.5 text-left font-semibold uppercase text-[11px] tracking-widest md:p-2 md:text-[10px] sm:p-1.5 sm:text-[9px]">ENDPOINT</th>
+                        <th class="bg-terminal-dim text-terminal-bg p-2.5 text-left font-semibold uppercase text-[11px] tracking-widest md:p-2 md:text-[10px] sm:p-1.5 sm:text-[9px]">DESCRIPTION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-terminal-dim border-opacity-30"><td class="p-2.5 text-terminal-accent md:p-2 sm:p-1.5"><code>GET /api/health</code></td><td class="p-2.5 text-terminal-dim md:p-2 sm:p-1.5">Server status and data counts</td></tr>
+                    <tr class="border-b border-terminal-dim border-opacity-30"><td class="p-2.5 text-terminal-accent md:p-2 sm:p-1.5"><code>GET /api/classes</code></td><td class="p-2.5 text-terminal-dim md:p-2 sm:p-1.5">List all classes with available specs</td></tr>
+                    <tr class="border-b border-terminal-dim border-opacity-30"><td class="p-2.5 text-terminal-accent md:p-2 sm:p-1.5"><code>GET /api/classes/{class}</code></td><td class="p-2.5 text-terminal-dim md:p-2 sm:p-1.5">Full class data (e.g., /api/classes/warrior)</td></tr>
+                    <tr class="border-b border-terminal-dim border-opacity-30"><td class="p-2.5 text-terminal-accent md:p-2 sm:p-1.5"><code>GET /api/classes/{class}/{spec}</code></td><td class="p-2.5 text-terminal-dim md:p-2 sm:p-1.5">Specific spec (e.g., /api/classes/warrior/fury)</td></tr>
+                    <tr class="border-b border-terminal-dim border-opacity-30"><td class="p-2.5 text-terminal-accent md:p-2 sm:p-1.5"><code>GET /api/items/search?q={query}</code></td><td class="p-2.5 text-terminal-dim md:p-2 sm:p-1.5">Search items by name</td></tr>
+                    <tr class="border-b border-terminal-dim border-opacity-30"><td class="p-2.5 text-terminal-accent md:p-2 sm:p-1.5"><code>GET /api/items/{name}</code></td><td class="p-2.5 text-terminal-dim md:p-2 sm:p-1.5">Get item ID by name</td></tr>
+                    <tr class="border-b border-terminal-dim border-opacity-30"><td class="p-2.5 text-terminal-accent md:p-2 sm:p-1.5"><code>GET /api/raids</code></td><td class="p-2.5 text-terminal-dim md:p-2 sm:p-1.5">All raid data by phase</td></tr>
+                    <tr class="border-b border-terminal-dim border-opacity-30"><td class="p-2.5 text-terminal-accent md:p-2 sm:p-1.5"><code>GET /api/raids/{phase}</code></td><td class="p-2.5 text-terminal-dim md:p-2 sm:p-1.5">Raids by phase (e.g., /api/raids/1)</td></tr>
+                    <tr class="border-b border-terminal-dim border-opacity-30"><td class="p-2.5 text-terminal-accent md:p-2 sm:p-1.5"><code>GET /api/recipes/{profession}</code></td><td class="p-2.5 text-terminal-dim md:p-2 sm:p-1.5">Profession recipes</td></tr>
+                    <tr class="border-b border-terminal-dim border-opacity-30"><td class="p-2.5 text-terminal-accent md:p-2 sm:p-1.5"><code>GET /api/reference/enchants</code></td><td class="p-2.5 text-terminal-dim md:p-2 sm:p-1.5">Enchant spell IDs</td></tr>
+                    <tr class="border-b border-terminal-dim border-opacity-30"><td class="p-2.5 text-terminal-accent md:p-2 sm:p-1.5"><code>GET /api/reference/talents</code></td><td class="p-2.5 text-terminal-dim md:p-2 sm:p-1.5">Talent spell IDs</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ EXAMPLE USAGE ]</h3>
+        <div class="border border-terminal-dim p-4 mb-4 md:p-3 sm:p-2.5">
+            <h4 class="text-terminal-accent text-xs mb-2">// JavaScript</h4>
+            <pre class="bg-terminal-bg/50 p-3 text-xs text-terminal-dim overflow-x-auto md:text-[11px] sm:text-[10px]"><code>const response = await fetch('http://localhost:8080/api/classes/warrior/fury');
+const fury = await response.json();
+console.log(fury.rotation);      // Rotation priority
+console.log(fury.phases[1].bis); // Phase 1 BiS gear</code></pre>
+        </div>
+
+        <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ DATA FILES ]</h3>
+        <p class="text-terminal-dim text-xs mb-3 md:text-[11px] sm:text-[10px]">Raw JSON files available in <code class="text-terminal-accent">/data/</code>:</p>
+        <ul class="text-terminal-dim text-xs list-none space-y-1 md:text-[11px] sm:text-[10px]">
+            <li>• <code class="text-terminal-accent">classData.json</code> - All class/spec data (701 KB)</li>
+            <li>• <code class="text-terminal-accent">itemIds.json</code> - 36,000+ item IDs (1.2 MB)</li>
+            <li>• <code class="text-terminal-accent">raidsData.json</code> - Raid/boss mechanics (132 KB)</li>
+            <li>• <code class="text-terminal-accent">recipesData.json</code> - Profession recipes (81 KB)</li>
+            <li>• <code class="text-terminal-accent">referenceData.json</code> - Enchants, talents, quests (19 KB)</li>
+        </ul>
+
+        <div class="mt-6 p-4 border border-terminal-accent border-opacity-30 bg-terminal-bg/50 md:mt-4 md:p-3 sm:mt-3 sm:p-2.5">
+            <p class="text-terminal-dim text-xs md:text-[11px] sm:text-[10px]">CORS enabled on all endpoints. Read-only, no authentication required.</p>
+        </div>
+    `;
+
+    const mainContent = document.getElementById('main-content');
+    mainContent.style.opacity = '0.3';
+    setTimeout(() => {
+        mainContent.innerHTML = html;
+        mainContent.style.opacity = '1';
+    }, 200);
+}
+
 // ===== INITIALIZATION =====
 function initClassSelector() {
     document.querySelectorAll('.class-list li').forEach(item => {
@@ -1453,23 +1531,18 @@ function initClassSelector() {
             document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
             this.classList.add('active');
 
-            // Check if this is the recipes/raids view or a class view
             if (this.dataset.view === 'recipes') {
                 renderRecipesContent();
             } else if (this.dataset.view === 'raids') {
                 renderRaidsContent();
+            } else if (this.dataset.view === 'api') {
+                renderApiDocs();
             } else if (this.dataset.class) {
                 renderClassContent(this.dataset.class);
             }
         });
     });
 }
-
-// Initialize on page load
-window.addEventListener('DOMContentLoaded', () => {
-    initClassSelector();
-    renderClassContent('warrior');
-});
 
 // ===== START APP =====
 window.addEventListener('DOMContentLoaded', loadAllData);
