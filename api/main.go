@@ -93,7 +93,10 @@ func main() {
 }
 
 func loadData() error {
-	dataDir := "../data"
+	dataDir := os.Getenv("DATA_DIR")
+	if dataDir == "" {
+		dataDir = "../data"
+	}
 
 	// Load classData
 	if err := loadJSON(filepath.Join(dataDir, "classData.json"), &classData); err != nil {

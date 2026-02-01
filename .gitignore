@@ -5,6 +5,7 @@
 !index.backup.html
 !illidan.ico
 !amplify.yml
+!Dockerfile
 
 # Data files
 !data/
