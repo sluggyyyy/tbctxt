@@ -1,5 +1,15 @@
 *
 
+!.gitignore
 !index.html
+!index.backup.html
 !illidan.ico
 !amplify.yml
+
+# Data files
+!data/
+!data/*.json
+
+# API
+!api/
+!api/**

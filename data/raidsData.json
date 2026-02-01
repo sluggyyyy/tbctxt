@@ -1,0 +1,2050 @@
+{
+  "phase1": {
+    "name": "Phase 1",
+    "raids": {
+      "karazhan": {
+        "name": "Karazhan",
+        "size": 10,
+        "location": "Deadwind Pass",
+        "attunement": "The Master's Key",
+        "bosses": [
+          {
+            "name": "Attumen the Huntsman",
+            "npcId": 15550,
+            "description": "The first boss, accompanied by his steed Midnight. At 95% Midnight's HP, Attumen spawns. At 25% Midnight's HP, they merge into a mounted form.",
+            "abilities": [
+              {
+                "name": "Shadow Cleave",
+                "spellId": 29832,
+                "description": "Frontal cone dealing ~4k shadow damage. HANDLING: Tank faces Midnight/Attumen away from raid at all times. Melee stand behind the boss."
+              },
+              {
+                "name": "Intangible Presence",
+                "spellId": 29833,
+                "description": "Curse on random players reducing hit chance by 50% for 15 sec. HANDLING: Mages/Druids decurse immediately - this cripples DPS and tank threat. Priority: Tank > Melee DPS > Casters."
+              },
+              {
+                "name": "Charge",
+                "spellId": 29847,
+                "description": "After merge, charges random raid member dealing ~2k damage and knockback. HANDLING: Ranged/healers spread loosely 20+ yards from boss. Don't stand near ledges."
+              }
+            ],
+            "strategy": "Phase 1: Tank Midnight facing away, DPS to 95%. Phase 2: OT picks up Attumen, keep both faced away, kill Attumen to 25%. Phase 3: They merge - single tank, decurse constantly, burn boss. Use consumables if undergeared."
+          },
+          {
+            "name": "Moroes",
+            "npcId": 15687,
+            "description": "The steward of Karazhan with 4 random guests. Adds: Baroness Dorothea (shadow priest), Baron Rafe (retri pala), Lady Catriona (holy priest), Lady Keira (holy pala), Lord Robin (arms warr), Lord Crispin (prot warr).",
+            "abilities": [
+              {
+                "name": "Garrote",
+                "spellId": 37066,
+                "description": "Applied after Vanish. 1k damage/3 sec bleed for 5 MINUTES. Cannot be dispelled normally. HANDLING: Dwarf Stoneform removes it. Paladin BoP removes it. Ice Block removes it. Mage Blink does NOT work. Healers must heal through it if no counter available - it's 100k+ total damage."
+              },
+              {
+                "name": "Gouge",
+                "spellId": 29425,
+                "description": "Stuns current tank for 6 sec, Moroes attacks 2nd threat. HANDLING: MUST have 2 tanks or OT ready. When MT is gouged, OT taunts immediately. If no OT, Moroes will likely one-shot a healer."
+              },
+              {
+                "name": "Blind",
+                "spellId": 34654,
+                "description": "10 sec disorient on nearby player (poison). HANDLING: Dispel with Abolish Poison/Cleanse. Low priority but annoying on healers."
+              },
+              {
+                "name": "Vanish",
+                "spellId": 29448,
+                "description": "Moroes vanishes, applies Garrote to random player, returns to highest threat. HANDLING: Cannot be prevented. Heal the Garrote target. Occurs roughly every 30 sec."
+              }
+            ],
+            "strategy": "CC priority: Shackle priests > Trap/sheep holy pala > warriors last. Kill order: Holy Priest > Shadow Priest > Holy Pala > Retri Pala > Warriors > Moroes. Keep 2 tanks. Save BoPs/Stoneform for Garrote on healers. After adds die, tank and spank while healing Garrote targets."
+          },
+          {
+            "name": "Maiden of Virtue",
+            "npcId": 16457,
+            "description": "A holy construct in the Guest Chambers. Punishes melee with constant holy damage and periodically stuns the entire raid.",
+            "abilities": [
+              {
+                "name": "Repentance",
+                "spellId": 29511,
+                "description": "12 second incapacitate on ENTIRE RAID every 25-35 sec. HANDLING: Blessing of Sacrifice on a healer breaks it instantly via damage tick. Warrior Berserker Rage immune. PvP trinkets work. Undead Will of the Forsaken works. Time heals/hots before cast."
+              },
+              {
+                "name": "Holy Fire",
+                "spellId": 29522,
+                "description": "Random target DoT dealing ~3k holy damage over 12 sec. HANDLING: DISPEL IMMEDIATELY - this is top priority. Priests/Paladins assigned to dispel duty. Can overlap on multiple targets."
+              },
+              {
+                "name": "Holy Ground",
+                "spellId": 29512,
+                "description": "Consecration aura dealing ~300 holy/sec to melee AND silencing spellcasts. HANDLING: Melee must accept this damage - healers compensate. Melee should not try to cast instant heals while in range. Only affects ~12 yard radius."
+              },
+              {
+                "name": "Holy Wrath",
+                "spellId": 32445,
+                "description": "Chain holy damage jumping between nearby players, DOUBLES per jump (500 > 1000 > 2000 > 4000...). HANDLING: SPREAD OUT at least 10 yards apart. This is the #1 wipe cause. Mark positions on floor if needed."
+              }
+            ],
+            "strategy": "Positioning is everything. Spread 10+ yards apart in a circle around boss. Assign 2 dispellers for Holy Fire. Put BoSac on a healer before Repentance. Melee cleave her down while healers keep them up through Holy Ground. Shadow resistance helps slightly."
+          },
+          {
+            "name": "Opera Event",
+            "npcId": 17603,
+            "description": "Random event determined when entering Karazhan. Talk to Barnes to see which show. Three possible encounters with very different mechanics.",
+            "abilities": [
+              {
+                "name": "Little Red Riding Hood (Wolf)",
+                "spellId": 30753,
+                "description": "Transforms random player into Red Riding Hood for 20 sec - 50% speed, can't attack, Wolf chases you. HANDLING: RUN IN CIRCLES around the room. Use sprint/dash/blink. Other players must slow/kite Wolf. If caught = instant death."
+              },
+              {
+                "name": "Terrifying Howl (Wolf)",
+                "spellId": 30752,
+                "description": "AoE fear in melee range. HANDLING: Fear Ward tank, use Tremor Totem, Berserker Rage. Stay at max melee range if possible."
+              },
+              {
+                "name": "Blinding Passion (R&J)",
+                "spellId": 30461,
+                "description": "Julianne's holy damage + knockback on tank. HANDLING: Tank with back to wall to avoid knockback positioning issues."
+              },
+              {
+                "name": "Devotion (R&J)",
+                "spellId": 30887,
+                "description": "Julianne heals Romulo for 10% HP. HANDLING: Interrupt with Kick/Pummel/Earth Shock. If both are up, she spam heals - must kill separately first."
+              },
+              {
+                "name": "Poisoned Thrust (R&J)",
+                "spellId": 30822,
+                "description": "Romulo's stacking poison on tank. HANDLING: Dispel poison, tank swap at 3-4 stacks if necessary."
+              },
+              {
+                "name": "Brain Bash (Oz)",
+                "spellId": 31046,
+                "description": "Tinhead stuns tank for 4 sec. HANDLING: OT must be ready to pick up if Dorothee is still alive. Not a huge issue once Dorothee dies."
+              },
+              {
+                "name": "Roar's Fear (Oz)",
+                "spellId": 31043,
+                "description": "Roar periodically fears in melee range. HANDLING: Fear Ward, Tremor Totem, Berserker Rage. Ranged can ignore this."
+              },
+              {
+                "name": "Water Bolt (Oz)",
+                "spellId": 31012,
+                "description": "Tito (dog) casts water bolts at random players. HANDLING: Kill Tito to stop Dorothee from enraging, but focus Dorothee first."
+              }
+            ],
+            "strategy": "WOLF: Kite in circles when transformed, healers keep Red Riding Hood alive, slow the Wolf. R&J: Kill Julianne first (interrupt heals), then Romulo, then BOTH together within 10 sec or they resurrect. OZ: Kill order Dorothee > Roar > Tinhead > Strawman (interrupt fireball) > Tito > Crone appears. Crone is easy tank-and-spank."
+          },
+          {
+            "name": "The Curator",
+            "npcId": 15691,
+            "description": "A massive arcane construct in the Menagerie. Spawns Astral Flares continuously and enters Evocation when OOM, taking double damage.",
+            "abilities": [
+              {
+                "name": "Hateful Bolt",
+                "spellId": 30383,
+                "description": "Hits the raid member with HIGHEST HP (excluding tank) for 4-5k arcane damage every 10 sec. HANDLING: Designate 2-3 soakers (plate DPS, hunters with Aspect) to stay topped off. Spread healing. If soakers die, bolt goes random = deaths."
+              },
+              {
+                "name": "Summon Astral Flare",
+                "spellId": 30236,
+                "description": "Spawns a Flare every 10 sec that chain lightnings nearby players. 12k HP each. HANDLING: KILL IMMEDIATELY. Assign ranged DPS to swap to flares. If flares stack up = raid damage overwhelms healers. Warlocks can banish."
+              },
+              {
+                "name": "Evocation",
+                "spellId": 30254,
+                "description": "At 10% mana, Curator channels for 20 sec, restoring mana but taking 200% DAMAGE. HANDLING: THIS IS YOUR BURN PHASE. Save cooldowns, Heroism/Bloodlust, trinkets. Goal: Kill before Evocation ends or push another Evocation."
+              },
+              {
+                "name": "Enrage",
+                "spellId": 28747,
+                "description": "At 15% HP, Curator enrages - increased attack speed and damage. HANDLING: Save tank CDs for this. Should overlap with Evocation if DPS is good."
+              }
+            ],
+            "strategy": "Kill flares > soakers stay topped > DPS boss. When Evocation hits, BURN with all CDs. Arcane resist helps Hateful Bolt soakers. Fight is about managing flares while dealing consistent damage. At 15% he enrages but also keeps Evocating - burn hard."
+          },
+          {
+            "name": "Terestian Illhoof",
+            "npcId": 15688,
+            "description": "A satyr warlock in the Repository. Sacrifices players to Demon Chains while spawning endless imps. Kil'rek (his imp) must be managed.",
+            "abilities": [
+              {
+                "name": "Sacrifice",
+                "spellId": 30115,
+                "description": "Chains a random player to Demon Chains portal, draining 1500 HP/sec. Player cannot act. HANDLING: ALL DPS SWAP TO DEMON CHAINS IMMEDIATELY. Chains has ~12k HP. Player dies in 8 sec if chains not killed. #1 wipe cause."
+              },
+              {
+                "name": "Summon Kil'rek",
+                "spellId": 30066,
+                "description": "Kil'rek imp has 75k HP. When alive, Illhoof takes 25% less damage. Respawns 45 sec after death. HANDLING: Kill Kil'rek early, then DPS Illhoof during 45 sec window. Repeat."
+              },
+              {
+                "name": "Summon Imps",
+                "spellId": 30067,
+                "description": "Spawns waves of small imps continuously. Each imp firebolts for 150-200 damage. HANDLING: Warlock Seed of Corruption is AMAZING. Otherwise AoE (Consecrate, Rain of Fire, Volley). Don't let imps stack or raid damage spikes."
+              },
+              {
+                "name": "Shadow Bolt",
+                "spellId": 30055,
+                "description": "2 sec cast, 3-4k shadow damage on random player. HANDLING: Can be interrupted but not priority. Healers handle through healing."
+              },
+              {
+                "name": "Amplify Flames",
+                "spellId": 30053,
+                "description": "Debuff increasing fire damage taken by 500%. HANDLING: Dispel with magic dispel if using fire mages. Otherwise ignorable since most damage is shadow/physical."
+              }
+            ],
+            "strategy": "Kill Kil'rek immediately. Warlock spams Seed of Corruption on Illhoof (chains imps). When Sacrifice happens, EVERYONE swaps to Demon Chains. Resume boss DPS after chains die. Repeat Kil'rek kills every 45 sec. This is a healer-intensive fight."
+          },
+          {
+            "name": "Shade of Aran",
+            "npcId": 16524,
+            "description": "Medivh's father in the Guardian's Library. NO THREAT TABLE - attacks randomly. Devastating AoE abilities require precise movement. Do NOT drink mana pots (he drinks = Pyroblast).",
+            "abilities": [
+              {
+                "name": "Flame Wreath",
+                "spellId": 30004,
+                "description": "Places fire rings around 3 random players lasting 20 sec. Moving through ANY ring = 5k fire AoE to ENTIRE RAID. HANDLING: STOP MOVING COMPLETELY. Don't jump. Don't turn. Don't blink. Don't charge. Pets on passive. This is THE wipe mechanic - one person moves = raid wipe."
+              },
+              {
+                "name": "Blizzard",
+                "spellId": 29969,
+                "description": "Rotating Blizzard circles the room clockwise, dealing heavy frost damage + slow. HANDLING: Move WITH the rotation, staying ahead of it. Don't panic. Predictable pattern."
+              },
+              {
+                "name": "Arcane Explosion",
+                "spellId": 29973,
+                "description": "Magnetic pull drags entire raid to center, then 10 sec cast of massive AoE explosion (10k+). HANDLING: IMMEDIATELY run to room edge when pulled. Stay at wall until cast finishes. Getting caught in middle = death."
+              },
+              {
+                "name": "Mass Polymorph",
+                "spellId": 29963,
+                "description": "Polymorphs entire raid while Aran drinks to restore mana. HANDLING: Wait it out. When poly ends, INTERRUPT his Pyroblast (Counterspell, Kick, etc.) or raid takes 7k fire each."
+              },
+              {
+                "name": "Summon Water Elementals",
+                "spellId": 37051,
+                "description": "At 40% HP, summons 4 Water Elementals with 20k HP each. They spam frost bolts. HANDLING: AoE them down fast. Warlock Banish works. Can't let them free-cast or healers are overwhelmed."
+              },
+              {
+                "name": "Pyroblast",
+                "spellId": 29978,
+                "description": "After drinking, casts 10 sec Pyroblast dealing 7k fire damage to everyone. HANDLING: MUST INTERRUPT. Assign interrupters. If no interrupt available, use Ice Block, Divine Shield, Cloak of Shadows."
+              }
+            ],
+            "strategy": "Spread around the room. During Flame Wreath = FREEZE. During Blizzard = move clockwise. During Arcane Explosion = run to walls. Interrupt Pyroblast after Mass Poly. At 40%, nuke water elementals. Do NOT use mana consumables if Aran is drinking. Most wipes are Flame Wreath movement."
+          },
+          {
+            "name": "Netherspite",
+            "npcId": 15689,
+            "description": "A nether dragon with unique colored beam mechanics. Three beams (Red/Green/Blue) connect portals to boss - players must intercept them or boss becomes immune and wipes raid.",
+            "abilities": [
+              {
+                "name": "Void Zone",
+                "spellId": 37063,
+                "description": "Places void zones under random players dealing 1k shadow/sec. Lasts 25 sec. HANDLING: Move out immediately. Don't stand in purple circles. Simple mechanic but deadly if ignored."
+              },
+              {
+                "name": "Netherburn",
+                "spellId": 30523,
+                "description": "During Banish Phase, boss pulses 1.5k shadow damage every 2 sec to entire raid. HANDLING: Healers AoE heal. Stay spread for Void Zones. Wait for beam phase to resume."
+              },
+              {
+                "name": "Nether Beam - Red (Perseverance)",
+                "spellId": 30400,
+                "description": "Tank beam. Reduces damage taken by 1% per stack, max 100. Increases damage dealt. BUT: reduces max HP by 1% per stack. HANDLING: Tank intercepts. Swap tanks at 25-30 stacks or tank's HP gets dangerously low."
+              },
+              {
+                "name": "Nether Beam - Green (Serenity)",
+                "spellId": 30401,
+                "description": "Healer beam. Restores 300 mana/sec. Reduces healing done by 1% per stack, increases healing received. HANDLING: Rotate 2-3 healers. Swap at 15-20 stacks before healing becomes useless."
+              },
+              {
+                "name": "Nether Beam - Blue (Dominance)",
+                "spellId": 30402,
+                "description": "DPS beam. Increases spell damage by 5% per stack, reduces max HP by 1% per stack. HANDLING: Warlock/mage takes beam. Swap at 30 stacks or HP gets too low. Insane DPS potential."
+              },
+              {
+                "name": "Nether Exhaustion",
+                "spellId": 37090,
+                "description": "Cannot benefit from same beam for 90 sec after exposure. HANDLING: Must rotate players through beams - can't have same person take a beam twice in a row."
+              }
+            ],
+            "strategy": "BEAM PHASE: Assign 2 tanks (red), 3 healers (green), 2-3 casters (blue) to rotate. Block beams - if beam hits boss, bad things happen. Swap at high stacks. BANISH PHASE: Boss teleports to center, banishes, raid spreads and heals through damage. Beams reset. Repeat ~3 cycles. Kill before exhaustion causes issues."
+          },
+          {
+            "name": "Chess Event",
+            "npcId": 17469,
+            "description": "Control chess pieces to defeat the enemy king. Each player controls one piece. Not a traditional boss fight - it's a tactical minigame.",
+            "abilities": [
+              {
+                "name": "King Heal",
+                "description": "King piece heals all adjacent friendly pieces. HANDLING: Keep king in center, use heal ability on cooldown."
+              },
+              {
+                "name": "Medivh Cheat",
+                "description": "Medivh occasionally buffs enemy pieces or damages yours. HANDLING: Cannot prevent. Just part of the fight. Focus enemy king faster."
+              },
+              {
+                "name": "Piece Abilities",
+                "description": "Each piece has unique abilities - Pawns cleave, Rooks have AoE fire, Knights charge, Bishops heal, Queen does massive damage. HANDLING: Learn your piece. Move into range. Use abilities. Move out when damaged."
+              }
+            ],
+            "strategy": "Control King (keep healing), Queen (big damage), and 1-2 other pieces. Move Queen to attack enemy king while protecting your king. Burn enemy clerics (healers) if they're healing king. Use Rook fire on grouped enemies. It's mostly about positioning and using abilities. Very forgiving - can attempt multiple times."
+          },
+          {
+            "name": "Prince Malchezaar",
+            "npcId": 15690,
+            "description": "The final boss on the tower top. Three phases with different mechanics. Infernals rain down throughout the fight and don't despawn - positioning is everything.",
+            "abilities": [
+              {
+                "name": "Enfeeble",
+                "spellId": 30843,
+                "description": "Reduces 5 random players (never tank) to 1 HP for 7 sec. Healing reduced 100%. HANDLING: ENFEEBLED PLAYERS RUN OUT past 30 yards immediately. Shadow Nova follows Enfeeble - if you're in range with 1 HP = instant death. Healthstones/pots don't work while debuffed."
+              },
+              {
+                "name": "Shadow Nova",
+                "spellId": 30852,
+                "description": "3 sec cast, 30 yard AoE dealing 3k shadow damage. Always follows Enfeeble. HANDLING: If not enfeebled, stay in and DPS. If enfeebled, be OUT of 30 yard range. Deadly combo is the main mechanic."
+              },
+              {
+                "name": "Summon Infernal",
+                "spellId": 30836,
+                "description": "Infernals land randomly and Hellfire for 1k fire/sec in radius. Don't despawn. Phase 3 spawns faster. HANDLING: Tank boss in corner. Kite around room edge as infernals fill space. Don't tank in open - no room to move later."
+              },
+              {
+                "name": "Sunder Armor",
+                "spellId": 30901,
+                "description": "Phase 2 only: Stacking armor reduction on tank. HANDLING: Devastate to remove stacks, or tank swap at 3-5 stacks. Makes tank squishy if ignored."
+              },
+              {
+                "name": "Thrash",
+                "spellId": 12787,
+                "description": "Phase 2 only: Prince gains extra attacks. HANDLING: Tank cooldowns during Phase 2 (60-30%). This phase is hardest on tank. Shield Block/Dodge helps."
+              },
+              {
+                "name": "Amplify Damage",
+                "spellId": 39095,
+                "description": "Phase 3: Prince increases damage on tank. HANDLING: Tank CDs, external CDs (Pain Suppression, Blessing of Protection). Phase 3 is a burn race."
+              }
+            ],
+            "strategy": "PHASE 1 (100-60%): Easy. Tank in corner. Enfeebled players run out. PHASE 2 (60-30%): Prince dual-wields axes - tank takes massive damage. Use CDs. Still do Enfeeble dance. PHASE 3 (30-0%): Axes disappear, more infernals, increased damage. BURN. Keep kiting around room edge as infernals fill space. Shadow resist gear helps entire raid."
+          },
+          {
+            "name": "Nightbane",
+            "npcId": 17225,
+            "description": "Optional boss on Master's Terrace (balcony). Summon with Blackened Urn from Medivh's Journal questline. Alternates ground/air phases. Long, healing-intensive fight.",
+            "abilities": [
+              {
+                "name": "Bellowing Roar",
+                "spellId": 36922,
+                "description": "2.5 sec cast AoE fear on ground phase. HANDLING: Fear Ward tank. Tremor Totem. Berserker Rage. If feared off balcony = death. Tank with back to wall."
+              },
+              {
+                "name": "Charred Earth",
+                "spellId": 30129,
+                "description": "Fire patches under random players. 1.5k fire/sec. Last 60 sec. HANDLING: Move out. Don't stand in fire. Ground gets crowded - kite boss to clear areas if needed."
+              },
+              {
+                "name": "Smoldering Breath",
+                "spellId": 30210,
+                "description": "Frontal cone fire dealing 4-6k damage + DoT. HANDLING: Tank faces boss away from raid. Only tank gets hit."
+              },
+              {
+                "name": "Tail Sweep",
+                "spellId": 25653,
+                "description": "Rear cone knockback + damage. HANDLING: Melee stand at boss's side, not behind."
+              },
+              {
+                "name": "Distracting Ash",
+                "spellId": 30130,
+                "description": "Debuff reducing spell/ability range by 50%. HANDLING: Dispel magic. Annoying on healers. Dispel priority."
+              },
+              {
+                "name": "Smoking Blast",
+                "spellId": 37057,
+                "description": "AIR PHASE: Hits highest threat (tank) with stacking fire DoT. Each stack = more damage. HANDLING: Tank must survive - use CDs, healthstones. Healers spam tank. 4+ stacks = dangerous. Lasts entire air phase."
+              },
+              {
+                "name": "Rain of Bones",
+                "spellId": 37091,
+                "description": "AIR PHASE: Targets random player with bone rain AoE zone. Spawns 5 Restless Skeletons (13k HP each). HANDLING: STACK ON TANK. All skeletons spawn in one spot for AoE. Kill skeletons before Nightbane lands or they overwhelm raid."
+              },
+              {
+                "name": "Fireball Barrage",
+                "spellId": 30282,
+                "description": "AIR PHASE: If players too far from Nightbane's position, he fireballs them. HANDLING: Stay loosely grouped, don't spread across entire balcony."
+              }
+            ],
+            "strategy": "GROUND (100-75%, 50-25%): Tank against wall, face away. Fear Ward. Move from Charred Earth. TRANSITION TO AIR at 75%, 50%, 25%. AIR PHASE: Stack on tank position. Kill skeletons fast (AoE). Heal tank through Smoking Blast stacks. When Nightbane lands, tank picks up immediately. Fight is long - conserve mana. Bring shadow/fire resist."
+          }
+        ]
+      },
+      "gruuls_lair": {
+        "name": "Gruul's Lair",
+        "size": 25,
+        "location": "Blade's Edge Mountains",
+        "attunement": "None",
+        "bosses": [
+          {
+            "name": "High King Maulgar",
+            "npcId": 18831,
+            "description": "Council fight: Maulgar + 4 adds. Each add requires different handling. Adds: Krosh Firehand (mage), Olm the Summoner (warlock), Kiggler the Crazed (shaman), Blindeye the Seer (priest).",
+            "abilities": [
+              {
+                "name": "Arcing Smash",
+                "spellId": 39144,
+                "description": "Maulgar's frontal cone dealing 7-8k physical. HANDLING: Tank faces away from raid. Melee stand behind. Only MT should be hit."
+              },
+              {
+                "name": "Mighty Blow",
+                "spellId": 33230,
+                "description": "Maulgar knockback on tank. HANDLING: Tank with back to wall to avoid positioning issues."
+              },
+              {
+                "name": "Whirlwind",
+                "spellId": 33238,
+                "description": "Maulgar spins dealing heavy damage in melee range. HANDLING: ALL MELEE RUN OUT when he starts spinning. 8 second duration. Come back when done."
+              },
+              {
+                "name": "Berserker Charge",
+                "spellId": 26561,
+                "description": "Maulgar charges random player at 50% HP, dealing damage. HANDLING: Stay spread loosely. Healers ready. This is why you kill adds first."
+              },
+              {
+                "name": "Greater Polymorph (Krosh)",
+                "spellId": 33173,
+                "description": "Krosh polymorphs his target. HANDLING: MAGE TANK required. Mage spellsteals Krosh's Spell Shield and tanks him at range. Sheep breaks on Blast Wave damage."
+              },
+              {
+                "name": "Blast Wave (Krosh)",
+                "spellId": 33061,
+                "description": "Krosh fire AoE if anyone in melee range. HANDLING: NO ONE enters melee range of Krosh except mage tank who spellsteals shield first."
+              },
+              {
+                "name": "Summon Felhunter (Olm)",
+                "spellId": 33131,
+                "description": "Olm summons Felhunters that mana burn casters. HANDLING: Off-tank Olm away from casters. Kill Felhunters or lock them down."
+              },
+              {
+                "name": "Death Coil (Olm)",
+                "spellId": 33130,
+                "description": "Olm fears tank + damages. HANDLING: Be ready for loose threat. OT stance dance or use Fear Ward."
+              },
+              {
+                "name": "Lightning Bolt (Kiggler)",
+                "spellId": 36152,
+                "description": "Kiggler ranged lightning bolts. HANDLING: HUNTER KITE. Hunter runs in circles while raid burns other adds. Do not try to melee tank Kiggler."
+              },
+              {
+                "name": "Greater Polymorph (Kiggler)",
+                "spellId": 33173,
+                "description": "Kiggler polymorphs melee attackers. HANDLING: Another reason to hunter kite - no melee on Kiggler."
+              },
+              {
+                "name": "Prayer of Healing (Blindeye)",
+                "spellId": 33152,
+                "description": "Blindeye heals all adds for massive amounts. HANDLING: KILL BLINDEYE FIRST. Interrupt with Kick/Pummel/Earth Shock. Must die or fight is impossible."
+              }
+            ],
+            "strategy": "PULL: MT grabs Maulgar, OT1 grabs Olm (away from casters), Mage tanks Krosh (spellsteal!), Hunter kites Kiggler, OT2 grabs Blindeye. KILL ORDER: Blindeye (interrupt heals!) > Olm > Kiggler > Krosh > Maulgar. At 50% Maulgar enrages with charges - burn him. This is a coordination check."
+          },
+          {
+            "name": "Gruul the Dragonkiller",
+            "npcId": 19044,
+            "description": "A massive gronn in a circular room. Grows stronger every 30 sec. DPS race - must kill before Growth stacks make him unhealable. Shatter mechanic requires spreading.",
+            "abilities": [
+              {
+                "name": "Growth",
+                "spellId": 36300,
+                "description": "Every 30 sec, Gruul gains +15% damage. Stacks 30 times (450% total damage increase). HANDLING: CANNOT BE STOPPED. This is the enrage timer. Must kill before ~8-10 stacks or tank dies. Burn cooldowns EARLY, not late."
+              },
+              {
+                "name": "Ground Slam",
+                "spellId": 33525,
+                "description": "Knocks entire raid back and applies Gronn Lord's Grasp (stacking slow, then root into stone). HANDLING: After knockback, SPREAD OUT IMMEDIATELY before you turn to stone. You have ~5 seconds."
+              },
+              {
+                "name": "Shatter",
+                "spellId": 33654,
+                "description": "After Ground Slam roots everyone in stone, Gruul shatters. Damage based on PROXIMITY: 0-5 yards = 8-9k, 6-10 yards = 4-5k, 11-15 yards = 2k, 16+ yards = 0. HANDLING: BE SPREAD when you turn to stone. Minimum 15 yards apart. THIS IS THE MAIN WIPE MECHANIC. Divine Shield/Ice Block prevent the turn-to-stone but NOT Shatter damage!"
+              },
+              {
+                "name": "Hurtful Strike",
+                "spellId": 33813,
+                "description": "Massive physical hit (12k+ damage) on highest HP target in melee range BESIDES the tank. Every 8 seconds. HANDLING: OFF-TANK REQUIRED in melee to soak. OT must be #2 threat or a DPS dies. Rotate OTs if needed."
+              },
+              {
+                "name": "Reverberation",
+                "spellId": 36297,
+                "description": "4 second AoE silence. HANDLING: Healers should pre-HoT before silence. Not a huge issue but annoying if it hits during critical healing."
+              },
+              {
+                "name": "Cave In",
+                "spellId": 36240,
+                "description": "Rocks fall from ceiling at random locations, dealing 3k physical/sec in area. HANDLING: Move out of the dusty ground circles. Simple but deadly if ignored while rooted."
+              }
+            ],
+            "strategy": "SPREAD around room edges. MT + OT in center. OT soaks Hurtful Strike. When Ground Slam hits, use any movement abilities to spread further. After Shatter, regroup and continue DPS. Pop Heroism/Bloodlust and damage CDs EARLY (first 2-3 Growth stacks) because Growth makes fight exponentially harder. This is a pure DPS check - 4-5 minute kill or wipe."
+          }
+        ]
+      },
+      "magtheridons_lair": {
+        "name": "Magtheridon's Lair",
+        "size": 25,
+        "location": "Hellfire Peninsula",
+        "attunement": "None",
+        "bosses": [
+          {
+            "name": "Magtheridon",
+            "npcId": 17257,
+            "description": "The pit lord imprisoned beneath Hellfire Citadel. Two phases: kill Channelers while Mag is banished, then fight Mag while clicking cubes to interrupt Blast Nova. At 30%, ceiling collapses.",
+            "abilities": [
+              {
+                "name": "Blast Nova",
+                "spellId": 30616,
+                "description": "20 sec cast dealing 50% of everyone's max HP as fire damage. Cast repeatedly during Phase 2. HANDLING: 5 DESIGNATED CLICKERS must click Manticron Cubes within 1 sec of each other to banish Mag and interrupt. Requires coordination - use voice countdown. Miss = half raid dead."
+              },
+              {
+                "name": "Cleave",
+                "spellId": 30619,
+                "description": "Frontal cleave dealing 7-10k physical. HANDLING: Tank faces away from raid. Only tank in front."
+              },
+              {
+                "name": "Quake",
+                "spellId": 30657,
+                "description": "Raid-wide knockback every 40 sec. Interrupts spellcasting. HANDLING: Casters stop casting during quake. Healers use instant casts. Brief interruption."
+              },
+              {
+                "name": "Cave In (30%)",
+                "spellId": 36240,
+                "description": "At 30% HP, ceiling collapses. 5-8k physical damage every 2 sec to ENTIRE RAID for rest of fight. HANDLING: BURN PHASE. All cooldowns. Healers spam AoE heals. This is a hard DPS check - must kill fast or healers OOM."
+              },
+              {
+                "name": "Conflagration",
+                "spellId": 30757,
+                "description": "Fire damage on random target. Spreads if players nearby. HANDLING: Spread loosely during Phase 2. Don't stack except for AoE heals. Low priority mechanic."
+              },
+              {
+                "name": "Channeler Shadow Bolt Volley",
+                "spellId": 30510,
+                "description": "PHASE 1: Channelers cast shadow bolts at random targets. HANDLING: Kill Channelers fast. Assign kill order and interrupts."
+              },
+              {
+                "name": "Channeler Dark Mending",
+                "spellId": 30528,
+                "description": "PHASE 1: Channelers heal each other. HANDLING: Interrupt with Kick/Pummel/Earth Shock. Can't let them heal or Phase 1 takes forever."
+              },
+              {
+                "name": "Channeler Mind Exhaustion",
+                "spellId": 30504,
+                "description": "PHASE 1: Channelers debuff reducing healing received. HANDLING: Dispel if on tanks. Not critical on DPS."
+              },
+              {
+                "name": "Burning Abyssal",
+                "spellId": 30511,
+                "description": "PHASE 1: Channelers spawn fire adds periodically. HANDLING: OT picks up Abyssals. Kill them when Channelers are dead or they overwhelm."
+              }
+            ],
+            "strategy": "PHASE 1 (Mag banished): Pull Channelers to center. 2-3 tanks grab them. DPS burns them down (assign kill order). Interrupt heals. OT handles Abyssals. Takes ~2 min. PHASE 2 (Mag active): Tank picks up Mag. Raid spreads. 5 clickers assigned to cubes. When Blast Nova starts casting (~20 sec), RL counts down 5-4-3-2-1-CLICK. All 5 click simultaneously. Repeat every Blast Nova. AT 30%: Ceiling collapses. EVERYONE burns. Healers chain AoE heals. Kill before OOM."
+          }
+        ]
+      }
+    }
+  },
+  "phase2": {
+    "name": "Phase 2",
+    "raids": {
+      "serpentshrine_cavern": {
+        "name": "Serpentshrine Cavern",
+        "size": 25,
+        "location": "Coilfang Reservoir, Zangarmarsh",
+        "attunement": "The Mark of Vashj (removed in 2.4)",
+        "bosses": [
+          {
+            "name": "Hydross the Unstable",
+            "npcId": 21216,
+            "description": "A water elemental that changes between Frost (clean) and Nature (corrupt) forms. Crossing the center threshold triggers transition. Requires two tanks with different resist gear.",
+            "abilities": [
+              {
+                "name": "Mark of Hydross (Frost)",
+                "spellId": 38215,
+                "description": "Applied every 15 sec in frost form. Stacking debuff increasing frost damage taken by 10% per stack. HANDLING: Tank swap at 4-5 stacks. Frost tank needs ~365 frost resist (cap). Marks reset on form change."
+              },
+              {
+                "name": "Mark of Corruption (Nature)",
+                "spellId": 38219,
+                "description": "Applied every 15 sec in nature form. Stacking debuff increasing nature damage taken by 10% per stack. HANDLING: Tank swap at 4-5 stacks. Nature tank needs ~365 nature resist. Marks reset on form change."
+              },
+              {
+                "name": "Water Tomb",
+                "spellId": 38235,
+                "description": "Stuns 4 random players in water bubbles for 4 sec, dealing ~4.5k frost damage. HANDLING: Healers pre-assigned to tomb targets. Cannot prevent - just heal through it."
+              },
+              {
+                "name": "Vile Sludge",
+                "spellId": 38246,
+                "description": "Nature DoT on random player in corrupted form. ~3k nature damage over 24 sec. HANDLING: Nature resist helps. Can be dispelled with Abolish Poison."
+              },
+              {
+                "name": "Spawn Adds (Transition)",
+                "description": "Each form change spawns 4 adds (Pure Spawn in frost, Tainted Spawn in nature). HANDLING: AoE them down fast. Warlocks Seed, mages Blizzard. Don't let them overwhelm healers."
+              }
+            ],
+            "strategy": "START in frost form (Hydross is blue). Frost tank pulls. At 4-5 Mark stacks, Nature tank taunts and DRAGS Hydross across the center line (he turns green). AoE adds. At 4-5 Corruption stacks, Frost tank taunts and drags back. Repeat. THE PULL IS CRITICAL - accidental transitions = extra adds = wipe. This fight is about tank coordination and resist gear, not DPS."
+          },
+          {
+            "name": "The Lurker Below",
+            "npcId": 21217,
+            "description": "A massive fish in the center pool. Raid stands on surrounding platforms. Submerges periodically spawning adds. Spout = instant death if not avoided.",
+            "abilities": [
+              {
+                "name": "Spout",
+                "spellId": 37433,
+                "description": "Lurker emerges and spins, spraying water beam in 360 degrees over ~15 sec. 10k+ damage = instant death. HANDLING: When Spout starts, JUMP IN THE WATER immediately. Stay underwater facing AWAY from Lurker (beam goes slightly under surface). Or run AHEAD of the beam (risky). Spout is the #1 killer."
+              },
+              {
+                "name": "Whirl",
+                "spellId": 37363,
+                "description": "Melee range knockback + damage. HANDLING: Melee will get knocked into water periodically. Climb back up on platforms fast before Spout."
+              },
+              {
+                "name": "Geyser",
+                "spellId": 37478,
+                "description": "Launches random player into air, ~2k fall damage. HANDLING: Can't avoid. Healers top up Geyser targets. Minor damage."
+              },
+              {
+                "name": "Water Bolt",
+                "spellId": 37138,
+                "description": "Spams tank with ~5k frost damage if tank is in LoS. HANDLING: Tank stands on inner ring close to Lurker. Use frost resist."
+              },
+              {
+                "name": "Summon Adds (Submerge)",
+                "description": "Every 90 sec, Lurker submerges. Adds spawn on all platforms: Coilfang Ambushers (melee) and Coilfang Guardians (casters). HANDLING: Each platform group handles their adds. Kill Guardians first (they chain lightning). Get back to positions before Lurker surfaces - he emerges with immediate Whirl."
+              }
+            ],
+            "strategy": "Raid spreads on outer platforms (ring of islands). Tank on inner platform. DPS Lurker. When SUBMERGE happens, each island kills their adds. When Lurker surfaces, resume DPS. When SPOUT starts, EVERYONE JUMPS IN WATER facing away. Climb back up after Spout. Repeat. Bring water breathing potions/buffs for long Spouts. Simple fight if you respect Spout."
+          },
+          {
+            "name": "Leotheras the Blind",
+            "npcId": 21215,
+            "description": "A night elf demon hunter. Alternates between human form (warrior tank) and demon form (warlock tank). At 15% both forms active simultaneously. Inner Demons mechanic requires individual responsibility.",
+            "abilities": [
+              {
+                "name": "Whirlwind",
+                "spellId": 37640,
+                "description": "Human form: Leotheras spins through the room dealing massive damage in melee range. 12 sec duration. HANDLING: ALL MELEE RUN AWAY when Whirlwind starts. Stay at max range. Do not try to DPS during Whirlwind. He moves randomly."
+              },
+              {
+                "name": "Chaos Blast",
+                "spellId": 37674,
+                "description": "Demon form: Fire damage on tank. Hits VERY hard (6-8k). HANDLING: WARLOCK TANK required with fire resist gear. Warriors cannot tank demon form (parry/dodge doesn't work on spells). Warlocks use Searing Pain for threat."
+              },
+              {
+                "name": "Insidious Whisper",
+                "spellId": 37676,
+                "description": "During demon form, targets 5 random players who spawn their own Inner Demon (shadow copies). HANDLING: YOU MUST KILL YOUR OWN INNER DEMON within 30 sec. No one else can damage it. Use all cooldowns. If you fail = permanent Mind Control."
+              },
+              {
+                "name": "Inner Demon",
+                "spellId": 37735,
+                "description": "Shadow copy of you with ~18k HP. Only you can see/damage it. Immune to CC. HANDLING: Pre-pot with DPS consumable before demon form. Save trinkets. THIS IS A PERSONAL SKILL CHECK - practice on PTR if possible. Healers especially struggle."
+              },
+              {
+                "name": "Demon Form (15%)",
+                "description": "At 15% HP, Leotheras splits into human + demon simultaneously. HANDLING: Both tanks active. Warrior tanks human, Warlock tanks demon. Burn human first (melee can damage him), then demon. This is chaotic - use cooldowns."
+              }
+            ],
+            "strategy": "PHASE 1 (Human): Warrior tanks. Melee DPS until Whirlwind, then run. Ranged can DPS through Whirlwind. PHASE 2 (Demon): Warlock tanks with fire resist + Searing Pain. EVERYONE kills their Inner Demon within 30 sec or permanent MC. Healers must also kill their demon while keeping raid alive. AT 15%: Both forms. Tanks coordinate. Burn human first, then demon. Pre-assigned interrupts for any heals from MC'd players."
+          },
+          {
+            "name": "Fathom-Lord Karathress",
+            "npcId": 21214,
+            "description": "A naga lord with 3 advisors: Caribdis (shaman), Tidalvess (hunter), Sharkkis (beast master). When each advisor dies, Karathress gains their abilities. Council fight requiring multiple tanks.",
+            "abilities": [
+              {
+                "name": "Cataclysmic Bolt",
+                "spellId": 38441,
+                "description": "Karathress hits his tank for 50% of their MAX HP as nature damage. Ignores armor. HANDLING: Tank swap immediately after Cataclysmic Bolt. Need 2 tanks on Karathress. Tank him last so you only deal with this during final phase."
+              },
+              {
+                "name": "Sear Nova (Caribdis)",
+                "spellId": 38445,
+                "description": "Caribdis casts 8k AoE fire damage. HANDLING: INTERRUPT. Assign 2 interrupters to Caribdis. Kill her first."
+              },
+              {
+                "name": "Healing Wave (Caribdis)",
+                "spellId": 38330,
+                "description": "Heals advisors. HANDLING: INTERRUPT! This is why Caribdis dies first - she heals others."
+              },
+              {
+                "name": "Tidal Surge (Tidalvess)",
+                "spellId": 38358,
+                "description": "Knockback on random player. HANDLING: Minor annoyance. Kill Tidalvess second."
+              },
+              {
+                "name": "Spitfire Totem (Sharkkis)",
+                "spellId": 38236,
+                "description": "Drops totems that shoot fireballs. HANDLING: Kill totems or move away. Not a huge priority."
+              },
+              {
+                "name": "Multi-Shot (Tidalvess)",
+                "spellId": 38383,
+                "description": "AoE physical damage on clumped players. HANDLING: Ranged spread loosely."
+              },
+              {
+                "name": "The Beast Within (Sharkkis)",
+                "spellId": 38373,
+                "description": "Sharkkis and pet enrage. Increased damage. HANDLING: Tank cooldowns, kite if needed. Kill Sharkkis third."
+              }
+            ],
+            "strategy": "PULL: MT on Karathress (tanked far away). OT1 on Caribdis. OT2 on Tidalvess. OT3 on Sharkkis. KILL ORDER: Caribdis (interrupt heals!) > Tidalvess > Sharkkis > Karathress. Each death empowers Karathress but it's manageable. When only Karathress remains, tank swap after Cataclysmic Bolt. Pop cooldowns and burn."
+          },
+          {
+            "name": "Morogrim Tidewalker",
+            "npcId": 21213,
+            "description": "A giant in a large room. Periodically sends players to Watery Graves (must be healed) and summons massive waves of murlocs. Healing and AoE check.",
+            "abilities": [
+              {
+                "name": "Tidal Wave",
+                "spellId": 37730,
+                "description": "Frontal cone dealing 5k+ frost damage and knocking back. HANDLING: Tank faces Morogrim toward wall with back to wall. Only tank should get hit. Melee stand at sides."
+              },
+              {
+                "name": "Watery Grave",
+                "spellId": 38049,
+                "description": "Teleports 4 random players to graves around the room, stunned for 6 sec, taking ~1k frost/sec. HANDLING: Pre-assigned healers IMMEDIATELY target grave players. They can die fast if ignored. Grave locations are fixed - learn them."
+              },
+              {
+                "name": "Earthquake",
+                "spellId": 37764,
+                "description": "2 sec AoE knockdown + damage to entire raid. HANDLING: Brief interrupt. Resume healing/DPS after. Stack loosely for AoE heals during this."
+              },
+              {
+                "name": "Summon Murlocs",
+                "spellId": 37854,
+                "description": "Every ~45 sec, spawns 12 murlocs on each side (24 total). They charge random players. HANDLING: WARLOCK SEED OF CORRUPTION. Have warlocks pre-seed marked targets. Other AoE: Blizzard, Volley, Consecrate. Murlocs die fast but overwhelm if not controlled."
+              }
+            ],
+            "strategy": "Tank against wall facing out. Raid stacks loosely in center for AoE heals. Assign 2 healers per Watery Grave location (4 locations = 8 healers ideal). When murlocs spawn, Warlocks seed marked targets, other AoE classes help. Kill murlocs fast, then resume boss DPS. This is a healer mana check - bring mana pots. Nature resist helps with Watery Grave damage."
+          },
+          {
+            "name": "Lady Vashj",
+            "npcId": 21212,
+            "description": "The final boss of SSC. Three phases. Phase 2 is the hardest - must collect Tainted Cores from elementals and throw them to players near shield generators. Extremely complex coordination.",
+            "abilities": [
+              {
+                "name": "Shoot",
+                "spellId": 38295,
+                "description": "P1/P3: Ranged auto-attack dealing 4-6k physical to tank. HANDLING: Tank can use shield. Nature resist does not help - it's physical."
+              },
+              {
+                "name": "Shock Blast",
+                "spellId": 38509,
+                "description": "P1/P3: 6 sec cast, deals 8.5k nature damage to tank. HANDLING: Interruptible with Kick/Pummel/Earth Shock. Assign interrupters. If lands, tank may die."
+              },
+              {
+                "name": "Static Charge",
+                "spellId": 38280,
+                "description": "P1/P3: Debuff on random player - deals ~2k nature damage every 2 sec to them AND nearby players for 20 sec. HANDLING: Infected player RUNS OUT of the raid. Stay 10+ yards from others. Deadly if raid is stacked."
+              },
+              {
+                "name": "Entangle",
+                "spellId": 38316,
+                "description": "P1/P3: Roots all melee in range. HANDLING: Druids can shapeshift out. Others wait it out. Minor inconvenience."
+              },
+              {
+                "name": "Multi-Shot",
+                "spellId": 38310,
+                "description": "P1/P3: Hits 3 closest targets for 6k physical each. HANDLING: Don't clump near tank. Spread in P1/P3."
+              },
+              {
+                "name": "Shield Generator",
+                "description": "P2: Vashj activates 4 shield generators making her IMMUNE. Must deactivate all 4 to reach P3. HANDLING: Kill Tainted Elementals, they drop Tainted Cores. Loot core. THROW core to player next to a generator. That player uses core on generator. Repeat for all 4."
+              },
+              {
+                "name": "Tainted Elemental",
+                "spellId": 38132,
+                "description": "P2: Spawns at each generator. 9k HP. Drops Tainted Core on death. HANDLING: Kill fast. Loot core. Core holder CANNOT MOVE. Must throw to another player (click core, click player). Relay cores to generator players."
+              },
+              {
+                "name": "Coilfang Strider",
+                "spellId": 38132,
+                "description": "P2: Big adds that Fear and hit hard. HANDLING: OT picks them up and tanks away from raid. Kill after current elementals."
+              },
+              {
+                "name": "Coilfang Elite",
+                "spellId": 38132,
+                "description": "P2: Melee adds that Cleave. HANDLING: OT picks up and cleaves down."
+              },
+              {
+                "name": "Enchanted Elemental",
+                "spellId": 38132,
+                "description": "P2: Small adds that head toward Vashj. If they reach her = heal her. HANDLING: Slow/root/kill immediately. Frost Nova, Earthbind, etc. HIGH PRIORITY."
+              },
+              {
+                "name": "Toxic Spore Bat",
+                "spellId": 38575,
+                "description": "P3: Bats fly around dropping poison clouds on the ground. HANDLING: Kill bats, avoid poison clouds. Room becomes increasingly dangerous in P3."
+              },
+              {
+                "name": "Forked Lightning",
+                "spellId": 38145,
+                "description": "P2/P3: Chain lightning on random players. HANDLING: Spread out to avoid chain jumps."
+              }
+            ],
+            "strategy": "P1 (100-70%): Tank and spank. Interrupt Shock Blast. Static Charge players run out. Spread for Multi-Shot. Easy phase. P2 (70% - shield down): IMMUNE Vashj. 4 generators in corners. Assign: 4 'generator players' (one at each corner), 'kiters' for Striders, 'AoE' for small adds, 'core relayers' for the middle. Kill Tainted Elementals > loot cores > THROW cores player-to-player to generator players > use on generator. KILL ENCHANTED ELEMENTALS before they heal Vashj. Once all 4 generators down, P3 starts. P3 (shield down - 0%): P1 mechanics return + Spore Bats. Burn Vashj. Avoid poison. Kill bats. This is the TBC coordination check. Practice P2 extensively."
+          }
+        ]
+      },
+      "tempest_keep": {
+        "name": "Tempest Keep: The Eye",
+        "size": 25,
+        "location": "Netherstorm",
+        "attunement": "The Tempest Key (removed in 2.4)",
+        "bosses": [
+          {
+            "name": "Al'ar",
+            "npcId": 19514,
+            "description": "A majestic phoenix boss in a circular room with raised platforms. Two phases: platform hopping in P1, ground-based in P2. Resurrects once at 0% HP.",
+            "abilities": [
+              {
+                "name": "Flame Buffet",
+                "spellId": 34121,
+                "description": "P1: Stacking fire debuff on tank increasing fire damage taken by 10% per stack. Lasts 60 sec. HANDLING: Tank swap at 8-10 stacks. Multiple tanks needed on different platforms. Fire resist helps but not required."
+              },
+              {
+                "name": "Flame Quills",
+                "spellId": 34229,
+                "description": "P1: Al'ar flies to center and shoots fire quills at ALL platforms simultaneously for ~10k fire damage. HANDLING: EVERYONE drops to the ground floor ramp when Quills starts. Don't be on platforms. Return to platforms after Quills ends."
+              },
+              {
+                "name": "Meteor",
+                "spellId": 35181,
+                "description": "P2: Al'ar dive bombs a random location, dealing 5-6k fire damage in area and spawning 2 Ember of Al'ar adds. HANDLING: Spread out. Move from dive bomb location. Kill Ember adds - they explode on death, so range them down or have melee move away at low HP."
+              },
+              {
+                "name": "Melt Armor",
+                "spellId": 35410,
+                "description": "P2: Reduces tank armor by 80% for 60 sec. HANDLING: Tank swap immediately or tank dies to melee hits. Huge damage increase."
+              },
+              {
+                "name": "Flame Patch",
+                "spellId": 35383,
+                "description": "P2: Fire patches on ground dealing 3k/sec. HANDLING: Don't stand in fire. Simple."
+              },
+              {
+                "name": "Rebirth",
+                "spellId": 34342,
+                "description": "At 0% HP, Al'ar resurrects with full health, dealing 5k fire damage raid-wide. HANDLING: Be aware - you have to kill him TWICE. He resurrects at the center. Tank picks up immediately. Second time he stays dead."
+              }
+            ],
+            "strategy": "P1 (Platform Phase): Tank on upper platforms. Al'ar flies between them. Tank swap for Flame Buffet stacks. When Quills starts, EVERYONE drops to ramp. Resume after Quills. At 0% HP on platforms, P2 begins. P2 (Ground Phase): Tank in center. Al'ar dive bombs, spawning Embers. Kill Embers (watch for explosion). Tank swap for Melt Armor. At 0% HP he Resurrects - tank picks up, burn again. Kill twice total."
+          },
+          {
+            "name": "Void Reaver",
+            "npcId": 19516,
+            "description": "A mechanical construct and often the 'loot reaver' - considered easy for the tier. Main mechanic is avoiding slow-moving Arcane Orbs. Good entry boss for TK.",
+            "abilities": [
+              {
+                "name": "Pounding",
+                "spellId": 34162,
+                "description": "Every 12-14 sec, deals ~2k arcane damage to entire raid and silences for 3 sec. HANDLING: Cannot avoid. Healers pre-HoT before Pounding. Top raid off between Poundings. Arcane resist helps."
+              },
+              {
+                "name": "Arcane Orb",
+                "spellId": 34172,
+                "description": "Launches pink/purple orbs at random players. Orbs travel SLOWLY. On impact: 6-7k arcane damage in 20 yard radius. HANDLING: WATCH FOR ORBS and move away. They're slow - easy to dodge. #1 wipe cause is people not paying attention. Ranged spread out."
+              },
+              {
+                "name": "Knock Away",
+                "spellId": 25778,
+                "description": "Periodically knocks tank back and reduces threat by 25%. HANDLING: OT must be ready to taunt. Tank with back to wall to minimize knockback distance. Not a huge issue with good threat."
+              }
+            ],
+            "strategy": "SPREAD OUT in a loose semi-circle around boss. Tank in center with back to wall. Watch for Arcane Orbs and move out of their path. Healers keep raid topped for Pounding. That's it. This is a simple fight - the mechanics are forgiving. Good raid for pugs and learning TK."
+          },
+          {
+            "name": "High Astromancer Solarian",
+            "npcId": 18805,
+            "description": "A blood elf mage who periodically splits and summons adds. Wrath of the Astromancer is the key mechanic - player explodes if they don't run out.",
+            "abilities": [
+              {
+                "name": "Arcane Missiles",
+                "spellId": 33031,
+                "description": "Channels missiles on current target (tank) for moderate arcane damage. HANDLING: Tank and heal through it. Nothing special."
+              },
+              {
+                "name": "Wrath of the Astromancer",
+                "spellId": 33045,
+                "description": "Marks a random player with a debuff. After 6 sec, they EXPLODE for 6k arcane damage in 8 yard radius AND get launched into the air (falling damage). HANDLING: If you get Wrath, RUN AWAY FROM EVERYONE. 8+ yards minimum. Use slowfall/levitate if available for the launch. This is the wipe mechanic if ignored."
+              },
+              {
+                "name": "Blinding Light",
+                "spellId": 33009,
+                "description": "2 sec cast AoE dealing 3k arcane damage and knocking back anyone in 20 yards. HANDLING: Melee will get hit. Healers be ready. Not a huge issue."
+              },
+              {
+                "name": "Split Phase",
+                "description": "Periodically Solarian disappears and 12 adds spawn (4 Agents, 8 Solarium Priests). HANDLING: AoE down Priests (they heal), kill Agents. Solarian returns after adds die. Repeat. Warlocks shine here."
+              },
+              {
+                "name": "Void Form (20%)",
+                "spellId": 39329,
+                "description": "At 20% HP, Solarian transforms into a Voidwalker and spams Void Bolt at random targets for 4-5k shadow damage. HANDLING: Burn phase. Pop cooldowns. She's vulnerable. Just heal through Void Bolts and kill her."
+              }
+            ],
+            "strategy": "SPREAD 8+ yards apart (use markers if needed). Tank Solarian in center. When Wrath goes out, that player RUNS OUT. During Split Phase, AoE Priests, kill Agents. At 20% she transforms - burn with cooldowns. Simple fight if Wrath targets run out properly."
+          },
+          {
+            "name": "Kael'thas Sunstrider",
+            "npcId": 19622,
+            "description": "The most complex TBC boss. FIVE phases: kill 4 Advisors, kill 7 Legendary Weapons (loot them!), Advisors resurrect, Kael'thas activates, Gravity Lapse. 20-30+ minute fight. Requires extensive coordination.",
+            "abilities": [
+              {
+                "name": "Thaladred the Darkener (P1/P3)",
+                "spellId": 36965,
+                "description": "Advisor. Fixates random player and melees them. HANDLING: KITE. Whoever he fixates runs. No threat table. Kill first in P3."
+              },
+              {
+                "name": "Lord Sanguinar (P1/P3)",
+                "spellId": 36965,
+                "description": "Advisor. Fears and hits hard. HANDLING: Tank with Fear Ward/Tremor. Kill second in P3."
+              },
+              {
+                "name": "Grand Astromancer Capernian (P1/P3)",
+                "spellId": 36965,
+                "description": "Advisor. Casts Fireballs and Conflagration (disorient). HANDLING: INTERRUPT Fireballs. Ranged can tank her. Kill third in P3."
+              },
+              {
+                "name": "Master Engineer Telonicus (P1/P3)",
+                "spellId": 36965,
+                "description": "Advisor. Remote Toy stuns random player. HANDLING: Tank and spank. Kill last in P3."
+              },
+              {
+                "name": "Legendary Weapons (P2)",
+                "description": "7 weapons spawn and attack raid: Staff, Sword, Mace, Shield, Bow, Axe, Dagger. HANDLING: KILL ALL WEAPONS AND LOOT THEM. You NEED these items for P4/P5. Assign loot - everyone should get a weapon. Staff goes to casters (MC break), Shield to tanks, Dagger to melee (CC break)."
+              },
+              {
+                "name": "Fireball",
+                "spellId": 36805,
+                "description": "P4/P5: Kael'thas casts fireballs at random players for 5-8k fire damage. HANDLING: Fire resist helps. Healers heal through it. Can't avoid."
+              },
+              {
+                "name": "Pyroblast",
+                "spellId": 36819,
+                "description": "P4/P5: 4 sec cast, 45k+ fire damage on tank. HANDLING: MUST INTERRUPT or tank dies. Assign multiple interrupters in rotation."
+              },
+              {
+                "name": "Shock Barrier",
+                "spellId": 36815,
+                "description": "P4/P5: Kael shields himself absorbing 80k damage. While shielded, he CAN'T BE INTERRUPTED. HANDLING: DPS down barrier fast so you can interrupt Pyroblast. This is why P4 is dangerous."
+              },
+              {
+                "name": "Mind Control",
+                "spellId": 36797,
+                "description": "P4/P5: Controls 2-3 players for 60 sec. HANDLING: CC them (sheep/fear/stun). Player with STAFF OF DISINTEGRATION can break MC (use Legendary weapon ability)."
+              },
+              {
+                "name": "Phoenix",
+                "spellId": 36723,
+                "description": "P4/P5: Summons a Phoenix that deals fire damage. When killed, drops Phoenix Egg. HANDLING: Kill Phoenix, then KILL THE EGG or Phoenix respawns. Assign ranged to Phoenixes."
+              },
+              {
+                "name": "Gravity Lapse",
+                "spellId": 35966,
+                "description": "P5: Entire raid floats in the air. Use movement keys to 'swim.' Nether Beams chase players. HANDLING: SPREAD OUT while floating. Stay 15+ yards apart. Nether Beams chain between close players for massive damage. Swim slowly - don't panic."
+              },
+              {
+                "name": "Nether Beam",
+                "spellId": 35873,
+                "description": "P5: During Gravity Lapse, purple beams target players and chain to nearby players, dealing stacking shadow damage. HANDLING: SPREAD while floating. Don't clump. This is the main P5 killer."
+              },
+              {
+                "name": "Nether Vapor",
+                "spellId": 35865,
+                "description": "P5: Clouds float around during Gravity Lapse. Standing in them reduces max HP by 10% per tick. HANDLING: Avoid clouds while floating. Watch your surroundings."
+              }
+            ],
+            "strategy": "P1: Kill Advisors one at a time. Thaladred > Sanguinar > Capernian > Telonicus. P2: Kill 7 Legendary Weapons. LOOT THEM ALL - assign who gets what before pull. P3: All 4 Advisors resurrect simultaneously. Same kill order as P1. Use weapons to help. P4: Kael'thas engages. INTERRUPT PYROBLAST (watch for Shock Barrier). Kill Phoenixes and eggs. CC Mind Controlled players. P5 (50%): Gravity Lapse. SPREAD while floating. Avoid Nether Beams. Return to ground, burn Kael. Repeat Gravity Lapse. Kill before 4th Gravity Lapse or enrage. THIS IS THE TBC SKILL CHECK."
+          }
+        ]
+      }
+    }
+  },
+  "phase3": {
+    "name": "Phase 3",
+    "raids": {
+      "hyjal_summit": {
+        "name": "Hyjal Summit",
+        "size": 25,
+        "location": "Caverns of Time",
+        "attunement": "Battle for Mount Hyjal (removed in 2.4)",
+        "bosses": [
+          {
+            "name": "Rage Winterchill",
+            "npcId": 17767,
+            "description": "First boss of Hyjal. Before engaging, must survive 8 waves of undead attacking the Alliance base (Jaina's camp). Waves include ghouls, abominations, crypt fiends, and necromancers.",
+            "abilities": [
+              {
+                "name": "Icebolt",
+                "spellId": 31249,
+                "description": "Encases random player in ice block, dealing 4.5k frost damage. When ice breaks (damage or dispel), deals 2.5k frost AoE to nearby players. HANDLING: DISPEL IMMEDIATELY but have players spread so the AoE doesn't chain. Priests/Paladins assigned to dispel duty. If not dispelled, target dies in ~6 sec."
+              },
+              {
+                "name": "Death and Decay",
+                "spellId": 31258,
+                "description": "Large green circle on ground dealing 15% max HP per second as shadow damage. 8 sec duration. HANDLING: MOVE OUT IMMEDIATELY. This is instant death if you stand in it. Watch your feet constantly."
+              },
+              {
+                "name": "Frost Nova",
+                "spellId": 31250,
+                "description": "Roots all players in melee range for 10 sec. HANDLING: Melee will get rooted occasionally - use Freedom, shapeshift, trinkets, or just wait. Don't panic."
+              },
+              {
+                "name": "Frost Armor",
+                "spellId": 31256,
+                "description": "Passive aura slowing melee attackers by 25% for 5 sec per hit. HANDLING: Melee accept the slow. Not a huge issue. Casters unaffected."
+              }
+            ],
+            "strategy": "WAVE PHASE: 8 waves of undead. AoE them down. Protect Jaina. Drink between waves. BOSS PHASE: Spread 10+ yards apart. Move from Death and Decay instantly. Dispel Icebolt fast but don't stack. Simple boss once you survive waves. Frost resist helps but not required."
+          },
+          {
+            "name": "Anetheron",
+            "npcId": 17808,
+            "description": "Second boss of Hyjal (still at Alliance base). 8 more waves before boss. Dreadlord with infernals. Must protect Jaina throughout.",
+            "abilities": [
+              {
+                "name": "Carrion Swarm",
+                "spellId": 31306,
+                "description": "Frontal cone dealing 4-6k shadow damage and reducing healing by 75% for 20 sec (stacking). HANDLING: Tank faces boss AWAY from raid. Only tank gets hit. Heal through debuff - it will eventually fade."
+              },
+              {
+                "name": "Sleep",
+                "spellId": 31298,
+                "description": "Puts random target to sleep for 10 sec. Breaks on ANY damage. HANDLING: Dispel immediately OR DPS the sleeping target to wake them. Priests dispel magic, or any damage works. Not deadly but annoying if ignored."
+              },
+              {
+                "name": "Inferno",
+                "spellId": 31299,
+                "description": "Summons a Towering Infernal (100k HP) that drops from sky dealing 3k AoE fire damage on landing, then attacks and pulses fire AoE. HANDLING: OT picks up Infernal immediately. Tank away from raid. Kill Infernals between - they don't despawn."
+              },
+              {
+                "name": "Vampiric Aura",
+                "spellId": 31317,
+                "description": "Passive aura healing Anetheron for 300% of melee damage dealt. HANDLING: Cannot remove. Just outdamage his healing. Not a huge issue with raid DPS."
+              }
+            ],
+            "strategy": "WAVE PHASE: 8 more waves. Same as before - AoE, protect Jaina. BOSS PHASE: Tank faces away (Carrion Swarm). OT grabs Infernals and tanks them separately. Dispel Sleep. Kill Infernals during fight. Shadow resist helps for Carrion Swarm tank."
+          },
+          {
+            "name": "Kaz'rogal",
+            "npcId": 17888,
+            "description": "Third boss - now at Horde base (Thrall's camp). 8 waves again. Doom Lord with unique mana drain mechanic that EXPLODES mana users when empty.",
+            "abilities": [
+              {
+                "name": "Mark of Kaz'rogal",
+                "spellId": 31447,
+                "description": "Debuff on entire raid draining 600 mana every second for 5 sec (3k total). If your mana reaches 0 while debuffed, you EXPLODE for 10k shadow damage to everyone within 15 yards. HANDLING: MANA USERS: Before you hit 0 mana, either LIFETAP/USE MANA (warlocks), RUN OUT of the raid, or use mana pots. Non-mana users (warriors, rogues) are immune - they can stay stacked."
+              },
+              {
+                "name": "War Stomp",
+                "spellId": 31480,
+                "description": "AoE stun for 5 sec to all players within 15 yards. HANDLING: Melee will get stunned. Healers outside 15 yards keep healing. Not preventable."
+              },
+              {
+                "name": "Cleave",
+                "spellId": 31345,
+                "description": "Frontal cleave dealing 8-10k physical. HANDLING: Tank faces away. Only tank in front."
+              }
+            ],
+            "strategy": "WAVE PHASE: 8 waves at Horde base. BOSS PHASE: Mana users spread loosely in a circle. When Mark goes out, watch your mana bar. If you're going to hit 0, RUN OUT of raid before exploding OR drain mana intentionally (Life Tap). Melee can stack. This is a mana management check. Bring mana pots and Dark Runes."
+          },
+          {
+            "name": "Azgalor",
+            "npcId": 17842,
+            "description": "Fourth boss (still Horde base). Pit Lord with DOOM mechanic - marked players WILL DIE and spawn adds. Cannot prevent the death.",
+            "abilities": [
+              {
+                "name": "Rain of Fire",
+                "spellId": 31340,
+                "description": "Large fire AoE zone lasting 10 sec, dealing 2k fire damage per second. HANDLING: MOVE OUT immediately. Standard 'don't stand in fire.' Multiple can be active at once."
+              },
+              {
+                "name": "Doom",
+                "spellId": 31347,
+                "description": "Debuffs random player for 20 sec. When timer expires, player DIES (unavoidable) and spawns a Lesser Doomguard add. HANDLING: Player with Doom RUNS OUT of raid (so add spawns away from group). Accept you will die. Soulstone/Ankh/Battle Rez as needed. OT picks up spawned Doomguard."
+              },
+              {
+                "name": "Howl of Azgalor",
+                "spellId": 31344,
+                "description": "AoE silence lasting 5 sec. HANDLING: Healers pre-HoT before Howl. Use instant casts during silence. Brief interruption."
+              },
+              {
+                "name": "Cleave",
+                "spellId": 31345,
+                "description": "Frontal cleave. HANDLING: Tank faces away."
+              }
+            ],
+            "strategy": "WAVE PHASE: 8 waves. BOSS PHASE: Spread for Rain of Fire. When you get DOOM, run out - you WILL die, just make sure you die away from raid. OT picks up Doomguards. Battle rez Doom targets if needed. Accept deaths will happen. Fire resist helps but not critical."
+          },
+          {
+            "name": "Archimonde",
+            "npcId": 17968,
+            "description": "FINAL BOSS of Hyjal. No waves before him. Extremely unforgiving - deaths EMPOWER him. Every mechanic can instantly kill you. Requires near-perfect execution from all 25 players.",
+            "abilities": [
+              {
+                "name": "Grip of the Legion",
+                "spellId": 31972,
+                "description": "Random target DoT dealing 2.5k shadow damage every 2 sec for 5 sec. Stacks. HANDLING: DISPEL IMMEDIATELY. If it stacks to 2-3, player dies. Assign multiple dispellers. This is constant throughout fight."
+              },
+              {
+                "name": "Air Burst",
+                "spellId": 32014,
+                "description": "Launches random player 60+ yards into the air. Fall = death. HANDLING: USE TEARS OF THE GODDESS (quest item from Hyjal) to slow fall. Everyone must have Tears equipped in trinket slot. Click Tears DURING the fall. Mages can also Blink, Priests can Levitate."
+              },
+              {
+                "name": "Doomfire",
+                "spellId": 31903,
+                "description": "Spawns a trail of green fire that CHASES a random player, leaving persistent fire on ground. Deals 2.5k fire/sec. HANDLING: If Doomfire targets you, RUN AWAY from raid. Kite it in circles around the edge. Never run it through the group. Eventually it stops chasing."
+              },
+              {
+                "name": "Fear",
+                "spellId": 31970,
+                "description": "AoE fear for 8 sec. HANDLING: Fear Ward priests. Tremor Totems from shamans. Berserker Rage for warriors. Getting feared INTO Doomfire = death."
+              },
+              {
+                "name": "Soul Charge",
+                "spellId": 32045,
+                "description": "Whenever a player dies, Archimonde gains a Soul Charge (10 stacks = raid wipe). Also gains a random ability based on class: Warriors = AoE fire, Mages = AoE silence, etc. HANDLING: DON'T DIE. Every death makes him stronger. This is why survival is more important than DPS."
+              },
+              {
+                "name": "Finger of Death",
+                "spellId": 31984,
+                "description": "If any player is more than 75 yards from Archimonde OR out of LoS, instant death. HANDLING: Stay within range. Don't run too far kiting Doomfire. Don't hide behind trees."
+              },
+              {
+                "name": "Hand of Death",
+                "spellId": 35354,
+                "description": "10 minute enrage. Instant kills entire raid. HANDLING: Kill him before 10 min. Not usually an issue if people survive."
+              }
+            ],
+            "strategy": "PRE-FIGHT: Everyone needs Tears of the Goddess equipped. Assign 3-4 dispellers for Grip. Fear Wards on healers. Tremor Totems down. POSITIONING: Loose spread around Archimonde. Tank in center. EXECUTION: Dispel Grip instantly. When Air Burst hits you, USE TEARS mid-air. When Doomfire chases you, kite around edge - never through raid. Don't get feared into fire. DON'T DIE - deaths empower him. This is a survival check. Wipe at 1% happens if you lose too many people."
+          }
+        ]
+      },
+      "black_temple": {
+        "name": "Black Temple",
+        "size": 25,
+        "location": "Shadowmoon Valley",
+        "attunement": "Medallion of Karabor (removed in 2.4)",
+        "bosses": [
+          {
+            "name": "High Warlord Naj'entus",
+            "npcId": 22887,
+            "description": "First boss of Black Temple. Naga lord with unique shield mechanic requiring Impaling Spines to break. HP check - entire raid needs 8.5k+ HP buffed.",
+            "abilities": [
+              {
+                "name": "Tidal Shield",
+                "spellId": 39872,
+                "description": "Every 60 sec, Naj'entus shields himself absorbing 3 MILLION damage. While shielded, he's immune. HANDLING: Must break with Impaling Spine (throw at boss). Cannot DPS through it. Shield must break or raid wipes."
+              },
+              {
+                "name": "Impaling Spine",
+                "spellId": 39837,
+                "description": "Impales random player, dealing 4.5k physical + 2.5k bleed/3 sec. Player is stunned. Spine can be LOOTED from impaled player. HANDLING: Raid member near impaled player RIGHT-CLICKS them to loot the spine. Spine goes to inventory. When Tidal Shield goes up, person with spine throws it at boss (use item)."
+              },
+              {
+                "name": "Needle Spine",
+                "spellId": 39835,
+                "description": "Shoots spines at random players dealing 3k physical + 1k bleed DoT. Hits multiple targets. HANDLING: Cannot avoid. Healers keep raid topped. This is constant raid damage throughout fight."
+              },
+              {
+                "name": "Tidal Burst",
+                "spellId": 39878,
+                "description": "When Tidal Shield breaks, deals 8.5k frost damage to ENTIRE RAID. HANDLING: EVERYONE must be above 8.5k HP when shield breaks. Healers top raid before spine throw. Frost resist helps but HP is the check."
+              }
+            ],
+            "strategy": "POSITIONING: Spread around boss in circle. When someone gets Impaling Spine, nearby player loots it. When Tidal Shield goes up, HEALERS TOP EVERYONE above 8.5k HP, then spine holder throws spine. Burst immediately kills anyone below 8.5k. This is an HP/healing check. Bring frost resist pots if undergeared."
+          },
+          {
+            "name": "Supremus",
+            "npcId": 22898,
+            "description": "Massive abyssal in the courtyard. Two phases: Tank Phase (60 sec) and Kite Phase (60 sec). Relatively simple but punishes mistakes.",
+            "abilities": [
+              {
+                "name": "Hateful Strike",
+                "spellId": 41926,
+                "description": "TANK PHASE: Hits highest HP target in melee (besides MT) for 20k+ physical damage. HANDLING: Need 2-3 plate DPS or OTs in melee to soak. Rotate who has highest HP. If Hateful hits a squishy = death."
+              },
+              {
+                "name": "Molten Flame",
+                "spellId": 40253,
+                "description": "Blue fire trails on ground throughout fight. Deal 5k fire/sec. HANDLING: Don't stand in blue fire. Simple awareness check."
+              },
+              {
+                "name": "Volcanic Geyser",
+                "spellId": 42055,
+                "description": "KITE PHASE: Volcanoes erupt under random players dealing 6k fire damage. HANDLING: Keep moving during kite phase. Don't stand still."
+              },
+              {
+                "name": "Fixate (Gaze)",
+                "spellId": 40265,
+                "description": "KITE PHASE: Supremus fixates on random player and chases them. One-shots anyone he reaches. HANDLING: If fixated (skull appears on you), RUN. Kite him around the courtyard. Other players stay away from fixate target's path."
+              },
+              {
+                "name": "Molten Punch",
+                "spellId": 40126,
+                "description": "Fire damage to melee range + knockback. HANDLING: Tanks handle it. Minor."
+              }
+            ],
+            "strategy": "TANK PHASE (60 sec): MT tanks boss. 2-3 Hateful soakers (plate DPS) in melee rotate taking Hateful Strike. Ranged spread. Avoid blue fire. KITE PHASE (60 sec): Supremus fixates random player. Fixate target RUNS. Everyone else stays away. Avoid Volcanic Geysers. Phases alternate until dead."
+          },
+          {
+            "name": "Shade of Akama",
+            "npcId": 22841,
+            "description": "Unique encounter - Akama channels to break the Shade free while raid defends against endless adds. Once Shade is active, burn it down. Add management fight.",
+            "abilities": [
+              {
+                "name": "Channelers",
+                "description": "6 Ashtongue Channelers keep Shade immune. Akama fights them. HANDLING: Don't attack Channelers directly - Akama kills them over time. Focus on defending Akama from adds."
+              },
+              {
+                "name": "Ashtongue Defender",
+                "description": "Tank adds that spawn from sides. HANDLING: OTs pick up and tank away from Akama."
+              },
+              {
+                "name": "Ashtongue Elementalist",
+                "spellId": 42024,
+                "description": "Caster adds that cast Rain of Fire. HANDLING: Interrupt and kill. High priority."
+              },
+              {
+                "name": "Ashtongue Rogue",
+                "description": "Stealth adds that attack Akama. HANDLING: AoE to reveal. Kill quickly or they damage Akama."
+              },
+              {
+                "name": "Ashtongue Spiritbinder",
+                "spellId": 42027,
+                "description": "Healer adds that heal other adds. HANDLING: INTERRUPT AND KILL FIRST. Chain Spirit Heal is deadly."
+              },
+              {
+                "name": "Ashtongue Sorcerer",
+                "description": "Spawns during Shade phase. HANDLING: Kill before Shade."
+              }
+            ],
+            "strategy": "PHASE 1 (Channeling): Akama runs to Shade and channels. Adds spawn from both sides. KILL ORDER: Spiritbinder (interrupt heals) > Elementalist (interrupt Rain of Fire) > Rogues > Defenders. Protect Akama - if he dies, wipe. PHASE 2 (Shade Active): When all 6 Channelers die, Shade becomes attackable. BURN SHADE fast. He melees Akama and can kill him. Simple DPS race at this point."
+          },
+          {
+            "name": "Teron Gorefiend",
+            "npcId": 22871,
+            "description": "Death knight with GHOST MECHANIC. When you die to Shadow of Death, you become a ghost and must kill Shadowy Constructs. If constructs reach raid = wipe. Requires individual skill.",
+            "abilities": [
+              {
+                "name": "Incinerate",
+                "spellId": 40239,
+                "description": "Random target fire damage dealing 3-5k. HANDLING: Healers top people up. Cannot avoid."
+              },
+              {
+                "name": "Shadow of Death",
+                "spellId": 40251,
+                "description": "Debuffs random player for 55 sec. When debuff expires, player DIES and becomes a Ghost. HANDLING: Cannot prevent death. Accept it. When you become ghost, you get 4 abilities to kill Shadowy Constructs. PRACTICE THIS."
+              },
+              {
+                "name": "Crushing Shadows",
+                "spellId": 40243,
+                "description": "Frontal cone shadow damage to everyone in front of boss. HANDLING: Tank faces boss AWAY from raid. Only tank should be in front."
+              },
+              {
+                "name": "Doom Blossom",
+                "spellId": 40188,
+                "description": "Spawns shadow orbs (Doom Blossoms) that deal AoE shadow damage in radius. HANDLING: Move away from orbs. They're visible. Shadow resist helps."
+              },
+              {
+                "name": "Ghost Phase (Shadow of Death)",
+                "description": "As ghost you get: Spirit Lance (ranged damage), Spirit Chains (AoE root), Spirit Shield (absorb), Spirit Volley (AoE damage). 4 Shadowy Constructs spawn. HANDLING: USE YOUR ABILITIES to kill all 4 Constructs before your ghost timer expires. If ANY construct reaches the raid, it kills players and spawns more constructs = wipe."
+              }
+            ],
+            "strategy": "PRACTICE GHOST PHASE before attempting boss. Use online simulators. Normal Phase: Tank faces away. Spread for Doom Blossom. DPS boss. Ghost Phase: When you become ghost, IMMEDIATELY start killing Constructs with your 4 abilities. Spirit Chains to root them, Spirit Lance/Volley to damage. Kill all 4. This fight is easy IF everyone can handle ghost phase. One person failing = wipe."
+          },
+          {
+            "name": "Gurtogg Bloodboil",
+            "npcId": 22948,
+            "description": "Fel orc with Bloodboil stacking DoT and Fel Rage fixation. Requires 3 ranged groups rotating for Bloodboil stacks. Complex positioning fight.",
+            "abilities": [
+              {
+                "name": "Bloodboil",
+                "spellId": 42005,
+                "description": "Every 10 sec, hits the 5 FURTHEST players with physical DoT dealing 600/2 sec for 24 sec. STACKS. HANDLING: 3 groups of 5 ranged players rotate being furthest. Group 1 soaks 3-4 Bloodboils, then rotates out. Group 2 takes over. Then Group 3. Repeat. Stacking too high = death."
+              },
+              {
+                "name": "Acidic Wound",
+                "spellId": 40484,
+                "description": "Stacking debuff on tank reducing armor by 500 per stack. HANDLING: Tank swap at 5-6 stacks. Two tanks required."
+              },
+              {
+                "name": "Arcing Smash",
+                "spellId": 40599,
+                "description": "Frontal cone dealing 8k physical. HANDLING: Tank faces away from raid. Only tank in front."
+              },
+              {
+                "name": "Fel Rage",
+                "spellId": 40604,
+                "description": "Every 60 sec, Bloodboil fixates random player, giving them 10k armor, 200% damage, and 100% healing. Boss ignores threat and attacks them. HANDLING: Fel Rage target becomes temporary tank. Healers SPAM them. Other tanks can taunt but it won't work. Lasts 30 sec."
+              },
+              {
+                "name": "Fel Acid Breath",
+                "spellId": 40508,
+                "description": "During Fel Rage, boss breathes acid in cone at Fel Rage target. HANDLING: Fel Rage target faces boss away from raid (like a tank)."
+              },
+              {
+                "name": "Insignificance",
+                "spellId": 40618,
+                "description": "During Fel Rage, reduces all threat to 0 for non-Fel Rage players. HANDLING: After Fel Rage ends, tanks rebuild threat carefully."
+              }
+            ],
+            "strategy": "SETUP: 3 groups of 5 ranged at far distance. Melee + tanks close. Group 1 starts furthest, soaks 3 Bloodboils, rotates behind Group 2. Repeat. TANKS: Swap at 5-6 Acidic stacks. FEL RAGE: When random player gets Fel Rage, they become the 'tank.' Healers spam them. Face boss away. After 30 sec, normal tank taunts back. Complex coordination but manageable with practice."
+          },
+          {
+            "name": "Reliquary of Souls",
+            "npcId": 22856,
+            "description": "Three-phase fight against three Essences: Suffering (no healing works), Desire (self-damage reflection), Anger (stacking rage = raid wipe). Each phase has unique mechanics.",
+            "abilities": [
+              {
+                "name": "Aura of Suffering (P1)",
+                "spellId": 41292,
+                "description": "ALL HEALING reduced to 0. Raid takes constant shadow damage. Mana drains. HANDLING: NO HEALING WORKS. This is a DPS race. Tanks use Shield Block/defensive CDs. Healthstones/pots still work. Kill Essence of Suffering fast."
+              },
+              {
+                "name": "Frenzy (P1)",
+                "spellId": 41305,
+                "description": "Essence of Suffering frenzies, increasing attack speed. HANDLING: Tank CDs. Tranq Shot if available."
+              },
+              {
+                "name": "Aura of Desire (P2)",
+                "spellId": 41350,
+                "description": "50% of all damage dealt is reflected back to attacker. HANDLING: DPS MUST THROTTLE. Don't use big cooldowns. Healers keep DPS alive through reflection. Warlocks excellent (Searing Pain is cheap)."
+              },
+              {
+                "name": "Deaden (P2)",
+                "spellId": 41410,
+                "description": "Increases damage taken by target by 100% for 10 sec. HANDLING: STOP DPS when Deaden goes out or you one-shot yourself with reflection. Resume after Deaden fades."
+              },
+              {
+                "name": "Spirit Shock (P2)",
+                "spellId": 41426,
+                "description": "8k shadow damage to random target. HANDLING: Interrupt with Kick/Pummel/Earth Shock. Assign interrupters."
+              },
+              {
+                "name": "Aura of Anger (P3)",
+                "spellId": 41337,
+                "description": "Boss gains stacking damage buff AND deals increasing AoE shadow damage to raid. Ramps quickly. HANDLING: DPS RACE. Boss gets stronger every second. Must kill before he overwhelms healers. Pop ALL cooldowns."
+              },
+              {
+                "name": "Spite (P3)",
+                "spellId": 41376,
+                "description": "Splits 13.5k damage among 3 random players. HANDLING: If fewer than 3 players alive = instant death. Keep raid alive."
+              },
+              {
+                "name": "Soul Scream (P3)",
+                "spellId": 41545,
+                "description": "AoE mana burn. HANDLING: Healers conserve mana. Use pots/runes. Short phase if DPS is good."
+              }
+            ],
+            "strategy": "P1 (Suffering): NO HEALING. DPS race. Tank uses CDs. Kill fast. P2 (Desire): 50% damage reflected. THROTTLE DPS. Stop on Deaden. Interrupt Spirit Shock. Steady damage wins. P3 (Anger): ALL-OUT BURN. Heroism/Bloodlust. All cooldowns. Boss enrages over time. Kill before he kills you. This fight tests all three roles."
+          },
+          {
+            "name": "Mother Shahraz",
+            "npcId": 22947,
+            "description": "Shivarra priestess in Halls of Anguish. REQUIRES SHADOW RESISTANCE GEAR on entire raid (250+ SR recommended). Fatal Attraction is the main wipe mechanic.",
+            "abilities": [
+              {
+                "name": "Fatal Attraction",
+                "spellId": 40869,
+                "description": "Teleports 3 random players to same spot. After 3 sec, they explode dealing 11k shadow damage to each other per tick. Chain reaction. HANDLING: When teleported, IMMEDIATELY RUN APART from the other 2 players. Sprint/Blink/movement abilities. If you stay stacked = mutual death."
+              },
+              {
+                "name": "Saber Lash",
+                "spellId": 40810,
+                "description": "Physical attack dealing 60k+ damage SPLIT among the 3 closest targets to main target. HANDLING: THREE TANKS stack together. Saber Lash splits = 20k each (survivable). One tank = dead."
+              },
+              {
+                "name": "Prismatic Aura",
+                "spellId": 40880,
+                "description": "Cycles through random resistance auras every 15 sec. HANDLING: Shadow resist is always best since her main damage is shadow. Other resists help occasionally."
+              },
+              {
+                "name": "Silencing Shriek",
+                "spellId": 40823,
+                "description": "Frontal cone 10 sec silence. HANDLING: Tanks face boss away. Only tanks get silenced."
+              },
+              {
+                "name": "Sinful Beam/Wicked Beam/Vile Beam",
+                "spellId": 40859,
+                "description": "Random beam attacks on raid dealing various damage types. HANDLING: Shadow resist helps. Healers heal through it."
+              }
+            ],
+            "strategy": "GEAR: Everyone needs 250+ shadow resist (Heart of Darkness crafted gear). POSITIONING: 3 tanks stacked at boss. Raid spread behind in loose arc. When Fatal Attraction teleports you, RUN APART from the other 2 targets immediately. Saber Lash is why you need 3 tanks. Rest is healing through damage with SR gear."
+          },
+          {
+            "name": "The Illidari Council",
+            "npcId": 22949,
+            "description": "Four-boss council: Gathios the Shatterer (paladin), High Nethermancer Zerevor (mage), Lady Malande (priest), Veras Darkshadow (rogue). SHARED HEALTH POOL. All die together.",
+            "abilities": [
+              {
+                "name": "Circle of Healing (Malande)",
+                "spellId": 41455,
+                "description": "Lady Malande heals all Council members for 100k. 2.5 sec cast. HANDLING: INTERRUPT. This is top priority. Assign 2-3 dedicated interrupters on Malande. Every heal that lands extends the fight significantly."
+              },
+              {
+                "name": "Divine Wrath (Malande)",
+                "spellId": 41472,
+                "description": "Reflective shield on Malande dealing holy damage to attackers. HANDLING: Stop attacking Malande when shield is up. Wait for it to fade."
+              },
+              {
+                "name": "Reflective Shield (Malande)",
+                "spellId": 41475,
+                "description": "Absorbs damage and reflects to attacker. HANDLING: Don't DPS Malande during shield."
+              },
+              {
+                "name": "Flamestrike (Zerevor)",
+                "spellId": 41481,
+                "description": "Ground-targeted fire AoE. HANDLING: Move out of the fire circle. Standard AoE avoidance."
+              },
+              {
+                "name": "Blizzard (Zerevor)",
+                "spellId": 41482,
+                "description": "Ground-targeted frost AoE with slow. HANDLING: Move out. Don't stand in frost."
+              },
+              {
+                "name": "Arcane Bolt (Zerevor)",
+                "spellId": 41483,
+                "description": "Zerevor's main attack, interruptible. HANDLING: MAGE TANK required. Mage spellsteals Dampen Magic from Zerevor and tanks him at range."
+              },
+              {
+                "name": "Vanish (Veras)",
+                "spellId": 41476,
+                "description": "Veras vanishes and reappears behind random cloth wearer, backstabbing for 8k+ damage. HANDLING: Clothies stay spread. When Veras reappears, he attacks his target briefly then returns to his tank."
+              },
+              {
+                "name": "Deadly Poison (Veras)",
+                "spellId": 41485,
+                "description": "Stacking poison DoT. HANDLING: Dispel poison. Druids/Paladins assigned."
+              },
+              {
+                "name": "Blessing of Spell Warding (Gathios)",
+                "spellId": 41451,
+                "description": "Gathios buffs a Council member with spell immunity. HANDLING: Switch DPS to unprotected targets."
+              },
+              {
+                "name": "Blessing of Protection (Gathios)",
+                "spellId": 41450,
+                "description": "Gathios buffs a Council member with physical immunity. HANDLING: Casters DPS the protected target; melee switch off."
+              },
+              {
+                "name": "Judgement (Gathios)",
+                "spellId": 41467,
+                "description": "Gathios judges a player, dealing holy damage. HANDLING: Heal through it."
+              },
+              {
+                "name": "Consecration (Gathios)",
+                "spellId": 41541,
+                "description": "Ground AoE holy damage. HANDLING: Don't stand in it. Tank him away from raid."
+              }
+            ],
+            "strategy": "TANKS: Warrior tanks Gathios (kite for Consecration). Mage tanks Zerevor (spellsteal Dampen Magic). Rogue/OT handles Veras. Paladin/Priest healer tanks Malande (just takes hits). POSITIONING: Spread all 4 bosses around room. PRIORITY: Interrupt Malande's heals. Always. Clothies watch for Veras Vanish. DPS whoever isn't protected. They share HP so it doesn't matter who you hit."
+          },
+          {
+            "name": "Illidan Stormrage",
+            "npcId": 22917,
+            "description": "THE BETRAYER. Final boss of Black Temple. Five phases: P1 Normal, P2 Flames of Azzinoth, P3 Normal, P4 Demon Form, P5 Maiev arrives. Most complex TBC fight alongside Kael'thas.",
+            "abilities": [
+              {
+                "name": "Shear",
+                "spellId": 41032,
+                "description": "P1/P3/P5: Reduces tank's max HP by 60% for 7 sec. HANDLING: WARRIOR TANKS ONLY. Shield Block negates Shear. Druid/Paladin tanks will die. Warrior blocks every Shear. If Shear lands = tank at 40% HP = dead."
+              },
+              {
+                "name": "Draw Soul",
+                "spellId": 40904,
+                "description": "P1/P3/P5: Frontal cone dealing 5k shadow damage, healing Illidan for 100k per target hit. HANDLING: Tank faces Illidan AWAY from raid. Only tank in front."
+              },
+              {
+                "name": "Flame Crash",
+                "spellId": 40832,
+                "description": "P1/P3/P5: Targets random player with fire damage and leaves persistent blue flame on ground. HANDLING: Move out of fire. Don't stack blue flames in one spot."
+              },
+              {
+                "name": "Parasitic Shadowfiend",
+                "spellId": 41917,
+                "description": "P1/P3/P5: Debuffs random player with DoT. When debuff expires, spawns 2 Shadowfiends that attack raid. HANDLING: Kill Shadowfiends immediately. If ignored they multiply and overwhelm raid."
+              },
+              {
+                "name": "Summon Flames of Azzinoth (P2)",
+                "spellId": 39855,
+                "description": "At 65%, Illidan throws his Warglaives at the ground, summoning 2 Flames of Azzinoth. HANDLING: TWO FIRE RESIST TANKS required (365 FR). One tank per Flame. Keep Flames separated. Kill both to end P2."
+              },
+              {
+                "name": "Blaze (P2)",
+                "spellId": 40637,
+                "description": "Flames of Azzinoth leave fire trails. HANDLING: FR tanks kite slowly. Don't stand in fire."
+              },
+              {
+                "name": "Eye Beam (P2)",
+                "spellId": 40018,
+                "description": "Illidan hovers and shoots green beam across platform in a line. HANDLING: AVOID THE BEAM. It tracks and turns. Watch where it's pointing and move perpendicular. One-shots non-tanks."
+              },
+              {
+                "name": "Dark Barrage (P2)",
+                "spellId": 40585,
+                "description": "Illidan channels shadow damage on random target during P2. HANDLING: Heal through it. Cannot avoid."
+              },
+              {
+                "name": "Demon Form (P4)",
+                "spellId": 41083,
+                "description": "At 30%, Illidan transforms into Demon. Different abilities. HANDLING: P4 lasts 60 sec. Warlock tank required (fire resist + Searing Pain threat). Phase cycles with P3."
+              },
+              {
+                "name": "Shadow Blast (P4)",
+                "spellId": 41078,
+                "description": "Demon form attack on warlock tank. HANDLING: Warlock tank with shadow resist. Healers spam them."
+              },
+              {
+                "name": "Flame Burst (P4)",
+                "spellId": 41131,
+                "description": "AoE fire damage every 10 sec during demon form. HANDLING: Raid stacks for AoE heals. Fire resist helps."
+              },
+              {
+                "name": "Shadow Demons (P4)",
+                "spellId": 41117,
+                "description": "Summons 4 Shadow Demons that fixate random players. If they reach target = paralyze + death. HANDLING: KILL SHADOW DEMONS IMMEDIATELY. They're top priority. Ranged should be ready to switch instantly."
+              },
+              {
+                "name": "Maiev Shadowsong (P5)",
+                "description": "At 30%, Maiev joins the fight. She cages Illidan periodically, stunning him. HANDLING: FREE DPS. Burn Illidan during cage. P5 is basically P3 with help."
+              },
+              {
+                "name": "Enrage",
+                "spellId": 40683,
+                "description": "25 minute enrage timer. HANDLING: Should never hit this with proper DPS."
+              }
+            ],
+            "strategy": "P1 (100-65%): Warrior tank (Shield Block for Shear). Face away. Spread for Flame Crash. Kill Shadowfiends. P2 (65% - Flames dead): 2 Fire Resist tanks on Flames of Azzinoth. AVOID EYE BEAM. Raid kills both Flames. P3 (Flames dead - 30%): Same as P1. P4 (30% - alternates with P3): Demon form. Warlock tanks. KILL SHADOW DEMONS. Stack for Flame Burst heals. P5 (30% with Maiev): Maiev helps. Same as P3 but easier. Burn him. This is the ultimate TBC challenge."
+          }
+        ]
+      }
+    }
+  },
+  "phase4": {
+    "name": "Phase 4",
+    "raids": {
+      "zul_aman": {
+        "name": "Zul'Aman",
+        "size": 10,
+        "location": "Ghostlands",
+        "attunement": "None",
+        "bosses": [
+          {
+            "name": "Akil'zon",
+            "npcId": 23574,
+            "description": "Eagle Avatar boss. Has a timed rescue mechanic - save the hostage before time expires for bonus loot. Electrical Storm is the key mechanic.",
+            "abilities": [
+              {
+                "name": "Static Disruption",
+                "spellId": 43622,
+                "description": "Random target nature damage dealing 3.5k + creates a Static Disruption zone that damages players inside. HANDLING: Spread 10+ yards apart. Move out of the zone if it spawns on you."
+              },
+              {
+                "name": "Electrical Storm",
+                "spellId": 43648,
+                "description": "Akil'zon lifts a random player into the air. Everyone NOT under that player takes 2.5k nature damage/sec. HANDLING: EVERYONE IMMEDIATELY STACK UNDER the lifted player. The lifted player acts as an umbrella. If you're not under them = death in seconds."
+              },
+              {
+                "name": "Call Lightning",
+                "spellId": 43661,
+                "description": "Chain lightning dealing 3.5k nature, jumps to nearby targets. HANDLING: Stay spread when NOT in Electrical Storm. Chain breaks at 10 yards."
+              },
+              {
+                "name": "Gust of Wind",
+                "spellId": 43621,
+                "description": "Knockback on random player. HANDLING: Don't stand near ledges. Minor annoyance."
+              },
+              {
+                "name": "Soaring Eagles",
+                "description": "Eagles periodically spawn and attack random players. HANDLING: Ranged kill eagles. They're squishy but add up if ignored."
+              }
+            ],
+            "strategy": "SPREAD 10 yards apart. When Electrical Storm begins, EVERYONE runs under the floating player and stacks. Wait for storm to end, then spread again. Kill eagles when they spawn. Simple fight with one punishing mechanic. If people don't stack during Storm = wipe."
+          },
+          {
+            "name": "Nalorakk",
+            "npcId": 23576,
+            "description": "Bear Avatar boss. Alternates between Troll Form and Bear Form every 45 sec. Bear Form has devastating tank combo requiring tank swaps.",
+            "abilities": [
+              {
+                "name": "Mangle (Bear)",
+                "spellId": 42389,
+                "description": "BEAR FORM: Bleed DoT on tank dealing 1.7k/2 sec for 60 sec. Increases Lacerating Slash damage by 100%. HANDLING: THIS + Lacerating Slash = dead tank. Must swap tanks between Bear phases."
+              },
+              {
+                "name": "Lacerating Slash (Bear)",
+                "spellId": 42395,
+                "description": "BEAR FORM: 1.8k bleed/2 sec for 18 sec. Doubled by Mangle. HANDLING: If tank has Mangle + Lacerating = 7k+ damage/tick. Tank swap is mandatory."
+              },
+              {
+                "name": "Deafening Roar (Bear)",
+                "spellId": 42398,
+                "description": "BEAR FORM: AoE silence for 2 sec. HANDLING: Brief interruption. Healers pre-HoT."
+              },
+              {
+                "name": "Brutal Strike (Troll)",
+                "spellId": 42384,
+                "description": "TROLL FORM: Heavy physical hit on tank. HANDLING: Normal tanking. Less dangerous than Bear form."
+              },
+              {
+                "name": "Surge (Troll)",
+                "spellId": 42402,
+                "description": "TROLL FORM: Charges the furthest player dealing 3.5k physical + temporary threat drop. HANDLING: Ranged spread. Designated Surge soaker stays furthest if needed. OT ready to taunt after Surge."
+              }
+            ],
+            "strategy": "Two tanks required. Tank 1 takes first Bear phase (gets Mangle + Lacerating). Tank 2 taunts for Troll phase. Tank 2 takes second Bear phase. Tanks alternate. The Mangle/Lacerating combo will kill any tank who takes two Bear phases in a row. Ranged stay spread for Surge."
+          },
+          {
+            "name": "Jan'alai",
+            "npcId": 23578,
+            "description": "Dragonhawk Avatar boss. Egg management fight - Hatchers release dragonhawks from eggs. At 25% ALL remaining eggs hatch. Must balance killing hatchers vs having too many eggs at 25%.",
+            "abilities": [
+              {
+                "name": "Flame Breath",
+                "spellId": 43582,
+                "description": "Frontal cone fire dealing 4-6k damage. HANDLING: Tank faces boss away from raid."
+              },
+              {
+                "name": "Fire Bomb",
+                "spellId": 43501,
+                "description": "Throws bombs creating fire patches on ground. Eventually covers most of the floor. HANDLING: Stay mobile. Move out of fire. Safe spots shrink over time."
+              },
+              {
+                "name": "Amani'shi Hatcher",
+                "description": "Two Hatchers spawn from sides and run to egg platforms. They hatch eggs, releasing Dragonhawk adds. HANDLING: Let ONE Hatcher reach eggs and release SOME dragonhawks (manage add count). Kill other Hatcher. Goal: ~20 eggs remaining at 25%."
+              },
+              {
+                "name": "Hatch All Eggs (25%)",
+                "spellId": 43144,
+                "description": "At 25% HP, Jan'alai hatches ALL remaining eggs. HANDLING: If 40 eggs remain = 40 adds = wipe. Ideal: 15-20 eggs remaining. SAVE AOE COOLDOWNS for this moment."
+              },
+              {
+                "name": "Enrage",
+                "spellId": 44779,
+                "description": "5 minute enrage. HANDLING: Must kill before timer. Not usually an issue."
+              }
+            ],
+            "strategy": "Let Hatchers release eggs gradually to manage add count. Kill dragonhawks as they spawn (AoE). At 35-30%, stop letting Hatchers through. At 25%, all remaining eggs hatch - POP ALL AOE COOLDOWNS. Tank picks up adds, AoE burns them, then finish boss. Fire bomb safe spots matter in extended fights."
+          },
+          {
+            "name": "Halazzi",
+            "npcId": 23577,
+            "description": "Lynx Avatar boss. At 75/50/25% HP, splits into Troll Halazzi + Spirit Lynx. Kill Lynx to force merge. Saber Lash requires two tanks stacking.",
+            "abilities": [
+              {
+                "name": "Saber Lash",
+                "spellId": 43267,
+                "description": "MERGED FORM: Hits for 14-17k physical, SPLIT between the two closest targets. HANDLING: TWO TANKS stack together. Split damage = 7-8k each (survivable). One tank = death."
+              },
+              {
+                "name": "Frenzy",
+                "spellId": 43139,
+                "description": "MERGED FORM: Increased attack speed by 30%. HANDLING: Tank CDs if needed. Heal through it."
+              },
+              {
+                "name": "Corrupted Lightning Totem",
+                "spellId": 43302,
+                "description": "SPLIT FORM: Drops totem that chain lightnings raid for 2k nature damage. HANDLING: KILL TOTEM IMMEDIATELY. It's priority target during split."
+              },
+              {
+                "name": "Flame Shock",
+                "spellId": 43303,
+                "description": "SPLIT FORM: Fire DoT on random player. HANDLING: Dispel if needed. Minor damage."
+              },
+              {
+                "name": "Spirit Lynx",
+                "description": "SPLIT FORM: Spirit of the Lynx has 20% of Halazzi's HP. HANDLING: Kill Lynx to force merge. DPS burns Lynx, ignore Halazzi during split."
+              }
+            ],
+            "strategy": "Two tanks stack for Saber Lash. At 75/50/25%, Halazzi splits. KILL CORRUPTED TOTEM first, then burn Spirit Lynx. When Lynx dies, they merge. Resume Saber Lash tanking. Repeat at each threshold. Simple fight with clear phases."
+          },
+          {
+            "name": "Hex Lord Malacrass",
+            "npcId": 24239,
+            "description": "Hex Lord with 4 random adds (from pool of 8). Steals abilities from a random raid member's CLASS. Abilities vary based on who he drains.",
+            "abilities": [
+              {
+                "name": "Spirit Bolts",
+                "spellId": 43383,
+                "description": "Channels shadow bolts at entire raid dealing 1k shadow damage/sec for 10 sec. HANDLING: Healers AoE heal through it. Cannot interrupt. Stack for Chain Heal/Circle of Healing."
+              },
+              {
+                "name": "Drain Power",
+                "spellId": 44131,
+                "description": "Drains 1% of all stats from raid every 2 sec for 8 sec. HANDLING: Cannot prevent. He gains the stats. Minor issue."
+              },
+              {
+                "name": "Siphon Soul",
+                "spellId": 43501,
+                "description": "Steals abilities from random raid member's CLASS. Gains 2-3 abilities from that class. HANDLING: Varies by class stolen. See below."
+              },
+              {
+                "name": "Stolen: Paladin",
+                "description": "Gains Consecration (move boss out), Avenging Wrath (increased damage)."
+              },
+              {
+                "name": "Stolen: Mage",
+                "description": "Gains Frost Nova (frozen in place), Frostbolt (interruptible)."
+              },
+              {
+                "name": "Stolen: Warrior",
+                "description": "Gains Whirlwind (melee run out), Spell Reflection (stop casting)."
+              },
+              {
+                "name": "Stolen: Warlock",
+                "description": "Gains Corruption (dispel), Rain of Fire (move out)."
+              },
+              {
+                "name": "Stolen: Priest",
+                "description": "Gains Psychic Scream (fear - tremor/ward), Mind Control (CC the MC'd player)."
+              },
+              {
+                "name": "Stolen: Shaman",
+                "description": "Gains Fire Nova Totem (kill totem), Healing Wave (interrupt)."
+              },
+              {
+                "name": "Stolen: Hunter",
+                "description": "Gains Freezing Trap (dispel), Snake Trap (AoE snakes)."
+              },
+              {
+                "name": "Stolen: Druid",
+                "description": "Gains Lifebloom (purge/interrupt), Thorns (minor damage)."
+              },
+              {
+                "name": "Stolen: Rogue",
+                "description": "Gains Blind (dispel), Slice and Dice (increased speed)."
+              }
+            ],
+            "strategy": "KILL 4 ADDS FIRST. Each add has different abilities - CC or burn. Once adds dead, focus Malacrass. Watch for Siphon Soul - he announces which class. React to stolen abilities (interrupt heals, dispel CC, move from AoE). Stack for Spirit Bolts healing. Knowing class abilities helps predict his moves."
+          },
+          {
+            "name": "Zul'jin",
+            "npcId": 23863,
+            "description": "FINAL BOSS. Warlord Zul'jin cycles through 5 animal forms at 80/60/40/20% HP: Troll > Bear > Eagle > Lynx > Dragonhawk. Each form has unique lethal mechanic.",
+            "abilities": [
+              {
+                "name": "Grievous Throw (Troll)",
+                "spellId": 43093,
+                "description": "TROLL (100-80%): Bleed on random player dealing 2.5k/2 sec until healed to full. HANDLING: HEAL TARGET TO 100% HP to remove bleed. If not topped = bleeds to death."
+              },
+              {
+                "name": "Whirlwind (Troll)",
+                "spellId": 44949,
+                "description": "TROLL: Spins dealing 3-4k damage to melee. HANDLING: Melee run out during Whirlwind."
+              },
+              {
+                "name": "Creeping Paralysis (Bear)",
+                "spellId": 43095,
+                "description": "BEAR (80-60%): Stacking debuff slowing movement/attack by 20% per stack, roots at 5 stacks. HANDLING: DISPEL before 5 stacks. If rooted during bear charge = dead. Cleanse/Abolish constantly."
+              },
+              {
+                "name": "Overpower (Bear)",
+                "spellId": 43456,
+                "description": "BEAR: Heavy physical hit after dodged attack. HANDLING: Tank doesn't dodge (stance dance to Berserker if warrior)."
+              },
+              {
+                "name": "Energy Storm (Eagle)",
+                "spellId": 43983,
+                "description": "EAGLE (60-40%): Zul'jin floats and creates electric vortex. Every time ANYONE casts a spell, entire raid takes 1.2k nature damage. HANDLING: STOP CASTING. No heals (use bandages), no DPS spells. Melee white damage only. Hunters can shoot. Most wipe-causing phase."
+              },
+              {
+                "name": "Claw Rage (Lynx)",
+                "spellId": 43149,
+                "description": "LYNX (40-20%): Fixates random player, attacks them rapidly for 8k+ damage over duration. HANDLING: Spam heal the fixated target. They can't kite - just survive through healing."
+              },
+              {
+                "name": "Lynx Rush (Lynx)",
+                "spellId": 43153,
+                "description": "LYNX: Charges random player. HANDLING: Spread loosely. Heal charge targets."
+              },
+              {
+                "name": "Flame Whirl (Dragonhawk)",
+                "spellId": 43213,
+                "description": "DRAGONHAWK (20-0%): Fire columns spiral outward from Zul'jin. HANDLING: Move between columns. Don't get hit."
+              },
+              {
+                "name": "Flame Breath (Dragonhawk)",
+                "spellId": 43215,
+                "description": "DRAGONHAWK: Frontal cone fire. HANDLING: Don't stand in front of boss."
+              },
+              {
+                "name": "Pillar of Fire (Dragonhawk)",
+                "spellId": 43216,
+                "description": "DRAGONHAWK: Fire falls on random players. HANDLING: Move out of fire. Burn boss fast - room gets covered."
+              }
+            ],
+            "strategy": "TROLL: Heal Grievous Throw targets to full. Melee avoid Whirlwind. BEAR: Dispel Creeping Paralysis constantly. Don't let anyone hit 5 stacks. EAGLE: STOP ALL CASTING. Melee auto-attack. Hunters shoot. No heals unless someone will die. LYNX: Spam heal Claw Rage target. DRAGONHAWK: Avoid fire, burn boss. This is the ZA skill check - Eagle phase wipes most groups."
+          }
+        ]
+      }
+    }
+  },
+  "phase5": {
+    "name": "Phase 5",
+    "raids": {
+      "sunwell_plateau": {
+        "name": "Sunwell Plateau",
+        "size": 25,
+        "location": "Isle of Quel'Danas",
+        "attunement": "None",
+        "bosses": [
+          {
+            "name": "Kalecgos",
+            "npcId": 24850,
+            "description": "Blue dragon corrupted by the demon Sathrovarr. Unique two-realm encounter requiring coordination between dragon and demon realm groups.",
+            "abilities": [
+              {
+                "name": "Arcane Buffet",
+                "spellId": 45018,
+                "description": "Stacks arcane damage debuff every 8 seconds in dragon realm. Each stack increases arcane damage taken by 500. HANDLING: Portal to demon realm before reaching 10+ stacks. Coordinate rotations so you portal before stacks become lethal. Track your stacks carefully."
+              },
+              {
+                "name": "Frost Breath",
+                "spellId": 44799,
+                "description": "Frontal cone dealing 7,000-9,000 Frost damage. HANDLING: Only tanks in front of Kalecgos. Ranged and healers position to sides or behind. Tank faces dragon away from raid."
+              },
+              {
+                "name": "Spectral Blast",
+                "spellId": 44869,
+                "description": "Creates portal sending nearby players to demon realm. Targets random player, teleporting them and anyone within 6 yards. HANDLING: Spread loosely (6+ yards apart) to control who goes through portal. Only 1-2 people should enter per portal. Coordinate portal entries with Arcane Buffet stacks."
+              },
+              {
+                "name": "Corruption: Horror",
+                "spellId": 45034,
+                "description": "Sathrovarr fears all players in demon realm for 4 seconds. HANDLING: Tremor Totem, Fear Ward on tank. Maintain high HP before fear in case of positioning issues. Healers prepare for chaotic movement after fear."
+              },
+              {
+                "name": "Shadow Bolt Volley",
+                "spellId": 45031,
+                "description": "Sathrovarr hits all players in demon realm for 3,000-4,000 Shadow damage. HANDLING: Keep demon realm group healed. Shadow resist gear can help reduce damage. Cannot be interrupted - just heal through it."
+              },
+              {
+                "name": "Curse of Boundless Agony",
+                "spellId": 45032,
+                "description": "Debuff dealing increasing shadow damage every 2 seconds. Damage doubles each tick. HANDLING: Decurse IMMEDIATELY - this is top priority. Mages/Druids must have decurse on easy keybind. Unremoved curse will kill players quickly."
+              }
+            ],
+            "strategy": "TWO-REALM COORDINATION: Raid splits between dragon realm (fighting Kalecgos) and demon realm (fighting Sathrovarr). Use portals to rotate when Arcane Buffet stacks high. CRITICAL: Both Kalecgos and Sathrovarr must die within 10 seconds of each other or they heal to full. Keep damage even on both - use raid marks or DBM to track both health pools. Organize 3 groups rotating through portals systematically."
+          },
+          {
+            "name": "Brutallus",
+            "npcId": 24882,
+            "description": "Pure DPS race with extremely tight 6-minute enrage timer. Requires approximately 22,000 raid DPS. Often considered the 'gear check' boss of Sunwell.",
+            "abilities": [
+              {
+                "name": "Meteor Slash",
+                "spellId": 45150,
+                "description": "Deals massive physical damage split among all targets in front of Brutallus (approx 20,000 damage divided). Also applies debuff increasing Fire damage taken by 75% for 12 seconds. HANDLING: ENTIRE RAID except current tank stacks in front. More people = less damage per person. With Burn debuff, DO NOT stand in Meteor Slash group until debuff fades."
+              },
+              {
+                "name": "Burn",
+                "spellId": 46394,
+                "description": "Places fire DoT on random player dealing 3,000 Fire damage every 2 seconds for 60 seconds. Spreads to nearby players within 2 yards. Combined with Meteor Slash debuff = lethal damage. HANDLING: If you get Burn, RUN OUT OF MELEE immediately to designated Burn spot. Stay away from ALL players. The DoT ticks hard, especially with Fire damage debuff - healers assign dedicated Burn healers."
+              },
+              {
+                "name": "Stomp",
+                "spellId": 45185,
+                "description": "AoE knockback dealing 8,000-10,000 physical damage to current target and nearby players. 10-yard range. HANDLING: Only tanks and melee should be in Stomp range. Healers must be ready for spike damage on tanks. Use cooldowns if low health when Stomp incoming."
+              }
+            ],
+            "strategy": "PURE DPS RACE: Need ~22,000 raid DPS to beat 6-minute enrage. Everyone stacks in front for Meteor Slash EXCEPT: Burn targets run out, off-tank stays behind. TANK ROTATION: Taunt swap after each Meteor Slash because of fire damage debuff. Burn management is key - designated Burn spots on left and right, affected players immediately relocate. NO room for deaths - every DPS matters for timer. Use Heroism/Bloodlust early and again if Drums available."
+          },
+          {
+            "name": "Felmyst",
+            "npcId": 25038,
+            "description": "Reanimated corpse of the blue dragon Madrigosa. Alternates between ground and air phases. Tight DPS requirements with punishing mechanics.",
+            "abilities": [
+              {
+                "name": "Cleave",
+                "spellId": 19983,
+                "description": "Hits tank and nearby targets for 8,000-10,000 physical damage. HANDLING: Only tanks in front of boss. Melee position at rear legs or flanks, never directly in front."
+              },
+              {
+                "name": "Corrosion",
+                "spellId": 45866,
+                "description": "Stacking debuff reducing tank's armor by 10% per stack. Lasts 10 seconds, stacks quickly. HANDLING: Tank swap at 5-6 stacks or when comfortable. Tanks must communicate. Off-tank taunts, debuffed tank backs off until stacks drop."
+              },
+              {
+                "name": "Gas Nova",
+                "spellId": 45855,
+                "description": "Raid-wide AoE dealing 2,500 Shadow damage to everyone plus silencing for 1 second. HANDLING: Healers anticipate and pre-heal. Shadow resist helps. Keep raid topped before Gas Nova. Silence interrupts heals so stay healthy."
+              },
+              {
+                "name": "Encapsulate",
+                "spellId": 45665,
+                "description": "Encases random player in demonic energy, stunning them and dealing 3,500 Shadow damage every 2 seconds for 6 seconds. Also damages nearby players. HANDLING: If encapsulated, you can't do anything. Nearby players move away. Healers keep Encapsulate target alive. Ranged stay loosely spread to minimize splash."
+              },
+              {
+                "name": "Demonic Vapor",
+                "spellId": 45402,
+                "description": "AIR PHASE: Felmyst breathes green beam in a line across the platform. Anyone hit takes 2,000 damage/second and spawns Unyielding Dead skeletons. HANDLING: Watch where beam starts, run perpendicular to its path. Pre-position near edges to have escape room. Skeletons must be picked up and killed quickly - they cast Fog of Corruption."
+              },
+              {
+                "name": "Fog of Corruption",
+                "spellId": 45717,
+                "description": "AIR PHASE: Green fog clouds spawning from skeletons. Anyone touching fog is instantly mind controlled permanently (until killed). MC'd players buff nearby enemies. HANDLING: ABSOLUTE PRIORITY - never touch fog. Watch for fog spawn locations and adjust position. Kill skeletons fast to minimize fog. If someone is MC'd, they must be killed and battle-rezzed."
+              }
+            ],
+            "strategy": "GROUND PHASE: Tank and spank with Corrosion tank swaps. Spread for Encapsulate. DPS hard - air phase is recovery time. AIR PHASE: Position at edges of platform. Watch breath direction and RUN perpendicular. Kill skeletons IMMEDIATELY before they spawn fog. FOG = WIPE if multiple people MC'd. Three breath passes per air phase. After 3rd breath, reposition for ground phase. Felmyst always lands same spot - tanks ready."
+          },
+          {
+            "name": "Eredar Twins",
+            "npcId": 25165,
+            "description": "Grand Warlock Alythess (fire) and Lady Sacrolash (shadow). Must be tanked apart while managing touch debuffs that are removed by opposite school of damage.",
+            "abilities": [
+              {
+                "name": "Shadow Nova",
+                "spellId": 45329,
+                "description": "Sacrolash casts AoE dealing 3,000-4,000 Shadow damage to all players within 20 yards. 2-second cast. HANDLING: Melee on Sacrolash must run out during cast. Ranged stay at max range. Interruptible but on short cooldown so cannot rely on kicks alone."
+              },
+              {
+                "name": "Confounding Blow",
+                "spellId": 45256,
+                "description": "Sacrolash stuns tank for 2 seconds and knocks back. Resets threat on main target. HANDLING: Off-tank must taunt immediately. Main tank regains threat when stun fades. Tanks coordinate positioning so knockback doesn't push into raid."
+              },
+              {
+                "name": "Shadow Blades",
+                "spellId": 45248,
+                "description": "Sacrolash throws shadow blades at random player, dealing 1,500 Shadow damage. Applies Dark Touched. HANDLING: Cannot avoid - just heal through damage. Important for managing Dark Touched stacks. Shadow resist can help."
+              },
+              {
+                "name": "Dark Touched",
+                "spellId": 45347,
+                "description": "Stacking shadow debuff from Sacrolash abilities. At 5+ stacks, player explodes dealing massive Shadow damage to nearby allies. HANDLING: Stand near Alythess (fire twin) to get hit by her fire abilities - Fire damage REMOVES Dark Touched stacks. Never let stacks reach 5."
+              },
+              {
+                "name": "Blaze",
+                "spellId": 45235,
+                "description": "Alythess spawns fire patch on ground dealing 3,000 Fire damage per second. Persists for 1 minute. HANDLING: Move out of fire immediately. Tank repositions Alythess to clear space. Fire patches can fill room if not managed."
+              },
+              {
+                "name": "Flame Sear",
+                "spellId": 46771,
+                "description": "Alythess deals fire AoE to 3 random targets and anyone within 10 yards. HANDLING: Spread at least 10 yards when fighting Alythess. Removes Dark Touched stacks - intentionally position to get hit if you have stacks."
+              },
+              {
+                "name": "Fire Touched",
+                "spellId": 45348,
+                "description": "Stacking fire debuff from Alythess abilities. At 5+ stacks, player explodes dealing massive Fire damage to nearby allies. HANDLING: Move near Sacrolash (shadow twin) to get hit by Shadow Blades - removes Fire Touched stacks. Constantly swap positions based on your stacks."
+              },
+              {
+                "name": "Conflagration",
+                "spellId": 45342,
+                "description": "Alythess sets random player on fire for 3,000 Fire damage per second and damages nearby players. HANDLING: Conflag target RUN AWAY from raid immediately. Other players spread away from Conflag target. Dispel does not remove it - just survive duration."
+              }
+            ],
+            "strategy": "POSITIONING: Tank twins on opposite ends of room (40+ yards apart). Raid splits into two groups. TOUCH MECHANIC: If you have Dark Touched stacks, move to fire side to cleanse. If you have Fire Touched stacks, move to shadow side to cleanse. Never let either stack reach 5. DPS BALANCE: Keep health pools within 3% of each other - at 20% HP they start buffing each other. Stop DPS on low twin, push high twin to match. Kill simultaneously or surviving twin enrages."
+          },
+          {
+            "name": "M'uru",
+            "npcId": 25741,
+            "description": "Corrupted Naaru transforming into void god Entropius at 0% HP. Considered one of the hardest TBC encounters due to extremely healing-intensive add management.",
+            "abilities": [
+              {
+                "name": "Darkness",
+                "spellId": 45996,
+                "description": "PHASE 1: Raid-wide pulse dealing 3,000 Shadow damage every 3 seconds. Constant throughout P1. HANDLING: Healers must constantly AoE heal raid. Shadow protection helps. No way to avoid - just heal through it. Mana management critical."
+              },
+              {
+                "name": "Negative Energy",
+                "spellId": 46285,
+                "description": "M'uru casts constant AoE shadow damage around himself. HANDLING: Only tanks should be in melee range of M'uru. Everyone else stays at range. Melee DPS focus adds instead of boss."
+              },
+              {
+                "name": "Summon Blood Elf",
+                "description": "Every 30 seconds, 6 Sunblade Sentinels spawn - 2 Warriors, 2 Mages, 2 Warlocks. Warriors charge random targets. Mages cast Arcane Explosion. Warlocks apply DoTs. HANDLING: AOE CC immediately - Frost Nova, stuns, fears. Warriors charge so ranged/healers stay grouped for quick pickup. Kill Warlocks first (DoTs are deadly), then Mages, then Warriors. Mages counterspell Mage casts."
+              },
+              {
+                "name": "Summon Void Sentinel",
+                "spellId": 46087,
+                "description": "Every 30 seconds, Void Sentinel spawns from portal. High HP, hits hard, casts Shadow Pulse (AoE) and summons 8 Void Spawn on death. HANDLING: Tank Sentinel away from raid. DPS focus it down. When it dies, be ready to AoE the 8 Void Spawns immediately. Void Spawns cast Shadow Bolt Volley - must die fast."
+              },
+              {
+                "name": "Black Hole",
+                "spellId": 46282,
+                "description": "PHASE 2 (Entropius): Creates void zones that pull players toward center. Standing in center = instant death. HANDLING: Run against the pull immediately. Position away from Black Holes. They expand over time. Use movement abilities (Blink, Sprint) to escape pull if needed."
+              },
+              {
+                "name": "Singularity",
+                "spellId": 46238,
+                "description": "PHASE 2: Spawns Dark Fiends that fixate on random players. If they reach target, massive shadow damage. HANDLING: Kite Dark Fiends, don't let them touch you. Kill them with ranged DPS while kiting. Snares help significantly. They despawn after short time if not killed."
+              },
+              {
+                "name": "Negative Energy (Entropius)",
+                "spellId": 46289,
+                "description": "PHASE 2: Entropius pulses massive shadow AoE every 2 seconds for 5,000+ damage to everyone. HANDLING: This is why P2 is a burn phase. Healers spam AoE heals. Everyone uses healthstones, pots. Boss must die before healers OOM."
+              }
+            ],
+            "strategy": "PHASE 1: Control adds while slowly killing M'uru. Kill order: Sentinels → Warlocks → Mages → Warriors → Void Sentinels → Void Spawns. Timing is everything - new adds spawn every 30 sec. Warlocks MUST die in first fear. Void Sentinels tanked away; AoE Void Spawns when Sentinel dies. PHASE 2 (at 0% M'uru): BURN ENTROPIUS FAST. This is a healing race. Everyone uses cooldowns, pots, healthstones. Avoid Black Holes, kill Dark Fiends. Boss has ~1.5M HP in P2 - must die before healers OOM from constant raid damage. HEROISM IN P2."
+          },
+          {
+            "name": "Kil'jaeden",
+            "npcId": 25315,
+            "description": "The Deceiver. Final boss of TBC emerging from Sunwell portal. Five-phase encounter utilizing Dragon Orbs for survival mechanics. Most complex fight in TBC.",
+            "abilities": [
+              {
+                "name": "Soul Flay",
+                "spellId": 45442,
+                "description": "Main tank attack dealing 3,000 Shadow damage and applying debuff increasing Shadow damage taken. HANDLING: Tank uses Shadow resist gear. Healers keep tank topped. Shadow protection buffs help significantly. Standard tank healing rotation."
+              },
+              {
+                "name": "Legion Lightning",
+                "spellId": 45664,
+                "description": "Chain lightning hitting initial target for 3,000 Arcane damage, jumping to nearby players with increasing damage per jump. HANDLING: SPREAD OUT - 10+ yards apart. If lightning starts jumping through stacked players, damage escalates quickly and causes wipes. Ranged and healers maintain spacing."
+              },
+              {
+                "name": "Fire Bloom",
+                "spellId": 45641,
+                "description": "Hits 5 random players with fire DoT dealing 2,500 Fire damage every 2 seconds for 20 seconds. HANDLING: Cannot be avoided. Healers keep Fire Bloom targets alive. Fire resist can help but usually just heal through it. Players with Fire Bloom stay spread to avoid Legion Lightning stacking."
+              },
+              {
+                "name": "Sinister Reflection",
+                "spellId": 45892,
+                "description": "Creates shadowy copies of 4 random players. Copies have player abilities and can heal, DPS, or cast CC. HANDLING: Kill reflections IMMEDIATELY. They cast real spells - healer copies heal, mage copies sheep. CC them if possible (stuns, fears). Focus fire one at a time. Usually spawn during phase transitions."
+              },
+              {
+                "name": "Shadow Spike",
+                "spellId": 46680,
+                "description": "Targets random player with shadow damage spike. HANDLING: Cannot be avoided. Healers watch for Shadow Spike targets. Less dangerous than other abilities but contributes to overall damage pressure."
+              },
+              {
+                "name": "Flame Dart",
+                "spellId": 45740,
+                "description": "Fire projectiles shot at random raid members during later phases. HANDLING: Keep raid healthy. Fire resist can help. Another source of unavoidable damage requiring constant healing."
+              },
+              {
+                "name": "Darkness of a Thousand Souls",
+                "spellId": 46605,
+                "description": "PHASE 3+: 8-second cast dealing 50,000 Shadow damage to entire raid. WIPE MECHANIC if not handled. Cast multiple times in later phases. HANDLING: USE DRAGON ORBS when cast starts. Orbs create Shield of the Blue protecting from Darkness damage. One player activates orb, everyone stacks in shield. CRITICAL: Orbs have limited uses (4 orbs, ~3 uses each). Plan orb usage for later phases."
+              },
+              {
+                "name": "Armageddon",
+                "spellId": 45909,
+                "description": "PHASE 4-5: Meteors fall from sky targeting random locations. 10,000 Fire damage on impact plus fire DoT in area. Multiple meteors per wave. HANDLING: WATCH THE SKY - red circles indicate impact zones. Move out of impact zones immediately. Keep moving during Armageddon phases. Healers top raid before meteor waves."
+              },
+              {
+                "name": "Sacrifice of Anveena",
+                "description": "At 25% HP, Anveena sacrifices herself giving raid massive damage buff. Begins final burn phase. HANDLING: Save cooldowns and Heroism for this phase. Burn KJ as fast as possible. Darkness casts continue so still need orb shields."
+              }
+            ],
+            "strategy": "5 PHASES - Mechanics layer on progressively. P1 (100-85%): Basic tank and spank, spread for Legion Lightning. P2 (85-55%): Add Sinister Reflections - kill immediately. Add Shield Orbs - destroy before they reach KJ. P3 (55-25%): DARKNESS begins - assign orb clickers, stack in shields. Flame Darts add pressure. P4 (25%+): Armageddon meteors - constant movement while handling Darkness. Anveena buffs damage. FINAL BURN: All cooldowns, Heroism. Orbs may run out - need to kill KJ before next Darkness. POSITIONING: Spread 10 yards for Lightning, but be ready to stack for Darkness shields. Tanks use shadow resist. Sinister Reflections are top kill priority whenever they spawn."
+          }
+        ]
+      }
+    }
+  }
+}
