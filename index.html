@@ -1259,10 +1259,8 @@ function renderApiDocs() {
         <h2 class="text-terminal-accent text-lg mb-4 uppercase tracking-wide md:text-base md:mb-3 sm:text-sm">[ TBC.TXT API DOCUMENTATION ]</h2>
         <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">REST API for accessing TBC PvE data in your own applications</p>
         <div class="border border-terminal-dim p-4 mb-6 md:p-3 md:mb-4 sm:p-2.5 sm:mb-3">
-            <h3 class="text-terminal-accent text-sm mb-3 md:text-xs">// Quick Start</h3>
-            <pre class="bg-terminal-bg/50 p-3 text-xs text-terminal-text overflow-x-auto md:text-[11px] sm:text-[10px]"><code>cd api
-go run main.go
-# Server runs on http://localhost:8080</code></pre>
+            <h3 class="text-terminal-accent text-sm mb-3 md:text-xs">// Base URL</h3>
+            <pre class="bg-terminal-bg/50 p-3 text-xs text-terminal-text overflow-x-auto md:text-[11px] sm:text-[10px]"><code>https://ywkfgk2ikq.us-east-2.awsapprunner.com</code></pre>
         </div>
         <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ ENDPOINTS ]</h3>
         <div class="overflow-x-auto -mx-5 px-5 md:-mx-4 md:px-4 sm:-mx-3 sm:px-3">
@@ -1291,7 +1289,7 @@ go run main.go
         <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ EXAMPLE USAGE ]</h3>
         <div class="border border-terminal-dim p-4 mb-4 md:p-3 sm:p-2.5">
             <h4 class="text-terminal-accent text-xs mb-2">// JavaScript</h4>
-            <pre class="bg-terminal-bg/50 p-3 text-xs text-terminal-dim overflow-x-auto md:text-[11px] sm:text-[10px]"><code>const response = await fetch('http://localhost:8080/api/classes/warrior/fury');
+            <pre class="bg-terminal-bg/50 p-3 text-xs text-terminal-dim overflow-x-auto md:text-[11px] sm:text-[10px]"><code>const response = await fetch('https://ywkfgk2ikq.us-east-2.awsapprunner.com/api/classes/warrior/fury');
 const fury = await response.json();
 console.log(fury.rotation);      // Rotation priority
 console.log(fury.phases[1].bis); // Phase 1 BiS gear</code></pre>
