@@ -1760,13 +1760,18 @@ function getTooltipFromCache(itemId) {
 
 // OPTIMIZED: Fetch ALL items with polling until loaded
 async function fetchAllItemStats(itemIds) {
-    if (tooltipFetchInProgress) return;
+    console.log('[FETCH] fetchAllItemStats called with:', itemIds);
+    if (tooltipFetchInProgress) {
+        console.log('[FETCH] Already in progress, returning');
+        return;
+    }
     tooltipFetchInProgress = true;
 
     const statusDiv = document.getElementById('stats-status');
     const emptyStats = { stamina: 0, intellect: 0, strength: 0, agility: 0, spirit: 0, armor: 0, defense: 0, dodge: 0, parry: 0, block: 0, hit: 0, crit: 0, haste: 0, expertise: 0, attackpower: 0, armorpen: 0, spellhit: 0, spellcrit: 0, spellhaste: 0, spelldamage: 0, healing: 0, mp5: 0 };
 
     const toFetch = itemIds.filter(id => !fetchedItemStats[id]);
+    console.log('[FETCH] Items to fetch (not cached):', toFetch);
     if (toFetch.length === 0) {
         if (statusDiv) statusDiv.innerHTML = '<span class="text-terminal-accent">Stats cached!</span>';
         tooltipFetchInProgress = false;
@@ -2112,14 +2117,19 @@ Wastewalker Shoulderpads
 
         // Calculate stats button - fetches from Wowhead dynamically
         document.getElementById('fetch-stats-btn').addEventListener('click', async () => {
+            console.log('[BUTTON] Calculate Stats clicked!');
             const gearText = document.getElementById('gear-input')?.value || '';
             const lines = gearText.split('\n').map(l => l.trim()).filter(l => l);
+            console.log('[BUTTON] Lines:', lines);
             const itemIdsList = [];
 
             for (const line of lines) {
                 const itemId = findItemId(line);
+                console.log('[BUTTON] Item:', line, '-> ID:', itemId);
                 if (itemId) itemIdsList.push(itemId);
             }
+
+            console.log('[BUTTON] Item IDs to fetch:', itemIdsList);
 
             if (itemIdsList.length > 0) {
                 // Clear BiS cache to force recalculation
