@@ -320,7 +320,7 @@
             <ul class="class-list list-none">
                 <li class="py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="recipes">[ RECIPES ]</li>
                 <li class="py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="raids">[ RAIDS ]</li>
-                <li class="py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="preraid">[ PRE-RAID ]</li>
+                <li class="py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="preraid">[ RAID-READY ]</li>
             </ul>
         </aside>
         <main id="main-content" class="border border-terminal-text p-5 md:p-4 sm:p-3"></main>
@@ -1618,7 +1618,7 @@ function calculateGearReadiness(matchResults) {
     return Math.round(coverage * avgRating * 100);
 }
 
-// Parse stats from Wowhead tooltip HTML - FIXED regex patterns
+// Parse stats from Wowhead tooltip HTML - OPTIMIZED single-pass DFA-style
 function parseTooltipStats(tooltipHtml) {
     const stats = {
         stamina: 0, intellect: 0, strength: 0, agility: 0, spirit: 0,
@@ -1626,88 +1626,62 @@ function parseTooltipStats(tooltipHtml) {
         hit: 0, crit: 0, haste: 0, expertise: 0, attackpower: 0, armorpen: 0,
         spellhit: 0, spellcrit: 0, spellhaste: 0, spelldamage: 0, healing: 0, mp5: 0
     };
-    if (!tooltipHtml) {
-        console.log('[PARSE] No tooltip HTML provided');
-        return stats;
+    if (!tooltipHtml) return stats;
+
+    // Combined single-pass regex (Thompson NFA style - all patterns in one alternation)
+    const combinedPattern = /\+(\d+)\s+(Stamina|Intellect|Strength|Agility|Spirit|Hit Rating|Critical Strike Rating|Haste Rating|Expertise Rating|Attack Power|Armor Penetration|Defense Rating|Dodge Rating|Parry Rating|Block Rating|Spell Hit|Spell Crit|Spell Haste)|Equip: Increases? (?:your )?(hit rating|critical strike rating|haste rating|expertise rating|attack power|armor penetration|defense rating|dodge rating|parry rating|block rating|spell hit rating|spell critical strike rating|spell haste rating|spell power|damage and healing done by[^0-9]+) by (?:up to )?(\d+)|Equip: Restores (\d+) mana per 5|<span[^>]*>(\d+) Armor<\/span>/gi;
+
+    let match;
+    while ((match = combinedPattern.exec(tooltipHtml)) !== null) {
+        const val1 = match[1] ? parseInt(match[1], 10) : 0;
+        const type1 = match[2]?.toLowerCase();
+        const type2 = match[3]?.toLowerCase();
+        const val2 = match[4] ? parseInt(match[4], 10) : 0;
+        const mp5Val = match[5] ? parseInt(match[5], 10) : 0;
+        const armorVal = match[6] ? parseInt(match[6], 10) : 0;
+
+        // Primary stats from +X format
+        if (val1 && type1) {
+            if (type1 === 'stamina') stats.stamina = val1;
+            else if (type1 === 'intellect') stats.intellect = val1;
+            else if (type1 === 'strength') stats.strength = val1;
+            else if (type1 === 'agility') stats.agility = val1;
+            else if (type1 === 'spirit') stats.spirit = val1;
+            else if (type1 === 'hit rating') stats.hit = val1;
+            else if (type1 === 'critical strike rating') stats.crit = val1;
+            else if (type1 === 'haste rating') stats.haste = val1;
+            else if (type1 === 'expertise rating') stats.expertise = val1;
+            else if (type1 === 'attack power') stats.attackpower = val1;
+            else if (type1 === 'armor penetration') stats.armorpen = val1;
+            else if (type1 === 'defense rating') stats.defense = val1;
+            else if (type1 === 'dodge rating') stats.dodge = val1;
+            else if (type1 === 'parry rating') stats.parry = val1;
+            else if (type1 === 'block rating') stats.block = val1;
+            else if (type1 === 'spell hit') stats.spellhit = val1;
+            else if (type1 === 'spell crit') stats.spellcrit = val1;
+            else if (type1 === 'spell haste') stats.spellhaste = val1;
+        }
+        // Equip: format stats
+        if (val2 && type2) {
+            if (type2 === 'hit rating') stats.hit = val2;
+            else if (type2 === 'critical strike rating') stats.crit = val2;
+            else if (type2 === 'haste rating') stats.haste = val2;
+            else if (type2 === 'expertise rating') stats.expertise = val2;
+            else if (type2 === 'attack power') stats.attackpower = val2;
+            else if (type2 === 'armor penetration') stats.armorpen = val2;
+            else if (type2 === 'defense rating') stats.defense = val2;
+            else if (type2 === 'dodge rating') stats.dodge = val2;
+            else if (type2 === 'parry rating') stats.parry = val2;
+            else if (type2 === 'block rating') stats.block = val2;
+            else if (type2 === 'spell hit rating') stats.spellhit = val2;
+            else if (type2 === 'spell critical strike rating') stats.spellcrit = val2;
+            else if (type2 === 'spell haste rating') stats.spellhaste = val2;
+            else if (type2 === 'spell power') stats.spelldamage = val2;
+            else if (type2.includes('damage and healing')) stats.spelldamage = val2;
+        }
+        if (mp5Val) stats.mp5 = mp5Val;
+        if (armorVal) stats.armor = armorVal;
     }
-
-    console.log('[PARSE] Tooltip length:', tooltipHtml.length, 'Preview:', tooltipHtml.substring(0, 200));
-
-    // Helper to get first match only (no accumulation)
-    const getMatch = (regex) => {
-        const match = regex.exec(tooltipHtml);
-        if (match) console.log('[PARSE] Matched:', regex.source, '=', match[1]);
-        return match ? parseInt(match[1], 10) : 0;
-    };
-
-    // Primary stats - these are simple "+X Stat" format
-    stats.stamina = getMatch(/\+(\d+)\s+Stamina/i);
-    stats.intellect = getMatch(/\+(\d+)\s+Intellect/i);
-    stats.strength = getMatch(/\+(\d+)\s+Strength/i);
-    stats.agility = getMatch(/\+(\d+)\s+Agility/i);
-    stats.spirit = getMatch(/\+(\d+)\s+Spirit/i);
-
-    // Armor - look for the main armor value (usually in format "XXX Armor")
-    // But exclude "Armor Penetration" and bonus armor text
-    const armorMatch = tooltipHtml.match(/<span[^>]*>(\d+) Armor<\/span>/i);
-    if (armorMatch) stats.armor = parseInt(armorMatch[1], 10);
-
-    // Defense stats - rating format
-    stats.defense = getMatch(/\+(\d+)\s+Defense Rating/i) || getMatch(/Equip: Increases defense rating by (\d+)/i);
-    stats.dodge = getMatch(/\+(\d+)\s+Dodge Rating/i) || getMatch(/Equip: Increases your dodge rating by (\d+)/i);
-    stats.parry = getMatch(/\+(\d+)\s+Parry Rating/i) || getMatch(/Equip: Increases your parry rating by (\d+)/i);
-    stats.block = getMatch(/\+(\d+)\s+Block Rating/i) || getMatch(/Equip: Increases your shield block rating by (\d+)/i);
-
-    // Hit rating - be specific to avoid matching spell hit
-    stats.hit = getMatch(/\+(\d+)\s+Hit Rating/i) || getMatch(/Equip: Increases your hit rating by (\d+)/i);
-
-    // Crit rating
-    stats.crit = getMatch(/\+(\d+)\s+Critical Strike Rating/i) || getMatch(/Equip: Increases your critical strike rating by (\d+)/i);
-
-    // Haste rating
-    stats.haste = getMatch(/\+(\d+)\s+Haste Rating/i) || getMatch(/Equip: Increases your haste rating by (\d+)/i);
-
-    // Expertise
-    stats.expertise = getMatch(/\+(\d+)\s+Expertise Rating/i) || getMatch(/Equip: Increases your expertise rating by (\d+)/i);
-
-    // Attack power
-    stats.attackpower = getMatch(/\+(\d+)\s+Attack Power/i) || getMatch(/Equip: Increases attack power by (\d+)/i);
-
-    // Armor penetration
-    stats.armorpen = getMatch(/\+(\d+)\s+Armor Penetration Rating/i) || getMatch(/Equip: Increases your armor penetration rating by (\d+)/i);
-
-    // Spell hit (separate from melee hit)
-    stats.spellhit = getMatch(/\+(\d+)\s+Spell Hit Rating/i) || getMatch(/Equip: Increases your spell hit rating by (\d+)/i);
-
-    // Spell crit
-    stats.spellcrit = getMatch(/\+(\d+)\s+Spell Critical Strike Rating/i) || getMatch(/Equip: Increases your spell critical strike rating by (\d+)/i);
-
-    // Spell haste
-    stats.spellhaste = getMatch(/\+(\d+)\s+Spell Haste Rating/i) || getMatch(/Equip: Increases your spell haste rating by (\d+)/i);
-
-    // Spell damage / spell power - TBC uses "damage and healing" format
-    // Match: "Increases damage and healing done by magical spells and effects by up to X"
-    const spellPowerMatch = tooltipHtml.match(/Equip: Increases damage and healing done by (?:magical )?spells and effects by (?:up to )?(\d+)/i);
-    if (spellPowerMatch) {
-        stats.spelldamage = parseInt(spellPowerMatch[1], 10);
-    } else {
-        // Try spell power format
-        stats.spelldamage = getMatch(/Equip: Increases spell power by (\d+)/i);
-    }
-
-    // Healing bonus (separate from spell damage) - ONLY match healing-only items
-    // Pattern: "Increases healing done by spells and effects by up to X" (no "damage and")
-    const healingOnlyMatch = tooltipHtml.match(/Equip: Increases healing done by (?:up to )?(\d+)/i);
-    if (healingOnlyMatch && !tooltipHtml.match(/damage and healing/i)) {
-        stats.healing = parseInt(healingOnlyMatch[1], 10);
-    }
-
-    // MP5
-    stats.mp5 = getMatch(/Equip: Restores (\d+) mana per 5 sec/i) || getMatch(/\+(\d+)\s+Mana every 5 Sec/i);
-
-    // Log final parsed stats
-    const nonZeroStats = Object.entries(stats).filter(([k, v]) => v > 0);
-    console.log('[PARSE] Final stats:', nonZeroStats.length > 0 ? Object.fromEntries(nonZeroStats) : 'ALL ZERO');
 
     return stats;
 }
@@ -1731,105 +1705,72 @@ function sumStats(statsArray) {
 // Global cache for fetched item stats
 let fetchedItemStats = {};
 let tooltipFetchInProgress = false;
+let preloadContainer = null;
 
-// Fetch item tooltip from Wowhead and parse stats
-async function fetchItemTooltip(itemId) {
-    const emptyStats = { stamina: 0, intellect: 0, strength: 0, agility: 0, spirit: 0, armor: 0, defense: 0, dodge: 0, parry: 0, block: 0, hit: 0, crit: 0, haste: 0, expertise: 0, attackpower: 0, armorpen: 0, spellhit: 0, spellcrit: 0, spellhaste: 0, spelldamage: 0, healing: 0, mp5: 0 };
-
-    // Check cache first
-    if (fetchedItemStats[itemId]) {
-        return fetchedItemStats[itemId];
-    }
-
-    return new Promise((resolve) => {
-        // Create hidden container for tooltip fetch
-        const container = document.createElement('div');
-        container.style.cssText = 'position:fixed;left:-9999px;top:-9999px;visibility:hidden;';
-        container.innerHTML = `<a id="fetch-${itemId}" href="https://tbc.wowhead.com/item=${itemId}" data-wowhead="item=${itemId}&domain=tbc">x</a>`;
-        document.body.appendChild(container);
-
-        // Trigger Wowhead to fetch tooltip
-        if (typeof $WowheadPower !== 'undefined') {
-            $WowheadPower.refreshLinks();
+// Read tooltip from Wowhead cache
+function getTooltipFromCache(itemId) {
+    if (typeof $WowheadPower !== 'undefined') {
+        if ($WowheadPower.getItem) {
+            const item = $WowheadPower.getItem(itemId);
+            if (item?.tooltip_enus) return item.tooltip_enus;
         }
-
-        // Check for tooltip data in cache
-        let attempts = 0;
-        const maxAttempts = 50; // 5 seconds max
-
-        const checkCache = () => {
-            attempts++;
-            let tooltipHtml = null;
-
-            // Try multiple cache locations
-            if (typeof $WowheadPower !== 'undefined') {
-                // Check getItem method
-                if ($WowheadPower.getItem) {
-                    const item = $WowheadPower.getItem(itemId);
-                    if (item && item.tooltip_enus) {
-                        tooltipHtml = item.tooltip_enus;
-                        console.log(`[FETCH] Item ${itemId}: Found via getItem()`);
-                    }
-                }
-                // Check items cache
-                if (!tooltipHtml && $WowheadPower.items && $WowheadPower.items[itemId]) {
-                    tooltipHtml = $WowheadPower.items[itemId].tooltip_enus || $WowheadPower.items[itemId].tooltip;
-                    if (tooltipHtml) console.log(`[FETCH] Item ${itemId}: Found in items cache`);
-                }
-            }
-
-            // Check whTooltips cache
-            if (!tooltipHtml && typeof whTooltips !== 'undefined' && whTooltips.aT) {
-                tooltipHtml = whTooltips.aT[itemId] || whTooltips.aT[`item_${itemId}`];
-                if (tooltipHtml) console.log(`[FETCH] Item ${itemId}: Found in whTooltips.aT`);
-            }
-
-            if (tooltipHtml) {
-                console.log(`[FETCH] Item ${itemId}: Got tooltip, length=${tooltipHtml.length}`);
-                const stats = parseTooltipStats(tooltipHtml);
-                console.log(`[FETCH] Item ${itemId}: Parsed stats=`, JSON.stringify(stats));
-                fetchedItemStats[itemId] = stats;
-                container.remove();
-                resolve(stats);
-            } else if (attempts >= maxAttempts) {
-                console.log(`[FETCH] Item ${itemId}: Timeout - no tooltip found`);
-                container.remove();
-                resolve(emptyStats);
-            } else {
-                setTimeout(checkCache, 100);
-            }
-        };
-
-        setTimeout(checkCache, 150);
-    });
+        if ($WowheadPower.items?.[itemId]) {
+            return $WowheadPower.items[itemId].tooltip_enus || $WowheadPower.items[itemId].tooltip;
+        }
+    }
+    if (typeof whTooltips !== 'undefined' && whTooltips.aT) {
+        return whTooltips.aT[itemId] || whTooltips.aT[String(itemId)];
+    }
+    return null;
 }
 
-// Fetch stats for multiple items
+// OPTIMIZED: Fetch ALL items in single batch
 async function fetchAllItemStats(itemIds) {
     if (tooltipFetchInProgress) return;
     tooltipFetchInProgress = true;
 
     const statusDiv = document.getElementById('stats-status');
-    const toFetch = itemIds.filter(id => !fetchedItemStats[id]);
+    const emptyStats = { stamina: 0, intellect: 0, strength: 0, agility: 0, spirit: 0, armor: 0, defense: 0, dodge: 0, parry: 0, block: 0, hit: 0, crit: 0, haste: 0, expertise: 0, attackpower: 0, armorpen: 0, spellhit: 0, spellcrit: 0, spellhaste: 0, spelldamage: 0, healing: 0, mp5: 0 };
 
+    const toFetch = itemIds.filter(id => !fetchedItemStats[id]);
     if (toFetch.length === 0) {
-        if (statusDiv) statusDiv.innerHTML = '<span class="text-terminal-accent">Stats ready!</span>';
+        if (statusDiv) statusDiv.innerHTML = '<span class="text-terminal-accent">Stats cached!</span>';
         tooltipFetchInProgress = false;
         return;
     }
 
-    // Fetch in small batches to avoid overwhelming Wowhead
-    const batchSize = 5;
-    for (let i = 0; i < toFetch.length; i += batchSize) {
-        const batch = toFetch.slice(i, i + batchSize);
-        if (statusDiv) {
-            statusDiv.innerHTML = `<span class="text-yellow-400">Loading items ${i + 1}-${Math.min(i + batchSize, toFetch.length)} of ${toFetch.length}...</span>`;
+    if (statusDiv) statusDiv.innerHTML = `<span class="text-yellow-400">Loading ${toFetch.length} items...</span>`;
+
+    // Remove old preload container
+    if (preloadContainer) preloadContainer.remove();
+
+    // Create ALL links at once
+    preloadContainer = document.createElement('div');
+    preloadContainer.style.cssText = 'position:fixed;left:-99999px;top:-99999px;visibility:hidden;';
+    preloadContainer.innerHTML = toFetch.map(id =>
+        `<a href="https://tbc.wowhead.com/item=${id}" data-wowhead="item=${id}&domain=tbc">.</a>`
+    ).join('');
+    document.body.appendChild(preloadContainer);
+
+    // Single refresh for all
+    if (typeof $WowheadPower !== 'undefined') $WowheadPower.refreshLinks();
+
+    // Wait once for all tooltips (1.2s is usually enough)
+    await new Promise(r => setTimeout(r, 1200));
+
+    // Read all from cache in single pass
+    let found = 0;
+    for (const id of toFetch) {
+        const html = getTooltipFromCache(id);
+        if (html) {
+            fetchedItemStats[id] = parseTooltipStats(html);
+            found++;
+        } else {
+            fetchedItemStats[id] = { ...emptyStats };
         }
-        // Fetch batch in parallel
-        await Promise.all(batch.map(id => fetchItemTooltip(id)));
     }
 
-    if (statusDiv) statusDiv.innerHTML = '<span class="text-terminal-accent">Stats loaded!</span>';
+    if (statusDiv) statusDiv.innerHTML = `<span class="text-terminal-accent">${found}/${toFetch.length} loaded</span>`;
     tooltipFetchInProgress = false;
 }
 
