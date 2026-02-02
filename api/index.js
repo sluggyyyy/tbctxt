@@ -94,7 +94,9 @@ function bnetApiRequest(region, path, namespace, token) {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
-                'Battlenet-Namespace': namespace
+                'Battlenet-Namespace': namespace,
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache'
             }
         }, (res) => {
             let data = '';
@@ -141,7 +143,9 @@ async function handleBnetCharacter(req, res, url) {
 
     const realmSlug = realm.toLowerCase().replace(/\s+/g, '-');
     const charName = name.toLowerCase();
-    const path = `/profile/wow/character/${realmSlug}/${charName}/equipment`;
+    // Add cache-busting timestamp
+    const cacheBust = Date.now();
+    const path = `/profile/wow/character/${realmSlug}/${charName}/equipment?_=${cacheBust}`;
 
     console.log(`Fetching: ${path}`);
 
