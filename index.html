@@ -2529,7 +2529,7 @@ Wastewalker Shoulderpads
                 const gear = await fetchWclGear(wclCharacterName, wclRealm, wclRegion);
                 if (gear && gear.length > 0) {
                     // Convert gear to item names and populate the textarea
-                    const itemNames = gear.map(g => g.name).filter(n => n).join('\\n');
+                    const itemNames = gear.map(g => g.name).filter(n => n).join('\n');
                     if (gearInput) {
                         gearInput.value = itemNames;
                         preRaidGearText = itemNames;
