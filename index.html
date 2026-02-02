@@ -2374,31 +2374,8 @@ function renderPreRaidChecker() {
             </div>
         </div>
 
-        <div class="border border-terminal-accent/30 p-4 mb-6">
-            <h4 class="text-terminal-accent text-xs uppercase mb-3">// Import from Blizzard</h4>
-            <div class="grid grid-cols-3 gap-4 mb-3 md:grid-cols-1">
-                <div>
-                    <label class="text-terminal-dim text-xs block mb-2">CHARACTER NAME</label>
-                    <input type="text" id="wcl-character" class="w-full bg-terminal-bg border border-terminal-text text-terminal-text px-3 py-2 text-xs font-mono" placeholder="Enter character name" value="${wclCharacterName}">
-                </div>
-                <div>
-                    <label class="text-terminal-dim text-xs block mb-2">REALM</label>
-                    <select id="wcl-realm" class="w-full bg-terminal-bg border border-terminal-text text-terminal-text px-3 py-2 text-xs font-mono cursor-pointer">
-                        <option value="Nightslayer" ${wclRealm === 'Nightslayer' ? 'selected' : ''}>Nightslayer (US)</option>
-                        <option value="Dreamscythe" ${wclRealm === 'Dreamscythe' ? 'selected' : ''}>Dreamscythe (EU)</option>
-                    </select>
-                </div>
-                <div class="flex items-end">
-                    <button id="wcl-import-btn" class="w-full bg-terminal-text text-terminal-bg px-4 py-2 font-mono text-xs font-bold cursor-pointer hover:bg-terminal-accent transition-colors">
-                        [ IMPORT GEAR ]
-                    </button>
-                </div>
-            </div>
-            <span id="wcl-status" class="text-xs"></span>
-        </div>
-
         <div class="mb-4">
-            <label class="text-terminal-dim text-xs block mb-2">PASTE YOUR GEAR <span class="text-terminal-accent">(one item per line)</span> <span class="text-terminal-dim">or import above</span></label>
+            <label class="text-terminal-dim text-xs block mb-2">PASTE YOUR GEAR <span class="text-terminal-accent">(one item per line)</span></label>
             <textarea id="gear-input" class="w-full bg-terminal-bg border border-terminal-text text-terminal-text px-3 py-2 text-xs font-mono h-40 resize-y" placeholder="Overlord's Helmet of Second Sight
 Choker of Vile Intent
 Wastewalker Shoulderpads
@@ -2503,68 +2480,7 @@ Wastewalker Shoulderpads
         if (preRaidGearText) {
             updateGearPreview();
         }
-
-        // WCL Import handlers
-        document.getElementById('wcl-character')?.addEventListener('input', (e) => {
-            wclCharacterName = e.target.value;
-        });
-
-        document.getElementById('wcl-realm')?.addEventListener('change', (e) => {
-            wclRealm = e.target.value;
-            wclRegion = wclRealm === 'Nightslayer' ? 'us' : 'eu';
-        });
-
-        document.getElementById('wcl-import-btn')?.addEventListener('click', async () => {
-            const statusEl = document.getElementById('wcl-status');
-            const gearInput = document.getElementById('gear-input');
-
-            if (!wclCharacterName.trim()) {
-                if (statusEl) statusEl.innerHTML = '<span class="text-red-400">Please enter a character name</span>';
-                return;
-            }
-
-            if (statusEl) statusEl.innerHTML = '<span class="text-terminal-accent">Fetching from Blizzard API...</span>';
-
-            try {
-                const gear = await fetchWclGear(wclCharacterName, wclRealm, wclRegion);
-                if (gear && gear.length > 0) {
-                    // Convert gear to item names and populate the textarea
-                    const itemNames = gear.map(g => g.name).filter(n => n).join('\n');
-                    if (gearInput) {
-                        gearInput.value = itemNames;
-                        preRaidGearText = itemNames;
-                        updateGearPreview();
-                    }
-                    if (statusEl) statusEl.innerHTML = '<span class="text-green-400">✓ Imported ' + gear.length + ' items</span>';
-                } else {
-                    if (statusEl) statusEl.innerHTML = '<span class="text-yellow-400">No gear data found for this character.</span>';
-                }
-            } catch (error) {
-                console.error('WCL fetch error:', error);
-                if (statusEl) statusEl.innerHTML = '<span class="text-red-400">Error: ' + error.message + '</span>';
-            }
-        });
     }, FADE_TRANSITION_MS);
-}
-
-// WCL Import state
-let wclCharacterName = '';
-let wclRealm = 'Nightslayer';
-let wclRegion = 'us';
-
-const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? '' // Use relative URLs for local development
-    : 'https://api.tbctxt.io'; // Production API
-
-async function fetchWclGear(characterName, realm, region) {
-    // Blizzard API requires authentication, so we proxy through our backend
-    const response = await fetch(`${API_BASE_URL}/api/character?name=${encodeURIComponent(characterName)}&realm=${encodeURIComponent(realm)}&region=${region}`);
-    if (!response.ok) {
-        const error = await response.json().catch(() => ({ error: 'Unknown error' }));
-        throw new Error(error.error || 'Failed to fetch from Blizzard');
-    }
-    const data = await response.json();
-    return data.gear || [];
 }
 
 function renderApiDocs() {

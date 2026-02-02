@@ -1,14 +1,9 @@
 const http = require('http');
-const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
 const PORT = process.env.PORT || 8080;
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, '..', 'data');
-
-// Blizzard OAuth token cache
-let bnetAccessToken = '';
-let bnetTokenExpiry = 0;
 
 let classData = {};
 let itemIds = {};
@@ -32,157 +27,6 @@ function jsonResponse(res, data, status = 200) {
 
 function errorResponse(res, message, status = 404) {
     jsonResponse(res, { error: message }, status);
-}
-
-// Blizzard OAuth2 token fetching
-function getBnetAccessToken(region) {
-    return new Promise((resolve, reject) => {
-        if (bnetAccessToken && bnetTokenExpiry > Date.now() / 1000 + 60) {
-            return resolve(bnetAccessToken);
-        }
-
-        const clientId = process.env.BNET_CLIENT_ID;
-        const clientSecret = process.env.BNET_CLIENT_SECRET;
-
-        if (!clientId || !clientSecret) {
-            return reject(new Error('BNET_CLIENT_ID and BNET_CLIENT_SECRET required'));
-        }
-
-        const auth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
-        const postData = 'grant_type=client_credentials';
-
-        const req = https.request({
-            hostname: `${region}.battle.net`,
-            path: '/oauth/token',
-            method: 'POST',
-            headers: {
-                'Authorization': `Basic ${auth}`,
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': postData.length
-            }
-        }, (res) => {
-            let data = '';
-            res.on('data', chunk => data += chunk);
-            res.on('end', () => {
-                try {
-                    const parsed = JSON.parse(data);
-                    if (parsed.access_token) {
-                        bnetAccessToken = parsed.access_token;
-                        bnetTokenExpiry = Date.now() / 1000 + parsed.expires_in;
-                        resolve(bnetAccessToken);
-                    } else {
-                        reject(new Error('No access token in response: ' + JSON.stringify(parsed)));
-                    }
-                } catch (e) {
-                    reject(e);
-                }
-            });
-        });
-
-        req.on('error', reject);
-        req.write(postData);
-        req.end();
-    });
-}
-
-// Blizzard API request
-function bnetApiRequest(region, path, namespace, token) {
-    return new Promise((resolve, reject) => {
-        const req = https.request({
-            hostname: `${region}.api.blizzard.com`,
-            path: path,
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Battlenet-Namespace': namespace,
-                'Cache-Control': 'no-cache, no-store, must-revalidate',
-                'Pragma': 'no-cache'
-            }
-        }, (res) => {
-            let data = '';
-            res.on('data', chunk => data += chunk);
-            res.on('end', () => {
-                try {
-                    resolve({ status: res.statusCode, data: JSON.parse(data) });
-                } catch (e) {
-                    resolve({ status: res.statusCode, data: data });
-                }
-            });
-        });
-
-        req.on('error', reject);
-        req.end();
-    });
-}
-
-// Handle Blizzard character gear lookup
-async function handleBnetCharacter(req, res, url) {
-    const name = url.searchParams.get('name');
-    const realm = url.searchParams.get('realm');
-    const region = url.searchParams.get('region') || 'us';
-
-    if (!name || !realm) {
-        return errorResponse(res, 'name and realm parameters required', 400);
-    }
-
-    let token;
-    try {
-        token = await getBnetAccessToken(region);
-    } catch (e) {
-        console.error('Blizzard auth error:', e.message);
-        return errorResponse(res, 'Blizzard authentication failed: ' + e.message, 503);
-    }
-
-    // Try different namespaces for TBC Anniversary
-    // profile-classic-us, profile-classic1x-us, etc.
-    const namespaces = [
-        `profile-classic-${region}`,
-        `profile-classic1x-${region}`,
-        `profile-classicprogression-${region}`
-    ];
-
-    const realmSlug = realm.toLowerCase().replace(/\s+/g, '-');
-    const charName = name.toLowerCase();
-    // Add cache-busting timestamp
-    const cacheBust = Date.now();
-    const path = `/profile/wow/character/${realmSlug}/${charName}/equipment?_=${cacheBust}`;
-
-    console.log(`Fetching: ${path}`);
-
-    let lastError = null;
-    for (const namespace of namespaces) {
-        console.log(`Trying namespace: ${namespace}`);
-        try {
-            const result = await bnetApiRequest(region, path, namespace, token);
-            console.log(`Response (${namespace}):`, result.status, JSON.stringify(result.data).substring(0, 200));
-
-            if (result.status === 200 && result.data.equipped_items) {
-                // Transform Blizzard gear format to our format
-                const gear = result.data.equipped_items.map(item => ({
-                    id: item.item?.id,
-                    name: typeof item.name === 'object' ? (item.name.en_US || item.name.en_GB || Object.values(item.name)[0]) : item.name,
-                    slot: item.slot?.type,
-                    quality: item.quality?.type,
-                    itemLevel: item.level?.value
-                }));
-
-                return jsonResponse(res, {
-                    name: charName,
-                    gear,
-                    realm,
-                    region,
-                    source: 'blizzard',
-                    namespace
-                });
-            }
-            lastError = result.data;
-        } catch (e) {
-            console.error(`Error with namespace ${namespace}:`, e.message);
-            lastError = e.message;
-        }
-    }
-
-    return errorResponse(res, 'Character not found. Tried namespaces: ' + namespaces.join(', '), 404);
 }
 
 const server = http.createServer((req, res) => {
@@ -279,11 +123,6 @@ const server = http.createServer((req, res) => {
         if (route[1] === 'talents') return jsonResponse(res, referenceData.talentSpellIds || {});
         if (route[1] === 'quests') return jsonResponse(res, referenceData.questIds || {});
         return errorResponse(res, 'Not found');
-    }
-
-    // /api/character?name=&realm=&region= (Blizzard API)
-    if (route[0] === 'character') {
-        return handleBnetCharacter(req, res, url);
     }
 
     return errorResponse(res, 'Not found');
