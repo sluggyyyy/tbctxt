@@ -1,3 +1,4 @@
+// TBC API Server - v1.1.0 (item search support)
 const http = require('http');
 const https = require('https');
 const fs = require('fs');
