@@ -52,7 +52,7 @@ function getWclAccessToken() {
         const postData = 'grant_type=client_credentials';
 
         const req = https.request({
-            hostname: 'www.warcraftlogs.com',
+            hostname: 'fresh.warcraftlogs.com',
             path: '/oauth/token',
             method: 'POST',
             headers: {
@@ -91,7 +91,7 @@ function wclGraphQL(query, token) {
         const postData = JSON.stringify({ query });
 
         const req = https.request({
-            hostname: 'www.warcraftlogs.com',
+            hostname: 'fresh.warcraftlogs.com',
             path: '/api/v2/client',
             method: 'POST',
             headers: {
