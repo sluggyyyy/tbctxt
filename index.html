@@ -331,9 +331,6 @@
         <div class="mt-2 sm:mt-1.5"><a href="#" onclick="renderApiDocs(); return false;" class="text-terminal-accent hover:text-terminal-text underline">[ API Documentation ]</a></div>
     </footer>
     <script>
-console.log('[TBC.TXT] Script loaded - v3');
-alert('DEBUG v3: If you see this, clear cache worked!');
-
 // ===== GLOBAL DATA (loaded from JSON) =====
 let itemIds = {};
 let classData = {};
@@ -1712,12 +1709,10 @@ function sumStats(statsArray) {
 
 // Fetch tooltip from Wowhead and parse stats
 async function fetchItemStats(itemId) {
-    console.log(`[FETCH] Item ${itemId}: starting...`);
-
     return new Promise((resolve) => {
         let stats = { stamina: 0, intellect: 0, strength: 0, agility: 0, spirit: 0, armor: 0, defense: 0, dodge: 0, parry: 0, block: 0, hit: 0, crit: 0, haste: 0, expertise: 0, attackpower: 0, armorpen: 0, spellhit: 0, spellcrit: 0, spellhaste: 0, spelldamage: 0, healing: 0, mp5: 0 };
 
-        // Create temp link
+        // Create temp link to trigger Wowhead
         const tempDiv = document.createElement('div');
         tempDiv.style.cssText = 'position:absolute;left:-9999px;top:-9999px;';
         tempDiv.innerHTML = `<a href="https://tbc.wowhead.com/item=${itemId}" data-wowhead="item=${itemId}&domain=tbc">x</a>`;
@@ -1727,41 +1722,44 @@ async function fetchItemStats(itemId) {
             $WowheadPower.refreshLinks();
         }
 
+        // Quick check after Wowhead processes
         setTimeout(() => {
             let tooltipHtml = null;
 
-            // Check whTooltips.aT cache
-            if (typeof whTooltips !== 'undefined' && whTooltips.aT) {
-                const keys = Object.keys(whTooltips.aT);
-                console.log(`[FETCH] whTooltips.aT: ${keys.length} entries, sample:`, keys.slice(-5));
-
-                // Try numeric key (most likely)
-                if (whTooltips.aT[itemId]) {
-                    tooltipHtml = whTooltips.aT[itemId];
-                    console.log(`[FETCH] Found with key: ${itemId}`);
+            // Method 1: Check Wowhead's internal tooltip cache
+            if (typeof $WowheadPower !== 'undefined') {
+                // Wowhead stores tooltips in various places
+                const checkCaches = [
+                    () => $WowheadPower._.items?.[itemId]?.tooltip_enus,
+                    () => $WowheadPower._.items?.[itemId]?.tooltip,
+                    () => window.g_items?.[itemId]?.tooltip,
+                ];
+                for (const check of checkCaches) {
+                    try {
+                        const tt = check();
+                        if (tt && tt.length > 50) {
+                            tooltipHtml = tt;
+                            break;
+                        }
+                    } catch(e) {}
                 }
             }
 
-            // Check DOM tooltip
+            // Method 2: Check DOM for visible tooltip
             if (!tooltipHtml) {
                 const ttEl = document.querySelector('.wowhead-tooltip');
                 if (ttEl && ttEl.innerHTML.length > 100) {
                     tooltipHtml = ttEl.innerHTML;
-                    console.log(`[FETCH] Found in DOM tooltip`);
                 }
             }
 
             if (tooltipHtml) {
-                console.log(`[FETCH] Tooltip preview:`, tooltipHtml.substring(0, 150));
                 stats = parseTooltipStats(tooltipHtml);
-            } else {
-                console.log(`[FETCH] Item ${itemId}: NO TOOLTIP FOUND`);
             }
 
-            console.log(`[FETCH] Item ${itemId}: stats=`, stats);
             document.body.removeChild(tempDiv);
             resolve(stats);
-        }, 350);
+        }, 200);
     });
 }
 
@@ -1771,13 +1769,8 @@ let statsFetchInProgress = false;
 
 // Fetch all item stats and update display (sequential - Wowhead tooltips conflict in parallel)
 async function fetchAllItemStats(itemIds) {
-    console.log('[fetchAllItemStats] Called with', itemIds.length, 'items:', itemIds);
-    if (statsFetchInProgress) {
-        console.log('[fetchAllItemStats] Already in progress, returning');
-        return;
-    }
+    if (statsFetchInProgress) return;
     statsFetchInProgress = true;
-    console.log('[fetchAllItemStats] Starting fetch...');
 
     const statusDiv = document.getElementById('stats-status');
     try {
@@ -2108,10 +2101,8 @@ Wastewalker Shoulderpads
 
         // Fetch stats button
         document.getElementById('fetch-stats-btn').addEventListener('click', async () => {
-            console.log('[BUTTON] Calculate Stats clicked!');
             const gearText = document.getElementById('gear-input')?.value || '';
             const lines = gearText.split('\n').map(l => l.trim()).filter(l => l);
-            console.log('[BUTTON] Lines to process:', lines.length);
             const itemIdsToFetch = [];
 
             for (const line of lines) {
