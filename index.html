@@ -331,6 +331,7 @@
         <div class="mt-2 sm:mt-1.5"><a href="#" onclick="renderApiDocs(); return false;" class="text-terminal-accent hover:text-terminal-text underline">[ API Documentation ]</a></div>
     </footer>
     <script>
+console.log('[TBC.TXT] Script loaded - v3');
 // ===== GLOBAL DATA (loaded from JSON) =====
 let itemIds = {};
 let classData = {};
@@ -339,6 +340,7 @@ let raidsData = {};
 let enchantSpellIds = {};
 let talentSpellIds = {};
 let questIds = {};
+let itemStats = {}; // Pre-computed item stats from Wowhead
 let currentClass = 'warrior';
 let currentSpec = null;
 let currentPhase = 4;
@@ -362,12 +364,13 @@ async function loadAllData() {
         return res.json();
     }
     try {
-        const [items, classes, recipes, raids, reference] = await Promise.all([
+        const [items, classes, recipes, raids, reference, stats] = await Promise.all([
             fetchJSON('data/itemIds.json'),
             fetchJSON('data/classData.json'),
             fetchJSON('data/recipesData.json'),
             fetchJSON('data/raidsData.json'),
-            fetchJSON('data/referenceData.json')
+            fetchJSON('data/referenceData.json'),
+            fetchJSON('data/itemStats.json')
         ]);
         itemIds = items;
         classData = classes;
@@ -376,11 +379,13 @@ async function loadAllData() {
         enchantSpellIds = reference.enchantSpellIds;
         talentSpellIds = reference.talentSpellIds;
         questIds = reference.questIds;
+        itemStats = stats;
         console.log('Data loaded:', {
             items: Object.keys(itemIds).length,
             classes: Object.keys(classData).length,
             professions: Object.keys(recipesData).length,
-            raidPhases: Object.keys(raidsData).length
+            raidPhases: Object.keys(raidsData).length,
+            itemStats: Object.keys(itemStats).length
         });
         // Initialize the app
         initClassSelector();
@@ -1454,7 +1459,7 @@ function getPreRaidBisList(className, specName) {
     return getPhaseBisList(className, specName, '0');
 }
 
-// Calculate total BiS stats for a phase (uses cached stats, call fetchAllItemStats first)
+// Calculate total BiS stats for a phase by fetching all BiS items
 async function calculatePhaseBisStats(className, specName, phaseKey) {
     const cacheKey = `${className}-${specName}-${phaseKey}`;
     if (bisStatsCache[cacheKey]) return bisStatsCache[cacheKey];
@@ -1474,10 +1479,14 @@ async function calculatePhaseBisStats(className, specName, phaseKey) {
         }
     }
 
-    // Collect stats from all slots (assumes items already fetched)
+    // Get item IDs that need fetching
+    const bisItemIds = Object.values(bestBySlot).map(item => item.itemId);
+    await fetchAllItemStats(bisItemIds);
+
+    // Get stats from fetched cache
     const statsArray = Object.values(bestBySlot)
         .map(item => fetchedItemStats[item.itemId])
-        .filter(Boolean);
+        .filter(stats => stats && Object.values(stats).some(v => typeof v === 'number' && v > 0));
 
     const totalStats = sumStats(statsArray);
     bisStatsCache[cacheKey] = totalStats;
@@ -1609,7 +1618,7 @@ function calculateGearReadiness(matchResults) {
     return Math.round(coverage * avgRating * 100);
 }
 
-// Parse stats from Wowhead tooltip HTML
+// Parse stats from Wowhead tooltip HTML - FIXED regex patterns
 function parseTooltipStats(tooltipHtml) {
     const stats = {
         stamina: 0, intellect: 0, strength: 0, agility: 0, spirit: 0,
@@ -1617,57 +1626,88 @@ function parseTooltipStats(tooltipHtml) {
         hit: 0, crit: 0, haste: 0, expertise: 0, attackpower: 0, armorpen: 0,
         spellhit: 0, spellcrit: 0, spellhaste: 0, spelldamage: 0, healing: 0, mp5: 0
     };
-    if (!tooltipHtml) return stats;
-
-    // Common stat patterns in Wowhead TBC tooltips (multiple formats)
-    const patterns = [
-        // Primary stats
-        { regex: /\+(\d+)\s*Stamina/gi, stat: 'stamina' },
-        { regex: /\+(\d+)\s*Intellect/gi, stat: 'intellect' },
-        { regex: /\+(\d+)\s*Strength/gi, stat: 'strength' },
-        { regex: /\+(\d+)\s*Agility/gi, stat: 'agility' },
-        { regex: /\+(\d+)\s*Spirit/gi, stat: 'spirit' },
-        { regex: /(\d+)\s*Armor(?!\s*Penetration)/gi, stat: 'armor' },
-        // Defense stats
-        { regex: /\+(\d+)\s*Defense\s*Rating/gi, stat: 'defense' },
-        { regex: /Increases? defense rating by (\d+)/gi, stat: 'defense' },
-        { regex: /\+(\d+)\s*Dodge\s*Rating/gi, stat: 'dodge' },
-        { regex: /\+(\d+)\s*Parry\s*Rating/gi, stat: 'parry' },
-        { regex: /\+(\d+)\s*Block\s*Rating/gi, stat: 'block' },
-        // Hit/Crit
-        { regex: /\+(\d+)\s*Hit\s*Rating/gi, stat: 'hit' },
-        { regex: /Increases? (?:your )?hit rating by (\d+)/gi, stat: 'hit' },
-        { regex: /\+(\d+)\s*Critical\s*Strike\s*Rating/gi, stat: 'crit' },
-        { regex: /Increases? (?:your )?critical strike rating by (\d+)/gi, stat: 'crit' },
-        { regex: /\+(\d+)\s*Haste\s*Rating/gi, stat: 'haste' },
-        { regex: /\+(\d+)\s*Expertise\s*Rating/gi, stat: 'expertise' },
-        // Physical damage
-        { regex: /\+(\d+)\s*Attack\s*Power/gi, stat: 'attackpower' },
-        { regex: /Increases? attack power by (\d+)/gi, stat: 'attackpower' },
-        { regex: /\+(\d+)\s*Armor\s*Penetration/gi, stat: 'armorpen' },
-        // Spell stats
-        { regex: /\+(\d+)\s*Spell\s*Hit\s*Rating/gi, stat: 'spellhit' },
-        { regex: /\+(\d+)\s*Spell\s*Critical\s*Strike/gi, stat: 'spellcrit' },
-        { regex: /\+(\d+)\s*Spell\s*Haste/gi, stat: 'spellhaste' },
-        { regex: /\+(\d+)\s*Spell\s*Damage/gi, stat: 'spelldamage' },
-        { regex: /\+(\d+)\s*Damage\s*and\s*Healing/gi, stat: 'spelldamage' },
-        { regex: /Increases? (?:damage and )?healing done by (?:magical )?spells and effects by (?:up to )?(\d+)/gi, stat: 'spelldamage' },
-        { regex: /Increases? spell power by (\d+)/gi, stat: 'spelldamage' },
-        // Healing
-        { regex: /\+(\d+)\s*Healing/gi, stat: 'healing' },
-        { regex: /Increases? healing done by (?:spells and effects by )?(?:up to )?(\d+)/gi, stat: 'healing' },
-        // Mana
-        { regex: /(\d+)\s*Mana\s*per\s*5/gi, stat: 'mp5' },
-        { regex: /\+(\d+)\s*mana\s*every\s*5/gi, stat: 'mp5' },
-        { regex: /Restores? (\d+) mana per 5 sec/gi, stat: 'mp5' }
-    ];
-
-    for (const { regex, stat } of patterns) {
-        let match;
-        while ((match = regex.exec(tooltipHtml)) !== null) {
-            stats[stat] += parseInt(match[1], 10);
-        }
+    if (!tooltipHtml) {
+        console.log('[PARSE] No tooltip HTML provided');
+        return stats;
     }
+
+    console.log('[PARSE] Tooltip length:', tooltipHtml.length, 'Preview:', tooltipHtml.substring(0, 200));
+
+    // Helper to get first match only (no accumulation)
+    const getMatch = (regex) => {
+        const match = regex.exec(tooltipHtml);
+        if (match) console.log('[PARSE] Matched:', regex.source, '=', match[1]);
+        return match ? parseInt(match[1], 10) : 0;
+    };
+
+    // Primary stats - these are simple "+X Stat" format
+    stats.stamina = getMatch(/\+(\d+)\s+Stamina/i);
+    stats.intellect = getMatch(/\+(\d+)\s+Intellect/i);
+    stats.strength = getMatch(/\+(\d+)\s+Strength/i);
+    stats.agility = getMatch(/\+(\d+)\s+Agility/i);
+    stats.spirit = getMatch(/\+(\d+)\s+Spirit/i);
+
+    // Armor - look for the main armor value (usually in format "XXX Armor")
+    // But exclude "Armor Penetration" and bonus armor text
+    const armorMatch = tooltipHtml.match(/<span[^>]*>(\d+) Armor<\/span>/i);
+    if (armorMatch) stats.armor = parseInt(armorMatch[1], 10);
+
+    // Defense stats - rating format
+    stats.defense = getMatch(/\+(\d+)\s+Defense Rating/i) || getMatch(/Equip: Increases defense rating by (\d+)/i);
+    stats.dodge = getMatch(/\+(\d+)\s+Dodge Rating/i) || getMatch(/Equip: Increases your dodge rating by (\d+)/i);
+    stats.parry = getMatch(/\+(\d+)\s+Parry Rating/i) || getMatch(/Equip: Increases your parry rating by (\d+)/i);
+    stats.block = getMatch(/\+(\d+)\s+Block Rating/i) || getMatch(/Equip: Increases your shield block rating by (\d+)/i);
+
+    // Hit rating - be specific to avoid matching spell hit
+    stats.hit = getMatch(/\+(\d+)\s+Hit Rating/i) || getMatch(/Equip: Increases your hit rating by (\d+)/i);
+
+    // Crit rating
+    stats.crit = getMatch(/\+(\d+)\s+Critical Strike Rating/i) || getMatch(/Equip: Increases your critical strike rating by (\d+)/i);
+
+    // Haste rating
+    stats.haste = getMatch(/\+(\d+)\s+Haste Rating/i) || getMatch(/Equip: Increases your haste rating by (\d+)/i);
+
+    // Expertise
+    stats.expertise = getMatch(/\+(\d+)\s+Expertise Rating/i) || getMatch(/Equip: Increases your expertise rating by (\d+)/i);
+
+    // Attack power
+    stats.attackpower = getMatch(/\+(\d+)\s+Attack Power/i) || getMatch(/Equip: Increases attack power by (\d+)/i);
+
+    // Armor penetration
+    stats.armorpen = getMatch(/\+(\d+)\s+Armor Penetration Rating/i) || getMatch(/Equip: Increases your armor penetration rating by (\d+)/i);
+
+    // Spell hit (separate from melee hit)
+    stats.spellhit = getMatch(/\+(\d+)\s+Spell Hit Rating/i) || getMatch(/Equip: Increases your spell hit rating by (\d+)/i);
+
+    // Spell crit
+    stats.spellcrit = getMatch(/\+(\d+)\s+Spell Critical Strike Rating/i) || getMatch(/Equip: Increases your spell critical strike rating by (\d+)/i);
+
+    // Spell haste
+    stats.spellhaste = getMatch(/\+(\d+)\s+Spell Haste Rating/i) || getMatch(/Equip: Increases your spell haste rating by (\d+)/i);
+
+    // Spell damage / spell power - TBC uses "damage and healing" format
+    // Match: "Increases damage and healing done by magical spells and effects by up to X"
+    const spellPowerMatch = tooltipHtml.match(/Equip: Increases damage and healing done by (?:magical )?spells and effects by (?:up to )?(\d+)/i);
+    if (spellPowerMatch) {
+        stats.spelldamage = parseInt(spellPowerMatch[1], 10);
+    } else {
+        // Try spell power format
+        stats.spelldamage = getMatch(/Equip: Increases spell power by (\d+)/i);
+    }
+
+    // Healing bonus (separate from spell damage) - ONLY match healing-only items
+    // Pattern: "Increases healing done by spells and effects by up to X" (no "damage and")
+    const healingOnlyMatch = tooltipHtml.match(/Equip: Increases healing done by (?:up to )?(\d+)/i);
+    if (healingOnlyMatch && !tooltipHtml.match(/damage and healing/i)) {
+        stats.healing = parseInt(healingOnlyMatch[1], 10);
+    }
+
+    // MP5
+    stats.mp5 = getMatch(/Equip: Restores (\d+) mana per 5 sec/i) || getMatch(/\+(\d+)\s+Mana every 5 Sec/i);
+
+    // Log final parsed stats
+    const nonZeroStats = Object.entries(stats).filter(([k, v]) => v > 0);
+    console.log('[PARSE] Final stats:', nonZeroStats.length > 0 ? Object.fromEntries(nonZeroStats) : 'ALL ZERO');
 
     return stats;
 }
@@ -1688,137 +1728,136 @@ function sumStats(statsArray) {
     return total;
 }
 
-// Global storage for fetched item stats
+// Global cache for fetched item stats
 let fetchedItemStats = {};
-let statsFetchInProgress = false;
-let wowheadLinksContainer = null;
+let tooltipFetchInProgress = false;
 
-// Batch fetch all item stats - creates all links at once, waits for Wowhead to load, then reads tooltips
+// Fetch item tooltip from Wowhead and parse stats
+async function fetchItemTooltip(itemId) {
+    const emptyStats = { stamina: 0, intellect: 0, strength: 0, agility: 0, spirit: 0, armor: 0, defense: 0, dodge: 0, parry: 0, block: 0, hit: 0, crit: 0, haste: 0, expertise: 0, attackpower: 0, armorpen: 0, spellhit: 0, spellcrit: 0, spellhaste: 0, spelldamage: 0, healing: 0, mp5: 0 };
+
+    // Check cache first
+    if (fetchedItemStats[itemId]) {
+        return fetchedItemStats[itemId];
+    }
+
+    return new Promise((resolve) => {
+        // Create hidden container for tooltip fetch
+        const container = document.createElement('div');
+        container.style.cssText = 'position:fixed;left:-9999px;top:-9999px;visibility:hidden;';
+        container.innerHTML = `<a id="fetch-${itemId}" href="https://tbc.wowhead.com/item=${itemId}" data-wowhead="item=${itemId}&domain=tbc">x</a>`;
+        document.body.appendChild(container);
+
+        // Trigger Wowhead to fetch tooltip
+        if (typeof $WowheadPower !== 'undefined') {
+            $WowheadPower.refreshLinks();
+        }
+
+        // Check for tooltip data in cache
+        let attempts = 0;
+        const maxAttempts = 50; // 5 seconds max
+
+        const checkCache = () => {
+            attempts++;
+            let tooltipHtml = null;
+
+            // Try multiple cache locations
+            if (typeof $WowheadPower !== 'undefined') {
+                // Check getItem method
+                if ($WowheadPower.getItem) {
+                    const item = $WowheadPower.getItem(itemId);
+                    if (item && item.tooltip_enus) {
+                        tooltipHtml = item.tooltip_enus;
+                        console.log(`[FETCH] Item ${itemId}: Found via getItem()`);
+                    }
+                }
+                // Check items cache
+                if (!tooltipHtml && $WowheadPower.items && $WowheadPower.items[itemId]) {
+                    tooltipHtml = $WowheadPower.items[itemId].tooltip_enus || $WowheadPower.items[itemId].tooltip;
+                    if (tooltipHtml) console.log(`[FETCH] Item ${itemId}: Found in items cache`);
+                }
+            }
+
+            // Check whTooltips cache
+            if (!tooltipHtml && typeof whTooltips !== 'undefined' && whTooltips.aT) {
+                tooltipHtml = whTooltips.aT[itemId] || whTooltips.aT[`item_${itemId}`];
+                if (tooltipHtml) console.log(`[FETCH] Item ${itemId}: Found in whTooltips.aT`);
+            }
+
+            if (tooltipHtml) {
+                console.log(`[FETCH] Item ${itemId}: Got tooltip, length=${tooltipHtml.length}`);
+                const stats = parseTooltipStats(tooltipHtml);
+                console.log(`[FETCH] Item ${itemId}: Parsed stats=`, JSON.stringify(stats));
+                fetchedItemStats[itemId] = stats;
+                container.remove();
+                resolve(stats);
+            } else if (attempts >= maxAttempts) {
+                console.log(`[FETCH] Item ${itemId}: Timeout - no tooltip found`);
+                container.remove();
+                resolve(emptyStats);
+            } else {
+                setTimeout(checkCache, 100);
+            }
+        };
+
+        setTimeout(checkCache, 150);
+    });
+}
+
+// Fetch stats for multiple items
 async function fetchAllItemStats(itemIds) {
-    if (statsFetchInProgress) return;
-    statsFetchInProgress = true;
+    if (tooltipFetchInProgress) return;
+    tooltipFetchInProgress = true;
 
     const statusDiv = document.getElementById('stats-status');
     const toFetch = itemIds.filter(id => !fetchedItemStats[id]);
 
     if (toFetch.length === 0) {
-        statsFetchInProgress = false;
-        await updateStatsDisplay();
+        if (statusDiv) statusDiv.innerHTML = '<span class="text-terminal-accent">Stats ready!</span>';
+        tooltipFetchInProgress = false;
         return;
     }
 
-    try {
-        if (statusDiv) statusDiv.innerHTML = `<span class="text-yellow-400">Loading ${toFetch.length} items...</span>`;
-
-        // Hide any existing Wowhead tooltip during batch processing
-        const existingTooltips = document.querySelectorAll('.wowhead-tooltip');
-        existingTooltips.forEach(t => t.style.display = 'none');
-
-        // Create invisible container off-screen
-        wowheadLinksContainer = document.createElement('div');
-        wowheadLinksContainer.id = 'wowhead-batch-links';
-        wowheadLinksContainer.style.cssText = 'position:absolute;left:-9999px;top:-9999px;opacity:0;pointer-events:none;';
-
-        const links = {};
-        for (const itemId of toFetch) {
-            const link = document.createElement('a');
-            link.href = `https://tbc.wowhead.com/item=${itemId}`;
-            link.dataset.wowhead = `item=${itemId}&domain=tbc`;
-            link.dataset.itemId = itemId;
-            link.textContent = `[${itemId}]`;
-            wowheadLinksContainer.appendChild(link);
-            links[itemId] = link;
+    // Fetch in small batches to avoid overwhelming Wowhead
+    const batchSize = 5;
+    for (let i = 0; i < toFetch.length; i += batchSize) {
+        const batch = toFetch.slice(i, i + batchSize);
+        if (statusDiv) {
+            statusDiv.innerHTML = `<span class="text-yellow-400">Loading items ${i + 1}-${Math.min(i + batchSize, toFetch.length)} of ${toFetch.length}...</span>`;
         }
-        document.body.appendChild(wowheadLinksContainer);
-
-        // Tell Wowhead to process all links
-        if (typeof $WowheadPower !== 'undefined') {
-            $WowheadPower.refreshLinks();
-        }
-
-        // Wait for Wowhead to fetch data
-        await new Promise(r => setTimeout(r, 1000));
-
-        // Read tooltips by triggering hover on each
-        for (let i = 0; i < toFetch.length; i++) {
-            const itemId = toFetch[i];
-            const link = links[itemId];
-
-            // Temporarily make link interactive
-            link.style.cssText = 'position:fixed;top:0;left:0;';
-            wowheadLinksContainer.style.cssText = 'position:fixed;top:0;left:0;opacity:0;z-index:-1;';
-
-            link.dispatchEvent(new MouseEvent('mouseover', { bubbles: true, cancelable: true, view: window }));
-            await new Promise(r => setTimeout(r, 50));
-
-            let stats = { stamina: 0, intellect: 0, strength: 0, agility: 0, spirit: 0, armor: 0, defense: 0, dodge: 0, parry: 0, block: 0, hit: 0, crit: 0, haste: 0, expertise: 0, attackpower: 0, armorpen: 0, spellhit: 0, spellcrit: 0, spellhaste: 0, spelldamage: 0, healing: 0, mp5: 0 };
-
-            const tooltipEl = document.querySelector('.wowhead-tooltip');
-            if (tooltipEl && tooltipEl.innerHTML && tooltipEl.innerHTML.length > 100) {
-                stats = parseTooltipStats(tooltipEl.innerHTML);
-                tooltipEl.style.display = 'none'; // Hide immediately
-            }
-            fetchedItemStats[itemId] = stats;
-
-            link.dispatchEvent(new MouseEvent('mouseout', { bubbles: true, cancelable: true, view: window }));
-        }
-
-        // Cleanup
-        document.body.removeChild(wowheadLinksContainer);
-        wowheadLinksContainer = null;
-
-        // Restore tooltip visibility for normal use
-        document.querySelectorAll('.wowhead-tooltip').forEach(t => t.style.display = '');
-
-        if (statusDiv) statusDiv.innerHTML = '<span class="text-terminal-accent">Stats loaded!</span>';
-        await updateStatsDisplay();
-
-    } catch (err) {
-        console.error('Error fetching item stats:', err);
-        if (statusDiv) statusDiv.innerHTML = '<span class="text-red-400">Error: ' + err.message + '</span>';
-        if (wowheadLinksContainer && wowheadLinksContainer.parentNode) {
-            document.body.removeChild(wowheadLinksContainer);
-        }
-    } finally {
-        statsFetchInProgress = false;
+        // Fetch batch in parallel
+        await Promise.all(batch.map(id => fetchItemTooltip(id)));
     }
+
+    if (statusDiv) statusDiv.innerHTML = '<span class="text-terminal-accent">Stats loaded!</span>';
+    tooltipFetchInProgress = false;
 }
 
 // Update the stats display with phase-based BiS comparison
-async function updateStatsDisplay() {
+async function updateStatsDisplay(itemIdsList) {
     const statsDiv = document.getElementById('total-stats');
     const readinessDiv = document.getElementById('stat-readiness');
     if (!statsDiv) return;
 
-    // Get all item IDs from the current gear list
-    const gearText = document.getElementById('gear-input')?.value || '';
-    const lines = gearText.split('\n').map(l => l.trim()).filter(l => l);
-    const itemStats = [];
-
-    for (const line of lines) {
-        const itemId = findItemId(line);
-        if (itemId && fetchedItemStats[itemId]) {
-            itemStats.push(fetchedItemStats[itemId]);
-        }
+    // If no itemIdsList provided, try to get from gear input
+    if (!itemIdsList) {
+        const gearText = document.getElementById('gear-input')?.value || '';
+        const lines = gearText.split('\n').map(l => l.trim()).filter(l => l);
+        itemIdsList = lines.map(l => findItemId(l)).filter(Boolean);
     }
 
-    if (itemStats.length === 0) {
-        // Check if we have items but no stats were parsed
-        const gearIds = lines.map(l => findItemId(l)).filter(Boolean);
-        const hasItems = gearIds.length > 0;
-        const fetchedCount = gearIds.filter(id => fetchedItemStats[id]).length;
+    // Get stats from fetched cache
+    const userItemStats = itemIdsList
+        .map(id => fetchedItemStats[id])
+        .filter(stats => stats && Object.values(stats).some(v => typeof v === 'number' && v > 0));
 
-        if (hasItems && fetchedCount > 0) {
-            statsDiv.innerHTML = `<span class="text-yellow-400">Stats parsed but all were zero. Try refreshing the page and calculating again.</span>`;
-        } else {
-            statsDiv.innerHTML = '<span class="text-terminal-dim">No stats calculated yet</span>';
-        }
+    if (userItemStats.length === 0) {
+        statsDiv.innerHTML = '<span class="text-yellow-400">No stats loaded yet. Click Calculate Stats.</span>';
         if (readinessDiv) readinessDiv.innerHTML = '';
         return;
     }
 
-    const userTotal = sumStats(itemStats);
-    console.log('User total stats:', userTotal);
+    const userTotal = sumStats(userItemStats);
 
     // Get BiS stats for selected phase and previous phase
     const bisStats = await calculatePhaseBisStats(preRaidClass, preRaidSpecName, selectedPhase);
@@ -2062,63 +2101,40 @@ Wastewalker Shoulderpads
         });
 
         // Spec selector change
-        document.getElementById('preraid-spec').addEventListener('change', async (e) => {
+        document.getElementById('preraid-spec').addEventListener('change', (e) => {
             preRaidSpecName = e.target.value;
             bisStatsCache = {}; // Clear cache when spec changes
             updateGearPreview();
-            // Also update stats display if we have stats calculated
-            await updateStatsDisplay();
+            // Update stats display if we have fetched data
+            updateStatsDisplay();
         });
 
         // Phase selector change
-        document.getElementById('phase-select').addEventListener('change', async (e) => {
+        document.getElementById('phase-select').addEventListener('change', (e) => {
             selectedPhase = e.target.value;
             bisStatsCache = {}; // Clear cache when phase changes
-
-            // Show loading status
-            const statusDiv = document.getElementById('stats-status');
-            if (statusDiv) statusDiv.innerHTML = '<span class="text-yellow-400">Recalculating for new phase...</span>';
-
-            // Recalculate stats for the new phase
-            await updateStatsDisplay();
-
-            if (statusDiv) statusDiv.innerHTML = '<span class="text-terminal-accent">Phase updated!</span>';
+            // Recalculate stats display
+            updateStatsDisplay();
         });
 
-        // Fetch stats button
+        // Calculate stats button - fetches from Wowhead dynamically
         document.getElementById('fetch-stats-btn').addEventListener('click', async () => {
             const gearText = document.getElementById('gear-input')?.value || '';
             const lines = gearText.split('\n').map(l => l.trim()).filter(l => l);
-            const itemIdsToFetch = new Set();
+            const itemIdsList = [];
 
-            // Add user's items
             for (const line of lines) {
                 const itemId = findItemId(line);
-                if (itemId) itemIdsToFetch.add(itemId);
+                if (itemId) itemIdsList.push(itemId);
             }
 
-            // Also add BiS items for current phase so we can compare
-            const bisList = getPhaseBisList(preRaidClass, preRaidSpecName, selectedPhase);
-            for (const [slot, itemName, source] of bisList) {
-                const cleanName = cleanItemName(itemName);
-                const itemId = findItemId(cleanName);
-                if (itemId) itemIdsToFetch.add(itemId);
-            }
-
-            // Add previous phase BiS too for "PREPARED" comparison
-            const prevPhase = String(Math.max(0, parseInt(selectedPhase) - 1));
-            if (prevPhase !== selectedPhase) {
-                const prevBisList = getPhaseBisList(preRaidClass, preRaidSpecName, prevPhase);
-                for (const [slot, itemName, source] of prevBisList) {
-                    const cleanName = cleanItemName(itemName);
-                    const itemId = findItemId(cleanName);
-                    if (itemId) itemIdsToFetch.add(itemId);
-                }
-            }
-
-            if (itemIdsToFetch.size > 0) {
-                bisStatsCache = {}; // Clear BiS cache
-                await fetchAllItemStats([...itemIdsToFetch]);
+            if (itemIdsList.length > 0) {
+                // Clear BiS cache to force recalculation
+                bisStatsCache = {};
+                // Fetch item stats from Wowhead
+                await fetchAllItemStats(itemIdsList);
+                // Now display
+                updateStatsDisplay(itemIdsList);
             } else {
                 const statusDiv = document.getElementById('stats-status');
                 if (statusDiv) statusDiv.innerHTML = '<span class="text-red-400">No valid items found</span>';
