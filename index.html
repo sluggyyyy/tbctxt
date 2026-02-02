@@ -1460,9 +1460,10 @@ async function calculatePhaseBisStats(className, specName, phaseKey) {
     if (bisStatsCache[cacheKey]) return bisStatsCache[cacheKey];
 
     const bisList = getPhaseBisList(className, specName, phaseKey);
+    console.log(`BiS list for ${className}/${specName}/phase ${phaseKey}:`, bisList.length, 'items');
     if (bisList.length === 0) return null;
 
-    // Get only BEST items for each slot
+    // Get only BEST items for each slot (or first item if no BEST marker)
     const bestBySlot = {};
     for (const [slot, itemName, source] of bisList) {
         if (itemName.includes('(BEST)') || !bestBySlot[slot]) {
@@ -1470,24 +1471,35 @@ async function calculatePhaseBisStats(className, specName, phaseKey) {
             const itemId = findItemId(cleanName);
             if (itemId) {
                 bestBySlot[slot] = { itemId, name: cleanName };
+            } else {
+                console.warn(`Item not found in itemIds: "${cleanName}" for slot ${slot}`);
             }
         }
     }
 
-    // Fetch stats for each item
-    const statsArray = [];
-    for (const slot in bestBySlot) {
-        const { itemId } = bestBySlot[slot];
-        if (fetchedItemStats[itemId]) {
-            statsArray.push(fetchedItemStats[itemId]);
-        } else {
-            const stats = await fetchItemStats(itemId);
-            fetchedItemStats[itemId] = stats;
-            statsArray.push(stats);
-        }
+    console.log(`Best items by slot for phase ${phaseKey}:`, bestBySlot);
+
+    // Get list of item IDs that need fetching
+    const itemsToFetch = Object.values(bestBySlot)
+        .filter(item => !fetchedItemStats[item.itemId])
+        .map(item => item.itemId);
+
+    // Fetch all missing stats in parallel
+    if (itemsToFetch.length > 0) {
+        console.log(`Fetching ${itemsToFetch.length} BiS items for phase ${phaseKey}...`);
+        const results = await Promise.all(itemsToFetch.map(id => fetchItemStats(id)));
+        itemsToFetch.forEach((id, i) => {
+            fetchedItemStats[id] = results[i];
+        });
     }
 
+    // Collect stats from all slots
+    const statsArray = Object.values(bestBySlot)
+        .map(item => fetchedItemStats[item.itemId])
+        .filter(Boolean);
+
     const totalStats = sumStats(statsArray);
+    console.log(`Phase ${phaseKey} BiS total stats:`, totalStats);
     bisStatsCache[cacheKey] = totalStats;
     return totalStats;
 }
