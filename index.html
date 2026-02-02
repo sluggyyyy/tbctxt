@@ -1530,11 +1530,22 @@ async function searchItemByName(itemName) {
 
         const data = await response.json();
         if (data.items && data.items.length > 0) {
-            // Find best match - prefer exact name match
+            // Find best match - require the names to actually relate
             const exactMatch = data.items.find(item =>
                 item.name.toLowerCase() === lower
             );
-            const result = exactMatch || data.items[0];
+            // Partial match: item name contains search OR search contains item name
+            const partialMatch = data.items.find(item => {
+                const itemLower = item.name.toLowerCase();
+                return itemLower.includes(lower) || lower.includes(itemLower);
+            });
+
+            const result = exactMatch || partialMatch;
+            if (!result) {
+                // No good match found
+                itemSearchCache[lower] = null;
+                return null;
+            }
 
             // Cache the result and add to local itemIds for future lookups
             itemSearchCache[lower] = result;
