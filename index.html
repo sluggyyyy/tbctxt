@@ -1503,6 +1503,47 @@ function findItemId(itemName) {
     return null;
 }
 
+// Cache for Blizzard item searches
+const blizzardItemCache = {};
+
+// Search Blizzard API for item ID by name
+async function searchBlizzardItem(itemName) {
+    const lower = itemName.toLowerCase().trim();
+    if (!lower) return null;
+
+    // Check cache first
+    if (blizzardItemCache[lower] !== undefined) {
+        return blizzardItemCache[lower];
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/item-search?name=${encodeURIComponent(itemName)}`);
+        if (!response.ok) return null;
+
+        const data = await response.json();
+        if (data.items && data.items.length > 0) {
+            // Find best match - prefer exact name match
+            const exactMatch = data.items.find(item =>
+                item.name.toLowerCase() === lower
+            );
+            const result = exactMatch || data.items[0];
+
+            // Cache the result and add to local itemIds for future lookups
+            blizzardItemCache[lower] = result;
+            if (result && result.id) {
+                itemIds[lower] = result.id;
+            }
+            return result;
+        }
+
+        blizzardItemCache[lower] = null;
+        return null;
+    } catch (e) {
+        console.error('Blizzard item search error:', e);
+        return null;
+    }
+}
+
 // Extract item name without rating suffix
 function cleanItemName(bisEntry) {
     // bisEntry is like "Overlord's Helmet of Second Sight (BEST)"
@@ -2298,7 +2339,7 @@ function detectRole(stats) {
 }
 
 // Update gear preview with Wowhead tooltips
-function updateGearPreview() {
+async function updateGearPreview() {
     const previewDiv = document.getElementById('gear-preview');
     if (!previewDiv) return;
 
@@ -2313,11 +2354,36 @@ function updateGearPreview() {
     const bisList = getPreRaidBisList(preRaidClass, preRaidSpecName);
     const matchResults = parseAndMatchGear(gearText, bisList);
 
-    // Build preview HTML
+    // Find items not in local database and search Blizzard API
+    const unknownItems = matchResults.filter(r => !r.itemId);
+    if (unknownItems.length > 0) {
+        // Show searching indicator
+        const searchingHtml = matchResults.map(r => {
+            if (r.itemId) {
+                const bisTag = r.bisMatch ? `<span class="text-terminal-accent ml-2">[BiS${r.slot ? ' - ' + r.slot : ''}]</span>` : '';
+                return `<div class="py-1"><a href="https://tbc.wowhead.com/item=${r.itemId}" data-wowhead="item=${r.itemId}" class="text-wow-uncommon hover:text-terminal-text">${r.input}</a>${bisTag}</div>`;
+            }
+            return `<div class="py-1"><span class="text-yellow-400">${r.input}</span> <span class="text-terminal-dim">(searching...)</span></div>`;
+        }).join('');
+        previewDiv.innerHTML = searchingHtml;
+
+        // Search for unknown items via Blizzard API
+        await Promise.all(unknownItems.map(async (r) => {
+            const result = await searchBlizzardItem(r.input);
+            if (result && result.id) {
+                r.itemId = result.id;
+                r.found = true;
+                r.fromBlizzard = true;
+            }
+        }));
+    }
+
+    // Build final preview HTML
     const previewHtml = matchResults.map(r => {
         if (r.itemId) {
             const bisTag = r.bisMatch ? `<span class="text-terminal-accent ml-2">[BiS${r.slot ? ' - ' + r.slot : ''}]</span>` : '';
-            return `<div class="py-1"><a href="https://tbc.wowhead.com/item=${r.itemId}" data-wowhead="item=${r.itemId}" class="text-wow-uncommon hover:text-terminal-text">${r.input}</a>${bisTag}</div>`;
+            const blizzardTag = r.fromBlizzard ? `<span class="text-blue-400 ml-2">[Blizzard]</span>` : '';
+            return `<div class="py-1"><a href="https://tbc.wowhead.com/item=${r.itemId}" data-wowhead="item=${r.itemId}" class="text-wow-uncommon hover:text-terminal-text">${r.input}</a>${bisTag}${blizzardTag}</div>`;
         }
         return `<div class="py-1"><span class="text-red-400">${r.input}</span> <span class="text-terminal-dim">(not found)</span></div>`;
     }).join('');
