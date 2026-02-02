@@ -6,9 +6,9 @@ const path = require('path');
 const PORT = process.env.PORT || 8080;
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, '..', 'data');
 
-// WCL OAuth token cache
-let wclAccessToken = '';
-let wclTokenExpiry = 0;
+// Blizzard OAuth token cache
+let bnetAccessToken = '';
+let bnetTokenExpiry = 0;
 
 let classData = {};
 let itemIds = {};
@@ -34,25 +34,25 @@ function errorResponse(res, message, status = 404) {
     jsonResponse(res, { error: message }, status);
 }
 
-// WCL OAuth2 token fetching
-function getWclAccessToken() {
+// Blizzard OAuth2 token fetching
+function getBnetAccessToken(region) {
     return new Promise((resolve, reject) => {
-        if (wclAccessToken && wclTokenExpiry > Date.now() / 1000 + 60) {
-            return resolve(wclAccessToken);
+        if (bnetAccessToken && bnetTokenExpiry > Date.now() / 1000 + 60) {
+            return resolve(bnetAccessToken);
         }
 
-        const clientId = process.env.WCL_CLIENT_ID;
-        const clientSecret = process.env.WCL_CLIENT_SECRET;
+        const clientId = process.env.BNET_CLIENT_ID;
+        const clientSecret = process.env.BNET_CLIENT_SECRET;
 
         if (!clientId || !clientSecret) {
-            return reject(new Error('WCL_CLIENT_ID and WCL_CLIENT_SECRET required'));
+            return reject(new Error('BNET_CLIENT_ID and BNET_CLIENT_SECRET required'));
         }
 
         const auth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
         const postData = 'grant_type=client_credentials';
 
         const req = https.request({
-            hostname: 'fresh.warcraftlogs.com',
+            hostname: `${region}.battle.net`,
             path: '/oauth/token',
             method: 'POST',
             headers: {
@@ -67,11 +67,11 @@ function getWclAccessToken() {
                 try {
                     const parsed = JSON.parse(data);
                     if (parsed.access_token) {
-                        wclAccessToken = parsed.access_token;
-                        wclTokenExpiry = Date.now() / 1000 + parsed.expires_in;
-                        resolve(wclAccessToken);
+                        bnetAccessToken = parsed.access_token;
+                        bnetTokenExpiry = Date.now() / 1000 + parsed.expires_in;
+                        resolve(bnetAccessToken);
                     } else {
-                        reject(new Error('No access token in response'));
+                        reject(new Error('No access token in response: ' + JSON.stringify(parsed)));
                     }
                 } catch (e) {
                     reject(e);
@@ -85,40 +85,36 @@ function getWclAccessToken() {
     });
 }
 
-// WCL GraphQL request
-function wclGraphQL(query, token) {
+// Blizzard API request
+function bnetApiRequest(region, path, namespace, token) {
     return new Promise((resolve, reject) => {
-        const postData = JSON.stringify({ query });
-
         const req = https.request({
-            hostname: 'fresh.warcraftlogs.com',
-            path: '/api/v2/client',
-            method: 'POST',
+            hostname: `${region}.api.blizzard.com`,
+            path: path,
+            method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(postData)
+                'Battlenet-Namespace': namespace
             }
         }, (res) => {
             let data = '';
             res.on('data', chunk => data += chunk);
             res.on('end', () => {
                 try {
-                    resolve(JSON.parse(data));
+                    resolve({ status: res.statusCode, data: JSON.parse(data) });
                 } catch (e) {
-                    reject(e);
+                    resolve({ status: res.statusCode, data: data });
                 }
             });
         });
 
         req.on('error', reject);
-        req.write(postData);
         req.end();
     });
 }
 
-// Handle WCL character gear lookup
-async function handleWclCharacter(req, res, url) {
+// Handle Blizzard character gear lookup
+async function handleBnetCharacter(req, res, url) {
     const name = url.searchParams.get('name');
     const realm = url.searchParams.get('realm');
     const region = url.searchParams.get('region') || 'us';
@@ -129,90 +125,60 @@ async function handleWclCharacter(req, res, url) {
 
     let token;
     try {
-        token = await getWclAccessToken();
+        token = await getBnetAccessToken(region);
     } catch (e) {
-        console.error('WCL auth error:', e.message);
-        return errorResponse(res, 'Warcraft Logs authentication failed', 503);
+        console.error('Blizzard auth error:', e.message);
+        return errorResponse(res, 'Blizzard authentication failed: ' + e.message, 503);
     }
 
-    // Query for character and recent reports
-    // TBC Anniversary uses zoneID for the game version
-    // Zone 1002 = TBC Classic
-    const charQuery = `{
-        characterData {
-            character(name: "${name}", serverSlug: "${realm.toLowerCase()}", serverRegion: "${region}") {
-                name
-                classID
-                zoneRankings(zoneID: 1002)
-                recentReports(limit: 1, zoneID: 1002) {
-                    data {
-                        code
-                        startTime
-                        fights { id name }
-                    }
-                }
+    // Try different namespaces for TBC Anniversary
+    // profile-classic-us, profile-classic1x-us, etc.
+    const namespaces = [
+        `profile-classic-${region}`,
+        `profile-classic1x-${region}`,
+        `profile-classicprogression-${region}`
+    ];
+
+    const realmSlug = realm.toLowerCase().replace(/\s+/g, '-');
+    const charName = name.toLowerCase();
+    const path = `/profile/wow/character/${realmSlug}/${charName}/equipment`;
+
+    console.log(`Fetching: ${path}`);
+
+    let lastError = null;
+    for (const namespace of namespaces) {
+        console.log(`Trying namespace: ${namespace}`);
+        try {
+            const result = await bnetApiRequest(region, path, namespace, token);
+            console.log(`Response (${namespace}):`, result.status, JSON.stringify(result.data).substring(0, 200));
+
+            if (result.status === 200 && result.data.equipped_items) {
+                // Transform Blizzard gear format to our format
+                const gear = result.data.equipped_items.map(item => ({
+                    id: item.item?.id,
+                    name: item.name,
+                    slot: item.slot?.type,
+                    quality: item.quality?.type,
+                    itemLevel: item.level?.value
+                }));
+
+                return jsonResponse(res, {
+                    name: charName,
+                    gear,
+                    realm,
+                    region,
+                    source: 'blizzard',
+                    namespace
+                });
             }
+            lastError = result.data;
+        } catch (e) {
+            console.error(`Error with namespace ${namespace}:`, e.message);
+            lastError = e.message;
         }
-    }`;
-
-    try {
-        const charResp = await wclGraphQL(charQuery, token);
-        console.log('WCL Response:', JSON.stringify(charResp, null, 2));
-
-        if (charResp.errors?.length) {
-            console.log('WCL Errors:', charResp.errors);
-            return errorResponse(res, charResp.errors[0].message, 400);
-        }
-
-        const char = charResp.data?.characterData?.character;
-        if (!char?.name) {
-            console.log('Character not found in response:', charResp.data);
-            return errorResponse(res, 'Character not found', 404);
-        }
-
-        let gear = [];
-
-        // If we have a recent report, fetch gear from it
-        if (char.recentReports?.data?.length > 0) {
-            const report = char.recentReports.data[0];
-            const fightId = report.fights?.[0]?.id || 1;
-
-            const gearQuery = `{
-                reportData {
-                    report(code: "${report.code}") {
-                        playerDetails(fightIDs: [${fightId}])
-                    }
-                }
-            }`;
-
-            const gearResp = await wclGraphQL(gearQuery, token);
-            const playerDetails = gearResp.data?.reportData?.report?.playerDetails;
-
-            // Search all roles for the player
-            for (const role of ['dps', 'tanks', 'healers']) {
-                const players = playerDetails?.[role] || [];
-                for (const player of players) {
-                    if (player.name?.toLowerCase() === name.toLowerCase()) {
-                        gear = player.gear || [];
-                        break;
-                    }
-                }
-                if (gear.length) break;
-            }
-        }
-
-        return jsonResponse(res, {
-            name: char.name,
-            classID: char.classID,
-            gear,
-            realm,
-            region
-        });
-
-    } catch (e) {
-        console.error('WCL API error:', e);
-        return errorResponse(res, 'Failed to fetch from Warcraft Logs', 502);
     }
+
+    return errorResponse(res, 'Character not found. Tried namespaces: ' + namespaces.join(', '), 404);
 }
 
 const server = http.createServer((req, res) => {
@@ -306,9 +272,9 @@ const server = http.createServer((req, res) => {
         return errorResponse(res, 'Not found');
     }
 
-    // /api/wcl/character?name=&realm=&region=
-    if (route[0] === 'wcl' && route[1] === 'character') {
-        return handleWclCharacter(req, res, url);
+    // /api/character?name=&realm=&region= (Blizzard API)
+    if (route[0] === 'character') {
+        return handleBnetCharacter(req, res, url);
     }
 
     return errorResponse(res, 'Not found');

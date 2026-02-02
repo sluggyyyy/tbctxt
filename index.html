@@ -2289,7 +2289,6 @@ async function updateStatsDisplay(itemIdsList) {
         readinessDiv.innerHTML = readinessHtml;
     }
 }
-
 // Detect role based on stats
 function detectRole(stats) {
     if (stats.defense > 100 || stats.parry > 50 || stats.dodge > 50) return 'tank';
@@ -2524,7 +2523,7 @@ Wastewalker Shoulderpads
                 return;
             }
 
-            if (statusEl) statusEl.innerHTML = '<span class="text-terminal-accent">Fetching from Warcraft Logs...</span>';
+            if (statusEl) statusEl.innerHTML = '<span class="text-terminal-accent">Fetching from Blizzard API...</span>';
 
             try {
                 const gear = await fetchWclGear(wclCharacterName, wclRealm, wclRegion);
@@ -2538,7 +2537,7 @@ Wastewalker Shoulderpads
                     }
                     if (statusEl) statusEl.innerHTML = '<span class="text-green-400">✓ Imported ' + gear.length + ' items</span>';
                 } else {
-                    if (statusEl) statusEl.innerHTML = '<span class="text-yellow-400">No gear data found. Make sure character has logged raids.</span>';
+                    if (statusEl) statusEl.innerHTML = '<span class="text-yellow-400">No gear data found for this character.</span>';
                 }
             } catch (error) {
                 console.error('WCL fetch error:', error);
@@ -2558,11 +2557,11 @@ const API_BASE_URL = window.location.hostname === 'localhost' || window.location
     : 'https://api.tbctxt.io'; // Production API
 
 async function fetchWclGear(characterName, realm, region) {
-    // WCL API requires authentication, so we proxy through our backend
-    const response = await fetch(`${API_BASE_URL}/api/wcl/character?name=${encodeURIComponent(characterName)}&realm=${encodeURIComponent(realm)}&region=${region}`);
+    // Blizzard API requires authentication, so we proxy through our backend
+    const response = await fetch(`${API_BASE_URL}/api/character?name=${encodeURIComponent(characterName)}&realm=${encodeURIComponent(realm)}&region=${region}`);
     if (!response.ok) {
         const error = await response.json().catch(() => ({ error: 'Unknown error' }));
-        throw new Error(error.error || 'Failed to fetch from Warcraft Logs');
+        throw new Error(error.error || 'Failed to fetch from Blizzard');
     }
     const data = await response.json();
     return data.gear || [];
