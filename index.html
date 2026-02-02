@@ -1710,84 +1710,92 @@ function sumStats(statsArray) {
     return total;
 }
 
-// Fetch tooltip from Wowhead and parse stats
-async function fetchItemStats(itemId) {
-    return new Promise((resolve) => {
-        let stats = { stamina: 0, intellect: 0, strength: 0, agility: 0, spirit: 0, armor: 0, defense: 0, dodge: 0, parry: 0, block: 0, hit: 0, crit: 0, haste: 0, expertise: 0, attackpower: 0, armorpen: 0, spellhit: 0, spellcrit: 0, spellhaste: 0, spelldamage: 0, healing: 0, mp5: 0 };
+// Global storage for fetched item stats
+let fetchedItemStats = {};
+let statsFetchInProgress = false;
+let wowheadLinksContainer = null;
 
-        // Create a visible link that Wowhead can process
-        const tempDiv = document.createElement('div');
-        tempDiv.style.cssText = 'position:fixed;top:0;left:0;z-index:99999;opacity:0.01;';
-        const link = document.createElement('a');
-        link.href = `https://tbc.wowhead.com/item=${itemId}`;
-        link.dataset.wowhead = `item=${itemId}&domain=tbc`;
-        link.textContent = 'item';
-        tempDiv.appendChild(link);
-        document.body.appendChild(tempDiv);
+// Batch fetch all item stats - creates all links at once, waits for Wowhead to load, then reads tooltips
+async function fetchAllItemStats(itemIds) {
+    if (statsFetchInProgress) return;
+    statsFetchInProgress = true;
 
-        // Tell Wowhead to process this link
+    const statusDiv = document.getElementById('stats-status');
+    const toFetch = itemIds.filter(id => !fetchedItemStats[id]);
+
+    if (toFetch.length === 0) {
+        statsFetchInProgress = false;
+        await updateStatsDisplay();
+        return;
+    }
+
+    try {
+        if (statusDiv) statusDiv.innerHTML = `<span class="text-yellow-400">Loading ${toFetch.length} items...</span>`;
+
+        // Step 1: Create all links at once for Wowhead to prefetch
+        wowheadLinksContainer = document.createElement('div');
+        wowheadLinksContainer.id = 'wowhead-batch-links';
+        wowheadLinksContainer.style.cssText = 'position:fixed;top:10px;left:10px;z-index:99999;opacity:0.01;display:flex;flex-wrap:wrap;gap:5px;';
+
+        const links = {};
+        for (const itemId of toFetch) {
+            const link = document.createElement('a');
+            link.href = `https://tbc.wowhead.com/item=${itemId}`;
+            link.dataset.wowhead = `item=${itemId}&domain=tbc`;
+            link.dataset.itemId = itemId;
+            link.textContent = `[${itemId}]`;
+            link.style.cssText = 'display:inline-block;padding:2px;';
+            wowheadLinksContainer.appendChild(link);
+            links[itemId] = link;
+        }
+        document.body.appendChild(wowheadLinksContainer);
+
+        // Step 2: Tell Wowhead to process all links
         if (typeof $WowheadPower !== 'undefined') {
             $WowheadPower.refreshLinks();
         }
 
-        // Trigger hover to show tooltip
-        setTimeout(() => {
+        // Step 3: Wait for Wowhead to fetch data (longer wait for batch)
+        await new Promise(r => setTimeout(r, 1500));
+
+        if (statusDiv) statusDiv.innerHTML = `<span class="text-yellow-400">Reading tooltips...</span>`;
+
+        // Step 4: Hover over each link quickly and read tooltip
+        for (let i = 0; i < toFetch.length; i++) {
+            const itemId = toFetch[i];
+            const link = links[itemId];
+
+            // Trigger hover
             link.dispatchEvent(new MouseEvent('mouseover', { bubbles: true, cancelable: true }));
 
-            // Wait for tooltip to render
-            setTimeout(() => {
-                // Find the Wowhead tooltip element
-                const tooltipEl = document.querySelector('.wowhead-tooltip');
-                if (tooltipEl && tooltipEl.innerHTML) {
-                    const tooltipHtml = tooltipEl.innerHTML;
-                    stats = parseTooltipStats(tooltipHtml);
-                }
+            // Small delay for tooltip to appear
+            await new Promise(r => setTimeout(r, 80));
 
-                // Clean up - hide tooltip and remove temp element
-                link.dispatchEvent(new MouseEvent('mouseout', { bubbles: true, cancelable: true }));
-                document.body.removeChild(tempDiv);
-
-                resolve(stats);
-            }, 400);
-        }, 100);
-    });
-}
-
-// Global storage for fetched item stats
-let fetchedItemStats = {};
-let statsFetchInProgress = false;
-
-// Fetch all item stats and update display (sequential - Wowhead tooltips conflict in parallel)
-async function fetchAllItemStats(itemIds) {
-    console.log('[fetchAllItemStats] Called with', itemIds.length, 'items:', itemIds);
-    if (statsFetchInProgress) {
-        console.log('[fetchAllItemStats] Already in progress, returning');
-        return;
-    }
-    statsFetchInProgress = true;
-    console.log('[fetchAllItemStats] Starting fetch...');
-
-    const statusDiv = document.getElementById('stats-status');
-    try {
-        // Filter to only items not already fetched
-        const toFetch = itemIds.filter(id => !fetchedItemStats[id]);
-
-        if (toFetch.length > 0) {
-            // Sequential fetching required - Wowhead tooltip cache conflicts with parallel requests
-            for (let i = 0; i < toFetch.length; i++) {
-                const id = toFetch[i];
-                if (statusDiv) statusDiv.innerHTML = `<span class="text-yellow-400">Loading item ${i + 1}/${toFetch.length}...</span>`;
-                fetchedItemStats[id] = await fetchItemStats(id);
+            // Read tooltip
+            let stats = { stamina: 0, intellect: 0, strength: 0, agility: 0, spirit: 0, armor: 0, defense: 0, dodge: 0, parry: 0, block: 0, hit: 0, crit: 0, haste: 0, expertise: 0, attackpower: 0, armorpen: 0, spellhit: 0, spellcrit: 0, spellhaste: 0, spelldamage: 0, healing: 0, mp5: 0 };
+            const tooltipEl = document.querySelector('.wowhead-tooltip');
+            if (tooltipEl && tooltipEl.innerHTML && tooltipEl.innerHTML.length > 100) {
+                stats = parseTooltipStats(tooltipEl.innerHTML);
             }
+            fetchedItemStats[itemId] = stats;
+
+            // Hide tooltip
+            link.dispatchEvent(new MouseEvent('mouseout', { bubbles: true, cancelable: true }));
         }
 
-        if (statusDiv) statusDiv.innerHTML = '<span class="text-terminal-accent">Stats loaded!</span>';
+        // Cleanup
+        document.body.removeChild(wowheadLinksContainer);
+        wowheadLinksContainer = null;
 
-        // Recalculate and display
+        if (statusDiv) statusDiv.innerHTML = '<span class="text-terminal-accent">Stats loaded!</span>';
         await updateStatsDisplay();
+
     } catch (err) {
         console.error('Error fetching item stats:', err);
-        if (statusDiv) statusDiv.innerHTML = '<span class="text-red-400">Error loading stats</span>';
+        if (statusDiv) statusDiv.innerHTML = '<span class="text-red-400">Error: ' + err.message + '</span>';
+        if (wowheadLinksContainer && wowheadLinksContainer.parentNode) {
+            document.body.removeChild(wowheadLinksContainer);
+        }
     } finally {
         statsFetchInProgress = false;
     }
