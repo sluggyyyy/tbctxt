@@ -1707,24 +1707,39 @@ let fetchedItemStats = {};
 let tooltipFetchInProgress = false;
 let preloadContainer = null;
 
-// Read tooltip from Wowhead cache
+// Read tooltip from Wowhead cache - check ALL possible locations
 function getTooltipFromCache(itemId) {
-    if (typeof $WowheadPower !== 'undefined') {
-        if ($WowheadPower.getItem) {
-            const item = $WowheadPower.getItem(itemId);
-            if (item?.tooltip_enus) return item.tooltip_enus;
-        }
-        if ($WowheadPower.items?.[itemId]) {
-            return $WowheadPower.items[itemId].tooltip_enus || $WowheadPower.items[itemId].tooltip;
-        }
+    const id = String(itemId);
+
+    // Try $WowheadPower._ (main data store)
+    if (typeof $WowheadPower !== 'undefined' && $WowheadPower._) {
+        const data = $WowheadPower._[1]?.[id] || $WowheadPower._['items']?.[id];
+        if (data?.tooltip_enus) return data.tooltip_enus;
+        if (data?.tooltip) return data.tooltip;
     }
-    if (typeof whTooltips !== 'undefined' && whTooltips.aT) {
-        return whTooltips.aT[itemId] || whTooltips.aT[String(itemId)];
+
+    // Try $WowheadPower.items
+    if (typeof $WowheadPower !== 'undefined' && $WowheadPower.items) {
+        const item = $WowheadPower.items[id] || $WowheadPower.items[itemId];
+        if (item?.tooltip_enus) return item.tooltip_enus;
+        if (item?.tooltip) return item.tooltip;
     }
+
+    // Try whTooltips cache
+    if (typeof whTooltips !== 'undefined') {
+        if (whTooltips.aT?.[id]) return whTooltips.aT[id];
+        if (whTooltips.aT?.[itemId]) return whTooltips.aT[itemId];
+    }
+
+    // Try window.g_items (another Wowhead cache)
+    if (typeof g_items !== 'undefined' && g_items[id]) {
+        return g_items[id].tooltip_enus || g_items[id].tooltip;
+    }
+
     return null;
 }
 
-// OPTIMIZED: Fetch ALL items in single batch
+// OPTIMIZED: Fetch ALL items with polling until loaded
 async function fetchAllItemStats(itemIds) {
     if (tooltipFetchInProgress) return;
     tooltipFetchInProgress = true;
@@ -1752,14 +1767,32 @@ async function fetchAllItemStats(itemIds) {
     ).join('');
     document.body.appendChild(preloadContainer);
 
-    // Single refresh for all
+    // Trigger Wowhead fetch
     if (typeof $WowheadPower !== 'undefined') $WowheadPower.refreshLinks();
 
-    // Wait once for all tooltips (1.2s is usually enough)
-    await new Promise(r => setTimeout(r, 1200));
-
-    // Read all from cache in single pass
+    // Poll until items are loaded (max 5 seconds)
     let found = 0;
+    const maxWait = 5000;
+    const pollInterval = 200;
+    let waited = 0;
+
+    while (waited < maxWait) {
+        await new Promise(r => setTimeout(r, pollInterval));
+        waited += pollInterval;
+
+        found = 0;
+        for (const id of toFetch) {
+            if (getTooltipFromCache(id)) found++;
+        }
+
+        if (statusDiv) statusDiv.innerHTML = `<span class="text-yellow-400">Loading... ${found}/${toFetch.length}</span>`;
+
+        // Stop early if all loaded
+        if (found >= toFetch.length) break;
+    }
+
+    // Read all from cache
+    found = 0;
     for (const id of toFetch) {
         const html = getTooltipFromCache(id);
         if (html) {
