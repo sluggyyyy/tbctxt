@@ -333,6 +333,11 @@
     <script>
 console.log('[TBC.TXT] Script loaded - v3');
 // ===== GLOBAL DATA (loaded from JSON) =====
+// API base URL - use local server in dev, production API otherwise
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:8080'
+    : 'https://tbctxt.vercel.app';
+
 let itemIds = {};
 let classData = {};
 let recipesData = {};
@@ -1503,22 +1508,25 @@ function findItemId(itemName) {
     return null;
 }
 
-// Cache for Blizzard item searches
-const blizzardItemCache = {};
+// Cache for item searches
+const itemSearchCache = {};
 
-// Search Blizzard API for item ID by name
-async function searchBlizzardItem(itemName) {
+// Search for item ID by name using Blizzard API via backend
+async function searchItemByName(itemName) {
     const lower = itemName.toLowerCase().trim();
     if (!lower) return null;
 
     // Check cache first
-    if (blizzardItemCache[lower] !== undefined) {
-        return blizzardItemCache[lower];
+    if (itemSearchCache[lower] !== undefined) {
+        return itemSearchCache[lower];
     }
 
     try {
         const response = await fetch(`${API_BASE_URL}/api/item-search?name=${encodeURIComponent(itemName)}`);
-        if (!response.ok) return null;
+        if (!response.ok) {
+            console.error('Item search failed:', response.status);
+            return null;
+        }
 
         const data = await response.json();
         if (data.items && data.items.length > 0) {
@@ -1529,17 +1537,17 @@ async function searchBlizzardItem(itemName) {
             const result = exactMatch || data.items[0];
 
             // Cache the result and add to local itemIds for future lookups
-            blizzardItemCache[lower] = result;
+            itemSearchCache[lower] = result;
             if (result && result.id) {
                 itemIds[lower] = result.id;
             }
             return result;
         }
 
-        blizzardItemCache[lower] = null;
+        itemSearchCache[lower] = null;
         return null;
     } catch (e) {
-        console.error('Blizzard item search error:', e);
+        console.error('Item search error:', e);
         return null;
     }
 }
@@ -2369,7 +2377,7 @@ async function updateGearPreview() {
 
         // Search for unknown items via Blizzard API
         await Promise.all(unknownItems.map(async (r) => {
-            const result = await searchBlizzardItem(r.input);
+            const result = await searchItemByName(r.input);
             if (result && result.id) {
                 r.itemId = result.id;
                 r.found = true;
@@ -2382,8 +2390,8 @@ async function updateGearPreview() {
     const previewHtml = matchResults.map(r => {
         if (r.itemId) {
             const bisTag = r.bisMatch ? `<span class="text-terminal-accent ml-2">[BiS${r.slot ? ' - ' + r.slot : ''}]</span>` : '';
-            const blizzardTag = r.fromBlizzard ? `<span class="text-blue-400 ml-2">[Blizzard]</span>` : '';
-            return `<div class="py-1"><a href="https://tbc.wowhead.com/item=${r.itemId}" data-wowhead="item=${r.itemId}" class="text-wow-uncommon hover:text-terminal-text">${r.input}</a>${bisTag}${blizzardTag}</div>`;
+            const foundTag = r.fromBlizzard ? `<span class="text-blue-400 ml-2">[Found]</span>` : '';
+            return `<div class="py-1"><a href="https://tbc.wowhead.com/item=${r.itemId}" data-wowhead="item=${r.itemId}" class="text-wow-uncommon hover:text-terminal-text">${r.input}</a>${bisTag}${foundTag}</div>`;
         }
         return `<div class="py-1"><span class="text-red-400">${r.input}</span> <span class="text-terminal-dim">(not found)</span></div>`;
     }).join('');
