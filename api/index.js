@@ -156,7 +156,7 @@ async function handleBnetCharacter(req, res, url) {
                 // Transform Blizzard gear format to our format
                 const gear = result.data.equipped_items.map(item => ({
                     id: item.item?.id,
-                    name: item.name,
+                    name: typeof item.name === 'object' ? (item.name.en_US || item.name.en_GB || Object.values(item.name)[0]) : item.name,
                     slot: item.slot?.type,
                     quality: item.quality?.type,
                     itemLevel: item.level?.value
