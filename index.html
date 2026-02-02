@@ -331,6 +331,9 @@
         <div class="mt-2 sm:mt-1.5"><a href="#" onclick="renderApiDocs(); return false;" class="text-terminal-accent hover:text-terminal-text underline">[ API Documentation ]</a></div>
     </footer>
     <script>
+console.log('[TBC.TXT] Script loaded - v3');
+alert('DEBUG v3: If you see this, clear cache worked!');
+
 // ===== GLOBAL DATA (loaded from JSON) =====
 let itemIds = {};
 let classData = {};
@@ -1712,54 +1715,41 @@ async function fetchItemStats(itemId) {
     return new Promise((resolve) => {
         let stats = { stamina: 0, intellect: 0, strength: 0, agility: 0, spirit: 0, armor: 0, defense: 0, dodge: 0, parry: 0, block: 0, hit: 0, crit: 0, haste: 0, expertise: 0, attackpower: 0, armorpen: 0, spellhit: 0, spellcrit: 0, spellhaste: 0, spelldamage: 0, healing: 0, mp5: 0 };
 
-        // Create temp link to trigger Wowhead
+        // Create a visible link that Wowhead can process
         const tempDiv = document.createElement('div');
-        tempDiv.style.cssText = 'position:absolute;left:-9999px;top:-9999px;';
-        tempDiv.innerHTML = `<a href="https://tbc.wowhead.com/item=${itemId}" data-wowhead="item=${itemId}&domain=tbc">x</a>`;
+        tempDiv.style.cssText = 'position:fixed;top:0;left:0;z-index:99999;opacity:0.01;';
+        const link = document.createElement('a');
+        link.href = `https://tbc.wowhead.com/item=${itemId}`;
+        link.dataset.wowhead = `item=${itemId}&domain=tbc`;
+        link.textContent = 'item';
+        tempDiv.appendChild(link);
         document.body.appendChild(tempDiv);
 
+        // Tell Wowhead to process this link
         if (typeof $WowheadPower !== 'undefined') {
             $WowheadPower.refreshLinks();
         }
 
-        // Quick check after Wowhead processes
+        // Trigger hover to show tooltip
         setTimeout(() => {
-            let tooltipHtml = null;
+            link.dispatchEvent(new MouseEvent('mouseover', { bubbles: true, cancelable: true }));
 
-            // Method 1: Check Wowhead's internal tooltip cache
-            if (typeof $WowheadPower !== 'undefined') {
-                // Wowhead stores tooltips in various places
-                const checkCaches = [
-                    () => $WowheadPower._.items?.[itemId]?.tooltip_enus,
-                    () => $WowheadPower._.items?.[itemId]?.tooltip,
-                    () => window.g_items?.[itemId]?.tooltip,
-                ];
-                for (const check of checkCaches) {
-                    try {
-                        const tt = check();
-                        if (tt && tt.length > 50) {
-                            tooltipHtml = tt;
-                            break;
-                        }
-                    } catch(e) {}
+            // Wait for tooltip to render
+            setTimeout(() => {
+                // Find the Wowhead tooltip element
+                const tooltipEl = document.querySelector('.wowhead-tooltip');
+                if (tooltipEl && tooltipEl.innerHTML) {
+                    const tooltipHtml = tooltipEl.innerHTML;
+                    stats = parseTooltipStats(tooltipHtml);
                 }
-            }
 
-            // Method 2: Check DOM for visible tooltip
-            if (!tooltipHtml) {
-                const ttEl = document.querySelector('.wowhead-tooltip');
-                if (ttEl && ttEl.innerHTML.length > 100) {
-                    tooltipHtml = ttEl.innerHTML;
-                }
-            }
+                // Clean up - hide tooltip and remove temp element
+                link.dispatchEvent(new MouseEvent('mouseout', { bubbles: true, cancelable: true }));
+                document.body.removeChild(tempDiv);
 
-            if (tooltipHtml) {
-                stats = parseTooltipStats(tooltipHtml);
-            }
-
-            document.body.removeChild(tempDiv);
-            resolve(stats);
-        }, 200);
+                resolve(stats);
+            }, 400);
+        }, 100);
     });
 }
 
@@ -1769,8 +1759,13 @@ let statsFetchInProgress = false;
 
 // Fetch all item stats and update display (sequential - Wowhead tooltips conflict in parallel)
 async function fetchAllItemStats(itemIds) {
-    if (statsFetchInProgress) return;
+    console.log('[fetchAllItemStats] Called with', itemIds.length, 'items:', itemIds);
+    if (statsFetchInProgress) {
+        console.log('[fetchAllItemStats] Already in progress, returning');
+        return;
+    }
     statsFetchInProgress = true;
+    console.log('[fetchAllItemStats] Starting fetch...');
 
     const statusDiv = document.getElementById('stats-status');
     try {
@@ -2101,8 +2096,10 @@ Wastewalker Shoulderpads
 
         // Fetch stats button
         document.getElementById('fetch-stats-btn').addEventListener('click', async () => {
+            console.log('[BUTTON] Calculate Stats clicked!');
             const gearText = document.getElementById('gear-input')?.value || '';
             const lines = gearText.split('\n').map(l => l.trim()).filter(l => l);
+            console.log('[BUTTON] Lines to process:', lines.length);
             const itemIdsToFetch = [];
 
             for (const line of lines) {
