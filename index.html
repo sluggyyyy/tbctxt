@@ -331,6 +331,8 @@
         <div class="mt-2 sm:mt-1.5"><a href="#" onclick="renderApiDocs(); return false;" class="text-terminal-accent hover:text-terminal-text underline">[ API Documentation ]</a></div>
     </footer>
     <script>
+console.log('[TBC.TXT] Script starting...');
+
 // ===== GLOBAL DATA (loaded from JSON) =====
 let itemIds = {};
 let classData = {};
@@ -1768,8 +1770,13 @@ let statsFetchInProgress = false;
 
 // Fetch all item stats and update display (sequential - Wowhead tooltips conflict in parallel)
 async function fetchAllItemStats(itemIds) {
-    if (statsFetchInProgress) return;
+    console.log('[fetchAllItemStats] Called with', itemIds.length, 'items:', itemIds);
+    if (statsFetchInProgress) {
+        console.log('[fetchAllItemStats] Already in progress, returning');
+        return;
+    }
     statsFetchInProgress = true;
+    console.log('[fetchAllItemStats] Starting fetch...');
 
     const statusDiv = document.getElementById('stats-status');
     try {
@@ -2100,8 +2107,10 @@ Wastewalker Shoulderpads
 
         // Fetch stats button
         document.getElementById('fetch-stats-btn').addEventListener('click', async () => {
+            console.log('[BUTTON] Calculate Stats clicked!');
             const gearText = document.getElementById('gear-input')?.value || '';
             const lines = gearText.split('\n').map(l => l.trim()).filter(l => l);
+            console.log('[BUTTON] Lines to process:', lines.length);
             const itemIdsToFetch = [];
 
             for (const line of lines) {
