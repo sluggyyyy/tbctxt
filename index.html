@@ -1710,96 +1710,84 @@ function sumStats(statsArray) {
 // Fetch tooltip from Wowhead and parse stats
 async function fetchItemStats(itemId) {
     return new Promise((resolve) => {
-        // Create a temporary hidden element to trigger Wowhead tooltip
+        // Create a unique temporary element to trigger Wowhead tooltip
+        const tempId = `wh-temp-${itemId}-${Date.now()}`;
         const tempDiv = document.createElement('div');
+        tempDiv.id = tempId;
         tempDiv.style.cssText = 'position:absolute;left:-9999px;top:-9999px;';
-        tempDiv.innerHTML = `<a href="https://tbc.wowhead.com/item=${itemId}" data-wowhead="item=${itemId}&domain=tbc">temp</a>`;
+        tempDiv.innerHTML = `<a id="wh-link-${itemId}" href="https://tbc.wowhead.com/item=${itemId}" data-wowhead="item=${itemId}&domain=tbc">Item ${itemId}</a>`;
         document.body.appendChild(tempDiv);
 
-        // Refresh to load tooltip
+        // Trigger tooltip load
         if (typeof $WowheadPower !== 'undefined') {
             $WowheadPower.refreshLinks();
         }
 
-        // Retry logic for waiting on Wowhead data
-        let attempts = 0;
-        const maxAttempts = 3;
-        const checkInterval = 150;
+        console.log(`[DEBUG] Fetching item ${itemId}...`);
 
-        const checkForStats = () => {
-            attempts++;
+        // Wait and then check for tooltip data
+        setTimeout(() => {
             let stats = { stamina: 0, intellect: 0, strength: 0, agility: 0, spirit: 0, armor: 0, defense: 0, dodge: 0, parry: 0, block: 0, hit: 0, crit: 0, haste: 0, expertise: 0, attackpower: 0, armorpen: 0, spellhit: 0, spellcrit: 0, spellhaste: 0, spelldamage: 0, healing: 0, mp5: 0 };
             let tooltipHtml = null;
 
-            // Check multiple Wowhead cache locations
-            const cacheKeys = [
-                `tbc.item.${itemId}`,
-                `item:${itemId}`,
-                `item.${itemId}`,
-                itemId,
-                `${itemId}`
-            ];
+            // Try to get tooltip by triggering mouseenter on our specific link
+            const link = document.getElementById(`wh-link-${itemId}`);
+            console.log(`[DEBUG] Item ${itemId}: link element found = ${!!link}`);
 
-            // Try whTooltips cache
-            if (typeof whTooltips !== 'undefined') {
-                if (whTooltips.aT) {
-                    for (const key of cacheKeys) {
-                        if (whTooltips.aT[key]) {
-                            tooltipHtml = whTooltips.aT[key];
-                            break;
+            if (link) {
+                // Trigger mouseenter to show tooltip
+                link.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+                console.log(`[DEBUG] Item ${itemId}: triggered mouseenter`);
+
+                // Give it a moment to render
+                setTimeout(() => {
+                    // Look for the active tooltip
+                    const tooltipEl = document.querySelector('.wowhead-tooltip-item, .wowhead-tooltip, [class*="wowhead"][class*="tooltip"]');
+                    console.log(`[DEBUG] Item ${itemId}: tooltip element found = ${!!tooltipEl}`);
+
+                    if (tooltipEl) {
+                        tooltipHtml = tooltipEl.innerHTML;
+                        console.log(`[DEBUG] Item ${itemId}: tooltip HTML length = ${tooltipHtml.length}`);
+                    }
+
+                    // Also check Wowhead's internal cache
+                    if (!tooltipHtml && typeof $WowheadPower !== 'undefined') {
+                        console.log(`[DEBUG] Item ${itemId}: checking $WowheadPower cache...`);
+                        console.log(`[DEBUG] $WowheadPower keys:`, Object.keys($WowheadPower));
+                        if ($WowheadPower.tooltips) {
+                            console.log(`[DEBUG] $WowheadPower.tooltips keys:`, Object.keys($WowheadPower.tooltips).slice(0, 10));
+                            const cached = $WowheadPower.tooltips[`item:${itemId}`] || $WowheadPower.tooltips[itemId];
+                            if (cached) tooltipHtml = cached;
                         }
                     }
-                }
-                // Also check tooltipData
-                if (!tooltipHtml && whTooltips.tooltipData) {
-                    for (const key of cacheKeys) {
-                        if (whTooltips.tooltipData[key]) {
-                            tooltipHtml = whTooltips.tooltipData[key];
-                            break;
+
+                    // Check whTooltips cache too
+                    if (!tooltipHtml && typeof whTooltips !== 'undefined') {
+                        console.log(`[DEBUG] Item ${itemId}: checking whTooltips cache...`);
+                        console.log(`[DEBUG] whTooltips keys:`, Object.keys(whTooltips));
+                        if (whTooltips.aT) {
+                            console.log(`[DEBUG] whTooltips.aT keys (first 10):`, Object.keys(whTooltips.aT).slice(0, 10));
                         }
                     }
-                }
-            }
 
-            // Try $WowheadPower cache
-            if (!tooltipHtml && typeof $WowheadPower !== 'undefined') {
-                if ($WowheadPower.items && $WowheadPower.items[itemId]?.tooltip) {
-                    tooltipHtml = $WowheadPower.items[itemId].tooltip;
-                }
-                // Check getTooltip function
-                if (!tooltipHtml && $WowheadPower.getTooltip) {
-                    try {
-                        tooltipHtml = $WowheadPower.getTooltip('item', itemId, 'tbc');
-                    } catch (e) {}
-                }
-            }
+                    if (tooltipHtml) {
+                        console.log(`[DEBUG] Item ${itemId}: parsing tooltip...`);
+                        stats = parseTooltipStats(tooltipHtml);
+                    }
 
-            // Try to find tooltip element in DOM
-            if (!tooltipHtml) {
-                const tooltipEl = document.querySelector('.wowhead-tooltip, #wowhead-tooltip, [class*="tooltip"]');
-                if (tooltipEl && tooltipEl.innerHTML.length > 100) {
-                    tooltipHtml = tooltipEl.innerHTML;
-                }
-            }
+                    // Cleanup
+                    link.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
+                    document.body.removeChild(tempDiv);
 
-            if (tooltipHtml) {
-                stats = parseTooltipStats(tooltipHtml);
-            }
-
-            // Check if we got any stats or should retry
-            const hasStats = Object.values(stats).some(v => v > 0);
-            if (hasStats || attempts >= maxAttempts) {
-                document.body.removeChild(tempDiv);
-                console.log(`Item ${itemId}: found=${!!tooltipHtml}, stats=`, stats);
-                resolve(stats);
+                    console.log(`[DEBUG] Item ${itemId}: FINAL stats=`, stats);
+                    resolve(stats);
+                }, 300);
             } else {
-                // Retry after a delay
-                setTimeout(checkForStats, checkInterval);
+                console.log(`[DEBUG] Item ${itemId}: NO LINK FOUND, returning empty stats`);
+                document.body.removeChild(tempDiv);
+                resolve(stats);
             }
-        };
-
-        // Start checking after initial delay
-        setTimeout(checkForStats, 200);
+        }, 500);
     });
 }
 
