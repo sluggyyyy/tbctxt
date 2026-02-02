@@ -1711,28 +1711,47 @@ let preloadContainer = null;
 function getTooltipFromCache(itemId) {
     const id = String(itemId);
 
+    // DEBUG: Log available caches on first call
+    if (!window._wowheadDebugDone) {
+        window._wowheadDebugDone = true;
+        console.log('[WH DEBUG] $WowheadPower exists:', typeof $WowheadPower !== 'undefined');
+        if (typeof $WowheadPower !== 'undefined') {
+            console.log('[WH DEBUG] $WowheadPower keys:', Object.keys($WowheadPower));
+            if ($WowheadPower._) console.log('[WH DEBUG] _.keys:', Object.keys($WowheadPower._));
+        }
+        console.log('[WH DEBUG] whTooltips exists:', typeof whTooltips !== 'undefined');
+        if (typeof whTooltips !== 'undefined') {
+            console.log('[WH DEBUG] whTooltips keys:', Object.keys(whTooltips));
+            if (whTooltips.aT) console.log('[WH DEBUG] aT keys (first 5):', Object.keys(whTooltips.aT).slice(0,5));
+        }
+        console.log('[WH DEBUG] g_items exists:', typeof g_items !== 'undefined');
+        console.log('[WH DEBUG] WH exists:', typeof WH !== 'undefined');
+        if (typeof WH !== 'undefined') console.log('[WH DEBUG] WH keys:', Object.keys(WH));
+    }
+
     // Try $WowheadPower._ (main data store)
     if (typeof $WowheadPower !== 'undefined' && $WowheadPower._) {
         const data = $WowheadPower._[1]?.[id] || $WowheadPower._['items']?.[id];
-        if (data?.tooltip_enus) return data.tooltip_enus;
-        if (data?.tooltip) return data.tooltip;
+        if (data?.tooltip_enus) { console.log('[WH] Found in _:', id); return data.tooltip_enus; }
+        if (data?.tooltip) { console.log('[WH] Found in _ (tooltip):', id); return data.tooltip; }
     }
 
     // Try $WowheadPower.items
     if (typeof $WowheadPower !== 'undefined' && $WowheadPower.items) {
         const item = $WowheadPower.items[id] || $WowheadPower.items[itemId];
-        if (item?.tooltip_enus) return item.tooltip_enus;
-        if (item?.tooltip) return item.tooltip;
+        if (item?.tooltip_enus) { console.log('[WH] Found in items:', id); return item.tooltip_enus; }
+        if (item?.tooltip) { console.log('[WH] Found in items (tooltip):', id); return item.tooltip; }
     }
 
     // Try whTooltips cache
     if (typeof whTooltips !== 'undefined') {
-        if (whTooltips.aT?.[id]) return whTooltips.aT[id];
-        if (whTooltips.aT?.[itemId]) return whTooltips.aT[itemId];
+        if (whTooltips.aT?.[id]) { console.log('[WH] Found in aT:', id); return whTooltips.aT[id]; }
+        if (whTooltips.aT?.[itemId]) { console.log('[WH] Found in aT (num):', id); return whTooltips.aT[itemId]; }
     }
 
     // Try window.g_items (another Wowhead cache)
     if (typeof g_items !== 'undefined' && g_items[id]) {
+        console.log('[WH] Found in g_items:', id);
         return g_items[id].tooltip_enus || g_items[id].tooltip;
     }
 
