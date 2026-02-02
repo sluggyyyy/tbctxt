@@ -1454,13 +1454,12 @@ function getPreRaidBisList(className, specName) {
     return getPhaseBisList(className, specName, '0');
 }
 
-// Calculate total BiS stats for a phase by fetching all BiS items
+// Calculate total BiS stats for a phase (uses cached stats, call fetchAllItemStats first)
 async function calculatePhaseBisStats(className, specName, phaseKey) {
     const cacheKey = `${className}-${specName}-${phaseKey}`;
     if (bisStatsCache[cacheKey]) return bisStatsCache[cacheKey];
 
     const bisList = getPhaseBisList(className, specName, phaseKey);
-    console.log(`BiS list for ${className}/${specName}/phase ${phaseKey}:`, bisList.length, 'items');
     if (bisList.length === 0) return null;
 
     // Get only BEST items for each slot (or first item if no BEST marker)
@@ -1471,34 +1470,16 @@ async function calculatePhaseBisStats(className, specName, phaseKey) {
             const itemId = findItemId(cleanName);
             if (itemId) {
                 bestBySlot[slot] = { itemId, name: cleanName };
-            } else {
-                console.warn(`Item not found in itemIds: "${cleanName}" for slot ${slot}`);
             }
         }
     }
 
-    console.log(`Best items by slot for phase ${phaseKey}:`, bestBySlot);
-
-    // Get list of item IDs that need fetching
-    const itemsToFetch = Object.values(bestBySlot)
-        .filter(item => !fetchedItemStats[item.itemId])
-        .map(item => item.itemId);
-
-    // Fetch missing stats sequentially (Wowhead tooltips conflict in parallel)
-    if (itemsToFetch.length > 0) {
-        console.log(`Fetching ${itemsToFetch.length} BiS items for phase ${phaseKey}...`);
-        for (const id of itemsToFetch) {
-            fetchedItemStats[id] = await fetchItemStats(id);
-        }
-    }
-
-    // Collect stats from all slots
+    // Collect stats from all slots (assumes items already fetched)
     const statsArray = Object.values(bestBySlot)
         .map(item => fetchedItemStats[item.itemId])
         .filter(Boolean);
 
     const totalStats = sumStats(statsArray);
-    console.log(`Phase ${phaseKey} BiS total stats:`, totalStats);
     bisStatsCache[cacheKey] = totalStats;
     return totalStats;
 }
@@ -1729,10 +1710,14 @@ async function fetchAllItemStats(itemIds) {
     try {
         if (statusDiv) statusDiv.innerHTML = `<span class="text-yellow-400">Loading ${toFetch.length} items...</span>`;
 
-        // Step 1: Create all links at once for Wowhead to prefetch
+        // Hide any existing Wowhead tooltip during batch processing
+        const existingTooltips = document.querySelectorAll('.wowhead-tooltip');
+        existingTooltips.forEach(t => t.style.display = 'none');
+
+        // Create invisible container off-screen
         wowheadLinksContainer = document.createElement('div');
         wowheadLinksContainer.id = 'wowhead-batch-links';
-        wowheadLinksContainer.style.cssText = 'position:fixed;top:10px;left:10px;z-index:99999;opacity:0.01;display:flex;flex-wrap:wrap;gap:5px;';
+        wowheadLinksContainer.style.cssText = 'position:absolute;left:-9999px;top:-9999px;opacity:0;pointer-events:none;';
 
         const links = {};
         for (const itemId of toFetch) {
@@ -1741,48 +1726,49 @@ async function fetchAllItemStats(itemIds) {
             link.dataset.wowhead = `item=${itemId}&domain=tbc`;
             link.dataset.itemId = itemId;
             link.textContent = `[${itemId}]`;
-            link.style.cssText = 'display:inline-block;padding:2px;';
             wowheadLinksContainer.appendChild(link);
             links[itemId] = link;
         }
         document.body.appendChild(wowheadLinksContainer);
 
-        // Step 2: Tell Wowhead to process all links
+        // Tell Wowhead to process all links
         if (typeof $WowheadPower !== 'undefined') {
             $WowheadPower.refreshLinks();
         }
 
-        // Step 3: Wait for Wowhead to fetch data (longer wait for batch)
-        await new Promise(r => setTimeout(r, 1500));
+        // Wait for Wowhead to fetch data
+        await new Promise(r => setTimeout(r, 1000));
 
-        if (statusDiv) statusDiv.innerHTML = `<span class="text-yellow-400">Reading tooltips...</span>`;
-
-        // Step 4: Hover over each link quickly and read tooltip
+        // Read tooltips by triggering hover on each
         for (let i = 0; i < toFetch.length; i++) {
             const itemId = toFetch[i];
             const link = links[itemId];
 
-            // Trigger hover
-            link.dispatchEvent(new MouseEvent('mouseover', { bubbles: true, cancelable: true }));
+            // Temporarily make link interactive
+            link.style.cssText = 'position:fixed;top:0;left:0;';
+            wowheadLinksContainer.style.cssText = 'position:fixed;top:0;left:0;opacity:0;z-index:-1;';
 
-            // Small delay for tooltip to appear
-            await new Promise(r => setTimeout(r, 80));
+            link.dispatchEvent(new MouseEvent('mouseover', { bubbles: true, cancelable: true, view: window }));
+            await new Promise(r => setTimeout(r, 50));
 
-            // Read tooltip
             let stats = { stamina: 0, intellect: 0, strength: 0, agility: 0, spirit: 0, armor: 0, defense: 0, dodge: 0, parry: 0, block: 0, hit: 0, crit: 0, haste: 0, expertise: 0, attackpower: 0, armorpen: 0, spellhit: 0, spellcrit: 0, spellhaste: 0, spelldamage: 0, healing: 0, mp5: 0 };
+
             const tooltipEl = document.querySelector('.wowhead-tooltip');
             if (tooltipEl && tooltipEl.innerHTML && tooltipEl.innerHTML.length > 100) {
                 stats = parseTooltipStats(tooltipEl.innerHTML);
+                tooltipEl.style.display = 'none'; // Hide immediately
             }
             fetchedItemStats[itemId] = stats;
 
-            // Hide tooltip
-            link.dispatchEvent(new MouseEvent('mouseout', { bubbles: true, cancelable: true }));
+            link.dispatchEvent(new MouseEvent('mouseout', { bubbles: true, cancelable: true, view: window }));
         }
 
         // Cleanup
         document.body.removeChild(wowheadLinksContainer);
         wowheadLinksContainer = null;
+
+        // Restore tooltip visibility for normal use
+        document.querySelectorAll('.wowhead-tooltip').forEach(t => t.style.display = '');
 
         if (statusDiv) statusDiv.innerHTML = '<span class="text-terminal-accent">Stats loaded!</span>';
         await updateStatsDisplay();
@@ -2101,21 +2087,38 @@ Wastewalker Shoulderpads
 
         // Fetch stats button
         document.getElementById('fetch-stats-btn').addEventListener('click', async () => {
-            console.log('[BUTTON] Calculate Stats clicked!');
             const gearText = document.getElementById('gear-input')?.value || '';
             const lines = gearText.split('\n').map(l => l.trim()).filter(l => l);
-            console.log('[BUTTON] Lines to process:', lines.length);
-            const itemIdsToFetch = [];
+            const itemIdsToFetch = new Set();
 
+            // Add user's items
             for (const line of lines) {
                 const itemId = findItemId(line);
-                if (itemId) itemIdsToFetch.push(itemId);
+                if (itemId) itemIdsToFetch.add(itemId);
             }
 
-            if (itemIdsToFetch.length > 0) {
-                // Clear BiS cache to force recalculation for current phase
-                bisStatsCache = {};
-                await fetchAllItemStats(itemIdsToFetch);
+            // Also add BiS items for current phase so we can compare
+            const bisList = getPhaseBisList(preRaidClass, preRaidSpecName, selectedPhase);
+            for (const [slot, itemName, source] of bisList) {
+                const cleanName = cleanItemName(itemName);
+                const itemId = findItemId(cleanName);
+                if (itemId) itemIdsToFetch.add(itemId);
+            }
+
+            // Add previous phase BiS too for "PREPARED" comparison
+            const prevPhase = String(Math.max(0, parseInt(selectedPhase) - 1));
+            if (prevPhase !== selectedPhase) {
+                const prevBisList = getPhaseBisList(preRaidClass, preRaidSpecName, prevPhase);
+                for (const [slot, itemName, source] of prevBisList) {
+                    const cleanName = cleanItemName(itemName);
+                    const itemId = findItemId(cleanName);
+                    if (itemId) itemIdsToFetch.add(itemId);
+                }
+            }
+
+            if (itemIdsToFetch.size > 0) {
+                bisStatsCache = {}; // Clear BiS cache
+                await fetchAllItemStats([...itemIdsToFetch]);
             } else {
                 const statusDiv = document.getElementById('stats-status');
                 if (statusDiv) statusDiv.innerHTML = '<span class="text-red-400">No valid items found</span>';
