@@ -1,9 +1,14 @@
 const http = require('http');
+const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
 const PORT = process.env.PORT || 8080;
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, '..', 'data');
+
+// WCL OAuth token cache
+let wclAccessToken = '';
+let wclTokenExpiry = 0;
 
 let classData = {};
 let itemIds = {};
@@ -27,6 +32,181 @@ function jsonResponse(res, data, status = 200) {
 
 function errorResponse(res, message, status = 404) {
     jsonResponse(res, { error: message }, status);
+}
+
+// WCL OAuth2 token fetching
+function getWclAccessToken() {
+    return new Promise((resolve, reject) => {
+        if (wclAccessToken && wclTokenExpiry > Date.now() / 1000 + 60) {
+            return resolve(wclAccessToken);
+        }
+
+        const clientId = process.env.WCL_CLIENT_ID;
+        const clientSecret = process.env.WCL_CLIENT_SECRET;
+
+        if (!clientId || !clientSecret) {
+            return reject(new Error('WCL_CLIENT_ID and WCL_CLIENT_SECRET required'));
+        }
+
+        const auth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+        const postData = 'grant_type=client_credentials';
+
+        const req = https.request({
+            hostname: 'www.warcraftlogs.com',
+            path: '/oauth/token',
+            method: 'POST',
+            headers: {
+                'Authorization': `Basic ${auth}`,
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': postData.length
+            }
+        }, (res) => {
+            let data = '';
+            res.on('data', chunk => data += chunk);
+            res.on('end', () => {
+                try {
+                    const parsed = JSON.parse(data);
+                    if (parsed.access_token) {
+                        wclAccessToken = parsed.access_token;
+                        wclTokenExpiry = Date.now() / 1000 + parsed.expires_in;
+                        resolve(wclAccessToken);
+                    } else {
+                        reject(new Error('No access token in response'));
+                    }
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        });
+
+        req.on('error', reject);
+        req.write(postData);
+        req.end();
+    });
+}
+
+// WCL GraphQL request
+function wclGraphQL(query, token) {
+    return new Promise((resolve, reject) => {
+        const postData = JSON.stringify({ query });
+
+        const req = https.request({
+            hostname: 'www.warcraftlogs.com',
+            path: '/api/v2/client',
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(postData)
+            }
+        }, (res) => {
+            let data = '';
+            res.on('data', chunk => data += chunk);
+            res.on('end', () => {
+                try {
+                    resolve(JSON.parse(data));
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        });
+
+        req.on('error', reject);
+        req.write(postData);
+        req.end();
+    });
+}
+
+// Handle WCL character gear lookup
+async function handleWclCharacter(req, res, url) {
+    const name = url.searchParams.get('name');
+    const realm = url.searchParams.get('realm');
+    const region = url.searchParams.get('region') || 'us';
+
+    if (!name || !realm) {
+        return errorResponse(res, 'name and realm parameters required', 400);
+    }
+
+    let token;
+    try {
+        token = await getWclAccessToken();
+    } catch (e) {
+        console.error('WCL auth error:', e.message);
+        return errorResponse(res, 'Warcraft Logs authentication failed', 503);
+    }
+
+    // Query for character and recent reports
+    const charQuery = `{
+        characterData {
+            character(name: "${name}", serverSlug: "${realm.toLowerCase()}", serverRegion: "${region}") {
+                name
+                classID
+                recentReports(limit: 1) {
+                    data {
+                        code
+                        startTime
+                        fights { id name }
+                    }
+                }
+            }
+        }
+    }`;
+
+    try {
+        const charResp = await wclGraphQL(charQuery, token);
+
+        if (charResp.errors?.length) {
+            return errorResponse(res, charResp.errors[0].message, 400);
+        }
+
+        const char = charResp.data?.characterData?.character;
+        if (!char?.name) {
+            return errorResponse(res, 'Character not found', 404);
+        }
+
+        let gear = [];
+
+        // If we have a recent report, fetch gear from it
+        if (char.recentReports?.data?.length > 0) {
+            const report = char.recentReports.data[0];
+            const fightId = report.fights?.[0]?.id || 1;
+
+            const gearQuery = `{
+                reportData {
+                    report(code: "${report.code}") {
+                        playerDetails(fightIDs: [${fightId}])
+                    }
+                }
+            }`;
+
+            const gearResp = await wclGraphQL(gearQuery, token);
+            const playerDetails = gearResp.data?.reportData?.report?.playerDetails;
+
+            // Search all roles for the player
+            for (const role of ['dps', 'tanks', 'healers']) {
+                const players = playerDetails?.[role] || [];
+                for (const player of players) {
+                    if (player.name?.toLowerCase() === name.toLowerCase()) {
+                        gear = player.gear || [];
+                        break;
+                    }
+                }
+                if (gear.length) break;
+            }
+        }
+
+        return jsonResponse(res, {
+            name: char.name,
+            classID: char.classID,
+            gear,
+            realm,
+            region
+        });
+
+    } catch (e) {
+        console.error('WCL API error:', e);
+        return errorResponse(res, 'Failed to fetch from Warcraft Logs', 502);
+    }
 }
 
 const server = http.createServer((req, res) => {
@@ -118,6 +298,11 @@ const server = http.createServer((req, res) => {
         if (route[1] === 'talents') return jsonResponse(res, referenceData.talentSpellIds || {});
         if (route[1] === 'quests') return jsonResponse(res, referenceData.questIds || {});
         return errorResponse(res, 'Not found');
+    }
+
+    // /api/wcl/character?name=&realm=&region=
+    if (route[0] === 'wcl' && route[1] === 'character') {
+        return handleWclCharacter(req, res, url);
     }
 
     return errorResponse(res, 'Not found');
