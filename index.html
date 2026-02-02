@@ -1484,13 +1484,12 @@ async function calculatePhaseBisStats(className, specName, phaseKey) {
         .filter(item => !fetchedItemStats[item.itemId])
         .map(item => item.itemId);
 
-    // Fetch all missing stats in parallel
+    // Fetch missing stats sequentially (Wowhead tooltips conflict in parallel)
     if (itemsToFetch.length > 0) {
         console.log(`Fetching ${itemsToFetch.length} BiS items for phase ${phaseKey}...`);
-        const results = await Promise.all(itemsToFetch.map(id => fetchItemStats(id)));
-        itemsToFetch.forEach((id, i) => {
-            fetchedItemStats[id] = results[i];
-        });
+        for (const id of itemsToFetch) {
+            fetchedItemStats[id] = await fetchItemStats(id);
+        }
     }
 
     // Collect stats from all slots
@@ -1724,8 +1723,8 @@ async function fetchItemStats(itemId) {
 
         // Retry logic for waiting on Wowhead data
         let attempts = 0;
-        const maxAttempts = 4;
-        const checkInterval = 250;
+        const maxAttempts = 3;
+        const checkInterval = 150;
 
         const checkForStats = () => {
             attempts++;
@@ -1808,7 +1807,7 @@ async function fetchItemStats(itemId) {
 let fetchedItemStats = {};
 let statsFetchInProgress = false;
 
-// Fetch all item stats and update display
+// Fetch all item stats and update display (sequential - Wowhead tooltips conflict in parallel)
 async function fetchAllItemStats(itemIds) {
     if (statsFetchInProgress) return;
     statsFetchInProgress = true;
@@ -1819,15 +1818,12 @@ async function fetchAllItemStats(itemIds) {
         const toFetch = itemIds.filter(id => !fetchedItemStats[id]);
 
         if (toFetch.length > 0) {
-            if (statusDiv) statusDiv.innerHTML = `<span class="text-yellow-400">Loading ${toFetch.length} item stats from Wowhead...</span>`;
-
-            // Fetch all items in parallel for speed
-            const results = await Promise.all(toFetch.map(id => fetchItemStats(id)));
-
-            // Store results
-            toFetch.forEach((id, i) => {
-                fetchedItemStats[id] = results[i];
-            });
+            // Sequential fetching required - Wowhead tooltip cache conflicts with parallel requests
+            for (let i = 0; i < toFetch.length; i++) {
+                const id = toFetch[i];
+                if (statusDiv) statusDiv.innerHTML = `<span class="text-yellow-400">Loading item ${i + 1}/${toFetch.length}...</span>`;
+                fetchedItemStats[id] = await fetchItemStats(id);
+            }
         }
 
         if (statusDiv) statusDiv.innerHTML = '<span class="text-terminal-accent">Stats loaded!</span>';
