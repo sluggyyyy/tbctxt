@@ -2,6 +2,7 @@
   "warrior": {
     "title": "WARRIOR",
     "defaultSpec": "arms",
+    "professions": [{"name": "Blacksmithing", "skillId": 164}, {"name": "Engineering", "skillId": 202}],
     "specs": {
       "arms": {
         "name": "Arms",
@@ -2755,6 +2756,7 @@
   "rogue": {
     "title": "ROGUE",
     "defaultSpec": "combat",
+    "professions": [{"name": "Leatherworking", "skillId": 165}, {"name": "Engineering", "skillId": 202}],
     "specs": {
       "combat": {
         "name": "All",
@@ -4276,6 +4278,7 @@
   "hunter": {
     "title": "HUNTER",
     "defaultSpec": "beast_mastery",
+    "professions": [{"name": "Leatherworking", "skillId": 165}, {"name": "Engineering", "skillId": 202}],
     "specs": {
       "beast_mastery": {
         "name": "Beast Mastery",
@@ -6534,6 +6537,7 @@
   "paladin": {
     "title": "PALADIN",
     "defaultSpec": "holy",
+    "professions": [{"name": "Blacksmithing", "skillId": 164}, {"name": "Engineering", "skillId": 202}],
     "specs": {
       "holy": {
         "name": "Holy",
@@ -8931,6 +8935,7 @@
   "priest": {
     "title": "PRIEST",
     "defaultSpec": "holy",
+    "professions": [{"name": "Tailoring", "skillId": 197}, {"name": "Enchanting", "skillId": 333}],
     "specs": {
       "holy": {
         "name": "Holy",
@@ -10963,6 +10968,7 @@
   "shaman": {
     "title": "SHAMAN",
     "defaultSpec": "elemental",
+    "professions": [{"name": "Leatherworking", "skillId": 165}, {"name": "Engineering", "skillId": 202}],
     "specs": {
       "elemental": {
         "name": "Elemental",
@@ -14348,6 +14354,7 @@
   "druid": {
     "title": "DRUID",
     "defaultSpec": "balance",
+    "professions": [{"name": "Leatherworking", "skillId": 165}, {"name": "Engineering", "skillId": 202}],
     "specs": {
       "balance": {
         "name": "Balance",
@@ -19732,6 +19739,7 @@
   "warlock": {
     "title": "WARLOCK",
     "defaultSpec": "affliction",
+    "professions": [{"name": "Tailoring", "skillId": 197}, {"name": "Enchanting", "skillId": 333}],
     "specs": {
       "affliction": {
         "name": "Affliction",
@@ -22544,6 +22552,7 @@
   "mage": {
     "title": "MAGE",
     "defaultSpec": "arcane",
+    "professions": [{"name": "Tailoring", "skillId": 197}, {"name": "Enchanting", "skillId": 333}],
     "specs": {
       "arcane": {
         "name": "Arcane",

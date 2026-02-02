@@ -1,13 +1,16 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 // Data structures
@@ -56,6 +59,9 @@ func main() {
 	mux.HandleFunc("GET /api/reference/talents", handleTalents)
 	mux.HandleFunc("GET /api/reference/quests", handleQuests)
 
+	// Warcraft Logs proxy endpoint
+	mux.HandleFunc("GET /api/wcl/character", handleWclCharacter)
+
 	// Wrap with CORS middleware
 	handler := corsMiddleware(mux)
 
@@ -86,6 +92,7 @@ func main() {
 ║    GET /api/reference/enchants  - Enchant spell IDs        ║
 ║    GET /api/reference/talents   - Talent spell IDs         ║
 ║    GET /api/reference/quests    - Quest IDs                ║
+║    GET /api/wcl/character       - WCL gear lookup          ║
 ╚════════════════════════════════════════════════════════════╝
 `, port)
 
@@ -415,4 +422,273 @@ func handleQuests(w http.ResponseWriter, r *http.Request) {
 	} else {
 		errorResponse(w, "Quest data not found", http.StatusNotFound)
 	}
+}
+
+// ===== WARCRAFT LOGS API =====
+
+var wclAccessToken string
+var wclTokenExpiry int64
+
+func getWclAccessToken() (string, error) {
+	// Check if we have a valid cached token
+	if wclAccessToken != "" && wclTokenExpiry > time.Now().Unix()+60 {
+		return wclAccessToken, nil
+	}
+
+	clientID := os.Getenv("WCL_CLIENT_ID")
+	clientSecret := os.Getenv("WCL_CLIENT_SECRET")
+
+	if clientID == "" || clientSecret == "" {
+		return "", fmt.Errorf("WCL_CLIENT_ID and WCL_CLIENT_SECRET environment variables required")
+	}
+
+	// OAuth2 client credentials flow
+	data := "grant_type=client_credentials"
+	req, err := http.NewRequest("POST", "https://www.warcraftlogs.com/oauth/token", strings.NewReader(data))
+	if err != nil {
+		return "", err
+	}
+
+	req.SetBasicAuth(clientID, clientSecret)
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	client := &http.Client{Timeout: 10 * time.Second}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(resp.Body)
+		return "", fmt.Errorf("OAuth failed: %s", string(body))
+	}
+
+	var tokenResp struct {
+		AccessToken string `json:"access_token"`
+		ExpiresIn   int64  `json:"expires_in"`
+	}
+
+	if err := json.NewDecoder(resp.Body).Decode(&tokenResp); err != nil {
+		return "", err
+	}
+
+	wclAccessToken = tokenResp.AccessToken
+	wclTokenExpiry = time.Now().Unix() + tokenResp.ExpiresIn
+
+	return wclAccessToken, nil
+}
+
+func handleWclCharacter(w http.ResponseWriter, r *http.Request) {
+	name := r.URL.Query().Get("name")
+	realm := r.URL.Query().Get("realm")
+	region := r.URL.Query().Get("region")
+
+	if name == "" || realm == "" {
+		errorResponse(w, "name and realm parameters required", http.StatusBadRequest)
+		return
+	}
+
+	if region == "" {
+		region = "us"
+	}
+
+	// Get access token
+	token, err := getWclAccessToken()
+	if err != nil {
+		log.Printf("WCL auth error: %v", err)
+		errorResponse(w, "Warcraft Logs authentication failed. Please configure WCL_CLIENT_ID and WCL_CLIENT_SECRET.", http.StatusServiceUnavailable)
+		return
+	}
+
+	// Build GraphQL query for character gear
+	// Note: TBC Classic Anniversary uses "zone" partition for the game
+	query := fmt.Sprintf(`{
+		characterData {
+			character(name: "%s", serverSlug: "%s", serverRegion: "%s") {
+				name
+				classID
+				recentReports(limit: 1) {
+					data {
+						code
+						startTime
+						fights {
+							id
+							name
+						}
+					}
+				}
+			}
+		}
+	}`, name, strings.ToLower(realm), region)
+
+	// Make GraphQL request
+	gqlBody := map[string]string{"query": query}
+	bodyBytes, _ := json.Marshal(gqlBody)
+
+	req, err := http.NewRequest("POST", "https://www.warcraftlogs.com/api/v2/client", bytes.NewReader(bodyBytes))
+	if err != nil {
+		errorResponse(w, "Failed to create request", http.StatusInternalServerError)
+		return
+	}
+
+	req.Header.Set("Authorization", "Bearer "+token)
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{Timeout: 15 * time.Second}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Printf("WCL API error: %v", err)
+		errorResponse(w, "Failed to fetch from Warcraft Logs", http.StatusBadGateway)
+		return
+	}
+	defer resp.Body.Close()
+
+	body, _ := io.ReadAll(resp.Body)
+
+	if resp.StatusCode != http.StatusOK {
+		log.Printf("WCL API non-200: %d - %s", resp.StatusCode, string(body))
+		errorResponse(w, "Warcraft Logs API error", http.StatusBadGateway)
+		return
+	}
+
+	// Parse response to extract character data
+	var gqlResp struct {
+		Data struct {
+			CharacterData struct {
+				Character struct {
+					Name          string `json:"name"`
+					ClassID       int    `json:"classID"`
+					RecentReports struct {
+						Data []struct {
+							Code      string `json:"code"`
+							StartTime int64  `json:"startTime"`
+							Fights    []struct {
+								ID   int    `json:"id"`
+								Name string `json:"name"`
+							} `json:"fights"`
+						} `json:"data"`
+					} `json:"recentReports"`
+				} `json:"character"`
+			} `json:"characterData"`
+		} `json:"data"`
+		Errors []struct {
+			Message string `json:"message"`
+		} `json:"errors"`
+	}
+
+	if err := json.Unmarshal(body, &gqlResp); err != nil {
+		log.Printf("WCL parse error: %v", err)
+		errorResponse(w, "Failed to parse Warcraft Logs response", http.StatusInternalServerError)
+		return
+	}
+
+	if len(gqlResp.Errors) > 0 {
+		errorResponse(w, gqlResp.Errors[0].Message, http.StatusBadRequest)
+		return
+	}
+
+	char := gqlResp.Data.CharacterData.Character
+	if char.Name == "" {
+		errorResponse(w, "Character not found", http.StatusNotFound)
+		return
+	}
+
+	// If we have a recent report, fetch the gear from it
+	var gear []map[string]interface{}
+
+	if len(char.RecentReports.Data) > 0 {
+		report := char.RecentReports.Data[0]
+
+		// Query for gear from the report
+		gearQuery := fmt.Sprintf(`{
+			reportData {
+				report(code: "%s") {
+					masterData {
+						actors(type: "Player") {
+							name
+							type
+							subType
+							gameID
+						}
+					}
+					playerDetails(fightIDs: [%d])
+				}
+			}
+		}`, report.Code, func() int {
+			if len(report.Fights) > 0 {
+				return report.Fights[0].ID
+			}
+			return 1
+		}())
+
+		gearBodyBytes, _ := json.Marshal(map[string]string{"query": gearQuery})
+		gearReq, _ := http.NewRequest("POST", "https://www.warcraftlogs.com/api/v2/client", bytes.NewReader(gearBodyBytes))
+		gearReq.Header.Set("Authorization", "Bearer "+token)
+		gearReq.Header.Set("Content-Type", "application/json")
+
+		gearResp, err := client.Do(gearReq)
+		if err == nil {
+			defer gearResp.Body.Close()
+			gearBody, _ := io.ReadAll(gearResp.Body)
+
+			var gearGqlResp map[string]interface{}
+			if json.Unmarshal(gearBody, &gearGqlResp) == nil {
+				// Extract gear data from playerDetails
+				if data, ok := gearGqlResp["data"].(map[string]interface{}); ok {
+					if reportData, ok := data["reportData"].(map[string]interface{}); ok {
+						if report, ok := reportData["report"].(map[string]interface{}); ok {
+							if playerDetails, ok := report["playerDetails"].(map[string]interface{}); ok {
+								// Find the matching player and extract their gear
+								if dps, ok := playerDetails["dps"].([]interface{}); ok {
+									for _, p := range dps {
+										if player, ok := p.(map[string]interface{}); ok {
+											if playerName, ok := player["name"].(string); ok && strings.EqualFold(playerName, name) {
+												if gearData, ok := player["gear"].([]interface{}); ok {
+													for _, g := range gearData {
+														if gearItem, ok := g.(map[string]interface{}); ok {
+															gear = append(gear, gearItem)
+														}
+													}
+												}
+												break
+											}
+										}
+									}
+								}
+								// Also check tanks and healers
+								for _, role := range []string{"tanks", "healers"} {
+									if players, ok := playerDetails[role].([]interface{}); ok {
+										for _, p := range players {
+											if player, ok := p.(map[string]interface{}); ok {
+												if playerName, ok := player["name"].(string); ok && strings.EqualFold(playerName, name) {
+													if gearData, ok := player["gear"].([]interface{}); ok {
+														for _, g := range gearData {
+															if gearItem, ok := g.(map[string]interface{}); ok {
+																gear = append(gear, gearItem)
+															}
+														}
+													}
+													break
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// Return the gear data
+	jsonResponse(w, map[string]interface{}{
+		"name":    char.Name,
+		"classID": char.ClassID,
+		"gear":    gear,
+		"realm":   realm,
+		"region":  region,
+	})
 }
