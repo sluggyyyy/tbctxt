@@ -136,12 +136,15 @@ async function handleWclCharacter(req, res, url) {
     }
 
     // Query for character and recent reports
+    // TBC Anniversary uses zoneID for the game version
+    // Zone 1002 = TBC Classic
     const charQuery = `{
         characterData {
             character(name: "${name}", serverSlug: "${realm.toLowerCase()}", serverRegion: "${region}") {
                 name
                 classID
-                recentReports(limit: 1) {
+                zoneRankings(zoneID: 1002)
+                recentReports(limit: 1, zoneID: 1002) {
                     data {
                         code
                         startTime
@@ -154,13 +157,16 @@ async function handleWclCharacter(req, res, url) {
 
     try {
         const charResp = await wclGraphQL(charQuery, token);
+        console.log('WCL Response:', JSON.stringify(charResp, null, 2));
 
         if (charResp.errors?.length) {
+            console.log('WCL Errors:', charResp.errors);
             return errorResponse(res, charResp.errors[0].message, 400);
         }
 
         const char = charResp.data?.characterData?.character;
         if (!char?.name) {
+            console.log('Character not found in response:', charResp.data);
             return errorResponse(res, 'Character not found', 404);
         }
 
