@@ -1396,18 +1396,91 @@ let preRaidGearText = '';
 let preRaidDebounceTimer = null;
 let selectedPhase = '1'; // Default to Phase 1 (Karazhan)
 
-// Phase definitions
+// Phase definitions - "Am I ready for X?"
 const PHASES = [
-    { key: '0', name: 'Pre-Raid', shortName: 'PreRaid' },
-    { key: '1', name: 'Phase 1 (Karazhan/Gruul/Mag)', shortName: 'Phase 1' },
-    { key: '2', name: 'Phase 2 (SSC/TK)', shortName: 'Phase 2' },
-    { key: '3', name: 'Phase 3 (Hyjal/BT)', shortName: 'Phase 3' },
-    { key: '4', name: 'Phase 4 (ZA)', shortName: 'Phase 4' },
-    { key: '5', name: 'Phase 5 (Sunwell)', shortName: 'Phase 5' }
+    { key: '1', name: 'Phase 1 (Karazhan/Gruul/Mag)', shortName: 'Karazhan' },
+    { key: '2', name: 'Phase 2 (SSC/TK)', shortName: 'SSC/TK' },
+    { key: '3', name: 'Phase 3 (Hyjal/BT)', shortName: 'Hyjal/BT' },
+    { key: '4', name: 'Phase 4 (ZA)', shortName: 'ZA' },
+    { key: '5', name: 'Phase 5 (Sunwell)', shortName: 'Sunwell' }
 ];
 
+// Minimum raid thresholds by role and phase
+// These are realistic minimums to be "ready", not BiS targets
+const RAID_THRESHOLDS = {
+    caster_dps: {
+        '1': { spellhit: 50, spelldamage: 500, stamina: 120, label: 'Karazhan' },
+        '2': { spellhit: 76, spelldamage: 750, stamina: 160, label: 'SSC/TK' },
+        '3': { spellhit: 101, spelldamage: 1000, stamina: 200, label: 'Hyjal/BT' },
+        '4': { spellhit: 101, spelldamage: 1100, stamina: 230, label: 'ZA' },
+        '5': { spellhit: 126, spelldamage: 1300, stamina: 280, label: 'Sunwell' }
+    },
+    healer: {
+        '1': { healing: 1000, mp5: 40, stamina: 120, label: 'Karazhan' },
+        '2': { healing: 1400, mp5: 60, stamina: 160, label: 'SSC/TK' },
+        '3': { healing: 1700, mp5: 80, stamina: 200, label: 'Hyjal/BT' },
+        '4': { healing: 1900, mp5: 90, stamina: 230, label: 'ZA' },
+        '5': { healing: 2200, mp5: 110, stamina: 280, label: 'Sunwell' }
+    },
+    melee_dps: {
+        '1': { hit: 50, attackpower: 800, crit: 40, stamina: 120, label: 'Karazhan' },
+        '2': { hit: 75, attackpower: 1100, crit: 70, stamina: 160, label: 'SSC/TK' },
+        '3': { hit: 100, attackpower: 1400, crit: 100, stamina: 220, label: 'Hyjal/BT' },
+        '4': { hit: 110, attackpower: 1600, crit: 120, stamina: 260, label: 'ZA' },
+        '5': { hit: 120, attackpower: 1900, crit: 150, stamina: 320, label: 'Sunwell' }
+    },
+    tank: {
+        '1': { defense: 490, armor: 10000, stamina: 200, label: 'Karazhan' },
+        '2': { defense: 490, armor: 13000, stamina: 280, label: 'SSC/TK' },
+        '3': { defense: 490, armor: 16000, stamina: 350, label: 'Hyjal/BT' },
+        '4': { defense: 490, armor: 18000, stamina: 400, label: 'ZA' },
+        '5': { defense: 490, armor: 21000, stamina: 480, label: 'Sunwell' }
+    }
+};
+
+// Map specs to roles
+const SPEC_ROLES = {
+    // Priest
+    'shadow': 'caster_dps',
+    'holy': 'healer',
+    'discipline': 'healer',
+    // Mage
+    'fire': 'caster_dps',
+    'frost': 'caster_dps',
+    'arcane': 'caster_dps',
+    // Warlock
+    'affliction': 'caster_dps',
+    'demonology': 'caster_dps',
+    'destruction': 'caster_dps',
+    // Druid
+    'balance': 'caster_dps',
+    'feral': 'melee_dps',
+    'feral tank': 'tank',
+    'restoration': 'healer',
+    // Paladin
+    'holy': 'healer',
+    'protection': 'tank',
+    'retribution': 'melee_dps',
+    // Shaman
+    'elemental': 'caster_dps',
+    'enhancement': 'melee_dps',
+    'restoration': 'healer',
+    // Warrior
+    'arms': 'melee_dps',
+    'fury': 'melee_dps',
+    'protection': 'tank',
+    // Rogue
+    'combat': 'melee_dps',
+    'assassination': 'melee_dps',
+    'subtlety': 'melee_dps',
+    // Hunter
+    'beast mastery': 'melee_dps',
+    'marksmanship': 'melee_dps',
+    'survival': 'melee_dps'
+};
+
 // Gear slots for scoring
-const GEAR_SLOTS = ['HELM', 'NECK', 'SHOULDER', 'CLOAK', 'CHEST', 'WRIST', 'HANDS', 'WAIST', 'LEGS', 'FEET', 'RING', 'TRINKET', 'MAINHAND', 'OFFHAND', 'RANGED'];
+const GEAR_SLOTS = ['HELM', 'NECK', 'SHOULDER', 'CLOAK', 'CHEST', 'BRACER', 'GLOVES', 'BELT', 'LEGS', 'BOOTS', 'RING', 'TRINKET', 'WEAPON', 'OFF-HAND', 'RANGED'];
 
 // Cache for calculated BiS stats per phase/spec
 let bisStatsCache = {};
@@ -1483,12 +1556,16 @@ async function calculatePhaseBisStats(className, specName, phaseKey) {
     const bisItemIds = Object.values(bestBySlot).map(item => item.itemId);
     await fetchAllItemStats(bisItemIds);
 
+    // Debug: log what items are counted for BiS
+    console.log(`[BiS ${phaseKey}] Slots:`, Object.keys(bestBySlot).length, Object.entries(bestBySlot).map(([slot, item]) => `${slot}: ${item.name}`));
+
     // Get stats from fetched cache
     const statsArray = Object.values(bestBySlot)
         .map(item => fetchedItemStats[item.itemId])
         .filter(stats => stats && Object.values(stats).some(v => typeof v === 'number' && v > 0));
 
     const totalStats = sumStats(statsArray);
+    console.log(`[BiS ${phaseKey}] Total stats:`, totalStats);
     bisStatsCache[cacheKey] = totalStats;
     return totalStats;
 }
@@ -1512,7 +1589,8 @@ function getStatStatus(userValue, bisValue, prevBisValue) {
 
 // Get overall readiness status
 function getOverallStatus(userStats, bisStats, prevBisStats) {
-    const keyStats = ['stamina', 'hit', 'crit', 'attackpower', 'spelldamage', 'healing', 'defense'];
+    // Include both melee and caster stats - only count ones where BiS > 0
+    const keyStats = ['stamina', 'hit', 'crit', 'attackpower', 'spelldamage', 'spellhit', 'spellcrit', 'healing', 'defense', 'mp5'];
     let bisCount = 0, goodCount = 0, preparedCount = 0, totalRelevant = 0;
 
     for (const stat of keyStats) {
@@ -1530,6 +1608,109 @@ function getOverallStatus(userStats, bisStats, prevBisStats) {
     if (bisCount + goodCount >= totalRelevant * 0.8) return { status: 'GOOD', class: 'text-terminal-accent' };
     if (bisCount + goodCount + preparedCount >= totalRelevant * 0.6) return { status: 'PREPARED', class: 'text-yellow-400' };
     return { status: 'UNDERGEARED', class: 'text-red-400' };
+}
+
+// Get role for a spec
+function getSpecRole(specName) {
+    const lower = specName?.toLowerCase() || '';
+    return SPEC_ROLES[lower] || 'caster_dps'; // Default to caster
+}
+
+// Check user stats against raid thresholds
+function checkRaidThresholds(userStats, role, phaseKey) {
+    const thresholds = RAID_THRESHOLDS[role]?.[phaseKey];
+    if (!thresholds) return { passed: [], failed: [], label: 'Unknown' };
+
+    const results = { passed: [], failed: [], label: thresholds.label };
+
+    for (const [stat, minValue] of Object.entries(thresholds)) {
+        if (stat === 'label') continue;
+
+        const userValue = userStats[stat] || 0;
+        const statLabels = {
+            hit: 'Hit Rating', spellhit: 'Spell Hit', spelldamage: 'Spell Damage', stamina: 'Stamina',
+            healing: 'Healing', mp5: 'MP5', attackpower: 'Attack Power',
+            crit: 'Crit %', defense: 'Defense', armor: 'Armor', dodge: 'Dodge %'
+        };
+
+        const entry = {
+            stat,
+            label: statLabels[stat] || stat,
+            current: userValue,
+            required: minValue,
+            diff: userValue - minValue
+        };
+
+        if (userValue >= minValue) {
+            results.passed.push(entry);
+        } else {
+            results.failed.push(entry);
+        }
+    }
+
+    return results;
+}
+
+// Compare user items to BiS list by slot
+function compareItemsToBis(userItemNames, bisList) {
+    const results = {};
+    const usedUserItems = new Set(); // Track which user items have been matched
+
+    // Build BiS lookup by slot (keep RING 1, RING 2, etc. separate)
+    const bisBySlot = {};
+    for (const [slot, itemName, source] of bisList) {
+        if (!bisBySlot[slot]) bisBySlot[slot] = [];
+        bisBySlot[slot].push({
+            name: cleanItemName(itemName),
+            source,
+            rating: getRatingWeight(itemName)
+        });
+    }
+
+    // Check each BiS slot
+    for (const [slot, bisItems] of Object.entries(bisBySlot)) {
+        const bestBis = bisItems.find(i => i.rating >= 1) || bisItems[0];
+
+        // Find if user has any item for this slot (that hasn't been used yet)
+        let userMatch = null;
+        let matchType = 'MISSING';
+
+        for (const userName of userItemNames) {
+            if (usedUserItems.has(userName.toLowerCase())) continue; // Skip already matched items
+
+            const cleanUser = userName.toLowerCase().trim();
+
+            // Check if user item matches any BiS item for this slot
+            for (const bisItem of bisItems) {
+                const cleanBis = bisItem.name.toLowerCase();
+                if (cleanUser === cleanBis || cleanUser.includes(cleanBis) || cleanBis.includes(cleanUser)) {
+                    userMatch = userName;
+                    usedUserItems.add(userName.toLowerCase());
+                    if (bisItem.rating >= 1) {
+                        matchType = 'BiS';
+                    } else if (bisItem.rating >= 0.7) {
+                        matchType = 'GOOD';
+                    } else {
+                        matchType = 'OK';
+                    }
+                    break;
+                }
+            }
+            if (userMatch) break;
+        }
+
+        // Display slot name without number for cleaner UI
+        const displaySlot = slot.replace(/\s*\d+$/, '');
+        results[slot] = {
+            displaySlot,
+            userItem: userMatch,
+            bisItem: bestBis?.name || 'Unknown',
+            bisSource: bestBis?.source || '',
+            status: matchType
+        };
+    }
+
+    return results;
 }
 
 // Parse gear list and match against BiS
@@ -1628,60 +1809,65 @@ function parseTooltipStats(tooltipHtml) {
     };
     if (!tooltipHtml) return stats;
 
-    // Combined single-pass regex (Thompson NFA style - all patterns in one alternation)
-    const combinedPattern = /\+(\d+)\s+(Stamina|Intellect|Strength|Agility|Spirit|Hit Rating|Critical Strike Rating|Haste Rating|Expertise Rating|Attack Power|Armor Penetration|Defense Rating|Dodge Rating|Parry Rating|Block Rating|Spell Hit|Spell Crit|Spell Haste)|Equip: Increases? (?:your )?(hit rating|critical strike rating|haste rating|expertise rating|attack power|armor penetration|defense rating|dodge rating|parry rating|block rating|spell hit rating|spell critical strike rating|spell haste rating|spell power|damage and healing done by[^0-9]+) by (?:up to )?(\d+)|Equip: Restores (\d+) mana per 5|<span[^>]*>(\d+) Armor<\/span>/gi;
+    // Strip HTML tags and decode entities to get plain text
+    const text = tooltipHtml
+        .replace(/<[^>]+>/g, ' ')  // Remove HTML tags
+        .replace(/&nbsp;/g, ' ')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&amp;/g, '&')
+        .replace(/Socket Bonus:.*?(?=Durability|Requires|Equip:|$)/gi, '')  // Remove socket bonus
+        .replace(/\s+/g, ' ');     // Normalize whitespace
 
-    let match;
-    while ((match = combinedPattern.exec(tooltipHtml)) !== null) {
-        const val1 = match[1] ? parseInt(match[1], 10) : 0;
-        const type1 = match[2]?.toLowerCase();
-        const type2 = match[3]?.toLowerCase();
-        const val2 = match[4] ? parseInt(match[4], 10) : 0;
-        const mp5Val = match[5] ? parseInt(match[5], 10) : 0;
-        const armorVal = match[6] ? parseInt(match[6], 10) : 0;
+    console.log('[TEXT]', text.substring(0, 300));
 
-        // Primary stats from +X format
-        if (val1 && type1) {
-            if (type1 === 'stamina') stats.stamina = val1;
-            else if (type1 === 'intellect') stats.intellect = val1;
-            else if (type1 === 'strength') stats.strength = val1;
-            else if (type1 === 'agility') stats.agility = val1;
-            else if (type1 === 'spirit') stats.spirit = val1;
-            else if (type1 === 'hit rating') stats.hit = val1;
-            else if (type1 === 'critical strike rating') stats.crit = val1;
-            else if (type1 === 'haste rating') stats.haste = val1;
-            else if (type1 === 'expertise rating') stats.expertise = val1;
-            else if (type1 === 'attack power') stats.attackpower = val1;
-            else if (type1 === 'armor penetration') stats.armorpen = val1;
-            else if (type1 === 'defense rating') stats.defense = val1;
-            else if (type1 === 'dodge rating') stats.dodge = val1;
-            else if (type1 === 'parry rating') stats.parry = val1;
-            else if (type1 === 'block rating') stats.block = val1;
-            else if (type1 === 'spell hit') stats.spellhit = val1;
-            else if (type1 === 'spell crit') stats.spellcrit = val1;
-            else if (type1 === 'spell haste') stats.spellhaste = val1;
+    // Simple patterns for plain text
+    const patterns = [
+        [/\+(\d+)\s+Stamina/gi, 'stamina'],
+        [/\+(\d+)\s+Intellect/gi, 'intellect'],
+        [/\+(\d+)\s+Strength/gi, 'strength'],
+        [/\+(\d+)\s+Agility/gi, 'agility'],
+        [/\+(\d+)\s+Spirit/gi, 'spirit'],
+        [/\+(\d+)\s+Hit Rating/gi, 'hit'],
+        [/\+(\d+)\s+Critical Strike Rating/gi, 'crit'],
+        [/\+(\d+)\s+Haste Rating/gi, 'haste'],
+        [/\+(\d+)\s+Expertise Rating/gi, 'expertise'],
+        [/\+(\d+)\s+Attack Power/gi, 'attackpower'],
+        [/\+(\d+)\s+Armor Penetration/gi, 'armorpen'],
+        [/\+(\d+)\s+Defense Rating/gi, 'defense'],
+        [/\+(\d+)\s+Dodge Rating/gi, 'dodge'],
+        [/\+(\d+)\s+Parry Rating/gi, 'parry'],
+        [/\+(\d+)\s+Block Rating/gi, 'block'],
+        [/(\d+)\s+Armor/gi, 'armor'],
+        // Equip effects
+        [/spell hit rating by (\d+)/gi, 'spellhit'],
+        [/spell critical strike rating by (\d+)/gi, 'spellcrit'],
+        [/spell haste rating by (\d+)/gi, 'spellhaste'],
+        [/healing done by up to (\d+)/gi, 'healing'],
+        [/healing done by spells by up to (\d+)/gi, 'healing'],
+        [/damage and healing[^0-9]+by (?:up to )?(\d+)/gi, 'spelldamage'],
+        [/spell power by (\d+)/gi, 'spelldamage'],
+        [/hit rating by (\d+)/gi, 'hit'],
+        [/critical strike rating by (\d+)/gi, 'crit'],
+        [/haste rating by (\d+)/gi, 'haste'],
+        [/attack power by (\d+)/gi, 'attackpower'],
+        [/(\d+) mana per 5/gi, 'mp5'],
+    ];
+
+    // Apply all patterns and SUM the values (not replace)
+    for (const [pattern, statKey] of patterns) {
+        let match;
+        while ((match = pattern.exec(text)) !== null) {
+            const val = parseInt(match[1], 10);
+            if (val > 0) {
+                stats[statKey] += val;
+            }
         }
-        // Equip: format stats
-        if (val2 && type2) {
-            if (type2 === 'hit rating') stats.hit = val2;
-            else if (type2 === 'critical strike rating') stats.crit = val2;
-            else if (type2 === 'haste rating') stats.haste = val2;
-            else if (type2 === 'expertise rating') stats.expertise = val2;
-            else if (type2 === 'attack power') stats.attackpower = val2;
-            else if (type2 === 'armor penetration') stats.armorpen = val2;
-            else if (type2 === 'defense rating') stats.defense = val2;
-            else if (type2 === 'dodge rating') stats.dodge = val2;
-            else if (type2 === 'parry rating') stats.parry = val2;
-            else if (type2 === 'block rating') stats.block = val2;
-            else if (type2 === 'spell hit rating') stats.spellhit = val2;
-            else if (type2 === 'spell critical strike rating') stats.spellcrit = val2;
-            else if (type2 === 'spell haste rating') stats.spellhaste = val2;
-            else if (type2 === 'spell power') stats.spelldamage = val2;
-            else if (type2.includes('damage and healing')) stats.spelldamage = val2;
-        }
-        if (mp5Val) stats.mp5 = mp5Val;
-        if (armorVal) stats.armor = armorVal;
     }
+
+    // Debug output
+    const nonZero = Object.entries(stats).filter(([k,v]) => v > 0);
+    console.log('[PARSED]', nonZero.length > 0 ? Object.fromEntries(nonZero) : 'NONE');
 
     return stats;
 }
@@ -1707,58 +1893,177 @@ let fetchedItemStats = {};
 let tooltipFetchInProgress = false;
 let preloadContainer = null;
 
-// Read tooltip from Wowhead cache - check ALL possible locations
+// OUR OWN tooltip cache - populated by XHR/JSONP intercept
+let capturedTooltips = {};
+
+// Helper to extract tooltip from response text
+function extractTooltipFromResponse(text, itemIdHint) {
+    // Try to find tooltip_enus in the response
+    const tooltipMatch = text.match(/"tooltip_enus"\s*:\s*"((?:[^"\\]|\\.)*)"/);
+    if (tooltipMatch) {
+        // Try to find item ID near the tooltip
+        const idMatch = text.match(/["\[](\d{4,6})["\]]/);
+        const itemId = idMatch ? idMatch[1] : itemIdHint;
+        if (itemId) {
+            const tooltip = tooltipMatch[1]
+                .replace(/\\"/g, '"')
+                .replace(/\\n/g, '\n')
+                .replace(/\\\\/g, '\\')
+                .replace(/\\u003c/g, '<')
+                .replace(/\\u003e/g, '>')
+                .replace(/\\u0026/g, '&');
+            capturedTooltips[itemId] = tooltip;
+            console.log('[CAPTURED]', itemId, tooltip.substring(0, 80));
+            return true;
+        }
+    }
+    return false;
+}
+
+// Intercept XMLHttpRequest to capture Wowhead tooltip responses
+(function() {
+    const origOpen = XMLHttpRequest.prototype.open;
+    const origSend = XMLHttpRequest.prototype.send;
+
+    XMLHttpRequest.prototype.open = function(method, url) {
+        this._whUrl = url;
+        return origOpen.apply(this, arguments);
+    };
+
+    XMLHttpRequest.prototype.send = function() {
+        const xhr = this;
+        const url = xhr._whUrl || '';
+
+        // Check if this is a Wowhead request
+        if (url.includes('wowhead.com')) {
+            console.log('[XHR]', url);
+            xhr.addEventListener('load', function() {
+                try {
+                    const text = xhr.responseText;
+                    console.log('[XHR RESPONSE]', url, text.substring(0, 200));
+
+                    // Extract item ID from URL if present
+                    const idMatch = url.match(/item[=\/](\d+)/);
+                    extractTooltipFromResponse(text, idMatch ? idMatch[1] : null);
+                } catch(e) {
+                    console.log('[XHR ERROR]', e);
+                }
+            });
+        }
+        return origSend.apply(this, arguments);
+    };
+})();
+
+// Also intercept fetch API
+(function() {
+    const origFetch = window.fetch;
+    window.fetch = function(url, options) {
+        const urlStr = typeof url === 'string' ? url : url.url || '';
+
+        if (urlStr.includes('wowhead.com')) {
+            console.log('[FETCH API]', urlStr);
+            return origFetch.apply(this, arguments).then(response => {
+                const clone = response.clone();
+                clone.text().then(text => {
+                    console.log('[FETCH RESPONSE]', urlStr, text.substring(0, 200));
+                    const idMatch = urlStr.match(/item[=\/](\d+)/);
+                    extractTooltipFromResponse(text, idMatch ? idMatch[1] : null);
+                });
+                return response;
+            });
+        }
+        return origFetch.apply(this, arguments);
+    };
+})();
+
+// Watch for JSONP script insertions and intercept Wowhead callbacks
+(function() {
+    // Monitor script insertions
+    const observer = new MutationObserver(mutations => {
+        for (const mutation of mutations) {
+            for (const node of mutation.addedNodes) {
+                if (node.tagName === 'SCRIPT' && node.src && node.src.includes('wowhead.com')) {
+                    console.log('[SCRIPT ADDED]', node.src);
+                }
+            }
+        }
+    });
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+
+    // Intercept $WowheadPower methods when it becomes available
+    function hookWowhead() {
+        if (typeof $WowheadPower === 'undefined') {
+            setTimeout(hookWowhead, 100);
+            return;
+        }
+
+        console.log('[WOWHEAD] Hooking $WowheadPower, methods:', Object.keys($WowheadPower));
+
+        // Try to find and hook the item registration function
+        const checkObj = obj => {
+            if (!obj || typeof obj !== 'object') return;
+            for (const key of Object.keys(obj)) {
+                if (typeof obj[key] === 'function' && (key.includes('register') || key.includes('item') || key.includes('tooltip'))) {
+                    const orig = obj[key];
+                    obj[key] = function() {
+                        console.log('[WOWHEAD CALL]', key, arguments);
+                        return orig.apply(this, arguments);
+                    };
+                }
+            }
+        };
+
+        checkObj($WowheadPower);
+        if (typeof WH !== 'undefined') checkObj(WH);
+    }
+
+    hookWowhead();
+})();
+
+// Get tooltip from our captured cache
 function getTooltipFromCache(itemId) {
-    const id = String(itemId);
+    return capturedTooltips[String(itemId)] || null;
+}
 
-    // DEBUG: Log available caches on first call
-    if (!window._wowheadDebugDone) {
-        window._wowheadDebugDone = true;
-        console.log('[WH DEBUG] $WowheadPower exists:', typeof $WowheadPower !== 'undefined');
-        if (typeof $WowheadPower !== 'undefined') {
-            console.log('[WH DEBUG] $WowheadPower keys:', Object.keys($WowheadPower));
-            if ($WowheadPower._) console.log('[WH DEBUG] _.keys:', Object.keys($WowheadPower._));
+// Direct fetch from Wowhead tooltip API
+async function fetchTooltipDirect(itemId) {
+    if (capturedTooltips[itemId]) {
+        return capturedTooltips[itemId];
+    }
+
+    // Try multiple Wowhead API endpoints - TBC Classic uses dataEnv=5
+    const endpoints = [
+        `https://nether.wowhead.com/tooltip/item/${itemId}?dataEnv=5&locale=0`,
+        `https://nether.wowhead.com/tooltip/item/${itemId}?dataEnv=4&locale=0`,
+        `https://nether.wowhead.com/tbc/tooltip/item/${itemId}`,
+        `https://tbc.wowhead.com/tooltip/item/${itemId}`
+    ];
+
+    for (const url of endpoints) {
+        try {
+            console.log('[FETCH TRYING]', url);
+            const response = await fetch(url);
+            console.log('[FETCH STATUS]', itemId, response.status);
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log('[FETCH DATA]', itemId, Object.keys(data));
+
+                if (data.tooltip) {
+                    capturedTooltips[itemId] = data.tooltip;
+                    console.log('[FETCH OK]', itemId, data.tooltip.substring(0, 80));
+                    return data.tooltip;
+                }
+            }
+        } catch(e) {
+            console.log('[FETCH ERROR]', url, e.message);
         }
-        console.log('[WH DEBUG] whTooltips exists:', typeof whTooltips !== 'undefined');
-        if (typeof whTooltips !== 'undefined') {
-            console.log('[WH DEBUG] whTooltips keys:', Object.keys(whTooltips));
-            if (whTooltips.aT) console.log('[WH DEBUG] aT keys (first 5):', Object.keys(whTooltips.aT).slice(0,5));
-        }
-        console.log('[WH DEBUG] g_items exists:', typeof g_items !== 'undefined');
-        console.log('[WH DEBUG] WH exists:', typeof WH !== 'undefined');
-        if (typeof WH !== 'undefined') console.log('[WH DEBUG] WH keys:', Object.keys(WH));
-    }
-
-    // Try $WowheadPower._ (main data store)
-    if (typeof $WowheadPower !== 'undefined' && $WowheadPower._) {
-        const data = $WowheadPower._[1]?.[id] || $WowheadPower._['items']?.[id];
-        if (data?.tooltip_enus) { console.log('[WH] Found in _:', id); return data.tooltip_enus; }
-        if (data?.tooltip) { console.log('[WH] Found in _ (tooltip):', id); return data.tooltip; }
-    }
-
-    // Try $WowheadPower.items
-    if (typeof $WowheadPower !== 'undefined' && $WowheadPower.items) {
-        const item = $WowheadPower.items[id] || $WowheadPower.items[itemId];
-        if (item?.tooltip_enus) { console.log('[WH] Found in items:', id); return item.tooltip_enus; }
-        if (item?.tooltip) { console.log('[WH] Found in items (tooltip):', id); return item.tooltip; }
-    }
-
-    // Try whTooltips cache
-    if (typeof whTooltips !== 'undefined') {
-        if (whTooltips.aT?.[id]) { console.log('[WH] Found in aT:', id); return whTooltips.aT[id]; }
-        if (whTooltips.aT?.[itemId]) { console.log('[WH] Found in aT (num):', id); return whTooltips.aT[itemId]; }
-    }
-
-    // Try window.g_items (another Wowhead cache)
-    if (typeof g_items !== 'undefined' && g_items[id]) {
-        console.log('[WH] Found in g_items:', id);
-        return g_items[id].tooltip_enus || g_items[id].tooltip;
     }
 
     return null;
 }
 
-// OPTIMIZED: Fetch ALL items with polling until loaded
+// OPTIMIZED: Fetch ALL items directly from Wowhead API
 async function fetchAllItemStats(itemIds) {
     console.log('[FETCH] fetchAllItemStats called with:', itemIds);
     if (tooltipFetchInProgress) {
@@ -1780,54 +2085,22 @@ async function fetchAllItemStats(itemIds) {
 
     if (statusDiv) statusDiv.innerHTML = `<span class="text-yellow-400">Loading ${toFetch.length} items...</span>`;
 
-    // Remove old preload container
-    if (preloadContainer) preloadContainer.remove();
-
-    // Create ALL links at once
-    preloadContainer = document.createElement('div');
-    preloadContainer.style.cssText = 'position:fixed;left:-99999px;top:-99999px;visibility:hidden;';
-    preloadContainer.innerHTML = toFetch.map(id =>
-        `<a href="https://tbc.wowhead.com/item=${id}" data-wowhead="item=${id}&domain=tbc">.</a>`
-    ).join('');
-    document.body.appendChild(preloadContainer);
-
-    // Trigger Wowhead fetch
-    if (typeof $WowheadPower !== 'undefined') $WowheadPower.refreshLinks();
-
-    // Poll until items are loaded (max 5 seconds)
-    let found = 0;
-    const maxWait = 5000;
-    const pollInterval = 200;
-    let waited = 0;
-
-    while (waited < maxWait) {
-        await new Promise(r => setTimeout(r, pollInterval));
-        waited += pollInterval;
-
-        found = 0;
-        for (const id of toFetch) {
-            if (getTooltipFromCache(id)) found++;
-        }
-
-        if (statusDiv) statusDiv.innerHTML = `<span class="text-yellow-400">Loading... ${found}/${toFetch.length}</span>`;
-
-        // Stop early if all loaded
-        if (found >= toFetch.length) break;
-    }
-
-    // Read all from cache
-    found = 0;
-    for (const id of toFetch) {
-        const html = getTooltipFromCache(id);
-        if (html) {
-            fetchedItemStats[id] = parseTooltipStats(html);
-            found++;
+    // Fetch all items in parallel using direct API
+    let loaded = 0;
+    const fetchPromises = toFetch.map(async (id) => {
+        const tooltip = await fetchTooltipDirect(id);
+        if (tooltip) {
+            fetchedItemStats[id] = parseTooltipStats(tooltip);
+            loaded++;
         } else {
             fetchedItemStats[id] = { ...emptyStats };
         }
-    }
+        if (statusDiv) statusDiv.innerHTML = `<span class="text-yellow-400">Loading... ${loaded}/${toFetch.length}</span>`;
+    });
 
-    if (statusDiv) statusDiv.innerHTML = `<span class="text-terminal-accent">${found}/${toFetch.length} loaded</span>`;
+    await Promise.all(fetchPromises);
+
+    if (statusDiv) statusDiv.innerHTML = `<span class="text-terminal-accent">${loaded}/${toFetch.length} loaded</span>`;
     tooltipFetchInProgress = false;
 }
 
@@ -1912,54 +2185,106 @@ async function updateStatsDisplay(itemIdsList) {
     statsHtml += `</div>`;
     statsDiv.innerHTML = statsHtml;
 
-    // Calculate overall readiness
-    if (readinessDiv && bisStats) {
-        const overall = getOverallStatus(userTotal, bisStats, prevBisStats);
+    // Calculate readiness using thresholds and slot comparison
+    if (readinessDiv) {
         const phaseName = PHASES.find(p => p.key === selectedPhase)?.shortName || `Phase ${selectedPhase}`;
+        const role = getSpecRole(preRaidSpecName);
+        const thresholds = checkRaidThresholds(userTotal, role, selectedPhase);
+
+        // Get user item names for slot comparison
+        const gearText = document.getElementById('gear-input')?.value || '';
+        const userItemNames = gearText.split('\n').map(l => l.trim()).filter(l => l);
+        const bisList = getPhaseBisList(preRaidClass, preRaidSpecName, selectedPhase);
+        const slotComparison = compareItemsToBis(userItemNames, bisList);
+
+        // Determine overall status based on thresholds
+        const allPassed = thresholds.failed.length === 0;
+        const mostPassed = thresholds.failed.length <= 1;
+        const overallStatus = allPassed ? { text: 'READY', class: 'text-terminal-accent' } :
+                              mostPassed ? { text: 'ALMOST READY', class: 'text-yellow-400' } :
+                              { text: 'NOT READY', class: 'text-red-400' };
 
         let readinessHtml = `
             <div class="mb-4">
                 <div class="flex items-center justify-between mb-2">
-                    <h4 class="text-terminal-text text-xs uppercase">${phaseName} Readiness</h4>
-                    <span class="${overall.class} text-sm font-bold">[${overall.status}]</span>
+                    <h4 class="text-terminal-text text-xs uppercase">${thresholds.label} Requirements</h4>
+                    <span class="${overallStatus.class} text-sm font-bold">[${overallStatus.text}]</span>
                 </div>
+
+                <div class="space-y-1 text-xs mb-4">
         `;
 
-        // Progress bar based on key stats
-        const keyStats = ['stamina', 'hit', 'crit', 'attackpower', 'spelldamage', 'healing', 'defense'];
-        let totalPct = 0, statCount = 0;
-        for (const stat of keyStats) {
-            if (bisStats[stat] > 0) {
-                totalPct += Math.min((userTotal[stat] / bisStats[stat]) * 100, 100);
-                statCount++;
-            }
+        // Show passed thresholds
+        for (const t of thresholds.passed) {
+            readinessHtml += `
+                <div class="flex items-center justify-between">
+                    <span class="text-terminal-accent">✓ ${t.label}</span>
+                    <span class="text-terminal-text">${t.current} / ${t.required}</span>
+                </div>
+            `;
         }
-        const avgPct = statCount > 0 ? Math.round(totalPct / statCount) : 0;
-        const barColor = avgPct >= 100 ? 'bg-wow-legendary' : avgPct >= 90 ? 'bg-terminal-accent' : avgPct >= 80 ? 'bg-yellow-500' : 'bg-red-500';
+
+        // Show failed thresholds
+        for (const t of thresholds.failed) {
+            const needed = t.required - t.current;
+            readinessHtml += `
+                <div class="flex items-center justify-between">
+                    <span class="text-red-400">✗ ${t.label}</span>
+                    <span class="text-red-400">${t.current} / ${t.required} <span class="text-[10px]">(need ${needed})</span></span>
+                </div>
+            `;
+        }
 
         readinessHtml += `
-                <div class="flex items-center gap-3">
-                    <div class="flex-1 h-3 bg-terminal-dim/20 border border-terminal-dim/50">
-                        <div class="${barColor} h-full transition-all" style="width: ${avgPct}%"></div>
-                    </div>
-                    <span class="text-terminal-text text-sm font-bold w-12 text-right">${avgPct}%</span>
-                </div>
-            </div>
-
-            <div class="border-t border-terminal-dim/30 pt-3 mt-3">
-                <h5 class="text-terminal-dim text-[10px] uppercase mb-2">// Status Legend</h5>
-                <div class="grid grid-cols-2 gap-1 text-[10px]">
-                    <div><span class="text-wow-legendary font-bold">BiS</span> = At or above phase BiS</div>
-                    <div><span class="text-terminal-accent font-bold">GOOD</span> = Within 10% of BiS</div>
-                    <div><span class="text-yellow-400 font-bold">PREPARED</span> = Within 20% of prev tier</div>
-                    <div><span class="text-red-400 font-bold">LOW</span> = Below prepared threshold</div>
                 </div>
             </div>
         `;
 
+        // Slot-by-slot comparison
+        const slotEntries = Object.entries(slotComparison);
+        if (slotEntries.length > 0) {
+            readinessHtml += `
+                <div class="border-t border-terminal-dim/30 pt-3 mt-3">
+                    <h5 class="text-terminal-dim text-[10px] uppercase mb-2">// Gear Slots</h5>
+                    <div class="space-y-1 text-[10px] max-h-48 overflow-y-auto">
+            `;
+
+            for (const [slot, data] of slotEntries) {
+                const statusColors = {
+                    'BiS': 'text-wow-legendary',
+                    'GOOD': 'text-terminal-accent',
+                    'OK': 'text-yellow-400',
+                    'MISSING': 'text-red-400'
+                };
+                const statusColor = statusColors[data.status] || 'text-terminal-dim';
+
+                const slotLabel = data.displaySlot || slot;
+                if (data.status === 'MISSING') {
+                    readinessHtml += `
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-terminal-dim w-16 flex-shrink-0">${slotLabel}</span>
+                            <span class="text-red-400 flex-1 truncate">— Need: ${data.bisItem}</span>
+                            <span class="${statusColor} font-bold w-14 text-right">[${data.status}]</span>
+                        </div>
+                    `;
+                } else {
+                    readinessHtml += `
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-terminal-dim w-16 flex-shrink-0">${slotLabel}</span>
+                            <span class="text-terminal-text flex-1 truncate">${data.userItem || '—'}</span>
+                            <span class="${statusColor} font-bold w-14 text-right">[${data.status}]</span>
+                        </div>
+                    `;
+                }
+            }
+
+            readinessHtml += `
+                    </div>
+                </div>
+            `;
+        }
+
         readinessDiv.innerHTML = readinessHtml;
-    } else if (readinessDiv) {
-        readinessDiv.innerHTML = '<span class="text-terminal-dim text-xs">No BiS data available for this phase/spec</span>';
     }
 }
 
@@ -2041,7 +2366,7 @@ function renderPreRaidChecker() {
                 </select>
             </div>
             <div>
-                <label class="text-terminal-dim text-xs block mb-2">COMPARE TO PHASE</label>
+                <label class="text-terminal-dim text-xs block mb-2">READY FOR</label>
                 <select id="phase-select" class="w-full bg-terminal-bg border border-terminal-accent text-terminal-accent px-3 py-2 text-xs font-mono cursor-pointer">
                     ${PHASES.map(p => `<option value="${p.key}" ${p.key === selectedPhase ? 'selected' : ''}>${p.name}</option>`).join('')}
                 </select>
