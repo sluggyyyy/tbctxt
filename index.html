@@ -321,7 +321,6 @@
                 <li class="py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="recipes">[ RECIPES ]</li>
                 <li class="py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="raids">[ RAIDS ]</li>
                 <li class="py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="preraid">[ RAID-READY ]</li>
-                <li class="py-2 pl-2.5 cursor-pointer text-terminal-text select-none md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="wcl-audit">[ WCL AUDIT ]</li>
             </ul>
         </aside>
         <main id="main-content" class="border border-terminal-text p-5 md:p-4 sm:p-3"></main>
@@ -2376,8 +2375,31 @@ function renderPreRaidChecker() {
             </div>
         </div>
 
+        <div class="border border-terminal-accent/30 p-4 mb-6">
+            <h4 class="text-terminal-accent text-xs uppercase mb-3">// Import from Warcraft Logs</h4>
+            <div class="grid grid-cols-3 gap-4 mb-3 md:grid-cols-1">
+                <div>
+                    <label class="text-terminal-dim text-xs block mb-2">CHARACTER NAME</label>
+                    <input type="text" id="wcl-character" class="w-full bg-terminal-bg border border-terminal-text text-terminal-text px-3 py-2 text-xs font-mono" placeholder="Enter character name" value="${wclCharacterName}">
+                </div>
+                <div>
+                    <label class="text-terminal-dim text-xs block mb-2">REALM</label>
+                    <select id="wcl-realm" class="w-full bg-terminal-bg border border-terminal-text text-terminal-text px-3 py-2 text-xs font-mono cursor-pointer">
+                        <option value="Nightslayer" ${wclRealm === 'Nightslayer' ? 'selected' : ''}>Nightslayer (US)</option>
+                        <option value="Dreamscythe" ${wclRealm === 'Dreamscythe' ? 'selected' : ''}>Dreamscythe (EU)</option>
+                    </select>
+                </div>
+                <div class="flex items-end">
+                    <button id="wcl-import-btn" class="w-full bg-terminal-text text-terminal-bg px-4 py-2 font-mono text-xs font-bold cursor-pointer hover:bg-terminal-accent transition-colors">
+                        [ IMPORT FROM WCL ]
+                    </button>
+                </div>
+            </div>
+            <span id="wcl-status" class="text-xs"></span>
+        </div>
+
         <div class="mb-4">
-            <label class="text-terminal-dim text-xs block mb-2">PASTE YOUR GEAR <span class="text-terminal-accent">(one item per line)</span></label>
+            <label class="text-terminal-dim text-xs block mb-2">PASTE YOUR GEAR <span class="text-terminal-accent">(one item per line)</span> <span class="text-terminal-dim">or import from WCL above</span></label>
             <textarea id="gear-input" class="w-full bg-terminal-bg border border-terminal-text text-terminal-text px-3 py-2 text-xs font-mono h-40 resize-y" placeholder="Overlord's Helmet of Second Sight
 Choker of Vile Intent
 Wastewalker Shoulderpads
@@ -2482,146 +2504,54 @@ Wastewalker Shoulderpads
         if (preRaidGearText) {
             updateGearPreview();
         }
-    }, FADE_TRANSITION_MS);
-}
 
-// WCL Audit state
-let wclCharacterName = '';
-let wclRealm = 'Nightslayer';
-let wclRegion = 'us';
-let wclClass = 'warrior';
-let wclSpec = 'fury';
-
-function renderWclAudit() {
-    currentClass = null;
-    document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
-    const wclLink = document.querySelector('.class-list li[data-view="wcl-audit"]');
-    if (wclLink) wclLink.classList.add('active');
-
-    const classes = Object.keys(classData);
-    if (!wclClass || !classData[wclClass]) {
-        wclClass = classes[0] || 'warrior';
-    }
-    const specs = classData[wclClass]?.specs ? Object.keys(classData[wclClass].specs) : [];
-    if (!wclSpec || !specs.includes(wclSpec)) {
-        wclSpec = classData[wclClass]?.defaultSpec || specs[0];
-    }
-
-    const html = `
-        <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">./wcl-audit --realm=${wclRealm} --character=${wclCharacterName || 'unknown'}</div>
-        <h2 class="text-terminal-accent text-lg mb-2 uppercase tracking-wide md:text-base sm:text-sm">[ WARCRAFT LOGS GEAR AUDIT ]</h2>
-        <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">Import your character's gear from Warcraft Logs and compare against BiS</p>
-
-        <div class="grid grid-cols-2 gap-4 mb-6 md:grid-cols-1">
-            <div>
-                <label class="text-terminal-dim text-xs block mb-2">CHARACTER NAME</label>
-                <input type="text" id="wcl-character" class="w-full bg-terminal-bg border border-terminal-text text-terminal-text px-3 py-2 text-xs font-mono" placeholder="Enter character name" value="${wclCharacterName}">
-            </div>
-            <div>
-                <label class="text-terminal-dim text-xs block mb-2">REALM</label>
-                <select id="wcl-realm" class="w-full bg-terminal-bg border border-terminal-accent text-terminal-accent px-3 py-2 text-xs font-mono cursor-pointer">
-                    <option value="Nightslayer" ${wclRealm === 'Nightslayer' ? 'selected' : ''}>Nightslayer (US)</option>
-                    <option value="Dreamscythe" ${wclRealm === 'Dreamscythe' ? 'selected' : ''}>Dreamscythe (EU)</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-4 mb-6 md:grid-cols-1">
-            <div>
-                <label class="text-terminal-dim text-xs block mb-2">CLASS</label>
-                <select id="wcl-class" class="w-full bg-terminal-bg border border-terminal-text text-terminal-text px-3 py-2 text-xs font-mono cursor-pointer">
-                    ${classes.map(c => `<option value="${c}" ${c === wclClass ? 'selected' : ''}>${classData[c]?.title || c}</option>`).join('')}
-                </select>
-            </div>
-            <div>
-                <label class="text-terminal-dim text-xs block mb-2">SPEC</label>
-                <select id="wcl-spec" class="w-full bg-terminal-bg border border-terminal-text text-terminal-text px-3 py-2 text-xs font-mono cursor-pointer">
-                    ${specs.map(s => `<option value="${s}" ${s === wclSpec ? 'selected' : ''}>${classData[wclClass]?.specs[s]?.name || s}</option>`).join('')}
-                </select>
-            </div>
-        </div>
-
-        <div class="mb-6">
-            <button id="wcl-fetch-btn" class="bg-terminal-accent text-terminal-bg px-6 py-2 font-mono text-xs font-bold cursor-pointer hover:bg-terminal-text transition-colors">
-                [ FETCH FROM WARCRAFT LOGS ]
-            </button>
-            <span id="wcl-status" class="ml-3 text-xs"></span>
-        </div>
-
-        <div id="wcl-results" class="border border-terminal-dim/50 p-4 min-h-[200px]">
-            <span class="text-terminal-dim text-xs">Enter your character name and click "Fetch" to import gear from Warcraft Logs</span>
-        </div>
-
-        <div class="mt-6 border border-yellow-500/30 p-4">
-            <h4 class="text-yellow-400 text-xs uppercase mb-2">// How This Works</h4>
-            <ul class="text-terminal-dim text-xs space-y-1">
-                <li>1. Enter your character name exactly as it appears in Warcraft Logs</li>
-                <li>2. Select your realm (Nightslayer for US, Dreamscythe for EU)</li>
-                <li>3. Click "Fetch" to pull your most recent gear from logged raids</li>
-                <li>4. Gear is compared against BiS for your selected spec</li>
-            </ul>
-        </div>
-    `;
-
-    const mainContent = document.getElementById('main-content');
-    mainContent.style.opacity = '0.3';
-    setTimeout(() => {
-        mainContent.innerHTML = html;
-        mainContent.style.opacity = '1';
-
-        // Character name input
-        document.getElementById('wcl-character').addEventListener('input', (e) => {
+        // WCL Import handlers
+        document.getElementById('wcl-character')?.addEventListener('input', (e) => {
             wclCharacterName = e.target.value;
         });
 
-        // Realm selector
-        document.getElementById('wcl-realm').addEventListener('change', (e) => {
+        document.getElementById('wcl-realm')?.addEventListener('change', (e) => {
             wclRealm = e.target.value;
             wclRegion = wclRealm === 'Nightslayer' ? 'us' : 'eu';
         });
 
-        // Class selector
-        document.getElementById('wcl-class').addEventListener('change', (e) => {
-            wclClass = e.target.value;
-            wclSpec = classData[wclClass]?.defaultSpec || Object.keys(classData[wclClass]?.specs || {})[0];
-            renderWclAudit();
-        });
-
-        // Spec selector
-        document.getElementById('wcl-spec').addEventListener('change', (e) => {
-            wclSpec = e.target.value;
-        });
-
-        // Fetch button
-        document.getElementById('wcl-fetch-btn').addEventListener('click', async () => {
+        document.getElementById('wcl-import-btn')?.addEventListener('click', async () => {
             const statusEl = document.getElementById('wcl-status');
-            const resultsEl = document.getElementById('wcl-results');
+            const gearInput = document.getElementById('gear-input');
 
             if (!wclCharacterName.trim()) {
-                statusEl.innerHTML = '<span class="text-red-400">Please enter a character name</span>';
+                if (statusEl) statusEl.innerHTML = '<span class="text-red-400">Please enter a character name</span>';
                 return;
             }
 
-            statusEl.innerHTML = '<span class="text-terminal-accent">Fetching from Warcraft Logs...</span>';
-            resultsEl.innerHTML = '<span class="text-terminal-dim">Loading...</span>';
+            if (statusEl) statusEl.innerHTML = '<span class="text-terminal-accent">Fetching from Warcraft Logs...</span>';
 
             try {
                 const gear = await fetchWclGear(wclCharacterName, wclRealm, wclRegion);
                 if (gear && gear.length > 0) {
-                    statusEl.innerHTML = '<span class="text-green-400">✓ Gear loaded successfully</span>';
-                    displayWclResults(gear);
+                    // Convert gear to item names and populate the textarea
+                    const itemNames = gear.map(g => g.name).filter(n => n).join('\\n');
+                    if (gearInput) {
+                        gearInput.value = itemNames;
+                        preRaidGearText = itemNames;
+                        updateGearPreview();
+                    }
+                    if (statusEl) statusEl.innerHTML = '<span class="text-green-400">✓ Imported ' + gear.length + ' items</span>';
                 } else {
-                    statusEl.innerHTML = '<span class="text-yellow-400">No recent gear data found</span>';
-                    resultsEl.innerHTML = '<span class="text-terminal-dim">No gear data found for this character. Make sure they have recent logged raids.</span>';
+                    if (statusEl) statusEl.innerHTML = '<span class="text-yellow-400">No gear data found. Make sure character has logged raids.</span>';
                 }
             } catch (error) {
                 console.error('WCL fetch error:', error);
-                statusEl.innerHTML = '<span class="text-red-400">Error fetching data</span>';
-                resultsEl.innerHTML = `<span class="text-red-400">Error: ${error.message}</span>`;
+                if (statusEl) statusEl.innerHTML = '<span class="text-red-400">Error: ' + error.message + '</span>';
             }
         });
     }, FADE_TRANSITION_MS);
 }
+
+// WCL Import state
+let wclCharacterName = '';
+let wclRealm = 'Nightslayer';
+let wclRegion = 'us';
 
 const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? '' // Use relative URLs for local development
@@ -2636,100 +2566,6 @@ async function fetchWclGear(characterName, realm, region) {
     }
     const data = await response.json();
     return data.gear || [];
-}
-
-function displayWclResults(gear) {
-    const resultsEl = document.getElementById('wcl-results');
-    if (!resultsEl) return;
-
-    // Get BiS list for comparison
-    const specData = classData[wclClass]?.specs[wclSpec];
-    const phaseData = specData?.phases?.[1]; // Default to Phase 1
-    const bisList = phaseData?.bis || {};
-
-    // Build comparison table
-    let html = `
-        <h4 class="text-terminal-accent text-xs uppercase mb-3">// Equipped Gear vs BiS</h4>
-        <div class="overflow-x-auto">
-            <table class="w-full border-collapse text-xs">
-                <thead>
-                    <tr>
-                        <th class="bg-terminal-dim text-terminal-bg p-2 text-left font-semibold uppercase text-[10px]">SLOT</th>
-                        <th class="bg-terminal-dim text-terminal-bg p-2 text-left font-semibold uppercase text-[10px]">EQUIPPED</th>
-                        <th class="bg-terminal-dim text-terminal-bg p-2 text-left font-semibold uppercase text-[10px]">BIS</th>
-                        <th class="bg-terminal-dim text-terminal-bg p-2 text-left font-semibold uppercase text-[10px]">STATUS</th>
-                    </tr>
-                </thead>
-                <tbody>
-    `;
-
-    const slotMapping = {
-        'head': 'Head', 'neck': 'Neck', 'shoulder': 'Shoulders', 'back': 'Back',
-        'chest': 'Chest', 'wrist': 'Wrists', 'hands': 'Hands', 'waist': 'Waist',
-        'legs': 'Legs', 'feet': 'Feet', 'finger1': 'Ring 1', 'finger2': 'Ring 2',
-        'trinket1': 'Trinket 1', 'trinket2': 'Trinket 2', 'mainhand': 'Main Hand',
-        'offhand': 'Off Hand', 'ranged': 'Ranged'
-    };
-
-    for (const [slot, slotName] of Object.entries(slotMapping)) {
-        const equipped = gear.find(g => g.slot?.toLowerCase() === slot);
-        const bisItems = bisList[slotName] || [];
-        const bisItem = Array.isArray(bisItems) ? bisItems[0] : bisItems;
-        const bisItemName = typeof bisItem === 'string' ? bisItem : bisItem?.name;
-
-        const equippedName = equipped?.name || '-';
-        const equippedId = equipped?.id;
-        const equippedLink = equippedId
-            ? `<a href="https://tbc.wowhead.com/item=${equippedId}" data-wowhead="item=${equippedId}" class="text-terminal-text hover:text-terminal-accent">${equippedName}</a>`
-            : `<span class="text-terminal-dim">${equippedName}</span>`;
-
-        const bisId = bisItemName ? getItemId(bisItemName) : null;
-        const bisLink = bisId
-            ? `<a href="https://tbc.wowhead.com/item=${bisId}" data-wowhead="item=${bisId}" class="text-terminal-accent hover:text-terminal-text">${bisItemName}</a>`
-            : `<span class="text-terminal-dim">${bisItemName || '-'}</span>`;
-
-        // Check if equipped matches BiS
-        let status = '';
-        if (!equipped || !equipped.name) {
-            status = '<span class="text-terminal-dim">-</span>';
-        } else if (bisItemName && equippedName.toLowerCase() === bisItemName.toLowerCase()) {
-            status = '<span class="text-green-400">✓ BiS</span>';
-        } else if (bisItemName) {
-            status = '<span class="text-yellow-400">↑ Upgrade available</span>';
-        } else {
-            status = '<span class="text-terminal-dim">-</span>';
-        }
-
-        html += `
-            <tr class="border-b border-terminal-dim/30">
-                <td class="p-2 text-terminal-text">${slotName}</td>
-                <td class="p-2">${equippedLink}</td>
-                <td class="p-2">${bisLink}</td>
-                <td class="p-2">${status}</td>
-            </tr>
-        `;
-    }
-
-    html += '</tbody></table></div>';
-
-    // Summary stats
-    const bisCount = gear.filter(g => {
-        const slotName = slotMapping[g.slot?.toLowerCase()];
-        const bisItems = bisList[slotName] || [];
-        const bisItem = Array.isArray(bisItems) ? bisItems[0] : bisItems;
-        const bisItemName = typeof bisItem === 'string' ? bisItem : bisItem?.name;
-        return bisItemName && g.name?.toLowerCase() === bisItemName.toLowerCase();
-    }).length;
-
-    html += `
-        <div class="mt-4 p-3 border border-terminal-dim/50">
-            <span class="text-terminal-text">BiS Items Equipped:</span>
-            <span class="text-terminal-accent ml-2">${bisCount} / ${Object.keys(slotMapping).length}</span>
-        </div>
-    `;
-
-    resultsEl.innerHTML = html;
-    processItemLinks();
 }
 
 function renderApiDocs() {
@@ -2808,8 +2644,6 @@ function initClassSelector() {
                 renderRaidsContent();
             } else if (this.dataset.view === 'preraid') {
                 renderPreRaidChecker();
-            } else if (this.dataset.view === 'wcl-audit') {
-                renderWclAudit();
             } else if (this.dataset.view === 'api') {
                 renderApiDocs();
             } else if (this.dataset.class) {
