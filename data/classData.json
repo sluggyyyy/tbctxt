@@ -311,6 +311,40 @@
             ]
           }
         ],
+        "macros": [
+          {
+            "name": "Mortal Strike + Start Attack",
+            "code": "#showtooltip\n/startattack\n/cast Mortal Strike"
+          },
+          {
+            "name": "Battle Stance Charge",
+            "code": "#showtooltip Charge\n/cast [nostance:1] Battle Stance\n/cast Charge"
+          },
+          {
+            "name": "Battle Stance Overpower",
+            "code": "#showtooltip Overpower\n/cast [nostance:1] Battle Stance\n/cast Overpower"
+          },
+          {
+            "name": "Berserker Stance Intercept",
+            "code": "#showtooltip Intercept\n/cast [nostance:3] Berserker Stance\n/cast Intercept"
+          },
+          {
+            "name": "Berserker Stance Pummel",
+            "code": "#showtooltip Pummel\n/cast [nostance:3] Berserker Stance\n/cast Pummel"
+          },
+          {
+            "name": "Slam Safety",
+            "code": "#showtooltip Slam\n/startattack\n/stopattack\n/cast Slam\n/startattack"
+          },
+          {
+            "name": "Shoot Ranged",
+            "code": "/cast [worn:thrown] Throw; [worn:bow] Shoot; [worn:gun] Shoot; [worn:crossbow] Shoot"
+          },
+          {
+            "name": "Sweeping Strikes + Whirlwind",
+            "code": "#showtooltip Whirlwind\n/cast Sweeping Strikes\n/cast Whirlwind"
+          }
+        ],
         "enchants": {
           "Head": "Glyph of Ferocity",
           "Shoulders": "Might of the Scourge",
@@ -1166,6 +1200,36 @@
                 "talents": []
               }
             ]
+          }
+        ],
+        "macros": [
+          {
+            "name": "Bloodthirst + Start Attack",
+            "code": "#showtooltip\n/startattack\n/cast Bloodthirst"
+          },
+          {
+            "name": "Weapon Desync",
+            "code": "/cleartarget\n/targetlasttarget\n/startattack"
+          },
+          {
+            "name": "Berserker Stance Intercept",
+            "code": "#showtooltip Intercept\n/cast [nostance:3] Berserker Stance\n/cast Intercept"
+          },
+          {
+            "name": "Berserker Stance Pummel",
+            "code": "#showtooltip Pummel\n/cast [nostance:3] Berserker Stance\n/cast Pummel"
+          },
+          {
+            "name": "Recklessness",
+            "code": "#showtooltip Recklessness\n/cast [nostance:3] Berserker Stance\n/cast Recklessness"
+          },
+          {
+            "name": "Death Wish + Trinkets",
+            "code": "#showtooltip Death Wish\n/use 13\n/use 14\n/cast Death Wish"
+          },
+          {
+            "name": "Shoot Ranged",
+            "code": "/cast [worn:thrown] Throw; [worn:bow] Shoot; [worn:gun] Shoot; [worn:crossbow] Shoot"
           }
         ],
         "enchants": {
@@ -2082,6 +2146,40 @@
                 ]
               }
             ]
+          }
+        ],
+        "macros": [
+          {
+            "name": "Shield Slam + Start Attack",
+            "code": "#showtooltip\n/startattack\n/cast Shield Slam"
+          },
+          {
+            "name": "Defensive Stance Taunt",
+            "code": "#showtooltip Taunt\n/cast [nostance:2] Defensive Stance\n/cast Taunt"
+          },
+          {
+            "name": "Defensive Stance Disarm",
+            "code": "#showtooltip Disarm\n/cast [nostance:2] Defensive Stance\n/cast Disarm"
+          },
+          {
+            "name": "Mouseover Intervene",
+            "code": "#showtooltip Intervene\n/cast [nostance:2] Defensive Stance\n/cast [@mouseover,help][] Intervene"
+          },
+          {
+            "name": "Shield Wall Emergency",
+            "code": "#showtooltip Shield Wall\n/cast [nostance:2] Defensive Stance\n/cast Shield Wall"
+          },
+          {
+            "name": "Spell Reflection",
+            "code": "#showtooltip Spell Reflection\n/stopcasting\n/cast [nostance:2] Defensive Stance\n/cast Spell Reflection"
+          },
+          {
+            "name": "Mouseover Sunder Armor",
+            "code": "#showtooltip\n/cast [@mouseover,harm,nodead][harm] Sunder Armor"
+          },
+          {
+            "name": "Berserker Rage (Fear Break)",
+            "code": "#showtooltip Berserker Rage\n/cast [nostance:3] Berserker Stance\n/cast Berserker Rage\n/cast [nostance:2] Defensive Stance"
           }
         ],
         "enchants": {
@@ -3577,6 +3675,40 @@
             ]
           }
         ],
+        "macros": [
+          {
+            "name": "Sinister Strike + Start Attack",
+            "code": "#showtooltip Sinister Strike\n/cast Sinister Strike\n/startattack"
+          },
+          {
+            "name": "Blade Flurry + Trinkets",
+            "code": "#showtooltip Blade Flurry\n/use 13\n/use 14\n/cast Blade Flurry"
+          },
+          {
+            "name": "Adrenaline Rush",
+            "code": "#showtooltip Adrenaline Rush\n/cast Adrenaline Rush"
+          },
+          {
+            "name": "Focus Kick",
+            "code": "#showtooltip Kick\n/cast [@focus,exists,harm][@target] Kick"
+          },
+          {
+            "name": "Sap (Auto-Target)",
+            "code": "#showtooltip Sap\n/stopattack\n/cleartarget\n/targetenemyplayer [noexists,nocombat,nodead]\n/cast [exists,nocombat,nodead] Sap"
+          },
+          {
+            "name": "Cloak of Shadows + Vanish",
+            "code": "/cast Cloak of Shadows\n/cast Vanish"
+          },
+          {
+            "name": "Vanish + Start Attack",
+            "code": "#showtooltip Vanish\n/cast Vanish\n/startattack"
+          },
+          {
+            "name": "Thistle Tea",
+            "code": "#showtooltip Thistle Tea\n/use Thistle Tea"
+          }
+        ],
         "enchants": {
           "Head": "Glyph of Ferocity",
           "Shoulders": "Might of the Scourge",
@@ -4455,6 +4587,44 @@
                 "talents": []
               }
             ]
+          }
+        ],
+        "macros": [
+          {
+            "name": "Steady Shot + Kill Command",
+            "code": "#showtooltip Steady Shot\n/cast Kill Command\n/cast Steady Shot"
+          },
+          {
+            "name": "Auto Shot (Non-Cancel)",
+            "code": "#showtooltip Auto Shot\n/targetenemy [noexists][dead][help]\n/cast !Auto Shot"
+          },
+          {
+            "name": "Hunter's Mark + Pet Attack",
+            "code": "#showtooltip Hunter's Mark\n/petattack\n/cast Hunter's Mark"
+          },
+          {
+            "name": "Feign Death (Safe)",
+            "code": "#showtooltip Feign Death\n/stopattack\n/petpassive\n/cast Feign Death"
+          },
+          {
+            "name": "Scatter Shot + Pet Passive",
+            "code": "#showtooltip Scatter Shot\n/petpassive\n/cast Scatter Shot"
+          },
+          {
+            "name": "Pet Return + Passive",
+            "code": "#showtooltip\n/petfollow\n/petpassive\n/cast Dash"
+          },
+          {
+            "name": "Melee Emergency",
+            "code": "#showtooltip\n/stopcasting\n/cast Raptor Strike\n/startattack\n/cast Mongoose Bite"
+          },
+          {
+            "name": "Bestial Wrath + Trinkets",
+            "code": "#showtooltip Bestial Wrath\n/use 13\n/use 14\n/cast Bestial Wrath"
+          },
+          {
+            "name": "Misdirection",
+            "code": "#showtooltip Misdirection\n/cast [@focus,exists,help][@targettarget,help] Misdirection"
           }
         ],
         "enchants": {
@@ -6717,6 +6887,44 @@
             ]
           }
         ],
+        "macros": [
+          {
+            "name": "Mouseover Holy Light",
+            "code": "#showtooltip Holy Light\n/cast [@mouseover,exists,help][@target,help][@player] Holy Light"
+          },
+          {
+            "name": "Mouseover Flash of Light",
+            "code": "#showtooltip Flash of Light\n/cast [@mouseover,exists,help][@target,help][@player] Flash of Light"
+          },
+          {
+            "name": "Mouseover Holy Shock",
+            "code": "#showtooltip Holy Shock\n/cast [@mouseover,exists,help][@target,help][@player] Holy Shock"
+          },
+          {
+            "name": "Mouseover Cleanse",
+            "code": "#showtooltip Cleanse\n/cast [@mouseover,exists,help][@target,help][@player] Cleanse"
+          },
+          {
+            "name": "Mouseover Blessing of Protection",
+            "code": "#showtooltip Blessing of Protection\n/cast [@mouseover,exists,help][@target,help][@player] Blessing of Protection"
+          },
+          {
+            "name": "Mouseover Blessing of Freedom",
+            "code": "#showtooltip Blessing of Freedom\n/cast [@mouseover,exists,help][@target,help][@player] Blessing of Freedom"
+          },
+          {
+            "name": "Cancel Divine Protection",
+            "code": "#showtooltip Divine Protection\n/cancelaura Divine Protection\n/cancelaura Blessing of Protection"
+          },
+          {
+            "name": "Stop Cast + Hammer of Justice",
+            "code": "#showtooltip Hammer of Justice\n/stopcasting\n/cast Hammer of Justice"
+          },
+          {
+            "name": "Divine Favor + Holy Light",
+            "code": "#showtooltip Divine Favor\n/cast Divine Favor\n/cast [@mouseover,exists,help][@target,help][@player] Holy Light"
+          }
+        ],
         "enchants": {
           "Head": "Glyph of Renewal",
           "Shoulders": "Greater Inscription of the Oracle",
@@ -7609,6 +7817,40 @@
             ]
           }
         ],
+        "macros": [
+          {
+            "name": "Judgement + Seal Refresh",
+            "code": "#showtooltip Judgement\n/startattack\n/cast Judgement\n/stopcasting\n/cast Seal of Righteousness"
+          },
+          {
+            "name": "Holy Shield + Consecration",
+            "code": "#showtooltip Holy Shield\n/cast Holy Shield\n/cast Consecration"
+          },
+          {
+            "name": "Righteous Defense (Taunt)",
+            "code": "#showtooltip Righteous Defense\n/cast [@mouseover,exists,help][@target,help][@targettarget] Righteous Defense"
+          },
+          {
+            "name": "Avenger's Shield",
+            "code": "#showtooltip Avenger's Shield\n/cast Avenger's Shield"
+          },
+          {
+            "name": "Cancel Divine Shield (Threat Recovery)",
+            "code": "#showtooltip Divine Shield\n/cancelaura Divine Shield\n/cancelaura Blessing of Protection"
+          },
+          {
+            "name": "Mouseover Blessing of Sacrifice",
+            "code": "#showtooltip Blessing of Sacrifice\n/cast [@mouseover,exists,help][@target,help][@player] Blessing of Sacrifice"
+          },
+          {
+            "name": "Hammer of Justice (Stopcasting)",
+            "code": "#showtooltip Hammer of Justice\n/stopcasting\n/cast Hammer of Justice"
+          },
+          {
+            "name": "Seal of Vengeance",
+            "code": "#showtooltip Seal of Vengeance\n/cast Seal of Vengeance"
+          }
+        ],
         "enchants": {
           "Head": "Glyph of the Defender",
           "Shoulders": "Greater Inscription of the Knight",
@@ -8347,6 +8589,36 @@
                 ]
               }
             ]
+          }
+        ],
+        "macros": [
+          {
+            "name": "Crusader Strike + Start Attack",
+            "code": "#showtooltip Crusader Strike\n/startattack\n/cast Crusader Strike"
+          },
+          {
+            "name": "Seal of Blood (Seal Twist)",
+            "code": "#showtooltip Seal of Blood\n/cast Seal of Blood"
+          },
+          {
+            "name": "Seal of Command",
+            "code": "#showtooltip Seal of Command\n/cast Seal of Command"
+          },
+          {
+            "name": "Judgement + Seal Refresh",
+            "code": "#showtooltip Judgement\n/startattack\n/cast Judgement\n/stopcasting\n/cast Seal of Blood"
+          },
+          {
+            "name": "Avenging Wrath + Trinkets",
+            "code": "#showtooltip Avenging Wrath\n/use 13\n/use 14\n/cast Avenging Wrath"
+          },
+          {
+            "name": "Hammer of Wrath",
+            "code": "#showtooltip Hammer of Wrath\n/cast Hammer of Wrath"
+          },
+          {
+            "name": "Mouseover Cleanse",
+            "code": "#showtooltip Cleanse\n/cast [@mouseover,exists,help][@target,help][@player] Cleanse"
           }
         ],
         "enchants": {
@@ -9489,6 +9761,48 @@
             ]
           }
         ],
+        "macros": [
+          {
+            "name": "Mouseover Greater Heal",
+            "code": "#showtooltip Greater Heal\n/cast [@mouseover,exists,help][@target,help][@player] Greater Heal"
+          },
+          {
+            "name": "Mouseover Flash Heal",
+            "code": "#showtooltip Flash Heal\n/cast [@mouseover,exists,help][@target,help][@player] Flash Heal"
+          },
+          {
+            "name": "Mouseover Renew",
+            "code": "#showtooltip Renew\n/cast [@mouseover,exists,help][@target,help][@player] Renew"
+          },
+          {
+            "name": "Mouseover Circle of Healing",
+            "code": "#showtooltip Circle of Healing\n/cast [@mouseover,exists,help][@target,help][@player] Circle of Healing"
+          },
+          {
+            "name": "Mouseover Prayer of Mending",
+            "code": "#showtooltip Prayer of Mending\n/cast [@mouseover,exists,help][@target,help][@player] Prayer of Mending"
+          },
+          {
+            "name": "Mouseover Binding Heal",
+            "code": "#showtooltip Binding Heal\n/cast [@mouseover,exists,help][@target,help][@player] Binding Heal"
+          },
+          {
+            "name": "Mouseover Power Word: Shield",
+            "code": "#showtooltip Power Word: Shield\n/cast [@mouseover,exists,help][@target,help][@player] Power Word: Shield"
+          },
+          {
+            "name": "Mouseover Dispel Magic",
+            "code": "#showtooltip Dispel Magic\n/cast [@mouseover,exists,help][@target,help][@player] Dispel Magic"
+          },
+          {
+            "name": "Shadowfiend + Pet Attack",
+            "code": "#showtooltip Shadowfiend\n/cast Shadowfiend\n/petattack"
+          },
+          {
+            "name": "Inner Focus + Greater Heal",
+            "code": "#showtooltip Inner Focus\n/cast Inner Focus\n/cast [@mouseover,exists,help][@target,help][@player] Greater Heal"
+          }
+        ],
         "enchants": {
           "Head": "Glyph of Renewal",
           "Shoulders": "Resilience of the Scourge",
@@ -10269,6 +10583,40 @@
                 ]
               }
             ]
+          }
+        ],
+        "macros": [
+          {
+            "name": "Mind Flay (No Clip)",
+            "code": "#showtooltip Mind Flay\n/cast [nochanneling:Mind Flay] Mind Flay"
+          },
+          {
+            "name": "Shadowfiend + Pet Attack",
+            "code": "#showtooltip Shadowfiend\n/cast Shadowfiend\n/petattack"
+          },
+          {
+            "name": "Vampiric Touch + VE Check",
+            "code": "#showtooltip Vampiric Touch\n/cast Vampiric Touch"
+          },
+          {
+            "name": "Shadow Word: Death (Execute)",
+            "code": "#showtooltip Shadow Word: Death\n/cast Shadow Word: Death"
+          },
+          {
+            "name": "Inner Focus + Mind Blast",
+            "code": "#showtooltip Inner Focus\n/cast Inner Focus\n/cast Mind Blast"
+          },
+          {
+            "name": "Trinket + Shadow Word: Pain",
+            "code": "#showtooltip Shadow Word: Pain\n/use 13\n/cast Shadow Word: Pain"
+          },
+          {
+            "name": "Cancel Shadowform (Heal)",
+            "code": "#showtooltip Flash Heal\n/cancelaura Shadowform\n/cast [@mouseover,exists,help][@player] Flash Heal"
+          },
+          {
+            "name": "Dispersion",
+            "code": "#showtooltip Dispersion\n/cast Dispersion"
           }
         ],
         "enchants": {
@@ -11255,6 +11603,36 @@
                 ]
               }
             ]
+          }
+        ],
+        "macros": [
+          {
+            "name": "Elemental Mastery + Chain Lightning",
+            "code": "#showtooltip Elemental Mastery\n/cast Elemental Mastery\n/cast Chain Lightning"
+          },
+          {
+            "name": "Nature's Swiftness + Chain Lightning",
+            "code": "#showtooltip Nature's Swiftness\n/cast Nature's Swiftness\n/cast Chain Lightning"
+          },
+          {
+            "name": "Stop Cast + Earth Shock",
+            "code": "#showtooltip Earth Shock\n/stopcasting\n/cast Earth Shock"
+          },
+          {
+            "name": "Trinket + Heroism",
+            "code": "#showtooltip Heroism\n/use 13\n/use 14\n/cast Heroism"
+          },
+          {
+            "name": "Lightning Shield Refresh",
+            "code": "#showtooltip Lightning Shield\n/cast Lightning Shield"
+          },
+          {
+            "name": "Totem of Wrath",
+            "code": "#showtooltip Totem of Wrath\n/cast Totem of Wrath"
+          },
+          {
+            "name": "One-Button Totems",
+            "code": "#showtooltip\n/castsequence reset=combat Totem of Wrath, Mana Spring Totem, Wrath of Air Totem"
           }
         ],
         "enchants": {
@@ -12410,6 +12788,36 @@
                 "talents": []
               }
             ]
+          }
+        ],
+        "macros": [
+          {
+            "name": "Stormstrike",
+            "code": "#showtooltip Stormstrike\n/cast Stormstrike\n/startattack"
+          },
+          {
+            "name": "Totem Twisting",
+            "code": "/castsequence reset=8 Windfury Totem, Grace of Air Totem"
+          },
+          {
+            "name": "Weapon Desync",
+            "code": "/cleartarget\n/targetlasttarget\n/startattack"
+          },
+          {
+            "name": "Stop Cast + Earth Shock",
+            "code": "#showtooltip Earth Shock\n/stopcasting\n/cast Earth Shock"
+          },
+          {
+            "name": "Shamanistic Rage",
+            "code": "#showtooltip Shamanistic Rage\n/cast Shamanistic Rage"
+          },
+          {
+            "name": "One-Button Buffs",
+            "code": "#showtooltip\n/castsequence reset=2 Lightning Shield, Windfury Weapon"
+          },
+          {
+            "name": "Trinket + Heroism",
+            "code": "#showtooltip Heroism\n/use 13\n/use 14\n/cast Heroism"
           }
         ],
         "enchants": {
@@ -13621,6 +14029,44 @@
             ]
           }
         ],
+        "macros": [
+          {
+            "name": "Mouseover Chain Heal",
+            "code": "#showtooltip Chain Heal\n/cast [@mouseover,exists,help][@target,help][@player] Chain Heal"
+          },
+          {
+            "name": "Mouseover Lesser Healing Wave",
+            "code": "#showtooltip Lesser Healing Wave\n/cast [@mouseover,exists,help][@target,help][@player] Lesser Healing Wave"
+          },
+          {
+            "name": "Mouseover Healing Wave",
+            "code": "#showtooltip Healing Wave\n/cast [@mouseover,exists,help][@target,help][@player] Healing Wave"
+          },
+          {
+            "name": "Mouseover Earth Shield",
+            "code": "#showtooltip Earth Shield\n/cast [@mouseover,exists,help][@target,help][@player] Earth Shield"
+          },
+          {
+            "name": "Nature's Swiftness + Healing Wave",
+            "code": "#showtooltip Nature's Swiftness\n/cast Nature's Swiftness\n/cast [@mouseover,exists,help][@target,help][@player] Healing Wave"
+          },
+          {
+            "name": "Mouseover Cure Poison/Disease",
+            "code": "#showtooltip Cure Poison\n/cast [mod:shift,@mouseover,help][@mouseover,help] Cure Disease; [@mouseover,help] Cure Poison"
+          },
+          {
+            "name": "Stop Cast + Earth Shock",
+            "code": "#showtooltip Earth Shock\n/stopcasting\n/cast Earth Shock"
+          },
+          {
+            "name": "Trinket + Heroism",
+            "code": "#showtooltip Heroism\n/use 13\n/use 14\n/cast Heroism"
+          },
+          {
+            "name": "Water Shield Refresh",
+            "code": "#showtooltip Water Shield\n/cast Water Shield"
+          }
+        ],
         "enchants": {
           "Head": "Glyph of Renewal",
           "Shoulders": "Resilience of the Scourge",
@@ -14671,6 +15117,36 @@
                 ]
               }
             ]
+          }
+        ],
+        "macros": [
+          {
+            "name": "Starfire",
+            "code": "#showtooltip Starfire\n/cast Starfire"
+          },
+          {
+            "name": "Wrath",
+            "code": "#showtooltip Wrath\n/cast Wrath"
+          },
+          {
+            "name": "Moonfire",
+            "code": "#showtooltip Moonfire\n/cast Moonfire"
+          },
+          {
+            "name": "Innervate Mouseover",
+            "code": "#showtooltip Innervate\n/cast [@mouseover,exists,help][@player] Innervate"
+          },
+          {
+            "name": "Force of Nature (Cursor)",
+            "code": "#showtooltip Force of Nature\n/cast [@cursor] Force of Nature"
+          },
+          {
+            "name": "One-Button Travel Form",
+            "code": "#showtooltip\n/cast [swimming] !Aquatic Form;[outdoors] !Travel Form; !Cat Form"
+          },
+          {
+            "name": "Nature's Swiftness + Healing Touch",
+            "code": "#showtooltip Nature's Swiftness\n/cast Nature's Swiftness\n/cast [@mouseover,exists,help][@player] Healing Touch"
           }
         ],
         "enchants": {
@@ -16147,6 +16623,40 @@
             ]
           }
         ],
+        "macros": [
+          {
+            "name": "Power Shifting (Cat)",
+            "code": "#showtooltip\n/cast !Cat Form\n/startattack [form:3,harm,nodead]"
+          },
+          {
+            "name": "Mangle (Cat)",
+            "code": "#showtooltip Mangle (Cat)\n/cast [noform:3] Cat Form\n/cast Mangle (Cat)"
+          },
+          {
+            "name": "Shred",
+            "code": "#showtooltip Shred\n/cast Shred"
+          },
+          {
+            "name": "Rake + Pounce",
+            "code": "/cast [nostealth] Rake; [stealth] Pounce"
+          },
+          {
+            "name": "Prowl (Enter Stealth)",
+            "code": "#showtooltip Prowl\n/cast [noform:3] Cat Form\n/cast !Prowl"
+          },
+          {
+            "name": "Faerie Fire (Feral)",
+            "code": "#showtooltip\n/cast [form:1/3] Faerie Fire (Feral); Faerie Fire"
+          },
+          {
+            "name": "Dash (From Any Form)",
+            "code": "#showtooltip Dash\n/cast [noform:3] Cat Form\n/cast !Dash"
+          },
+          {
+            "name": "One-Button Travel Form",
+            "code": "#showtooltip\n/cast [swimming] !Aquatic Form;[outdoors] !Travel Form; !Cat Form"
+          }
+        ],
         "enchants": {
           "Head": "Glyph of Ferocity",
           "Shoulders": "Might of the Scourge",
@@ -17435,6 +17945,40 @@
                 ]
               }
             ]
+          }
+        ],
+        "macros": [
+          {
+            "name": "Mangle (Bear)",
+            "code": "#showtooltip Mangle (Bear)\n/cast [noform:1] Dire Bear Form\n/cast Mangle (Bear)"
+          },
+          {
+            "name": "Lacerate",
+            "code": "#showtooltip Lacerate\n/cast Lacerate"
+          },
+          {
+            "name": "Swipe + Mangle",
+            "code": "#showtooltip\n/cast [form:1] Mangle (Bear)\n/cast [form:3] Mangle (Cat)"
+          },
+          {
+            "name": "Faerie Fire (Feral)",
+            "code": "#showtooltip\n/cast [form:1/3] Faerie Fire (Feral); Faerie Fire"
+          },
+          {
+            "name": "Feral Charge + Bear Form",
+            "code": "#showtooltip Feral Charge\n/cast [noform:1] Dire Bear Form\n/cast Feral Charge"
+          },
+          {
+            "name": "Bash",
+            "code": "#showtooltip Bash\n/cast Bash"
+          },
+          {
+            "name": "Emergency Frenzied Regeneration",
+            "code": "#showtooltip Frenzied Regeneration\n/cast Frenzied Regeneration"
+          },
+          {
+            "name": "One-Button Travel Form",
+            "code": "#showtooltip\n/cast [swimming] !Aquatic Form;[outdoors] !Travel Form; !Cat Form"
           }
         ],
         "enchants": {
@@ -18836,6 +19380,48 @@
             ]
           }
         ],
+        "macros": [
+          {
+            "name": "Mouseover Lifebloom",
+            "code": "#showtooltip Lifebloom\n/cast [@mouseover,exists,help][@target,help][@player] Lifebloom"
+          },
+          {
+            "name": "Mouseover Rejuvenation",
+            "code": "#showtooltip Rejuvenation\n/cast [@mouseover,exists,help][@target,help][@player] Rejuvenation"
+          },
+          {
+            "name": "Mouseover Regrowth",
+            "code": "#showtooltip Regrowth\n/cast [@mouseover,exists,help][@target,help][@player] Regrowth"
+          },
+          {
+            "name": "Mouseover Swiftmend",
+            "code": "#showtooltip Swiftmend\n/cast [@mouseover,exists,help][@target,help][@player] Swiftmend"
+          },
+          {
+            "name": "Mouseover Healing Touch",
+            "code": "#showtooltip Healing Touch\n/cast [@mouseover,exists,help][@target,help][@player] Healing Touch"
+          },
+          {
+            "name": "Nature's Swiftness + Healing Touch",
+            "code": "#showtooltip Nature's Swiftness\n/cast Nature's Swiftness\n/cast [@mouseover,exists,help][@target,help][@player] Healing Touch"
+          },
+          {
+            "name": "Mouseover Remove Curse",
+            "code": "#showtooltip Remove Curse\n/cast [@mouseover,exists,help][@target,help][@player] Remove Curse"
+          },
+          {
+            "name": "Mouseover Abolish Poison",
+            "code": "#showtooltip Abolish Poison\n/cast [@mouseover,exists,help][@target,help][@player] Abolish Poison"
+          },
+          {
+            "name": "Mouseover Innervate",
+            "code": "#showtooltip Innervate\n/cast [@mouseover,exists,help][@target,help][@player] Innervate"
+          },
+          {
+            "name": "One-Button Travel Form",
+            "code": "#showtooltip\n/cast [swimming] !Aquatic Form;[outdoors] !Travel Form; !Cat Form"
+          }
+        ],
         "enchants": {
           "Head": "Glyph of Renewal",
           "Shoulders": "Resilience of the Scourge",
@@ -20051,6 +20637,40 @@
                 ]
               }
             ]
+          }
+        ],
+        "macros": [
+          {
+            "name": "Corruption (Instant)",
+            "code": "#showtooltip Corruption\n/cast Corruption"
+          },
+          {
+            "name": "Curse of Elements/Doom",
+            "code": "#showtooltip\n/cast [mod:shift] Curse of Doom; Curse of the Elements"
+          },
+          {
+            "name": "Life Tap",
+            "code": "#showtooltip Life Tap\n/cast Life Tap"
+          },
+          {
+            "name": "Dark Pact (Imp Mana)",
+            "code": "#showtooltip Dark Pact\n/cast Dark Pact"
+          },
+          {
+            "name": "Trinket + Unstable Affliction",
+            "code": "#showtooltip Unstable Affliction\n/use 13\n/cast Unstable Affliction"
+          },
+          {
+            "name": "Focus Fear",
+            "code": "#showtooltip Fear\n/cast [@focus,exists,harm][@target] Fear"
+          },
+          {
+            "name": "Pet Attack + Shadow Bolt",
+            "code": "#showtooltip Shadow Bolt\n/petattack\n/cast Shadow Bolt"
+          },
+          {
+            "name": "Healthstone Usage",
+            "code": "#showtooltip\n/use Master Healthstone"
           }
         ],
         "enchants": {
@@ -21832,6 +22452,40 @@
             ]
           }
         ],
+        "macros": [
+          {
+            "name": "Shadow Bolt (Start Attack)",
+            "code": "#showtooltip Shadow Bolt\n/petattack\n/cast Shadow Bolt"
+          },
+          {
+            "name": "Curse of Elements/Doom",
+            "code": "#showtooltip\n/cast [mod:shift] Curse of Doom; Curse of the Elements"
+          },
+          {
+            "name": "Life Tap",
+            "code": "#showtooltip Life Tap\n/cast Life Tap"
+          },
+          {
+            "name": "Destruction Potion + Trinkets",
+            "code": "#showtooltip\n/use 13\n/use 14\n/use Destruction Potion"
+          },
+          {
+            "name": "Shadowburn (Execute)",
+            "code": "#showtooltip Shadowburn\n/cast Shadowburn"
+          },
+          {
+            "name": "Demonic Sacrifice (Succubus)",
+            "code": "#showtooltip Demonic Sacrifice\n/cast Demonic Sacrifice"
+          },
+          {
+            "name": "Focus Banish",
+            "code": "#showtooltip Banish\n/cast [@focus,exists,harm][@target] Banish"
+          },
+          {
+            "name": "Soulstone Self",
+            "code": "#showtooltip Soulstone\n/cast [@player] Soulstone"
+          }
+        ],
         "enchants": {
           "Head": "Glyph of Power",
           "Shoulders": "Power of the Scourge",
@@ -22719,6 +23373,40 @@
                 ]
               }
             ]
+          }
+        ],
+        "macros": [
+          {
+            "name": "Arcane Blast",
+            "code": "#showtooltip Arcane Blast\n/cast Arcane Blast"
+          },
+          {
+            "name": "Trinket + Icy Veins + Arcane Power",
+            "code": "#showtooltip Icy Veins\n/use 13\n/use 14\n/cast Icy Veins\n/cast Arcane Power"
+          },
+          {
+            "name": "Presence of Mind + Arcane Blast",
+            "code": "#showtooltip Presence of Mind\n/cast Presence of Mind\n/cast Arcane Blast"
+          },
+          {
+            "name": "Mana Emerald + Arcane Blast",
+            "code": "#showtooltip Mana Emerald\n/use Mana Emerald\n/cast Arcane Blast"
+          },
+          {
+            "name": "Super Mana Potion + Arcane Blast",
+            "code": "#showtooltip Super Mana Potion\n/use Super Mana Potion\n/cast Arcane Blast"
+          },
+          {
+            "name": "Counterspell (Stopcasting)",
+            "code": "#showtooltip Counterspell\n/stopcasting\n/cast Counterspell"
+          },
+          {
+            "name": "Ice Block Toggle",
+            "code": "#showtooltip Ice Block\n/cancelaura Ice Block\n/cast Ice Block"
+          },
+          {
+            "name": "Evocate (Safe)",
+            "code": "#showtooltip Evocate\n/cast Evocate"
           }
         ],
         "enchants": {
@@ -24101,6 +24789,40 @@
             ]
           }
         ],
+        "macros": [
+          {
+            "name": "Fireball",
+            "code": "#showtooltip Fireball\n/cast Fireball"
+          },
+          {
+            "name": "Scorch (Debuff)",
+            "code": "#showtooltip Scorch\n/cast Scorch"
+          },
+          {
+            "name": "Combustion + Trinkets",
+            "code": "#showtooltip Combustion\n/use 13\n/use 14\n/cast Combustion"
+          },
+          {
+            "name": "Icy Veins + Combustion",
+            "code": "#showtooltip Icy Veins\n/cast Icy Veins\n/cast Combustion"
+          },
+          {
+            "name": "Cold Snap (Reset Icy Veins)",
+            "code": "#showtooltip Cold Snap\n/cast Cold Snap"
+          },
+          {
+            "name": "Counterspell (Stopcasting)",
+            "code": "#showtooltip Counterspell\n/stopcasting\n/cast Counterspell"
+          },
+          {
+            "name": "Ice Block Toggle",
+            "code": "#showtooltip Ice Block\n/cancelaura Ice Block\n/cast Ice Block"
+          },
+          {
+            "name": "Flamestrike (Cursor)",
+            "code": "#showtooltip Flamestrike\n/cast [@cursor] Flamestrike"
+          }
+        ],
         "enchants": {
           "Head": "Glyph of Power",
           "Shoulders": "Greater Inscription of Discipline",
@@ -25012,6 +25734,40 @@
                 ]
               }
             ]
+          }
+        ],
+        "macros": [
+          {
+            "name": "Frostbolt",
+            "code": "#showtooltip Frostbolt\n/cast Frostbolt"
+          },
+          {
+            "name": "Icy Veins + Cold Snap Combo",
+            "code": "#showtooltip Icy Veins\n/use 13\n/use 14\n/cast Icy Veins"
+          },
+          {
+            "name": "Cold Snap (Reset Cooldowns)",
+            "code": "#showtooltip Cold Snap\n/cast Cold Snap"
+          },
+          {
+            "name": "Water Elemental Freeze (Cursor)",
+            "code": "#showtooltip Freeze\n/cast [@cursor] !Freeze"
+          },
+          {
+            "name": "Summon Water Elemental",
+            "code": "#showtooltip Summon Water Elemental\n/cast Summon Water Elemental"
+          },
+          {
+            "name": "Counterspell (Stopcasting)",
+            "code": "#showtooltip Counterspell\n/stopcasting\n/cast Counterspell"
+          },
+          {
+            "name": "Ice Block Toggle",
+            "code": "#showtooltip Ice Block\n/cancelaura Ice Block\n/cast Ice Block"
+          },
+          {
+            "name": "Blizzard (Cursor)",
+            "code": "#showtooltip Blizzard\n/cast [@cursor] Blizzard"
           }
         ],
         "enchants": {
