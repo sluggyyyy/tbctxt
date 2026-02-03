@@ -1257,6 +1257,22 @@ function renderClassContent(className) {
             <div class="bg-terminal-bg/30 border border-terminal-dim p-4 my-4 font-mono text-xs leading-relaxed md:text-[11px] md:p-3 sm:text-[10px] sm:p-2.5">${gemsList}</div>
         `;
     }
+    // Generate macros section
+    let macrosHtml = '';
+    if (specData.macros && specData.macros.length > 0) {
+        const macrosList = specData.macros.map(macro => {
+            const escapedCode = macro.code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return `
+                <div class="mb-4 last:mb-0">
+                    <div class="text-terminal-accent text-xs mb-1 font-semibold">${macro.name}</div>
+                    <pre class="bg-terminal-bg border border-terminal-dim p-2 text-[11px] text-terminal-text overflow-x-auto select-all cursor-pointer hover:border-terminal-accent transition-colors" onclick="navigator.clipboard.writeText(this.innerText).then(() => { this.style.borderColor = '#4ade80'; setTimeout(() => this.style.borderColor = '', 500); })" title="Click to copy">${escapedCode}</pre>
+                </div>`;
+        }).join('');
+        macrosHtml = `
+            <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ USEFUL MACROS ]</h3>
+            <div class="border border-terminal-dim p-4 my-4 md:p-3 sm:p-2.5">${macrosList}</div>
+        `;
+    }
     // Generate rotation section
     let rotationHtml = '';
     if (specData.rotation) {
@@ -1353,6 +1369,7 @@ function renderClassContent(className) {
             </div>
             ${gemsHtml}
             ${rotationHtml}
+            ${macrosHtml}
             ${talentsHtml}
         </div>
     `;
