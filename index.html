@@ -2661,8 +2661,6 @@ function navigateToHash(hash) {
         return;
     }
 
-    document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
-
     if (target === 'recipes') {
         renderRecipesContent();
     } else if (target === 'raids') {
@@ -2679,33 +2677,23 @@ function navigateToHash(hash) {
 }
 
 function updateActiveNav(target) {
-    document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
+    const items = document.querySelectorAll('.class-list li');
     const activeLink = document.querySelector(`.nav-link[data-class="${target}"], .nav-link[data-view="${target}"]`);
-    if (activeLink) {
-        activeLink.closest('li').classList.add('active');
-    }
+    items.forEach(li => li.classList.toggle('active', li.contains(activeLink)));
 }
 
 function initClassSelector() {
-    // Handle normal clicks - prevent default and navigate
-    document.querySelectorAll('.nav-link').forEach(link => {
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-            // Allow middle-click and ctrl+click to open in new tab
-            if (e.ctrlKey || e.metaKey || e.button === 1) {
-                return; // Let browser handle it
-            }
+            if (e.ctrlKey || e.metaKey || e.button === 1) return;
             e.preventDefault();
-            const hash = this.getAttribute('href');
-            window.location.hash = hash;
+            window.location.hash = this.getAttribute('href');
         });
     });
 
-    // Handle hash changes
-    window.addEventListener('hashchange', () => {
-        navigateToHash(window.location.hash);
-    });
+    window.addEventListener('hashchange', () => navigateToHash(window.location.hash));
 
-    // Handle initial hash on page load
     if (window.location.hash) {
         navigateToHash(window.location.hash);
     }
