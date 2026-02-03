@@ -2,10 +2,12 @@
   "warrior": {
     "title": "WARRIOR",
     "defaultSpec": "arms",
+    "armorType": "Plate",
     "professions": [{"name": "Blacksmithing", "skillId": 164}, {"name": "Engineering", "skillId": 202}],
     "specs": {
       "arms": {
         "name": "Arms",
+        "statPriority": ["Hit (9%)", "Expertise (6.5%)", "Crit", "Armor Pen", "Strength", "Agility", "Haste"],
         "rotation": {
           "description": "Arms is primarily a PvP spec in TBC but brings Blood Frenzy raid debuff. Uses 2H weapons with Mortal Strike.",
           "priority": [
@@ -1037,6 +1039,7 @@
       },
       "fury": {
         "name": "Fury",
+        "statPriority": ["Hit (9%)", "Expertise (6.5%)", "Crit", "Armor Pen", "Strength", "Agility", "Haste"],
         "rotation": {
           "description": "Fury Warriors use a priority system rather than a fixed rotation. Dual-wield for maximum DPS.",
           "priority": [
@@ -1960,6 +1963,7 @@
       },
       "protection": {
         "name": "Protection",
+        "statPriority": ["Defense (490)", "Stamina", "Armor", "Expertise (6.5%)", "Hit (9%)", "Dodge", "Parry", "Block Value"],
         "rotation": {
           "description": "Protection Warriors focus on threat generation and damage mitigation. Stance dance for abilities when safe.",
           "priority": [
@@ -2854,10 +2858,12 @@
   "rogue": {
     "title": "ROGUE",
     "defaultSpec": "combat",
+    "armorType": "Leather",
     "professions": [{"name": "Leatherworking", "skillId": 165}, {"name": "Engineering", "skillId": 202}],
     "specs": {
       "combat": {
         "name": "All",
+        "statPriority": ["Expertise (64)", "Hit (363)", "Agility", "Haste", "Crit", "Armor Pen"],
         "rotation": {
           "description": "Combat Rogues are the top melee DPS in TBC. Focus on keeping Slice and Dice up while maximizing finisher damage.",
           "priority": [
@@ -4410,10 +4416,12 @@
   "hunter": {
     "title": "HUNTER",
     "defaultSpec": "beast_mastery",
+    "armorType": "Mail",
     "professions": [{"name": "Leatherworking", "skillId": 165}, {"name": "Engineering", "skillId": 202}],
     "specs": {
       "beast_mastery": {
         "name": "Beast Mastery",
+        "statPriority": ["Hit (9%)", "Agility", "Attack Power", "Crit", "Haste", "Intellect"],
         "rotation": {
           "description": "BM Hunters focus on pet damage and steady shot weaving. Most popular raiding spec in TBC.",
           "priority": [
@@ -5221,6 +5229,7 @@
       },
       "marksmanship": {
         "name": "Marksmanship",
+        "statPriority": ["Hit (9%)", "Agility", "Attack Power", "Crit", "Haste", "Intellect"],
         "rotation": {
           "description": "MM Hunters bring Trueshot Aura for physical DPS. Higher personal damage potential than BM at high gear levels.",
           "priority": [
@@ -5986,6 +5995,7 @@
       },
       "survival": {
         "name": "Survival",
+        "statPriority": ["Hit (6%)", "Agility", "Attack Power", "Crit", "Haste", "Intellect"],
         "rotation": {
           "description": "Survival Hunters bring Expose Weakness debuff, buffing all physical DPS in the raid. Support spec.",
           "priority": [
@@ -6707,10 +6717,12 @@
   "paladin": {
     "title": "PALADIN",
     "defaultSpec": "holy",
+    "armorType": "Plate",
     "professions": [{"name": "Blacksmithing", "skillId": 164}, {"name": "Engineering", "skillId": 202}],
     "specs": {
       "holy": {
         "name": "Holy",
+        "statPriority": ["Healing Power", "Mp5", "Spell Crit", "Intellect", "Spell Haste"],
         "rotation": {
           "description": "Holy Paladins are single-target healing specialists with powerful cooldowns and buffs.",
           "priority": [
@@ -7532,6 +7544,7 @@
       },
       "protection": {
         "name": "Protection",
+        "statPriority": ["Defense (490)", "Avoidance (102.4%)", "Stamina", "Spell Damage", "Hit", "Expertise"],
         "rotation": {
           "description": "Protection Paladins excel at AoE tanking with Consecration and Holy Shield. Mana-based threat generation.",
           "priority": [
@@ -8457,6 +8470,7 @@
       },
       "retribution": {
         "name": "Retribution",
+        "statPriority": ["Hit (9%)", "Expertise", "Strength", "Attack Power", "Haste", "Armor Pen", "Crit"],
         "rotation": {
           "description": "Retribution Paladins use Seal twisting for maximum DPS. Brings Sanctity Aura and Judgement of the Crusader for raid.",
           "priority": [
@@ -9207,10 +9221,12 @@
   "priest": {
     "title": "PRIEST",
     "defaultSpec": "holy",
+    "armorType": "Cloth",
     "professions": [{"name": "Tailoring", "skillId": 197}, {"name": "Enchanting", "skillId": 333}],
     "specs": {
       "holy": {
         "name": "Holy",
+        "statPriority": ["Healing Power", "Spirit", "Intellect", "Spell Haste", "Spell Crit", "Mp5"],
         "rotation": {
           "description": "Holy Priests are versatile healers with strong single-target and AoE healing options.",
           "priority": [
@@ -10461,6 +10477,7 @@
       },
       "shadow": {
         "name": "Shadow",
+        "statPriority": ["Spell Hit (6%)", "Spell Damage", "Spell Haste", "Spell Crit", "Intellect", "Stamina"],
         "rotation": {
           "description": "Shadow Priests provide mana regeneration to their party via Vampiric Touch. Essential support class.",
           "priority": [
@@ -11316,10 +11333,12 @@
   "shaman": {
     "title": "SHAMAN",
     "defaultSpec": "elemental",
+    "armorType": "Mail",
     "professions": [{"name": "Leatherworking", "skillId": 165}, {"name": "Engineering", "skillId": 202}],
     "specs": {
       "elemental": {
         "name": "Elemental",
+        "statPriority": ["Spell Hit (16%)", "Spell Haste", "Spell Damage", "Spell Crit", "Intellect", "Mp5"],
         "rotation": {
           "description": "Elemental Shamans bring Totem of Wrath for caster groups. Simple rotation focused on Lightning Bolt.",
           "priority": [
@@ -12374,6 +12393,7 @@
       },
       "enhancement": {
         "name": "Enhancement",
+        "statPriority": ["Hit (9%)", "Expertise", "Strength", "Attack Power", "Crit", "Agility", "Haste"],
         "rotation": {
           "description": "Enhancement Shamans bring Windfury Totem and Unleashed Rage for melee groups. Totem twisting for max DPS.",
           "priority": [
@@ -13519,6 +13539,7 @@
       },
       "restoration": {
         "name": "Restoration",
+        "statPriority": ["Healing Power", "Mp5", "Spell Crit", "Intellect", "Spell Haste"],
         "rotation": {
           "description": "Resto Shamans excel at group healing with Chain Heal. Bring totems and Heroism/Bloodlust.",
           "priority": [
@@ -14800,10 +14821,12 @@
   "druid": {
     "title": "DRUID",
     "defaultSpec": "balance",
+    "armorType": "Leather",
     "professions": [{"name": "Leatherworking", "skillId": 165}, {"name": "Engineering", "skillId": 202}],
     "specs": {
       "balance": {
         "name": "Balance",
+        "statPriority": ["Spell Hit (16%)", "Spell Damage", "Spell Haste", "Spell Crit", "Intellect", "Spirit", "Mp5"],
         "rotation": {
           "description": "Balance Druids (Moonkins) bring 5% spell crit aura and Faerie Fire. Starfire spam rotation.",
           "priority": [
@@ -16192,6 +16215,7 @@
       },
       "feral_dps": {
         "name": "Feral (DPS)",
+        "statPriority": ["Hit (9%)", "Agility", "Strength", "Crit", "Attack Power", "Haste"],
         "rotation": {
           "description": "Feral Cat DPS requires complex rotation with powershifting. Brings Leader of the Pack crit aura.",
           "priority": [
@@ -17506,6 +17530,7 @@
       },
       "feral_tank": {
         "name": "Feral (Tank)",
+        "statPriority": ["Armor", "Stamina", "Agility", "Hit", "Expertise", "Dodge", "Defense"],
         "rotation": {
           "description": "Feral Bear tanks have high HP and armor but limited cooldowns. Great off-tanks and DPS hybrids.",
           "priority": [
@@ -18826,6 +18851,7 @@
       },
       "restoration": {
         "name": "Restoration",
+        "statPriority": ["Healing Power", "Spell Haste (242)", "Spirit", "Mp5", "Intellect", "Spell Crit"],
         "rotation": {
           "description": "Resto Druids are HoT-focused healers. Excellent tank healers and raid healers with Lifebloom.",
           "priority": [
@@ -20325,10 +20351,12 @@
   "warlock": {
     "title": "WARLOCK",
     "defaultSpec": "affliction",
+    "armorType": "Cloth",
     "professions": [{"name": "Tailoring", "skillId": 197}, {"name": "Enchanting", "skillId": 333}],
     "specs": {
       "affliction": {
         "name": "Affliction",
+        "statPriority": ["Spell Hit (6%)", "Spell Damage", "Spell Haste", "Spell Crit", "Intellect", "Stamina"],
         "rotation": {
           "description": "Affliction Warlocks maintain multiple DoTs for sustained damage. Brings Malediction for caster debuff.",
           "priority": [
@@ -21365,6 +21393,7 @@
       },
       "demonology": {
         "name": "Demonology",
+        "statPriority": ["Spell Hit (16%)", "Spell Damage", "Intellect", "Stamina", "Spell Haste", "Spell Crit"],
         "rotation": {
           "description": "Demonology Warlocks use the Felguard pet for damage. Strong AoE with Seed of Corruption.",
           "priority": [
@@ -22233,6 +22262,7 @@
       },
       "destruction": {
         "name": "Destruction",
+        "statPriority": ["Spell Hit (16%)", "Spell Damage", "Spell Haste", "Spell Crit", "Intellect", "Stamina"],
         "rotation": {
           "description": "Destruction Warlocks have the simplest rotation - Shadow Bolt spam. Highest single-target DPS spec.",
           "priority": [
@@ -23206,10 +23236,12 @@
   "mage": {
     "title": "MAGE",
     "defaultSpec": "arcane",
+    "armorType": "Cloth",
     "professions": [{"name": "Tailoring", "skillId": 197}, {"name": "Enchanting", "skillId": 333}],
     "specs": {
       "arcane": {
         "name": "Arcane",
+        "statPriority": ["Spell Hit (76)", "Intellect", "Spell Damage", "Spell Haste (25%)", "Spell Crit", "Spirit"],
         "rotation": {
           "description": "Arcane Mages have the highest burst DPS in TBC but are mana-intensive. Requires good mana management.",
           "priority": [
@@ -24493,6 +24525,7 @@
       },
       "fire": {
         "name": "Fire",
+        "statPriority": ["Spell Hit (165)", "Spell Damage", "Spell Haste", "Spell Crit", "Intellect", "Stamina"],
         "rotation": {
           "description": "Fire Mages have consistent damage with simple rotation. Gains power with Molten Fury below 20%.",
           "priority": [
@@ -25606,6 +25639,7 @@
       },
       "frost": {
         "name": "Frost",
+        "statPriority": ["Spell Hit (127)", "Spell Damage", "Spell Haste", "Spell Crit", "Intellect", "Stamina"],
         "rotation": {
           "description": "Frost is primarily a PvP/leveling spec in TBC but viable for AoE farming and early progression.",
           "priority": [
