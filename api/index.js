@@ -260,10 +260,18 @@ function parseCookies(req) {
     return cookies;
 }
 
-// Get user from session token
+// Get user from session token (checks Authorization header first, then cookies)
 function getUserFromSession(req) {
-    const cookies = parseCookies(req);
-    const token = cookies.tbctxt_session;
+    // Check Authorization header first (for cross-origin)
+    const authHeader = req.headers.authorization;
+    let token = null;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+        token = authHeader.substring(7);
+    } else {
+        // Fall back to cookie
+        const cookies = parseCookies(req);
+        token = cookies.tbctxt_session;
+    }
     if (!token) return null;
     const session = userSessions.get(token);
     if (!session || session.expiry < Date.now()) {
@@ -387,11 +395,13 @@ async function handleAuthCallback(req, res, url) {
     }
 
     // Set cookie and redirect (secure in production)
+    // Pass token and battletag in URL for cross-origin support
     const cookieExpiry = new Date(session.expiry).toUTCString();
     const isProduction = process.env.NODE_ENV === 'production' || !FRONTEND_URL.includes('localhost');
     const secureFlag = isProduction ? '; Secure' : '';
+    const encodedBattletag = encodeURIComponent(userInfo.battletag);
     res.writeHead(302, {
-        'Location': `${FRONTEND_URL}#login-success`,
+        'Location': `${FRONTEND_URL}?auth_token=${sessionToken}&battletag=${encodedBattletag}#login-success`,
         'Set-Cookie': `tbctxt_session=${sessionToken}; Path=/; Expires=${cookieExpiry}; SameSite=Lax; HttpOnly${secureFlag}`
     });
     res.end();

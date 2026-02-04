@@ -409,26 +409,47 @@ let questIds = {};
 let itemStats = {}; // Pre-computed item stats from Wowhead
 
 // Auth state
-let currentUser = null; // { battletag, bnetId } or null
+let currentUser = null; // { battletag, token } or null
 let serverProgress = null; // Progress from server when logged in
+const AUTH_STORAGE_KEY = 'tbctxt_auth';
 
 // Auth functions
-async function checkAuthStatus() {
-    try {
-        const res = await fetch(`${API_BASE_URL}/api/auth/user`, { credentials: 'include' });
-        const data = await res.json();
-        if (data.loggedIn) {
-            currentUser = { battletag: data.battletag, bnetId: data.bnetId };
-            await loadServerProgress();
-        } else {
+function checkAuthStatus() {
+    // Check localStorage for saved auth
+    const saved = localStorage.getItem(AUTH_STORAGE_KEY);
+    if (saved) {
+        try {
+            currentUser = JSON.parse(saved);
+        } catch (e) {
+            localStorage.removeItem(AUTH_STORAGE_KEY);
             currentUser = null;
         }
-        updateAuthUI();
-    } catch (e) {
-        console.error('Auth check failed:', e);
+    } else {
         currentUser = null;
-        updateAuthUI();
     }
+    updateAuthUI();
+    if (currentUser) loadServerProgress();
+}
+
+function handleAuthCallback() {
+    // Check for auth token in URL (from OAuth callback)
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('auth_token');
+    const battletag = params.get('battletag');
+    if (token && battletag) {
+        currentUser = { battletag: decodeURIComponent(battletag), token };
+        localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(currentUser));
+        // Clean URL
+        history.replaceState(null, '', window.location.pathname + window.location.hash);
+        updateAuthUI();
+        loadServerProgress();
+    }
+}
+
+function logout() {
+    localStorage.removeItem(AUTH_STORAGE_KEY);
+    currentUser = null;
+    updateAuthUI();
 }
 
 function updateAuthUI() {
@@ -437,7 +458,10 @@ function updateAuthUI() {
 
     if (currentUser) {
         headerAuth.innerHTML = `
-            <span class="text-xs px-3 py-1.5 border md:text-[11px] sm:text-[10px]" style="color: #00AEFF; border-color: #00AEFF;">${currentUser.battletag}</span>
+            <span class="inline-flex items-center px-3 py-1.5 border md:text-[11px] sm:text-[10px]" style="color: #00AEFF; border-color: #00AEFF;">
+                <span class="text-xs">${currentUser.battletag}</span>
+                <a href="#" onclick="logout(); return false;" class="ml-2 text-[10px] text-terminal-dim hover:text-terminal-text transition-colors">[ LOGOUT ]</a>
+            </span>
         `;
     } else {
         headerAuth.innerHTML = `
@@ -447,9 +471,11 @@ function updateAuthUI() {
 }
 
 async function loadServerProgress() {
-    if (!currentUser) return;
+    if (!currentUser || !currentUser.token) return;
     try {
-        const res = await fetch(`${API_BASE_URL}/api/progress`, { credentials: 'include' });
+        const res = await fetch(`${API_BASE_URL}/api/progress`, {
+            headers: { 'Authorization': `Bearer ${currentUser.token}` }
+        });
         if (res.ok) {
             serverProgress = await res.json();
             // Merge server progress with local storage (server wins on conflict)
@@ -464,13 +490,15 @@ async function loadServerProgress() {
 }
 
 async function saveProgressToServer() {
-    if (!currentUser) return;
+    if (!currentUser || !currentUser.token) return;
     try {
         const attunements = loadAttunementProgress();
         await fetch(`${API_BASE_URL}/api/progress`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentUser.token}`
+            },
             body: JSON.stringify({ attunements })
         });
         console.log('Progress saved to server');
@@ -3346,8 +3374,11 @@ function initClassSelector() {
 
     window.addEventListener('hashchange', () => navigateToHash(window.location.hash));
 
+    // Handle auth callback (token in URL from OAuth)
+    handleAuthCallback();
+
     if (window.location.hash) {
-        // Handle auth callbacks
+        // Handle auth hash states
         if (window.location.hash === '#login-success') {
             history.replaceState(null, '', window.location.pathname);
             console.log('Login successful!');
@@ -3358,7 +3389,7 @@ function initClassSelector() {
             navigateToHash(window.location.hash);
         }
     }
-    // Check auth status
+    // Check auth status (from localStorage)
     checkAuthStatus();
 }
 window.addEventListener('DOMContentLoaded', loadAllData);
