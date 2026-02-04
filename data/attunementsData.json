@@ -1,0 +1,468 @@
+{
+  "karazhan": {
+    "name": "Karazhan",
+    "shortName": "Kara",
+    "reward": "The Master's Key",
+    "rewardItemId": 24490,
+    "description": "The entry raid of TBC. Attunement is required to enter through the main gate.",
+    "steps": [
+      {
+        "id": "kara-1",
+        "questId": 9824,
+        "name": "Arcane Disturbances",
+        "description": "Use Violet Scrying Crystal near underground water sources in the Master's Cellar",
+        "location": "Master's Cellar, Deadwind Pass",
+        "npc": "Archmage Alturus",
+        "type": "quest"
+      },
+      {
+        "id": "kara-2",
+        "questId": 9825,
+        "name": "Restless Activity",
+        "description": "Kill ghosts in the Master's Cellar to collect Ghostly Essences",
+        "location": "Master's Cellar, Deadwind Pass",
+        "npc": "Archmage Alturus",
+        "type": "quest"
+      },
+      {
+        "id": "kara-3",
+        "questId": 9826,
+        "name": "Contact from Dalaran",
+        "description": "Travel to Alterac Mountains to speak with Archmage Cedric",
+        "location": "Alterac Mountains",
+        "npc": "Archmage Alturus",
+        "type": "quest"
+      },
+      {
+        "id": "kara-4",
+        "questId": 9829,
+        "name": "Khadgar",
+        "description": "Deliver Cedric's report to Khadgar in Shattrath City",
+        "location": "Shattrath City",
+        "npc": "Archmage Cedric",
+        "type": "quest"
+      },
+      {
+        "id": "kara-5",
+        "questId": 9831,
+        "name": "Entry Into Karazhan",
+        "description": "Retrieve the First Key Fragment from Shadow Labyrinth",
+        "location": "Shadow Labyrinth",
+        "npc": "Khadgar",
+        "type": "dungeon",
+        "dungeon": "Shadow Labyrinth"
+      },
+      {
+        "id": "kara-6",
+        "questId": 9832,
+        "name": "The Second and Third Fragments",
+        "description": "Retrieve the Second Key Fragment from Steamvault and Third Key Fragment from Arcatraz",
+        "location": "Steamvault & Arcatraz",
+        "npc": "Khadgar",
+        "type": "dungeon",
+        "dungeon": "Steamvault + Arcatraz"
+      },
+      {
+        "id": "kara-7",
+        "questId": 9836,
+        "name": "The Master's Touch",
+        "description": "Take the restored key to Medivh in the Black Morass to activate it",
+        "location": "Black Morass (Caverns of Time)",
+        "npc": "Khadgar",
+        "type": "dungeon",
+        "dungeon": "Black Morass"
+      }
+    ]
+  },
+  "ssc": {
+    "name": "Serpentshrine Cavern",
+    "shortName": "SSC",
+    "reward": "Hand of A'dal title",
+    "rewardItemId": null,
+    "description": "Attunement was removed in patch 2.1.2 but the quest remains for the title reward.",
+    "note": "Attunement no longer required for entry",
+    "steps": [
+      {
+        "id": "ssc-1",
+        "questId": null,
+        "name": "Reach Revered with Cenarion Expedition",
+        "description": "Required to purchase the Reservoir Key for Heroic Slave Pens access",
+        "location": "Zangarmarsh",
+        "type": "reputation",
+        "faction": "Cenarion Expedition",
+        "repRequired": "Revered"
+      },
+      {
+        "id": "ssc-2",
+        "questId": 10901,
+        "name": "The Cudgel of Kar'desh",
+        "description": "Accept quest from Skar'this the Heretic in Heroic Slave Pens",
+        "location": "Heroic Slave Pens",
+        "npc": "Skar'this the Heretic",
+        "type": "quest"
+      },
+      {
+        "id": "ssc-3",
+        "questId": null,
+        "name": "Obtain Earthen Signet",
+        "description": "Kill Gruul the Dragonkiller in Gruul's Lair",
+        "location": "Gruul's Lair",
+        "type": "raid",
+        "boss": "Gruul the Dragonkiller",
+        "itemId": 31748
+      },
+      {
+        "id": "ssc-4",
+        "questId": null,
+        "name": "Obtain Blazing Signet",
+        "description": "Kill Nightbane in Karazhan (requires summoning via Blackened Urn)",
+        "location": "Karazhan",
+        "type": "raid",
+        "boss": "Nightbane",
+        "itemId": 31749
+      },
+      {
+        "id": "ssc-5",
+        "questId": 10901,
+        "name": "Return to Skar'this",
+        "description": "Return both signets to Skar'this the Heretic in Heroic Slave Pens",
+        "location": "Heroic Slave Pens",
+        "npc": "Skar'this the Heretic",
+        "type": "quest"
+      }
+    ]
+  },
+  "tk": {
+    "name": "Tempest Keep: The Eye",
+    "shortName": "TK",
+    "reward": "The Tempest Key + Hand of A'dal title",
+    "rewardItemId": 31084,
+    "description": "The Trial of the Naaru quest chain. Attunement was removed in patch 2.1.2 but the quest remains for the title reward.",
+    "note": "Attunement no longer required for entry",
+    "steps": [
+      {
+        "id": "tk-1",
+        "questId": 10884,
+        "name": "Trial of the Naaru: Mercy",
+        "description": "Complete Heroic Shattered Halls before the Executioner kills the prisoners (timed run)",
+        "location": "Heroic Shattered Halls",
+        "npc": "A'dal",
+        "type": "heroic",
+        "dungeon": "Shattered Halls",
+        "note": "Timed run - save the prisoners"
+      },
+      {
+        "id": "tk-2",
+        "questId": 10885,
+        "name": "Trial of the Naaru: Strength",
+        "description": "Obtain Kalithresh's Trident from Heroic Steamvault and Murmur's Essence from Heroic Shadow Labyrinth",
+        "location": "Heroic Steamvault + Shadow Labyrinth",
+        "npc": "A'dal",
+        "type": "heroic",
+        "dungeon": "Steamvault + Shadow Labyrinth"
+      },
+      {
+        "id": "tk-3",
+        "questId": 10886,
+        "name": "Trial of the Naaru: Tenacity",
+        "description": "Complete Heroic Arcatraz while keeping Millhouse Manastorm alive",
+        "location": "Heroic Arcatraz",
+        "npc": "A'dal",
+        "type": "heroic",
+        "dungeon": "Arcatraz",
+        "note": "Keep Millhouse alive during final boss"
+      },
+      {
+        "id": "tk-4",
+        "questId": 10888,
+        "name": "Trial of the Naaru: Magtheridon",
+        "description": "Defeat Magtheridon in Magtheridon's Lair",
+        "location": "Magtheridon's Lair",
+        "npc": "A'dal",
+        "type": "raid",
+        "boss": "Magtheridon"
+      }
+    ]
+  },
+  "hyjal": {
+    "name": "Battle for Mount Hyjal",
+    "shortName": "Hyjal",
+    "reward": "Access to Mount Hyjal",
+    "rewardItemId": null,
+    "description": "Requires defeating the final bosses of SSC and TK. Attunement was removed in patch 2.4.0.",
+    "note": "Attunement no longer required for entry",
+    "steps": [
+      {
+        "id": "hyjal-1",
+        "questId": null,
+        "name": "Reach Revered with Keepers of Time",
+        "description": "Required to start The Vials of Eternity quest",
+        "location": "Caverns of Time",
+        "type": "reputation",
+        "faction": "Keepers of Time",
+        "repRequired": "Revered"
+      },
+      {
+        "id": "hyjal-2",
+        "questId": 10445,
+        "name": "The Vials of Eternity",
+        "description": "Accept quest from Soridormi in Caverns of Time",
+        "location": "Caverns of Time",
+        "npc": "Soridormi",
+        "type": "quest"
+      },
+      {
+        "id": "hyjal-3",
+        "questId": null,
+        "name": "Obtain Vashj's Vial Remnant",
+        "description": "Defeat Lady Vashj in Serpentshrine Cavern",
+        "location": "Serpentshrine Cavern",
+        "type": "raid",
+        "boss": "Lady Vashj",
+        "itemId": 31346
+      },
+      {
+        "id": "hyjal-4",
+        "questId": null,
+        "name": "Obtain Kael's Vial Remnant",
+        "description": "Defeat Kael'thas Sunstrider in Tempest Keep: The Eye",
+        "location": "Tempest Keep: The Eye",
+        "type": "raid",
+        "boss": "Kael'thas Sunstrider",
+        "itemId": 31339
+      },
+      {
+        "id": "hyjal-5",
+        "questId": 10445,
+        "name": "Return to Soridormi",
+        "description": "Return the vial remnants to Soridormi",
+        "location": "Caverns of Time",
+        "npc": "Soridormi",
+        "type": "quest"
+      }
+    ]
+  },
+  "bt": {
+    "name": "Black Temple",
+    "shortName": "BT",
+    "reward": "Medallion of Karabor",
+    "rewardItemId": 32649,
+    "description": "The longest attunement chain in TBC. Attunement was removed in patch 2.4.0.",
+    "note": "Attunement no longer required for entry",
+    "factionChoice": true,
+    "steps": [
+      {
+        "id": "bt-1",
+        "questId": 10568,
+        "questIdAlt": 10683,
+        "name": "Tablets of Baa'ri",
+        "description": "Collect Ata'mal Tablets from Baa'ri Ruins (Aldor) or Netherwing Fields (Scryers)",
+        "location": "Shadowmoon Valley",
+        "npc": "Anchorite Ceyla (Aldor) / Arcanist Thelis (Scryers)",
+        "type": "quest",
+        "factionSpecific": true
+      },
+      {
+        "id": "bt-2",
+        "questId": 10571,
+        "questIdAlt": 10684,
+        "name": "Oronu the Elder",
+        "description": "Speak with Oronu the Elder at the Altar of Sha'tar",
+        "location": "Shadowmoon Valley",
+        "type": "quest",
+        "factionSpecific": true
+      },
+      {
+        "id": "bt-3",
+        "questId": 10574,
+        "questIdAlt": 10685,
+        "name": "The Ashtongue Corruptors",
+        "description": "Kill 4 Ashtongue Corruptors in Shadowmoon Valley",
+        "location": "Shadowmoon Valley",
+        "type": "quest",
+        "factionSpecific": true
+      },
+      {
+        "id": "bt-4",
+        "questId": 10575,
+        "questIdAlt": 10686,
+        "name": "The Warden's Cage",
+        "description": "Speak with Akama at the Warden's Cage",
+        "location": "Shadowmoon Valley",
+        "type": "quest",
+        "factionSpecific": true
+      },
+      {
+        "id": "bt-5",
+        "questId": 10622,
+        "name": "Proof of Allegiance",
+        "description": "Kill Zandras in the Warden's Cage area",
+        "location": "Shadowmoon Valley",
+        "npc": "Akama",
+        "type": "quest"
+      },
+      {
+        "id": "bt-6",
+        "questId": 10628,
+        "name": "Akama",
+        "description": "Speak with Akama about his plan",
+        "location": "Shadowmoon Valley",
+        "npc": "Akama",
+        "type": "quest"
+      },
+      {
+        "id": "bt-7",
+        "questId": 10705,
+        "name": "Seer Udalo",
+        "description": "Find Seer Udalo's remains in the Arcatraz",
+        "location": "Arcatraz",
+        "npc": "Akama",
+        "type": "dungeon",
+        "dungeon": "Arcatraz"
+      },
+      {
+        "id": "bt-8",
+        "questId": 10706,
+        "name": "A Mysterious Portent",
+        "description": "Return to Akama with news of Udalo's death",
+        "location": "Shadowmoon Valley",
+        "npc": "Akama",
+        "type": "quest"
+      },
+      {
+        "id": "bt-9",
+        "questId": 10707,
+        "name": "The Ata'mal Terrace",
+        "description": "Retrieve the Heart of Fury from Shadowmoon Valley",
+        "location": "Ata'mal Terrace, Shadowmoon Valley",
+        "npc": "Akama",
+        "type": "quest"
+      },
+      {
+        "id": "bt-10",
+        "questId": 10708,
+        "name": "Akama's Promise",
+        "description": "Speak with A'dal in Shattrath City",
+        "location": "Shattrath City",
+        "npc": "Akama",
+        "type": "quest"
+      },
+      {
+        "id": "bt-11",
+        "questId": 10944,
+        "name": "The Secret Compromised",
+        "description": "Speak with Seer Olum in Serpentshrine Cavern after Lady Vashj is defeated",
+        "location": "Serpentshrine Cavern",
+        "npc": "Akama's Shade",
+        "type": "raid"
+      },
+      {
+        "id": "bt-12",
+        "questId": 10946,
+        "name": "Ruse of the Ashtongue",
+        "description": "Slay Al'ar in Tempest Keep while wearing the Ashtongue Cowl",
+        "location": "Tempest Keep: The Eye",
+        "npc": "Seer Olum",
+        "type": "raid",
+        "boss": "Al'ar",
+        "note": "Wear Ashtongue Cowl during kill"
+      },
+      {
+        "id": "bt-13",
+        "questId": 10947,
+        "name": "An Artifact From the Past",
+        "description": "Retrieve the Time-Phased Phylactery from Rage Winterchill in Mount Hyjal",
+        "location": "Battle for Mount Hyjal",
+        "npc": "Akama",
+        "type": "raid",
+        "boss": "Rage Winterchill",
+        "itemId": 32648
+      },
+      {
+        "id": "bt-14",
+        "questId": 10948,
+        "name": "The Hostage Soul",
+        "description": "Bring the phylactery to A'dal in Shattrath City",
+        "location": "Shattrath City",
+        "npc": "A'dal",
+        "type": "quest"
+      },
+      {
+        "id": "bt-15",
+        "questId": 10949,
+        "name": "Entry Into the Black Temple",
+        "description": "Speak with Xi'ri at the entrance to Black Temple",
+        "location": "Black Temple Entrance, Shadowmoon Valley",
+        "npc": "A'dal",
+        "type": "quest"
+      },
+      {
+        "id": "bt-16",
+        "questId": 10985,
+        "name": "A Distraction for Akama",
+        "description": "Help Xi'ri's forces create a distraction so Akama and Maiev can enter the Black Temple",
+        "location": "Black Temple",
+        "npc": "Xi'ri",
+        "type": "quest"
+      }
+    ]
+  },
+  "heroicKeys": {
+    "name": "Heroic Dungeon Keys",
+    "shortName": "Keys",
+    "reward": "Access to Heroic Dungeons",
+    "description": "Reputation-based keys required for Heroic dungeon access. All require Honored reputation.",
+    "steps": [
+      {
+        "id": "key-hfc",
+        "name": "Flamewrought Key",
+        "description": "Unlocks Heroic Hellfire Citadel dungeons (Ramparts, Blood Furnace, Shattered Halls)",
+        "type": "reputation",
+        "faction": "Honor Hold (Alliance) / Thrallmar (Horde)",
+        "repRequired": "Honored",
+        "itemId": 30622,
+        "dungeons": ["Hellfire Ramparts", "Blood Furnace", "Shattered Halls"]
+      },
+      {
+        "id": "key-cf",
+        "name": "Reservoir Key",
+        "description": "Unlocks Heroic Coilfang Reservoir dungeons (Slave Pens, Underbog, Steamvault)",
+        "type": "reputation",
+        "faction": "Cenarion Expedition",
+        "repRequired": "Honored",
+        "itemId": 30623,
+        "dungeons": ["Slave Pens", "Underbog", "Steamvault"]
+      },
+      {
+        "id": "key-auch",
+        "name": "Auchenai Key",
+        "description": "Unlocks Heroic Auchindoun dungeons (Mana-Tombs, Auchenai Crypts, Sethekk Halls, Shadow Labyrinth)",
+        "type": "reputation",
+        "faction": "Lower City",
+        "repRequired": "Honored",
+        "itemId": 30633,
+        "dungeons": ["Mana-Tombs", "Auchenai Crypts", "Sethekk Halls", "Shadow Labyrinth"]
+      },
+      {
+        "id": "key-tk",
+        "name": "Warpforged Key",
+        "description": "Unlocks Heroic Tempest Keep dungeons (Mechanar, Botanica, Arcatraz)",
+        "type": "reputation",
+        "faction": "The Sha'tar",
+        "repRequired": "Honored",
+        "itemId": 30634,
+        "dungeons": ["Mechanar", "Botanica", "Arcatraz"]
+      },
+      {
+        "id": "key-cot",
+        "name": "Key of Time",
+        "description": "Unlocks Heroic Caverns of Time dungeons (Old Hillsbrad, Black Morass)",
+        "type": "reputation",
+        "faction": "Keepers of Time",
+        "repRequired": "Honored",
+        "itemId": 30635,
+        "dungeons": ["Old Hillsbrad Foothills", "Black Morass"]
+      }
+    ]
+  }
+}

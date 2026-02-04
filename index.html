@@ -291,6 +291,58 @@
         .wowhead-tooltip .q4 { color: #a335ee !important; }
         .wowhead-tooltip .q5 { color: #ff8000 !important; }
         .wowhead-tooltip table { background: #222222 !important; border-color: #ffffff !important; }
+        /* ===== ATTUNEMENT TRACKER CHECKBOXES ===== */
+        .attunement-checkbox {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            min-width: 18px;
+            border: 2px solid #1eff00;
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.15s ease;
+        }
+        .attunement-checkbox:hover {
+            border-color: #ffffff;
+            box-shadow: 0 0 4px rgba(30, 255, 0, 0.3);
+        }
+        .attunement-checkbox:checked {
+            background: #1eff00;
+            border-color: #1eff00;
+        }
+        .attunement-checkbox:checked::after {
+            content: '\2713';
+            color: #222222;
+            font-size: 14px;
+            font-weight: bold;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .attunement-step {
+            transition: all 0.15s ease;
+        }
+        .attunement-step:hover {
+            background: rgba(30, 255, 0, 0.05);
+        }
+        .attunement-step.completed .step-text {
+            opacity: 0.5;
+            text-decoration: line-through;
+        }
+        .progress-bar-bg {
+            background: #333333;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            background: #1eff00;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
     </style>
 </head>
 <body class="bg-terminal-bg text-terminal-text font-mono leading-relaxed p-5 max-w-screen-xl mx-auto text-sm md:p-3 md:text-xs sm:p-2 sm:text-[11px]">
@@ -321,6 +373,7 @@
                 <li class="cursor-pointer text-terminal-text select-none"><a href="#recipes" class="nav-link block w-full text-inherit no-underline py-2 pl-2.5 md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="recipes">[ RECIPES ]</a></li>
                 <li class="cursor-pointer text-terminal-text select-none"><a href="#raids" class="nav-link block w-full text-inherit no-underline py-2 pl-2.5 md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="raids">[ RAIDS ]</a></li>
                 <li class="cursor-pointer text-terminal-text select-none"><a href="#collections" class="nav-link block w-full text-inherit no-underline py-2 pl-2.5 md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="collections">[ COLLECTIONS ]</a></li>
+                <li class="cursor-pointer text-terminal-text select-none"><a href="#attunements" class="nav-link block w-full text-inherit no-underline py-2 pl-2.5 md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="attunements">[ ATTUNEMENTS ]</a></li>
                 <li class="cursor-pointer text-terminal-text select-none"><a href="#raidready" class="nav-link block w-full text-inherit no-underline py-2 pl-2.5 md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="raidready">[ RAID-READY ]</a></li>
             </ul>
         </aside>
@@ -344,6 +397,7 @@ let classData = {};
 let recipesData = {};
 let raidsData = {};
 let collectionsData = {};
+let attunementsData = {};
 let enchantSpellIds = {};
 let talentSpellIds = {};
 let questIds = {};
@@ -354,7 +408,9 @@ let currentPhase = 4;
 let currentRaid = 'karazhan';
 let currentRaidPhase = 'phase1';
 let currentProfession = 'blacksmithing';
+let currentAttunement = 'karazhan';
 const FADE_TRANSITION_MS = 200;
+const ATTUNEMENT_STORAGE_KEY = 'tbctxt_attunements';
 function showLoading() {
     document.getElementById('main-content').innerHTML = `
         <div class="text-terminal-dim text-center py-10">
@@ -371,20 +427,22 @@ async function loadAllData() {
         return res.json();
     }
     try {
-        const [items, classes, recipes, raids, reference, stats, collections] = await Promise.all([
+        const [items, classes, recipes, raids, reference, stats, collections, attunements] = await Promise.all([
             fetchJSON('data/itemIds.json'),
             fetchJSON('data/classData.json'),
             fetchJSON('data/recipesData.json'),
             fetchJSON('data/raidsData.json'),
             fetchJSON('data/referenceData.json'),
             fetchJSON('data/itemStats.json'),
-            fetchJSON('data/collectionsData.json')
+            fetchJSON('data/collectionsData.json'),
+            fetchJSON('data/attunementsData.json')
         ]);
         itemIds = items;
         classData = classes;
         recipesData = recipes;
         raidsData = raids;
         collectionsData = collections;
+        attunementsData = attunements;
         enchantSpellIds = reference.enchantSpellIds;
         talentSpellIds = reference.talentSpellIds;
         questIds = reference.questIds;
@@ -1331,6 +1389,282 @@ function renderToysSection(data) {
         }
     }
     return html;
+}
+
+// ===== ATTUNEMENT TRACKER FUNCTIONS =====
+function loadAttunementProgress() {
+    try {
+        const saved = localStorage.getItem(ATTUNEMENT_STORAGE_KEY);
+        return saved ? JSON.parse(saved) : {};
+    } catch (e) {
+        console.error('Error loading attunement progress:', e);
+        return {};
+    }
+}
+
+function saveAttunementProgress(stepId, completed) {
+    try {
+        const progress = loadAttunementProgress();
+        if (completed) {
+            progress[stepId] = true;
+        } else {
+            delete progress[stepId];
+        }
+        localStorage.setItem(ATTUNEMENT_STORAGE_KEY, JSON.stringify(progress));
+    } catch (e) {
+        console.error('Error saving attunement progress:', e);
+    }
+}
+
+function clearAttunementProgress(attunementKey = null) {
+    try {
+        if (attunementKey) {
+            const progress = loadAttunementProgress();
+            const attunement = attunementsData[attunementKey];
+            if (attunement && attunement.steps) {
+                attunement.steps.forEach(step => {
+                    delete progress[step.id];
+                });
+            }
+            localStorage.setItem(ATTUNEMENT_STORAGE_KEY, JSON.stringify(progress));
+        } else {
+            localStorage.removeItem(ATTUNEMENT_STORAGE_KEY);
+        }
+    } catch (e) {
+        console.error('Error clearing attunement progress:', e);
+    }
+}
+
+function getAttunementCompletionStats(attunementKey) {
+    const progress = loadAttunementProgress();
+    const attunement = attunementsData[attunementKey];
+    if (!attunement || !attunement.steps) return { completed: 0, total: 0, percent: 0 };
+    const total = attunement.steps.length;
+    const completed = attunement.steps.filter(step => progress[step.id]).length;
+    return {
+        completed,
+        total,
+        percent: total > 0 ? Math.round((completed / total) * 100) : 0
+    };
+}
+
+function renderProgressBar(completed, total) {
+    const percent = total > 0 ? (completed / total) * 100 : 0;
+    const filledBlocks = Math.round(percent / 10);
+    const emptyBlocks = 10 - filledBlocks;
+    const bar = '\u2588'.repeat(filledBlocks) + '\u2591'.repeat(emptyBlocks);
+    return `<span class="text-terminal-accent">[${bar}]</span> <span class="text-terminal-dim">${percent}% (${completed}/${total})</span>`;
+}
+
+function renderAttunementsContent(attunementKey = 'karazhan') {
+    currentClass = null;
+    currentAttunement = attunementKey;
+    document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
+    const attunementsLink = document.querySelector('.nav-link[data-view="attunements"]');
+    if (attunementsLink) attunementsLink.parentElement.classList.add('active');
+
+    const attunementOrder = ['karazhan', 'ssc', 'tk', 'hyjal', 'bt', 'heroicKeys'];
+    const attunementLabels = {
+        karazhan: 'Karazhan',
+        ssc: 'SSC',
+        tk: 'TK',
+        hyjal: 'Hyjal',
+        bt: 'Black Temple',
+        heroicKeys: 'Heroic Keys'
+    };
+
+    const attunementButtons = attunementOrder.map(key => {
+        const stats = getAttunementCompletionStats(key);
+        const isComplete = stats.percent === 100;
+        return `<a href="#attunements/${key}" class="attunement-btn ${key === currentAttunement ? 'bg-terminal-text text-terminal-bg' : 'bg-transparent'} ${isComplete ? 'border-terminal-accent' : 'border-terminal-text'} border text-terminal-text px-4 py-2.5 cursor-pointer font-mono text-xs transition-all select-none hover:bg-terminal-text hover:text-terminal-bg no-underline md:px-3.5 md:py-2.5 md:text-[11px] sm:px-3 sm:py-2 sm:text-[10px]" data-attunement="${key}">${attunementLabels[key]}${isComplete ? ' \u2713' : ''}</a>`;
+    }).join('');
+
+    const attunement = attunementsData[attunementKey];
+    let contentHtml = '';
+
+    if (attunement) {
+        contentHtml = renderAttunementSteps(attunementKey, attunement);
+    }
+
+    const html = `
+        <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">query: tbc_attunements --raid=${attunementKey}</div>
+        <h2 class="text-terminal-accent text-lg mb-4 uppercase tracking-wide md:text-base md:mb-3 sm:text-sm">[ TBC ATTUNEMENTS ]</h2>
+        <p class="text-terminal-dim text-xs mb-2">Track your raid attunement progress. Data is saved in your browser.</p>
+        <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3 italic">Note: Most attunements were removed in later patches but remain for achievements/titles.</p>
+        <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ SELECT ATTUNEMENT ]</h3>
+        <div class="flex flex-wrap gap-2 mb-6 md:gap-1.5 md:mb-4 sm:mb-3">${attunementButtons}</div>
+        ${contentHtml}
+        <div class="mt-6 pt-4 border-t border-terminal-dim border-opacity-30">
+            <button onclick="clearAttunementProgress('${attunementKey}'); renderAttunementsContent('${attunementKey}');" class="text-xs text-terminal-dim hover:text-red-400 mr-4 cursor-pointer bg-transparent border-none font-mono">[Clear This Progress]</button>
+            <button onclick="if(confirm('Clear ALL attunement progress?')) { clearAttunementProgress(); renderAttunementsContent('${attunementKey}'); }" class="text-xs text-terminal-dim hover:text-red-400 cursor-pointer bg-transparent border-none font-mono">[Clear All Progress]</button>
+        </div>
+    `;
+
+    const mainContent = document.getElementById('main-content');
+    mainContent.style.opacity = '0.3';
+    setTimeout(() => {
+        mainContent.innerHTML = html;
+        mainContent.style.opacity = '1';
+        attachAttunementListeners();
+        if (typeof $WowheadPower !== 'undefined' && $WowheadPower.refreshLinks) {
+            $WowheadPower.refreshLinks();
+        }
+    }, FADE_TRANSITION_MS);
+}
+
+function renderAttunementSteps(attunementKey, attunement) {
+    const progress = loadAttunementProgress();
+    const stats = getAttunementCompletionStats(attunementKey);
+
+    let html = `
+        <div class="border border-terminal-text p-4 mb-4">
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+                <div>
+                    <h3 class="text-terminal-accent text-base uppercase mb-1">${attunement.name}</h3>
+                    <p class="text-terminal-dim text-xs">${attunement.description || ''}</p>
+                    ${attunement.note ? `<p class="text-yellow-400 text-xs mt-1">\u26A0 ${attunement.note}</p>` : ''}
+                </div>
+                <div class="text-right">
+                    <div class="text-xs text-terminal-dim mb-1">Reward: ${attunement.reward}</div>
+                    ${attunement.rewardItemId ? `<a href="https://tbc.wowhead.com/item=${attunement.rewardItemId}" data-wowhead="item=${attunement.rewardItemId}" class="text-wow-epic text-xs hover:text-terminal-text">View Item</a>` : ''}
+                </div>
+            </div>
+            <div class="mb-4">
+                <div class="text-xs text-terminal-dim mb-1">Progress:</div>
+                <div class="flex items-center gap-3">
+                    <div class="progress-bar-bg flex-1 max-w-xs">
+                        <div class="progress-bar-fill" style="width: ${stats.percent}%"></div>
+                    </div>
+                    <span class="text-xs text-terminal-dim">${stats.percent}% (${stats.completed}/${stats.total})</span>
+                </div>
+            </div>
+        </div>
+    `;
+
+    if (attunementKey === 'heroicKeys') {
+        html += renderHeroicKeysSteps(attunement, progress);
+    } else {
+        html += '<div class="space-y-1">';
+        attunement.steps.forEach((step, index) => {
+            const isCompleted = progress[step.id];
+            const stepTypeIcon = getStepTypeIcon(step.type);
+            const questLink = step.questId ? `<a href="https://tbc.wowhead.com/quest=${step.questId}" data-wowhead="quest=${step.questId}" class="text-yellow-400 hover:text-terminal-text">${step.name}</a>` : `<span class="text-terminal-text">${step.name}</span>`;
+
+            html += `
+                <label class="attunement-step ${isCompleted ? 'completed' : ''} flex items-start gap-3 p-3 cursor-pointer border border-transparent hover:border-terminal-dim hover:border-opacity-30 rounded">
+                    <input type="checkbox" id="${step.id}" class="attunement-checkbox mt-0.5" ${isCompleted ? 'checked' : ''} />
+                    <span class="text-terminal-accent text-xs min-w-[24px]">[${index + 1}]</span>
+                    <div class="flex-1 step-text">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="text-xs text-terminal-dim">${stepTypeIcon}</span>
+                            ${questLink}
+                            ${step.factionSpecific ? '<span class="text-xs text-blue-400">[Faction-specific]</span>' : ''}
+                        </div>
+                        <div class="text-xs text-terminal-dim mt-1">${step.description}</div>
+                        <div class="text-xs text-terminal-dim mt-0.5">
+                            ${step.location ? `<span class="mr-3">\u{1F4CD} ${step.location}</span>` : ''}
+                            ${step.npc ? `<span class="mr-3">\u{1F464} ${step.npc}</span>` : ''}
+                            ${step.dungeon ? `<span class="mr-3">\u{1F3F0} ${step.dungeon}</span>` : ''}
+                            ${step.boss ? `<span class="mr-3">\u{1F480} ${step.boss}</span>` : ''}
+                        </div>
+                        ${step.note ? `<div class="text-xs text-yellow-400 mt-1">\u26A0 ${step.note}</div>` : ''}
+                    </div>
+                </label>
+            `;
+        });
+        html += '</div>';
+    }
+
+    return html;
+}
+
+function renderHeroicKeysSteps(attunement, progress) {
+    let html = '<div class="space-y-3">';
+
+    attunement.steps.forEach(step => {
+        const isCompleted = progress[step.id];
+
+        html += `
+            <label class="attunement-step ${isCompleted ? 'completed' : ''} flex items-start gap-3 p-3 cursor-pointer border border-terminal-dim border-opacity-30 rounded">
+                <input type="checkbox" id="${step.id}" class="attunement-checkbox mt-0.5" ${isCompleted ? 'checked' : ''} />
+                <div class="flex-1 step-text">
+                    <div class="flex items-center gap-2 flex-wrap mb-1">
+                        ${step.itemId ? `<a href="https://tbc.wowhead.com/item=${step.itemId}" data-wowhead="item=${step.itemId}" class="text-wow-rare hover:text-terminal-text">${step.name}</a>` : `<span class="text-terminal-text">${step.name}</span>`}
+                    </div>
+                    <div class="text-xs text-terminal-dim">${step.description}</div>
+                    <div class="text-xs mt-2">
+                        <span class="text-terminal-accent">Faction:</span> <span class="text-terminal-dim">${step.faction}</span>
+                        <span class="text-terminal-accent ml-3">Required:</span> <span class="text-terminal-dim">${step.repRequired}</span>
+                    </div>
+                    <div class="text-xs text-terminal-dim mt-1">
+                        Dungeons: ${step.dungeons.join(', ')}
+                    </div>
+                </div>
+            </label>
+        `;
+    });
+
+    html += '</div>';
+    return html;
+}
+
+function getStepTypeIcon(type) {
+    const icons = {
+        'quest': '\u{1F4DC}',
+        'dungeon': '\u{1F3F0}',
+        'heroic': '\u{2694}\uFE0F',
+        'raid': '\u{1F409}',
+        'reputation': '\u{2B50}'
+    };
+    return icons[type] || '\u{1F4DC}';
+}
+
+function attachAttunementListeners() {
+    document.querySelectorAll('.attunement-checkbox').forEach(cb => {
+        cb.addEventListener('change', (e) => {
+            const stepId = e.target.id;
+            const completed = e.target.checked;
+            saveAttunementProgress(stepId, completed);
+
+            const label = e.target.closest('.attunement-step');
+            if (label) {
+                label.classList.toggle('completed', completed);
+            }
+
+            // Update progress bar
+            const stats = getAttunementCompletionStats(currentAttunement);
+            const progressFill = document.querySelector('.progress-bar-fill');
+            const progressText = document.querySelector('.progress-bar-bg').nextElementSibling;
+            if (progressFill) {
+                progressFill.style.width = `${stats.percent}%`;
+            }
+            if (progressText) {
+                progressText.textContent = `${stats.percent}% (${stats.completed}/${stats.total})`;
+            }
+
+            // Update button checkmark
+            const btn = document.querySelector(`.attunement-btn[data-attunement="${currentAttunement}"]`);
+            if (btn && stats.percent === 100) {
+                if (!btn.textContent.includes('\u2713')) {
+                    btn.textContent = btn.textContent + ' \u2713';
+                }
+                btn.classList.add('border-terminal-accent');
+                btn.classList.remove('border-terminal-text');
+            } else if (btn) {
+                btn.textContent = btn.textContent.replace(' \u2713', '');
+                btn.classList.remove('border-terminal-accent');
+                btn.classList.add('border-terminal-text');
+            }
+        });
+    });
+
+    document.querySelectorAll('.attunement-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            if (e.ctrlKey || e.metaKey || e.button === 1) return;
+            e.preventDefault();
+            window.location.hash = `#attunements/${btn.dataset.attunement}`;
+        });
+    });
 }
 
 function renderRecipesContent() {
@@ -2898,6 +3232,8 @@ function navigateToHash(hash) {
         renderRaidsContent();
     } else if (page === 'collections') {
         renderCollectionsContent(parts[1] || 'mounts');
+    } else if (page === 'attunements') {
+        renderAttunementsContent(parts[1] || 'karazhan');
     } else if (page === 'raidready') {
         renderPreRaidChecker();
     } else if (page === 'api') {
