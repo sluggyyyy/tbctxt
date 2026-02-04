@@ -1,0 +1,246 @@
+{
+  "mounts": {
+    "flyingMounts": {
+      "allianceVendor": [
+        {"itemId": 25470, "name": "Golden Gryphon", "source": "vendor", "faction": "Alliance", "requirements": "Expert Riding (225), 100g from Brunn Flamebeard in Wildhammer Stronghold"},
+        {"itemId": 25471, "name": "Ebon Gryphon", "source": "vendor", "faction": "Alliance", "requirements": "Expert Riding (225), 100g"},
+        {"itemId": 25472, "name": "Snowy Gryphon", "source": "vendor", "faction": "Alliance", "requirements": "Expert Riding (225), 100g"},
+        {"itemId": 25473, "name": "Swift Blue Gryphon", "source": "vendor", "faction": "Alliance", "requirements": "Artisan Riding (300), 200g"},
+        {"itemId": 25527, "name": "Swift Red Gryphon", "source": "vendor", "faction": "Alliance", "requirements": "Artisan Riding (300), 200g"},
+        {"itemId": 25528, "name": "Swift Green Gryphon", "source": "vendor", "faction": "Alliance", "requirements": "Artisan Riding (300), 200g"},
+        {"itemId": 25529, "name": "Swift Purple Gryphon", "source": "vendor", "faction": "Alliance", "requirements": "Artisan Riding (300), 200g"}
+      ],
+      "hordeVendor": [
+        {"itemId": 25474, "name": "Tawny Windrider", "source": "vendor", "faction": "Horde", "requirements": "Expert Riding (225), 100g from Dama Wildmane in Shadowmoon Village"},
+        {"itemId": 25475, "name": "Blue Windrider", "source": "vendor", "faction": "Horde", "requirements": "Expert Riding (225), 100g"},
+        {"itemId": 25476, "name": "Green Windrider", "source": "vendor", "faction": "Horde", "requirements": "Expert Riding (225), 100g"},
+        {"itemId": 25477, "name": "Swift Red Windrider", "source": "vendor", "faction": "Horde", "requirements": "Artisan Riding (300), 200g"},
+        {"itemId": 25531, "name": "Swift Green Windrider", "source": "vendor", "faction": "Horde", "requirements": "Artisan Riding (300), 200g"},
+        {"itemId": 25532, "name": "Swift Yellow Windrider", "source": "vendor", "faction": "Horde", "requirements": "Artisan Riding (300), 200g"},
+        {"itemId": 25533, "name": "Swift Purple Windrider", "source": "vendor", "faction": "Horde", "requirements": "Artisan Riding (300), 200g"}
+      ],
+      "netherwing": [
+        {"itemId": 32857, "name": "Onyx Netherwing Drake", "source": "reputation", "faction": "Both", "requirements": "Exalted with Netherwing, 200g (first free)"},
+        {"itemId": 32858, "name": "Azure Netherwing Drake", "source": "reputation", "faction": "Both", "requirements": "Exalted with Netherwing, 200g"},
+        {"itemId": 32859, "name": "Cobalt Netherwing Drake", "source": "reputation", "faction": "Both", "requirements": "Exalted with Netherwing, 200g"},
+        {"itemId": 32860, "name": "Purple Netherwing Drake", "source": "reputation", "faction": "Both", "requirements": "Exalted with Netherwing, 200g"},
+        {"itemId": 32861, "name": "Veridian Netherwing Drake", "source": "reputation", "faction": "Both", "requirements": "Exalted with Netherwing, 200g"},
+        {"itemId": 32862, "name": "Violet Netherwing Drake", "source": "reputation", "faction": "Both", "requirements": "Exalted with Netherwing, 200g"}
+      ],
+      "shatariSkyguard": [
+        {"itemId": 32314, "name": "Green Riding Nether Ray", "source": "reputation", "faction": "Both", "requirements": "Exalted with Sha'tari Skyguard, 200g"},
+        {"itemId": 32316, "name": "Purple Riding Nether Ray", "source": "reputation", "faction": "Both", "requirements": "Exalted with Sha'tari Skyguard, 200g"},
+        {"itemId": 32317, "name": "Red Riding Nether Ray", "source": "reputation", "faction": "Both", "requirements": "Exalted with Sha'tari Skyguard, 200g"},
+        {"itemId": 32318, "name": "Silver Riding Nether Ray", "source": "reputation", "faction": "Both", "requirements": "Exalted with Sha'tari Skyguard, 200g"},
+        {"itemId": 32319, "name": "Blue Riding Nether Ray", "source": "reputation", "faction": "Both", "requirements": "Exalted with Sha'tari Skyguard, 200g"}
+      ],
+      "cenarionExpedition": [
+        {"itemId": 33999, "name": "Cenarion War Hippogryph", "source": "reputation", "faction": "Both", "requirements": "Exalted with Cenarion Expedition, 1600g"}
+      ],
+      "engineering": [
+        {"itemId": 34060, "name": "Flying Machine Control", "source": "profession", "faction": "Both", "requirements": "Engineering (350), Expert Riding"},
+        {"itemId": 34061, "name": "Turbo-Charged Flying Machine", "source": "profession", "faction": "Both", "requirements": "Engineering (375), Artisan Riding"}
+      ],
+      "rareDrops": [
+        {"itemId": 32458, "name": "Ashes of Al'ar", "source": "drop", "faction": "Both", "requirements": "Kael'thas in The Eye, ~1.7% drop, 310% speed"},
+        {"itemId": 32768, "name": "Reins of the Raven Lord", "source": "drop", "faction": "Both", "requirements": "Anzu in Heroic Sethekk Halls, ~1% drop"}
+      ],
+      "gladiator": [
+        {"itemId": 30609, "name": "Swift Nether Drake", "source": "pvp", "faction": "Both", "requirements": "Season 1 Gladiator, 310% speed"},
+        {"itemId": 34092, "name": "Merciless Nether Drake", "source": "pvp", "faction": "Both", "requirements": "Season 2 Gladiator, 310% speed"},
+        {"itemId": 37676, "name": "Vengeful Nether Drake", "source": "pvp", "faction": "Both", "requirements": "Season 3 Gladiator, 310% speed"},
+        {"itemId": 43516, "name": "Brutal Nether Drake", "source": "pvp", "faction": "Both", "requirements": "Season 4 Gladiator, 310% speed"}
+      ]
+    },
+    "groundMounts": {
+      "bloodElfHawkstriders": [
+        {"itemId": 28927, "name": "Red Hawkstrider", "source": "vendor", "faction": "Horde", "requirements": "Apprentice Riding, 1g"},
+        {"itemId": 29220, "name": "Blue Hawkstrider", "source": "vendor", "faction": "Horde", "requirements": "Apprentice Riding, 1g"},
+        {"itemId": 29221, "name": "Black Hawkstrider", "source": "vendor", "faction": "Horde", "requirements": "Apprentice Riding, 1g"},
+        {"itemId": 29222, "name": "Purple Hawkstrider", "source": "vendor", "faction": "Horde", "requirements": "Apprentice Riding, 1g"},
+        {"itemId": 28936, "name": "Swift Pink Hawkstrider", "source": "vendor", "faction": "Horde", "requirements": "Journeyman Riding, 10g"},
+        {"itemId": 29223, "name": "Swift Green Hawkstrider", "source": "vendor", "faction": "Horde", "requirements": "Journeyman Riding, 10g"},
+        {"itemId": 29224, "name": "Swift Purple Hawkstrider", "source": "vendor", "faction": "Horde", "requirements": "Journeyman Riding, 10g"}
+      ],
+      "draeneiElekks": [
+        {"itemId": 28481, "name": "Brown Elekk", "source": "vendor", "faction": "Alliance", "requirements": "Apprentice Riding, 1g"},
+        {"itemId": 29743, "name": "Purple Elekk", "source": "vendor", "faction": "Alliance", "requirements": "Apprentice Riding, 1g"},
+        {"itemId": 29744, "name": "Gray Elekk", "source": "vendor", "faction": "Alliance", "requirements": "Apprentice Riding, 1g"},
+        {"itemId": 29745, "name": "Great Blue Elekk", "source": "vendor", "faction": "Alliance", "requirements": "Journeyman Riding, 10g"},
+        {"itemId": 29746, "name": "Great Green Elekk", "source": "vendor", "faction": "Alliance", "requirements": "Journeyman Riding, 10g"},
+        {"itemId": 29747, "name": "Great Purple Elekk", "source": "vendor", "faction": "Alliance", "requirements": "Journeyman Riding, 10g"}
+      ],
+      "talbuksMaghar": [
+        {"itemId": 31829, "name": "Cobalt Riding Talbuk", "source": "reputation", "faction": "Horde", "requirements": "Exalted with Mag'har, 80g"},
+        {"itemId": 31831, "name": "Silver Riding Talbuk", "source": "reputation", "faction": "Horde", "requirements": "Exalted with Mag'har, 80g"},
+        {"itemId": 31833, "name": "Tan Riding Talbuk", "source": "reputation", "faction": "Horde", "requirements": "Exalted with Mag'har, 80g"},
+        {"itemId": 31835, "name": "White Riding Talbuk", "source": "reputation", "faction": "Horde", "requirements": "Exalted with Mag'har, 80g"},
+        {"itemId": 29102, "name": "Cobalt War Talbuk", "source": "reputation", "faction": "Horde", "requirements": "Exalted with Mag'har, 100g"},
+        {"itemId": 29103, "name": "White War Talbuk", "source": "reputation", "faction": "Horde", "requirements": "Exalted with Mag'har, 100g"},
+        {"itemId": 29104, "name": "Silver War Talbuk", "source": "reputation", "faction": "Horde", "requirements": "Exalted with Mag'har, 100g"},
+        {"itemId": 29105, "name": "Tan War Talbuk", "source": "reputation", "faction": "Horde", "requirements": "Exalted with Mag'har, 100g"}
+      ],
+      "talbuksKurenai": [
+        {"itemId": 31830, "name": "Cobalt Riding Talbuk", "source": "reputation", "faction": "Alliance", "requirements": "Exalted with Kurenai, 80g"},
+        {"itemId": 31832, "name": "Silver Riding Talbuk", "source": "reputation", "faction": "Alliance", "requirements": "Exalted with Kurenai, 80g"},
+        {"itemId": 31834, "name": "Tan Riding Talbuk", "source": "reputation", "faction": "Alliance", "requirements": "Exalted with Kurenai, 80g"},
+        {"itemId": 31836, "name": "White Riding Talbuk", "source": "reputation", "faction": "Alliance", "requirements": "Exalted with Kurenai, 80g"},
+        {"itemId": 29227, "name": "Cobalt War Talbuk", "source": "reputation", "faction": "Alliance", "requirements": "Exalted with Kurenai, 100g"},
+        {"itemId": 29228, "name": "White War Talbuk", "source": "reputation", "faction": "Alliance", "requirements": "Exalted with Kurenai, 100g"},
+        {"itemId": 29229, "name": "Silver War Talbuk", "source": "reputation", "faction": "Alliance", "requirements": "Exalted with Kurenai, 100g"},
+        {"itemId": 29230, "name": "Tan War Talbuk", "source": "reputation", "faction": "Alliance", "requirements": "Exalted with Kurenai, 100g"}
+      ],
+      "halaa": [
+        {"itemId": 28915, "name": "Dark Riding Talbuk", "source": "pvp", "faction": "Both", "requirements": "70 Battle + 15 Research Tokens"},
+        {"itemId": 29228, "name": "Dark War Talbuk", "source": "pvp", "faction": "Both", "requirements": "100 Battle + 20 Research Tokens"}
+      ],
+      "raidDrops": [
+        {"itemId": 30480, "name": "Fiery Warhorse's Reins", "source": "drop", "faction": "Both", "requirements": "Attumen in Karazhan, ~1% drop"},
+        {"itemId": 33809, "name": "Amani War Bear", "source": "drop", "faction": "Both", "requirements": "ZA timed run - rescue all 4 prisoners"},
+        {"itemId": 35513, "name": "Swift White Hawkstrider", "source": "drop", "faction": "Both", "requirements": "Kael'thas in Heroic MGT, ~4% drop"}
+      ],
+      "worldEvents": [
+        {"itemId": 33977, "name": "Swift Brewfest Ram", "source": "world_event", "faction": "Both", "requirements": "Brewfest - Coren Direbrew or tokens"},
+        {"itemId": 37828, "name": "Great Brewfest Kodo", "source": "world_event", "faction": "Both", "requirements": "Brewfest - Coren Direbrew, ~2% drop"},
+        {"itemId": 37012, "name": "Headless Horseman's Mount", "source": "world_event", "faction": "Both", "requirements": "Hallow's End - Headless Horseman, ~0.5% drop"}
+      ]
+    }
+  },
+  "tabards": {
+    "reputation": [
+      {"itemId": 31779, "name": "Aldor Tabard", "source": "reputation", "faction": "Both", "requirements": "Exalted with The Aldor"},
+      {"itemId": 31780, "name": "Scryers Tabard", "source": "reputation", "faction": "Both", "requirements": "Exalted with The Scryers"},
+      {"itemId": 31804, "name": "Cenarion Expedition Tabard", "source": "reputation", "faction": "Both", "requirements": "Exalted with Cenarion Expedition"},
+      {"itemId": 31776, "name": "Consortium Tabard", "source": "reputation", "faction": "Both", "requirements": "Exalted with The Consortium"},
+      {"itemId": 31777, "name": "Keepers of Time Tabard", "source": "reputation", "faction": "Both", "requirements": "Exalted with Keepers of Time"},
+      {"itemId": 31778, "name": "Lower City Tabard", "source": "reputation", "faction": "Both", "requirements": "Exalted with Lower City"},
+      {"itemId": 31781, "name": "Sha'tar Tabard", "source": "reputation", "faction": "Both", "requirements": "Exalted with The Sha'tar"},
+      {"itemId": 32828, "name": "Ogri'la Tabard", "source": "reputation", "faction": "Both", "requirements": "Exalted with Ogri'la"},
+      {"itemId": 32445, "name": "Skyguard Tabard", "source": "reputation", "faction": "Both", "requirements": "Exalted with Sha'tari Skyguard"},
+      {"itemId": 35221, "name": "Tabard of the Shattered Sun", "source": "reputation", "faction": "Both", "requirements": "Exalted with Shattered Sun Offensive"}
+    ],
+    "pvp": [
+      {"itemId": 15196, "name": "Private's Tabard", "source": "pvp", "faction": "Alliance", "requirements": "Private rank or higher"},
+      {"itemId": 15197, "name": "Scout's Tabard", "source": "pvp", "faction": "Horde", "requirements": "Scout rank or higher"},
+      {"itemId": 28788, "name": "Tabard of the Protector", "source": "world_event", "faction": "Both", "requirements": "Dark Portal Opens event (no longer available)"},
+      {"itemId": 31405, "name": "Tabard of Fury", "source": "pvp", "faction": "Both", "requirements": "Arena Season 1 rewards"},
+      {"itemId": 31404, "name": "Green Trophy Tabard of the Illidari", "source": "pvp", "faction": "Both", "requirements": "Arena Season 1"},
+      {"itemId": 31408, "name": "Purple Trophy Tabard of the Illidari", "source": "pvp", "faction": "Both", "requirements": "Arena Season 1"}
+    ],
+    "other": [
+      {"itemId": 5976, "name": "Guild Tabard", "source": "guild", "faction": "Both", "requirements": "Design at Guild Tabard vendor, 1g"},
+      {"itemId": 24344, "name": "Tabard of the Argent Dawn", "source": "quest", "faction": "Both", "requirements": "Naxxramas attunement (Classic)"},
+      {"itemId": 23709, "name": "Tabard of the Scarlet Crusade", "source": "drop", "faction": "Both", "requirements": "Scarlet Trainee in Scarlet Monastery, ~0.1% drop"},
+      {"itemId": 19031, "name": "Frostwolf Battle Tabard", "source": "reputation", "faction": "Horde", "requirements": "Exalted with Frostwolf Clan"},
+      {"itemId": 19032, "name": "Stormpike Battle Tabard", "source": "reputation", "faction": "Alliance", "requirements": "Exalted with Stormpike Guard"},
+      {"itemId": 35280, "name": "Tabard of Summer Flames", "source": "world_event", "faction": "Both", "requirements": "Midsummer Fire Festival"},
+      {"itemId": 35279, "name": "Tabard of Summer Skies", "source": "world_event", "faction": "Both", "requirements": "Midsummer Fire Festival"}
+    ]
+  },
+  "vanityPets": {
+    "vendor": [
+      {"itemId": 29364, "name": "Brown Rabbit Crate", "source": "vendor", "zone": "Netherstorm", "requirements": "Dealer Rashaad in Stormspire, 10g"},
+      {"itemId": 29901, "name": "Blue Dragonhawk Hatchling", "source": "vendor", "zone": "Eversong Woods", "requirements": "Jilanne in Fairbreeze Village, 10g", "faction": "Horde"},
+      {"itemId": 29902, "name": "Golden Dragonhawk Hatchling", "source": "vendor", "zone": "Eversong Woods", "requirements": "Jilanne in Fairbreeze Village, 10g", "faction": "Horde"},
+      {"itemId": 29903, "name": "Red Dragonhawk Hatchling", "source": "vendor", "zone": "Eversong Woods", "requirements": "Jilanne in Fairbreeze Village, 10g", "faction": "Horde"},
+      {"itemId": 29904, "name": "Silver Dragonhawk Hatchling", "source": "vendor", "zone": "Eversong Woods", "requirements": "Jilanne in Fairbreeze Village, 10g", "faction": "Horde"},
+      {"itemId": 29958, "name": "Blue Moth Egg", "source": "vendor", "zone": "The Exodar", "requirements": "Sixx in The Exodar, 10g", "faction": "Alliance"},
+      {"itemId": 29960, "name": "White Moth Egg", "source": "vendor", "zone": "The Exodar", "requirements": "Sixx in The Exodar, 10g", "faction": "Alliance"},
+      {"itemId": 29901, "name": "Yellow Moth Egg", "source": "vendor", "zone": "The Exodar", "requirements": "Sixx in The Exodar, 10g", "faction": "Alliance"},
+      {"itemId": 29363, "name": "Mana Wyrmling", "source": "vendor", "zone": "Netherstorm", "requirements": "Dealer Rashaad in Stormspire, 40g"},
+      {"itemId": 29908, "name": "Red Moth Egg", "source": "vendor", "zone": "Netherstorm", "requirements": "Dealer Rashaad in Stormspire, 10g"}
+    ],
+    "drops": [
+      {"itemId": 25535, "name": "Netherwhelp's Collar", "source": "promo", "zone": "Collector's Edition", "requirements": "TBC Collector's Edition"},
+      {"itemId": 32617, "name": "Miniwing", "source": "quest", "zone": "Terokkar Forest", "requirements": "Quest: Skywing"},
+      {"itemId": 34478, "name": "Tiny Sporebat", "source": "reputation", "zone": "Zangarmarsh", "requirements": "Exalted with Sporeggar, 30 Glowcaps"},
+      {"itemId": 33993, "name": "Mojo", "source": "drop", "zone": "Zul'Aman", "requirements": "Kiss a Frog in ZA, 100% if kissed"},
+      {"itemId": 35504, "name": "Phoenix Hatchling", "source": "drop", "zone": "Magisters' Terrace", "requirements": "Kael'thas in Heroic MGT, ~8% drop"},
+      {"itemId": 33818, "name": "Rocket Chicken", "source": "tcg", "zone": "Trading Card Game", "requirements": "Fires of Outland TCG loot card"},
+      {"itemId": 34492, "name": "Rocket Bot", "source": "tcg", "zone": "Trading Card Game", "requirements": "March of the Legion TCG loot card"},
+      {"itemId": 32588, "name": "Willy's Portable Howitzer", "source": "quest", "zone": "Netherstorm", "requirements": "Quest: The Smallest Creatures"},
+      {"itemId": 31760, "name": "Miniwing", "source": "quest", "zone": "Terokkar Forest", "requirements": "Quest: Skywing"}
+    ],
+    "engineering": [
+      {"itemId": 21277, "name": "Tranquil Mechanical Yeti", "source": "profession", "zone": "Winterspring", "requirements": "Engineering (250), Schematic from Everlook"},
+      {"itemId": 11826, "name": "Lil' Smoky", "source": "profession", "zone": "Gnomeregan", "requirements": "Engineering (205), Gnomish Engineering"},
+      {"itemId": 11825, "name": "Pet Bombling", "source": "profession", "zone": "Gnomeregan", "requirements": "Engineering (205), Goblin Engineering"}
+    ],
+    "worldEvents": [
+      {"itemId": 33154, "name": "Sinister Squashling", "source": "world_event", "zone": "Hallow's End", "requirements": "Headless Horseman in SM, ~3% drop"},
+      {"itemId": 32233, "name": "Wolpertinger's Tankard", "source": "world_event", "zone": "Brewfest", "requirements": "Brewfest quest reward"},
+      {"itemId": 32622, "name": "Pint-Sized Pink Pachyderm", "source": "world_event", "zone": "Brewfest", "requirements": "100 Brewfest Prize Tokens"},
+      {"itemId": 33292, "name": "Toothy's Bucket", "source": "fishing", "zone": "Terokkar Forest", "requirements": "Crocolisk in the City daily fishing quest"},
+      {"itemId": 33293, "name": "Muckbreath's Bucket", "source": "fishing", "zone": "Terokkar Forest", "requirements": "Crocolisk in the City daily fishing quest"},
+      {"itemId": 33294, "name": "Snarly's Bucket", "source": "fishing", "zone": "Terokkar Forest", "requirements": "Crocolisk in the City daily fishing quest"},
+      {"itemId": 35350, "name": "Chuck's Bucket", "source": "fishing", "zone": "Terokkar Forest", "requirements": "Crocolisk in the City daily fishing quest"}
+    ]
+  },
+  "rareSpawns": {
+    "hellfire": [
+      {"npcId": 18678, "name": "Fulgorge", "zone": "Hellfire Peninsula", "drops": "Fulgorge's Heart (quest item)", "coords": "Roams eastern Hellfire"},
+      {"npcId": 18677, "name": "Mekthorg the Wild", "zone": "Hellfire Peninsula", "drops": "Green BoE gear", "coords": "Eastern Hellfire near fel orcs"},
+      {"npcId": 18679, "name": "Vorakem Doomspeaker", "zone": "Hellfire Peninsula", "drops": "Doomsayer's Cloth", "coords": "Pools of Aggonar area"}
+    ],
+    "zangarmarsh": [
+      {"npcId": 18680, "name": "Marticar", "zone": "Zangarmarsh", "drops": "Green BoE gear", "coords": "The Dead Mire"},
+      {"npcId": 18681, "name": "Coilfang Emissary", "zone": "Zangarmarsh", "drops": "Green BoE gear", "coords": "Near Coilfang Reservoir"},
+      {"npcId": 18682, "name": "Bog Lurker", "zone": "Zangarmarsh", "drops": "Green BoE gear", "coords": "Marshlight Lake"}
+    ],
+    "terokkar": [
+      {"npcId": 21724, "name": "Hawkbane", "zone": "Terokkar Forest", "drops": "Hawkbane's Scimitar", "coords": "Bone Wastes"},
+      {"npcId": 22060, "name": "Okrek", "zone": "Terokkar Forest", "drops": "Okrek's Head (quest)", "coords": "Bone Wastes"},
+      {"npcId": 18683, "name": "Crippler", "zone": "Terokkar Forest", "drops": "Green BoE gear", "coords": "Near Auchindoun"},
+      {"npcId": 18684, "name": "Doomsayer Jurim", "zone": "Terokkar Forest", "drops": "Green BoE gear", "coords": "Bone Wastes"}
+    ],
+    "nagrand": [
+      {"npcId": 18685, "name": "Goretooth", "zone": "Nagrand", "drops": "Green BoE gear", "coords": "Roams Nagrand"},
+      {"npcId": 18686, "name": "Voidhunter Yar", "zone": "Nagrand", "drops": "Green BoE gear", "coords": "Oshu'gun area"},
+      {"npcId": 18687, "name": "Bro'Gaz the Clanless", "zone": "Nagrand", "drops": "Bro'Gaz's Axe", "coords": "Burning Blade Ruins"}
+    ],
+    "bladesEdge": [
+      {"npcId": 18689, "name": "Morcrush", "zone": "Blade's Edge Mountains", "drops": "Green BoE gear", "coords": "Near Ogri'la"},
+      {"npcId": 18690, "name": "Speaker Mar'grom", "zone": "Blade's Edge Mountains", "drops": "Green BoE gear", "coords": "Near Sylvanaar"},
+      {"npcId": 18692, "name": "Hemathion", "zone": "Blade's Edge Mountains", "drops": "Green BoE gear", "coords": "Bash'ir Landing"}
+    ],
+    "netherstorm": [
+      {"npcId": 18694, "name": "Chief Engineer Lorthander", "zone": "Netherstorm", "drops": "Green BoE gear", "coords": "Manaforge Ultris"},
+      {"npcId": 18695, "name": "Ambassador Jerrikar", "zone": "Netherstorm", "drops": "Green BoE gear", "coords": "Ruins of Farahlon"},
+      {"npcId": 18697, "name": "Ever-Core the Punisher", "zone": "Netherstorm", "drops": "Green BoE gear", "coords": "Eco-Dome Midrealm"}
+    ],
+    "shadowmoon": [
+      {"npcId": 18693, "name": "Collidus the Warp-Watcher", "zone": "Shadowmoon Valley", "drops": "Green BoE gear", "coords": "Near Netherwing Ledge"},
+      {"npcId": 18696, "name": "Kraator", "zone": "Shadowmoon Valley", "drops": "Green BoE gear", "coords": "Near Legion Hold"},
+      {"npcId": 18698, "name": "Gongorek", "zone": "Shadowmoon Valley", "drops": "Green BoE gear", "coords": "Near Illidari Point"}
+    ]
+  },
+  "toys": {
+    "transformation": [
+      {"itemId": 32542, "name": "Hallowed Helm", "source": "world_event", "effect": "Puts a pumpkin on your head", "zone": "Hallow's End"},
+      {"itemId": 33223, "name": "Fishing Chair", "source": "fishing", "effect": "Sit in a fishing chair", "zone": "Terokkar Forest daily"},
+      {"itemId": 34499, "name": "Paper Flying Machine Kit", "source": "vendor", "effect": "Throw a paper airplane at a target", "zone": "Dalaran"},
+      {"itemId": 32566, "name": "Picnic Basket", "source": "world_event", "effect": "Spawns a romantic picnic", "zone": "Love is in the Air"},
+      {"itemId": 34686, "name": "Brazier of Dancing Flames", "source": "world_event", "effect": "Spawns a fire to dance on", "zone": "Midsummer Fire Festival"}
+    ],
+    "party": [
+      {"itemId": 32542, "name": "Heavy Leather Ball", "source": "crafted", "effect": "Throwable ball for playing catch", "zone": "Leatherworking"},
+      {"itemId": 38301, "name": "D.I.S.C.O.", "source": "drop", "effect": "Spawns a disco ball that makes players dance", "zone": "Sunwell Plateau trash"},
+      {"itemId": 33927, "name": "Brewfest Pony Keg", "source": "world_event", "effect": "Spawns a keg that gives Brewfest drinks", "zone": "Brewfest, 100 tokens"}
+    ],
+    "engineering": [
+      {"itemId": 18984, "name": "Dimensional Ripper - Everlook", "source": "profession", "effect": "Teleport to Everlook (may malfunction)", "zone": "Engineering (260), Goblin"},
+      {"itemId": 18986, "name": "Ultrasafe Transporter: Gadgetzan", "source": "profession", "effect": "Teleport to Gadgetzan (may malfunction)", "zone": "Engineering (260), Gnomish"},
+      {"itemId": 30544, "name": "Dimensional Ripper - Area 52", "source": "profession", "effect": "Teleport to Area 52 (may malfunction)", "zone": "Engineering (350), Goblin"},
+      {"itemId": 30542, "name": "Ultrasafe Transporter: Toshley's Station", "source": "profession", "effect": "Teleport to Toshley's (may malfunction)", "zone": "Engineering (350), Gnomish"},
+      {"itemId": 23821, "name": "Zapthrottle Mote Extractor", "source": "profession", "effect": "Extract motes from clouds", "zone": "Engineering (305)"},
+      {"itemId": 32542, "name": "World Enlarger", "source": "profession", "effect": "Makes you tiny for 5 min", "zone": "Engineering (350), Gnomish"}
+    ],
+    "misc": [
+      {"itemId": 32782, "name": "Time-Lost Figurine", "source": "drop", "effect": "Turns you into an Arakkoa for 5 min", "zone": "Terokkar Forest - rare drops"},
+      {"itemId": 35227, "name": "Goblin Gumbo Kettle", "source": "vendor", "effect": "Spawns a kettle giving Goblin Gumbo", "zone": "Shattered Sun Quartermaster"},
+      {"itemId": 32567, "name": "Crashin' Thrashin' Robot", "source": "world_event", "effect": "Spawns a robot to fight other robots", "zone": "Winter Veil gift"},
+      {"itemId": 34480, "name": "Romantic Picnic Basket", "source": "world_event", "effect": "Spawns a picnic for two", "zone": "Love is in the Air"},
+      {"itemId": 33219, "name": "Goblin Gumbo Kettle", "source": "reputation", "effect": "Spawns a kettle giving Goblin Gumbo", "zone": "Shattered Sun Offensive, Revered"}
+    ]
+  }
+}
