@@ -953,11 +953,11 @@ function renderRaidsContent() {
     ).join('');
     let html = `
         <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">query: tbc_raids --phase=${currentRaidPhase} --raid=${currentRaid}</div>
-        <h2 class="text-terminal-accent text-lg mb-4 uppercase tracking-wide md:text-base md:mb-3 md:tracking-wider sm:text-sm sm:tracking-tight">[ TBC RAID GUIDES ]</h2>
+        <h2 class="text-terminal-accent text-lg mb-4 uppercase tracking-wide md:text-base md:mb-3 md:tracking-wider sm:text-sm sm:tracking-tight">🏰 [ TBC RAID GUIDES ]</h2>
         <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">Boss strategies and ability breakdowns for all TBC raids</p>
-        <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ PHASE SELECTION ]</h3>
+        <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">📅 [ PHASE SELECTION ]</h3>
         <div class="flex flex-wrap gap-2 mb-4 md:gap-1.5 md:mb-3 sm:mb-2">${phaseButtons}</div>
-        <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ RAIDS - ${phaseData.name.toUpperCase()} ]</h3>
+        <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">🏰 [ RAIDS - ${phaseData.name.toUpperCase()} ]</h3>
         <div class="flex flex-wrap gap-2 mb-6 md:gap-1.5 md:mb-4 sm:mb-3">${raidButtons}</div>
     `;
     if (raidData) {
@@ -1213,9 +1213,9 @@ function renderCollectionsContent(category = 'mounts') {
 
     const html = `
         <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">query: tbc_collections --category=${category}</div>
-        <h2 class="text-terminal-accent text-lg mb-4 uppercase tracking-wide md:text-base md:mb-3 sm:text-sm">[ TBC COLLECTIONS ]</h2>
+        <h2 class="text-terminal-accent text-lg mb-4 uppercase tracking-wide md:text-base md:mb-3 sm:text-sm">📦 [ TBC COLLECTIONS ]</h2>
         <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">Collectible items available in The Burning Crusade</p>
-        <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ CATEGORY ]</h3>
+        <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">📁 [ CATEGORY ]</h3>
         <div class="flex flex-wrap gap-2 mb-6 md:gap-1.5 md:mb-4 sm:mb-3">${categoryButtons}</div>
         ${contentHtml}
     `;
@@ -1488,10 +1488,10 @@ function renderAttunementsContent(attunementKey = 'karazhan') {
 
     const html = `
         <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">query: tbc_attunements --raid=${attunementKey}</div>
-        <h2 class="text-terminal-accent text-lg mb-4 uppercase tracking-wide md:text-base md:mb-3 sm:text-sm">[ TBC ATTUNEMENTS ]</h2>
+        <h2 class="text-terminal-accent text-lg mb-4 uppercase tracking-wide md:text-base md:mb-3 sm:text-sm">🔑 [ TBC ATTUNEMENTS ]</h2>
         <p class="text-terminal-dim text-xs mb-2">Track your raid attunement progress. Data is saved in your browser.</p>
         <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3 italic">Note: Most attunements were removed in later patches but remain for achievements/titles.</p>
-        <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ SELECT ATTUNEMENT ]</h3>
+        <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">🔑 [ SELECT ATTUNEMENT ]</h3>
         <div class="flex flex-wrap gap-2 mb-6 md:gap-1.5 md:mb-4 sm:mb-3">${attunementButtons}</div>
         ${contentHtml}
         <div class="mt-6 pt-4 border-t border-terminal-dim border-opacity-30">
@@ -1674,13 +1674,14 @@ function renderRecipesContent() {
     };
     const profession = recipesData[currentProfession];
     if (!profession) return;
+    const profEmojis = {blacksmithing: '⚒️', leatherworking: '🥾', tailoring: '🧵', jewelcrafting: '💎', engineering: '⚙️', alchemy: '⚗️', enchanting: '✨'};
+    const currentProfEmoji = profEmojis[currentProfession] || '📜';
     let html = `
         <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">query: profession_recipes --profession=${currentProfession}</div>
-        <h2 class="text-terminal-accent text-lg mb-4 uppercase tracking-wide md:text-base md:mb-3 md:tracking-wider sm:text-sm sm:tracking-tight">[ ${profession.title.toUpperCase()} // TBC ]</h2>
+        <h2 class="text-terminal-accent text-lg mb-4 uppercase tracking-wide md:text-base md:mb-3 md:tracking-wider sm:text-sm sm:tracking-tight">${currentProfEmoji} [ ${profession.title.toUpperCase()} // TBC ]</h2>
         <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">Essential ${profession.title} recipes to prioritize for raiding and gold making</p>
         <div class="flex flex-wrap gap-2 mb-6 md:gap-1.5 md:mb-4 sm:mb-3">
             ${Object.keys(recipesData).map(prof => {
-                const profEmojis = {blacksmithing: '⚒️', leatherworking: '🥾', tailoring: '🧵', jewelcrafting: '💎', engineering: '⚙️', alchemy: '⚗️', enchanting: '✨'};
                 return `<a href="#recipes/${prof}" class="profession-btn ${prof === currentProfession ? 'bg-terminal-text text-terminal-bg' : 'bg-transparent'} border border-terminal-text text-terminal-text px-4 py-2.5 cursor-pointer font-mono text-xs transition-all select-none hover:bg-terminal-text hover:text-terminal-bg no-underline md:px-3.5 md:py-2.5 md:text-[11px] md:min-h-[48px] md:inline-flex md:items-center md:justify-center sm:px-3 sm:py-2 sm:text-[10px] sm:min-h-[44px]" data-profession="${prof}">${profEmojis[prof] || ''} ${recipesData[prof].title}</a>`;
             }).join('')}
         </div>
@@ -1795,7 +1796,7 @@ function renderClassContent(className) {
             return buildHtml;
         }).join('\n');
         talentsHtml = `
-            <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ TALENT BUILDS ]</h3>
+            <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">🌳 [ TALENT BUILDS ]</h3>
             <div class="talent-tree bg-terminal-bg/30 border border-terminal-dim p-4 my-4 font-mono text-xs leading-relaxed md:text-[11px] md:p-3 sm:text-[10px] sm:p-2.5" style="white-space: pre-wrap;">${buildsList}</div>
         `;
     }
@@ -1804,7 +1805,7 @@ function renderClassContent(className) {
     if (specData.gems && specData.gems.length > 0) {
         const gemsList = specData.gems.map(gem => generateItemCell(gem)).join(' ');
         gemsHtml = `
-            <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ RECOMMENDED GEMS ]</h3>
+            <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">💎 [ RECOMMENDED GEMS ]</h3>
             <div class="bg-terminal-bg/30 border border-terminal-dim p-4 my-4 font-mono text-xs leading-relaxed md:text-[11px] md:p-3 sm:text-[10px] sm:p-2.5">${gemsList}</div>
         `;
     }
@@ -1820,7 +1821,7 @@ function renderClassContent(className) {
                 </div>`;
         }).join('');
         macrosHtml = `
-            <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ USEFUL MACROS ]</h3>
+            <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">⌨️ [ USEFUL MACROS ]</h3>
             <div class="border border-terminal-dim p-4 my-4 md:p-3 sm:p-2.5">${macrosList}</div>
         `;
     }
@@ -1888,7 +1889,7 @@ function renderClassContent(className) {
                 <div class="bg-terminal-bg/50 border border-terminal-dim p-3 text-xs text-terminal-dim md:text-[11px] sm:text-[10px]">${rot.notes}</div>`;
         }
         rotationHtml = `
-            <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ ROTATION ]</h3>
+            <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">⚔️ [ ROTATION ]</h3>
             <div class="border border-terminal-dim p-4 my-4 md:p-3 sm:p-2.5">
                 ${rot.description ? `<p class="text-terminal-dim text-xs mb-3 md:text-[11px] sm:text-[10px]">${rot.description}</p>` : ''}
                 ${priorityHtml}
@@ -1906,15 +1907,15 @@ function renderClassContent(className) {
         <div class="mb-8 pb-5 border-b border-dashed border-terminal-dim last:border-b-0 md:mb-6 md:pb-4 sm:pb-3">
             <h2 class="text-terminal-accent text-lg mb-4 uppercase tracking-wide md:text-base md:mb-3 md:tracking-wider sm:text-sm sm:tracking-tight">[ ${data.title} // ${specData.name.toUpperCase()} PVE ]</h2>
             <p class="text-terminal-dim text-xs mb-4 md:text-[11px] sm:text-[10px]">Armor: ${data.armorType || 'Unknown'}</p>
-            <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ SPEC SELECTION ]</h3>
+            <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">🎯 [ SPEC SELECTION ]</h3>
             <div class="my-2.5">${specs}</div>
-            <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ STAT PRIORITY ]</h3>
+            <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">📊 [ STAT PRIORITY ]</h3>
             <div class="my-2.5 text-terminal-text text-xs md:text-[11px] sm:text-[10px]">${specData.statPriority ? specData.statPriority.map((stat, i) => `<span class="${i === 0 ? 'text-terminal-accent' : ''}">${stat}</span>`).join(' > ') : '<span class="text-terminal-dim">Not specified</span>'}</div>
-            <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ RECOMMENDED PROFESSIONS ]</h3>
+            <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">🔧 [ RECOMMENDED PROFESSIONS ]</h3>
             <div class="my-2.5">${data.professions ? data.professions.map(p => `[ <a href="https://tbc.wowhead.com/skill=${p.skillId}" data-wowhead="skill=${p.skillId}" class="text-terminal-text hover:text-terminal-accent">${p.name}</a> ]`).join(' ') : '<span class="text-terminal-dim">None specified</span>'}</div>
-            <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ PHASE SELECTOR ]</h3>
+            <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">📅 [ PHASE SELECTOR ]</h3>
             <div class="flex flex-wrap gap-2.5 my-4 md:gap-2 md:my-3">${phaseButtons}</div>
-            <h3 id="bis-header" class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ BEST IN SLOT - ${phaseData.name} ]</h3>
+            <h3 id="bis-header" class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">👑 [ BEST IN SLOT - ${phaseData.name} ]</h3>
             <div class="overflow-x-auto -mx-5 px-5 md:-mx-4 md:px-4 sm:-mx-3 sm:px-3">
                 <table class="w-full border-collapse my-4 text-[13px] min-w-[600px] md:my-3.5 md:text-[11px] sm:my-3 sm:text-[10px] sm:min-w-[500px]">
                     <thead><tr><th class="bg-terminal-dim text-terminal-bg p-2.5 text-justify font-semibold uppercase text-[11px] tracking-widest md:p-2 md:text-[10px] sm:p-1.5 sm:text-[9px] sm:tracking-wide">SLOT</th><th class="bg-terminal-dim text-terminal-bg p-2.5 text-justify font-semibold uppercase text-[11px] tracking-widest md:p-2 md:text-[10px] sm:p-1.5 sm:text-[9px] sm:tracking-wide">ITEM</th><th class="bg-terminal-dim text-terminal-bg p-2.5 text-justify font-semibold uppercase text-[11px] tracking-widest md:p-2 md:text-[10px] sm:p-1.5 sm:text-[9px] sm:tracking-wide">ENCHANT</th><th class="bg-terminal-dim text-terminal-bg p-2.5 text-justify font-semibold uppercase text-[11px] tracking-widest md:p-2 md:text-[10px] sm:p-1.5 sm:text-[9px] sm:tracking-wide">SOURCE</th></tr></thead>
@@ -3012,24 +3013,24 @@ function renderPreRaidChecker() {
 
     const html = `
         <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">./gear-checker --class=${preRaidClass} --spec=${preRaidSpecName} --phase=${selectedPhase}</div>
-        <h2 class="text-terminal-accent text-lg mb-2 uppercase tracking-wide md:text-base sm:text-sm">[ GEAR CHECKER ]</h2>
+        <h2 class="text-terminal-accent text-lg mb-2 uppercase tracking-wide md:text-base sm:text-sm">⚖️ [ GEAR CHECKER ]</h2>
         <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">Paste your gear list to compare against BiS for any raid tier</p>
 
         <div class="grid grid-cols-3 gap-4 mb-6 md:grid-cols-1">
             <div>
-                <label class="text-terminal-dim text-xs block mb-2">CLASS</label>
+                <label class="text-terminal-dim text-xs block mb-2">🎭 CLASS</label>
                 <select id="raidready-class" class="w-full bg-terminal-bg border border-terminal-text text-terminal-text px-3 py-2 text-xs font-mono cursor-pointer">
                     ${classes.map(c => `<option value="${c}" ${c === preRaidClass ? 'selected' : ''}>${classData[c]?.title || c}</option>`).join('')}
                 </select>
             </div>
             <div>
-                <label class="text-terminal-dim text-xs block mb-2">SPEC</label>
+                <label class="text-terminal-dim text-xs block mb-2">🎯 SPEC</label>
                 <select id="raidready-spec" class="w-full bg-terminal-bg border border-terminal-text text-terminal-text px-3 py-2 text-xs font-mono cursor-pointer">
                     ${specs.map(s => `<option value="${s}" ${s === preRaidSpecName ? 'selected' : ''}>${classData[preRaidClass]?.specs[s]?.title || s}</option>`).join('')}
                 </select>
             </div>
             <div>
-                <label class="text-terminal-dim text-xs block mb-2">READY FOR</label>
+                <label class="text-terminal-dim text-xs block mb-2">🏰 READY FOR</label>
                 <select id="phase-select" class="w-full bg-terminal-bg border border-terminal-accent text-terminal-accent px-3 py-2 text-xs font-mono cursor-pointer">
                     ${PHASES.map(p => `<option value="${p.key}" ${p.key === selectedPhase ? 'selected' : ''}>${p.name}</option>`).join('')}
                 </select>
@@ -3037,7 +3038,7 @@ function renderPreRaidChecker() {
         </div>
 
         <div class="mb-4">
-            <label class="text-terminal-dim text-xs block mb-2">PASTE YOUR GEAR <span class="text-terminal-accent">(one item per line)</span></label>
+            <label class="text-terminal-dim text-xs block mb-2">📋 PASTE YOUR GEAR <span class="text-terminal-accent">(one item per line)</span></label>
             <textarea id="gear-input" class="w-full bg-terminal-bg border border-terminal-text text-terminal-text px-3 py-2 text-xs font-mono h-40 resize-y" placeholder="Overlord's Helmet of Second Sight
 Choker of Vile Intent
 Wastewalker Shoulderpads
@@ -3045,7 +3046,7 @@ Wastewalker Shoulderpads
         </div>
 
         <div class="mb-4">
-            <label class="text-terminal-dim text-xs block mb-2">RECOGNIZED ITEMS</label>
+            <label class="text-terminal-dim text-xs block mb-2">✅ RECOGNIZED ITEMS</label>
             <div id="gear-preview" class="border border-terminal-dim/50 p-3 min-h-[60px] text-xs max-h-60 overflow-y-auto">
                 <span class="text-terminal-dim">Items will appear here as you type...</span>
             </div>
@@ -3060,7 +3061,7 @@ Wastewalker Shoulderpads
 
         <div class="grid grid-cols-2 gap-4 mb-6 md:grid-cols-1">
             <div class="border border-terminal-dim/50 p-4">
-                <h4 class="text-terminal-text text-xs uppercase mb-3">// Total Gear Stats</h4>
+                <h4 class="text-terminal-text text-xs uppercase mb-3">📊 // Total Gear Stats</h4>
                 <div id="total-stats">
                     <span class="text-terminal-dim text-xs">Click "Calculate Stats" to fetch item stats from Wowhead</span>
                 </div>
@@ -3152,13 +3153,13 @@ function renderApiDocs() {
     if (apiLink) apiLink.classList.add('active');
     const html = `
         <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">man tbc-api</div>
-        <h2 class="text-terminal-accent text-lg mb-4 uppercase tracking-wide md:text-base md:mb-3 sm:text-sm">[ TBC.TXT API DOCUMENTATION ]</h2>
+        <h2 class="text-terminal-accent text-lg mb-4 uppercase tracking-wide md:text-base md:mb-3 sm:text-sm">🔌 [ TBC.TXT API DOCUMENTATION ]</h2>
         <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">REST API for accessing TBC PvE data in your own applications</p>
         <div class="border border-terminal-dim p-4 mb-6 md:p-3 md:mb-4 sm:p-2.5 sm:mb-3">
             <h3 class="text-terminal-accent text-sm mb-3 md:text-xs">// Base URL</h3>
             <pre class="bg-terminal-bg/50 p-3 text-xs text-terminal-text overflow-x-auto md:text-[11px] sm:text-[10px]"><code>https://api.tbctxt.io</code></pre>
         </div>
-        <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ ENDPOINTS ]</h3>
+        <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">📡 [ ENDPOINTS ]</h3>
         <div class="overflow-x-auto -mx-5 px-5 md:-mx-4 md:px-4 sm:-mx-3 sm:px-3">
             <table class="w-full border-collapse text-[13px] min-w-[600px] md:text-[11px] sm:text-[10px]">
                 <thead>
@@ -3182,7 +3183,7 @@ function renderApiDocs() {
                 </tbody>
             </table>
         </div>
-        <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ EXAMPLE USAGE ]</h3>
+        <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">📝 [ EXAMPLE USAGE ]</h3>
         <div class="border border-terminal-dim p-4 mb-4 md:p-3 sm:p-2.5">
             <h4 class="text-terminal-accent text-xs mb-2">// JavaScript</h4>
             <pre class="bg-terminal-bg/50 p-3 text-xs text-terminal-dim overflow-x-auto md:text-[11px] sm:text-[10px]"><code>const response = await fetch('https://api.tbctxt.io/api/classes/warrior/fury');
@@ -3190,7 +3191,7 @@ const fury = await response.json();
 console.log(fury.rotation);      // Rotation priority
 console.log(fury.phases[1].bis); // Phase 1 BiS gear</code></pre>
         </div>
-        <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ DATA FILES ]</h3>
+        <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">📂 [ DATA FILES ]</h3>
         <p class="text-terminal-dim text-xs mb-3 md:text-[11px] sm:text-[10px]">Raw JSON files available in <code class="text-terminal-accent">/data/</code>:</p>
         <ul class="text-terminal-dim text-xs list-none space-y-1 md:text-[11px] sm:text-[10px]">
             <li>• <code class="text-terminal-accent">classData.json</code> - All class/spec data (701 KB)</li>
