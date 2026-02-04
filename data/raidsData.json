@@ -798,247 +798,458 @@
         "size": 25,
         "location": "Coilfang Reservoir, Zangarmarsh",
         "attunement": "The Cudgel of Kar'desh (requires killing Nightbane in Karazhan and Gruul)",
-        "description": "Lady Vashj's underwater stronghold. Features 6 bosses including the challenging Vashj encounter. Heavy nature resistance is needed for some fights.",
+        "description": "Lady Vashj's underwater stronghold beneath Zangarmarsh. This 25-player raid features 6 challenging bosses and introduces many complex mechanics that will test raid coordination. Heavy resistance gear is required for multiple encounters. Most guilds spend 2-3 months progressing through this instance.",
+        "recommendedComposition": {
+          "tanks": 4,
+          "healers": 7,
+          "dps": 14,
+          "notes": "Bring 2 Frost Resist tanks and 2 Nature Resist tanks for Hydross. A Warlock tank is mandatory for Leotheras. Multiple Mages help with add control on Vashj. Shamans are valuable for Heroism/Bloodlust timing."
+        },
+        "minimumGear": {
+          "tanks": "15,000+ health unbuffed, resistance sets for Hydross (365 Frost/Nature buffed)",
+          "healers": "1,400+ healing power, 9,000+ mana",
+          "dps": "Full Tier 4 or equivalent recommended"
+        },
         "tierTokens": "Tier 5 Gloves, Helm, and Legs tokens drop here",
         "bosses": [
           {
             "name": "Hydross the Unstable",
             "npcId": 21216,
             "difficulty": "Medium",
-            "description": "The first boss of SSC. Hydross alternates between Frost and Nature forms when pulled across the threshold. Requires two tanks with appropriate resistance gear.",
+            "description": "A water elemental that alternates between Frost and Nature forms based on position. Crossing the threshold (marked by banners) triggers a form change and spawns 4 elemental adds. This fight is entirely about controlled transitions and proper resistance gear - DPS is secondary to execution.",
+            "phaseBreakdown": [
+              "Frost Form: Hydross deals Frost damage and applies Mark of Hydross. Tank requires 365 Frost resistance (332 gear + buffs). Water Tomb stuns random players.",
+              "Nature Form: Hydross deals Nature damage and applies Mark of Corruption. Tank requires 365 Nature resistance. Vile Sludge reduces healing by 50%.",
+              "Transition: Crossing threshold spawns 4 Pure Spawn adds dealing 4-5k damage each. Aggro resets completely on Hydross."
+            ],
             "abilities": [
               {
                 "name": "Mark of Hydross",
                 "spellId": 38215,
-                "description": "Stacking debuff in Frost form, increases Frost damage taken by 10% per stack.",
-                "handling": "Tank swap at 4-6 stacks by pulling boss across threshold."
+                "description": "Applies every 15 seconds in Frost form. Each stack increases Frost damage taken by 10%. After 4 stacks, even resistance-geared tanks take massive damage.",
+                "handling": "Transition to Nature form before reaching 5-6 stacks. Stop all DPS at 3-4 stacks to prepare for transition. DoT classes must be especially careful."
               },
               {
                 "name": "Mark of Corruption",
                 "spellId": 38219,
-                "description": "Stacking debuff in Nature form, increases Nature damage taken by 10% per stack.",
-                "handling": "Tank swap at 4-6 stacks by pulling boss across threshold."
+                "description": "Applies every 15 seconds in Nature form. Each stack increases Nature damage taken by 10%. Generally less threatening than Frost marks.",
+                "handling": "Same as Mark of Hydross - transition around 4-5 stacks. Nature phase is considered slightly easier."
               },
               {
                 "name": "Water Tomb",
                 "spellId": 38235,
-                "description": "Encases random players in a water tomb, stunning them and dealing Frost damage.",
-                "handling": "Healers must top off tombed players quickly."
+                "description": "Encases a random player and nearby allies in a water tomb, stunning them for 5 seconds and dealing 900 Frost damage per second (4,500 total).",
+                "handling": "Spread out at least 6 yards to prevent chain-tombing. Healers must immediately heal tombed players - they'll drop to 50% health or lower."
               },
               {
                 "name": "Vile Sludge",
                 "spellId": 38246,
-                "description": "Reduces healing received by 50% in Nature form.",
-                "handling": "Dispel immediately, especially on tanks."
+                "description": "Coats a target in sludge, reducing damage and healing done by 50% and dealing 500 Nature damage every 3 seconds for 24 seconds.",
+                "handling": "Dispel immediately if on a healer or tank. Magic dispel only. If on DPS, can wait for a GCD but don't delay too long."
+              },
+              {
+                "name": "Purify Elemental",
+                "spellId": 36461,
+                "description": "Clears all threat when transitioning between forms. Hydross will attack whoever is closest after transition.",
+                "handling": "The new resistance tank must be in position and ready to immediately generate threat. All DPS must stop completely during transition."
               }
             ],
-            "strategy": "Position Hydross at the threshold between clean and corrupted water. When marks stack too high, pull him across to reset stacks and change forms. Each transition spawns adds that must be picked up by off-tanks. Frost resist tank for Frost form, Nature resist tank for Nature form.",
+            "strategy": "Position Hydross at the threshold (marked by banners on the floor). Frost resist tank pulls and tanks in clean water. At 4-5 stacks, all DPS stops and the Nature resist tank taunts Hydross across the threshold. Four adds spawn - off-tanks pick them up and raid AoEs them down quickly while staying on boss. Repeat this cycle, alternating forms every 4-5 marks. The fight is won by clean transitions with minimal raid damage. Enrage timer is 10 minutes - DPS is not the issue, execution is.",
+            "commonMistakes": [
+              "Tanks not having enough resistance (365 buffed required)",
+              "DPS not stopping before transitions, pulling Hydross across accidentally with DoTs",
+              "Raid members standing too close and getting chain-tombed",
+              "Not dispelling Vile Sludge on tanks",
+              "Adds running loose during transition and killing healers"
+            ],
             "lootHighlights": [
               "Hydross's Ring of Chaos",
-              "Scarab of Displacement"
+              "Scarab of Displacement",
+              "Wraps of Purification"
             ]
           },
           {
             "name": "The Lurker Below",
             "npcId": 21217,
             "difficulty": "Medium",
-            "description": "A giant fish that must be fished up from the pool. Raid stands on platforms around the pool, diving into water to avoid Spout.",
+            "description": "A colossal fish lurking beneath Serpentshrine Cavern's central pool. The Lurker must be fished up using 300+ fishing skill. The fight takes place on platforms surrounding a large pool - positioning and the Spout mechanic define this encounter. Learning to recognize and react to Spout is the key skill.",
+            "phaseBreakdown": [
+              "Phase 1 (Active): Lurker is targetable. Tank in pool, raid on platforms. Avoid Spout by submerging. Watch for Whirl and Geyser.",
+              "Phase 2 (Submerge): At 2 minutes, Lurker submerges. Adds spawn on platforms - 2 Guardians (tanked) and 6 Ambushers (killed fast). Get out of water!",
+              "Repeat: Lurker resurfaces, repeat Phase 1. This cycle continues until boss dies."
+            ],
             "abilities": [
               {
                 "name": "Spout",
                 "spellId": 37433,
-                "description": "Rotates in a circle, dealing massive damage and knockback to anyone hit.",
-                "handling": "Jump into the water when Spout starts. Submerge until it passes your platform."
+                "description": "The Lurker rotates 360 degrees while spewing a water jet. Anyone caught takes 4,500 Frost damage and is knocked back 100 yards (into the cavern walls = death). The rotation takes about 25 seconds to complete.",
+                "handling": "JUMP INTO THE WATER and SUBMERGE (swim down) when Spout starts. Stay underwater until the beam passes your position. You'll see the boss slowly rotating - only surface when the beam has gone past. Timing is everything. Watch for Lurker to stop attacking and rear back - this signals Spout is coming."
               },
               {
                 "name": "Whirl",
                 "spellId": 37363,
-                "description": "Knocks back all melee and deals Physical damage.",
-                "handling": "Melee should be prepared to reposition after each Whirl."
+                "description": "Knocks back all players within 15 yards, dealing 3,000-4,000 Physical damage and reducing threat by 50%. Used frequently during Phase 1.",
+                "handling": "Melee must constantly reposition after Whirl. Threat can be tricky - tanks should use high-threat abilities after each Whirl. Ranged should stay at max range to avoid being knocked into the water."
               },
               {
                 "name": "Geyser",
                 "spellId": 37478,
-                "description": "Water spout under a random player, launching them into the air.",
-                "handling": "Spread out on platforms to minimize splash damage."
+                "description": "Targets a random player and erupts a water geyser beneath them after 2 seconds, dealing 3,500-4,500 Frost damage to anyone within 10 yards and launching them into the air.",
+                "handling": "Spread out on platforms - at least 10 yards apart. When you see the geyser animation under you or nearby, move away immediately. If launched into air, try to land on a platform, not in the water during adds phase."
               },
               {
-                "name": "Submerge",
-                "spellId": 37433,
-                "description": "Lurker submerges and spawns adds on each platform.",
-                "handling": "Kill Ambushers fast, CC Guardians, prepare for Lurker to resurface."
+                "name": "Water Bolt",
+                "spellId": 37138,
+                "description": "Ranged attack dealing 5,500-6,500 Frost damage to a random target when no one is in melee range.",
+                "handling": "Keep the tank in melee range at all times. If the tank gets knocked back by Whirl, they must immediately swim back. Water Bolt spam will quickly kill healers and ranged."
+              },
+              {
+                "name": "Scalding Water",
+                "spellId": 37284,
+                "description": "The pool water deals 500 Fire damage per second to anyone swimming in it. During Submerge phase, the damage increases significantly.",
+                "handling": "Only enter water to avoid Spout, then get out immediately. During Submerge phase, DO NOT BE IN THE WATER - the damage ramps up and you will die. Get onto platforms before Lurker submerges."
+              },
+              {
+                "name": "Coilfang Guardian (Add)",
+                "spellId": 0,
+                "description": "Two Naga melee adds spawn on the inner platforms during Submerge. They hit hard and have significant health.",
+                "handling": "Tanks must be on platforms ready to pick these up. They can be crowd controlled (Polymorph, Hibernate) while DPS focuses on Ambushers first. Kill after Ambushers die."
+              },
+              {
+                "name": "Coilfang Ambusher (Add)",
+                "spellId": 0,
+                "description": "Six archer adds spawn on the outer platforms during Submerge. They Multi-Shot and deal moderate ranged damage.",
+                "handling": "KILL THESE FIRST. They have low health but their combined damage is dangerous. Ranged DPS should prioritize these immediately. Warlocks can Fear, Mages can Frost Nova. Get them down fast."
               }
             ],
-            "strategy": "Spread raid across platforms. When Spout begins, everyone jumps into water and submerges. During submerge phase, kill adds quickly. Tanks pick up Guardians, DPS burns Ambushers. Ranged should stay at max range to avoid Whirl.",
+            "strategy": "SETUP: Position tanks in the water near the boss, melee on the closest platform edge, ranged spread across other platforms. Assign tanks to specific platforms for add pickup. PHASE 1: Tank and spank. When Lurker rears back for Spout, EVERYONE jumps into water and submerges - surface only after beam passes. Tank swims back quickly after Whirl. SUBMERGE: Get out of the water immediately! Tanks pick up Guardians on inner platforms. DPS burns all 6 Ambushers first, then kills Guardians. When Lurker resurfaces, tank gets back in water, repeat. ENRAGE: 10 minutes. With good execution, you'll kill him in 6-7 minutes.",
+            "commonMistakes": [
+              "Not recognizing the Spout wind-up animation and getting knocked off the platforms",
+              "Staying in the water during Submerge phase and dying to Scalding Water",
+              "Not spreading on platforms, causing Geyser to hit multiple people",
+              "Tank not getting back to melee range after Whirl, causing Water Bolt spam",
+              "Killing Guardians before Ambushers, letting ranged add damage stack up"
+            ],
             "lootHighlights": [
+              "Glowing Breastplate of Truth",
               "Earring of Soulful Meditation",
-              "Mallet of the Tides"
+              "Mallet of the Tides",
+              "Cord of Screaming Terrors"
             ]
           },
           {
             "name": "Leotheras the Blind",
             "npcId": 21215,
             "difficulty": "Hard",
-            "description": "A Blood Elf demon hunter with two forms. Occasionally possesses raid members who must fight their inner demon.",
+            "description": "A Blood Elf demon hunter imprisoned by Lady Vashj, Leotheras channels Illidan's dual nature - shifting between his Blood Elf form and a fearsome Demon form. This fight requires a Warlock tank (non-negotiable) and tests every raid member's ability to defeat their own Inner Demon. One of the most mechanically demanding fights in SSC.",
+            "phaseBreakdown": [
+              "Phase 1 (Blood Elf - 100% to 60%): Leotheras in humanoid form. Tank faces away, melee watch for Whirlwind. Cycles between Blood Elf and Demon forms.",
+              "Phase 2 (Demon - 60 seconds each cycle): Demon form ignores normal threat - Warlock tank required. Inner Demons spawn for random players.",
+              "Phase 3 (Split - 15% HP): BOTH forms exist simultaneously. Blood Elf and Demon must both be tanked. Burn phase - pop cooldowns."
+            ],
+            "warlockTankRequirements": {
+              "gear": "285+ Shadow Resistance, 10,000+ HP buffed, 200+ spell damage minimum",
+              "talents": "Soul Link and Demonic Sacrifice essential",
+              "consumables": "Shadow Protection Potion, Healthstones, Master Healthstone",
+              "rotation": "Searing Pain spam for threat. Life Tap as needed but carefully."
+            },
             "abilities": [
               {
                 "name": "Whirlwind",
                 "spellId": 37640,
-                "description": "Spins rapidly, dealing massive damage to anyone nearby.",
-                "handling": "All melee and tanks run away immediately when Whirlwind starts."
+                "description": "In Blood Elf form, Leotheras spins in place for 12 seconds, dealing 3,000-5,000 Physical damage per second to anyone within 10 yards. He does NOT move during this - but the damage is lethal.",
+                "handling": "When Whirlwind starts (you'll see him spin), ALL melee and tanks RUN OUT immediately. Stay at 15+ yards until it ends. Ranged and healers continue as normal. After Whirlwind, tank re-engages and faces him away from raid."
               },
               {
                 "name": "Chaos Blast",
                 "spellId": 37674,
-                "description": "In demon form, blasts the highest threat target for Fire damage.",
-                "handling": "Warlock tank must maintain threat in demon form with Shadow resistance gear."
+                "description": "In Demon form, blasts the highest threat target for 1,500-2,500 Fire damage. Cast every 2 seconds. Applies a debuff increasing Fire damage taken by 1,675 for 45 seconds. Stacks.",
+                "handling": "WARLOCK TANK takes all Chaos Blasts. With Shadow/Fire resistance gear, the damage is manageable. Healers must keep the Warlock alive - assign 2-3 healers specifically. If anyone pulls aggro from the Warlock, they die instantly."
+              },
+              {
+                "name": "Demon Form Transition",
+                "spellId": 37673,
+                "description": "Every 60 seconds, Leotheras transforms into Demon form for 60 seconds, then returns to Blood Elf form. Threat is separate between forms.",
+                "handling": "Warlock must be ready to immediately grab threat when Demon form activates. The Warlock should pre-cast Searing Pain to land right as he transforms. Warrior tank holds threat in Blood Elf form and steps back during Demon phases."
               },
               {
                 "name": "Inner Demon",
                 "spellId": 37676,
-                "description": "Spawns an Inner Demon for 5 random players. Only that player can damage their demon.",
-                "handling": "Kill your Inner Demon within 30 seconds or you become Mind Controlled permanently."
+                "description": "During Demon form, 5 random raid members spawn a personal Inner Demon. ONLY YOU can damage YOUR Inner Demon. If you don't kill it within 30 seconds, you become permanently Mind Controlled for the rest of the fight.",
+                "handling": "DROP EVERYTHING and kill your Inner Demon immediately. It has approximately 6,000 HP. Melee classes should have no issue. Healers and casters need instant casts and wands. If you get MC'd, you will likely wipe the raid. Practice this - it's the #1 wipe mechanic."
               },
               {
-                "name": "Demon Form",
-                "spellId": 37673,
-                "description": "Transforms into demon, ignores regular threat table.",
-                "handling": "Warlock tank takes over, all others reduce threat and heal the lock."
+                "name": "Insidious Whisper",
+                "spellId": 37676,
+                "description": "The debuff that spawns your Inner Demon. Cannot be dispelled. You have 30 seconds.",
+                "handling": "You'll see a demon spawn near you with YOUR class icon. Target it immediately. Healers: use instant heals on yourself and wand. Shadow Priests can dot. Every class can kill their demon if they react fast."
+              },
+              {
+                "name": "Clear Aggro",
+                "spellId": 0,
+                "description": "When transitioning between Blood Elf and Demon forms, threat resets completely.",
+                "handling": "Both tanks must be ready to establish threat quickly. The Warrior during Blood Elf form, the Warlock during Demon form. DPS should hold back for 2-3 seconds after each transition."
               }
             ],
-            "strategy": "Phase 1: Tank and spank, run from Whirlwind. Phase 2 (Demon): Warlock tanks with fire/shadow resist. Phase 3: Both forms active simultaneously at 15%. Kill Inner Demons immediately when they spawn or it's a wipe.",
+            "strategy": "POSITIONING: Tank Leotheras in the center of his pool area, facing away from raid. Melee stack behind him. Ranged spread loosely at max range. Warlock tank stands at range until Demon phase. BLOOD ELF PHASE: Standard tanking. When Whirlwind starts, melee RUN OUT, ranged continue DPS. DEMON PHASE: Warlock immediately taunts and spams Searing Pain. Healers focus the Warlock. When Inner Demons spawn, EVERYONE kills their own demon - this is not optional. PHASE 3 (15%): Both forms exist at once! Warrior tanks Blood Elf, Warlock tanks Demon. Pop Heroism/Bloodlust and all cooldowns. Burn him before the chaos becomes unmanageable.",
+            "commonMistakes": [
+              "Melee not running from Whirlwind and dying in seconds",
+              "Warlock tank not pre-casting Searing Pain and losing threat on Demon phase",
+              "Raid members not killing their Inner Demon in time and getting MC'd",
+              "Healers tunnel-visioning on tanks and dying to their own Inner Demon",
+              "Not having a properly geared Warlock tank - this fight REQUIRES one"
+            ],
             "lootHighlights": [
-              "Gloves of the Vanquished Champion",
-              "True-Aim Stalker Bands"
+              "Gloves of the Vanquished Champion/Defender/Hero",
+              "True-Aim Stalker Bands",
+              "Girdle of the Invulnerable",
+              "Tsunami Talisman"
             ]
           },
           {
             "name": "Fathom-Lord Karathress",
             "npcId": 21214,
             "difficulty": "Hard",
-            "description": "Council-style fight with Karathress and three advisors. Kill order is critical as Karathress gains abilities from dead advisors.",
+            "description": "A council-style encounter where Fathom-Lord Karathress is joined by three powerful advisors. Each advisor killed transfers their abilities to Karathress, making the kill order critical. This fight demands excellent coordination between multiple tanks and a solid understanding of each advisor's mechanics. Proper interrupt rotations are mandatory.",
+            "phaseBreakdown": [
+              "Phase 1 (All Alive): Tank all 4 enemies separately. Focus DPS on advisors in kill order. Karathress stays in his starting position.",
+              "Phase 2 (1 Advisor Dead): Karathress gains first ability. Continue kill order.",
+              "Phase 3 (2 Advisors Dead): Karathress gains second ability. Damage ramps up.",
+              "Phase 4 (Karathress Only): All three abilities active on Karathress. Burn phase with Heroism/Bloodlust."
+            ],
+            "advisors": [
+              {
+                "name": "Fathom-Guard Caribdis",
+                "role": "Healer (KILL FIRST)",
+                "abilities": [
+                  "Healing Wave: 3-second cast healing an ally for 30,000-50,000. MUST BE INTERRUPTED every time.",
+                  "Water Bolt Volley: AoE Frost damage to the raid. Interruptible but lower priority than heals.",
+                  "Tidal Surge: Buffs an ally with attack speed. Dispel with Purge/Dispel Magic."
+                ],
+                "tankStrategy": "Can be tanked by anyone since she's a caster. Face away from raid. Assign 2-3 interrupters with a rotation to stop every Healing Wave."
+              },
+              {
+                "name": "Fathom-Guard Tidalvess",
+                "role": "Shaman (Kill Second)",
+                "abilities": [
+                  "Spitfire Totem: Places a totem that shoots fireballs. Kill totem immediately.",
+                  "Frost Shock: Instant Frost damage and slow on current target.",
+                  "Windfury: Melee attacks have chance for extra attacks. Makes him dangerous to tanks."
+                ],
+                "tankStrategy": "Requires a geared tank. Kill his Spitfire Totems instantly - they deal significant raid damage. Can be tanked near Karathress but keep some distance."
+              },
+              {
+                "name": "Fathom-Guard Sharkkis",
+                "role": "Hunter (Kill Third)",
+                "abilities": [
+                  "Multi-Shot: AoE physical damage to multiple targets in front.",
+                  "Leeching Throw: Drains health and transfers it to Sharkkis.",
+                  "The Beast Below: Summons a pet shark that needs to be kited or offtanked."
+                ],
+                "tankStrategy": "Kite-tank the pet shark with a Frost Mage or Hunter. Main tank handles Sharkkis. Keep raid spread to minimize Multi-Shot damage."
+              }
+            ],
             "abilities": [
               {
                 "name": "Cataclysmic Bolt",
                 "spellId": 38441,
-                "description": "Hits target for 50% of their max health as Nature damage.",
-                "handling": "Cannot be avoided, healers must be ready to top off the tank."
+                "description": "Karathress's core ability. Deals damage equal to 50% of the target's maximum health as Nature damage. Used on his current target (usually the tank).",
+                "handling": "Cannot be resisted, avoided, or mitigated. Healers MUST keep the Karathress tank at 60%+ health at ALL times. If tank is at 50% when this hits, they die. Assign dedicated healers to this tank."
               },
               {
-                "name": "Sear Nova",
+                "name": "Enrage",
+                "spellId": 38947,
+                "description": "At 25% HP, Karathress enrages, increasing damage dealt by 50%.",
+                "handling": "Save Heroism/Bloodlust for this phase. Burn him down. Tank cooldowns and heavy healing required."
+              },
+              {
+                "name": "Sear Nova (from Caribdis)",
                 "spellId": 38445,
-                "description": "Gained after Caribdis dies. AoE fire damage around Karathress.",
-                "handling": "Melee must be at full health, healers spam AoE heals."
+                "description": "After Caribdis dies, Karathress gains this ability. AoE Fire damage to everyone within 20 yards.",
+                "handling": "Melee stay at max melee range. Pre-heal before each Nova. Paladins can use Fire Resistance Aura."
               },
               {
-                "name": "Tidal Surge",
+                "name": "Tidal Surge (from Tidalvess)",
                 "spellId": 38358,
-                "description": "Gained after Tidalvess dies. Frost damage and knockback.",
-                "handling": "Tanks position against a wall to prevent knockback."
+                "description": "After Tidalvess dies, Karathress gains this ability. Frost damage and knockback to the tank plus nearby players.",
+                "handling": "Tank Karathress against a wall to prevent knockback into the raid. Melee should not stack directly behind the tank."
               },
               {
-                "name": "Spitfire Totem",
-                "spellId": 38236,
-                "description": "Sharkkis summons totems that shoot fireballs.",
-                "handling": "Destroy totems immediately."
+                "name": "Beast Within (from Sharkkis)",
+                "spellId": 38373,
+                "description": "After Sharkkis dies, Karathress summons his own pet and gains increased attack speed.",
+                "handling": "Off-tank picks up the pet. It doesn't hit hard but adds cleave danger. Can be CC'd or just tanked."
               }
             ],
-            "strategy": "Kill order: Caribdis (healer) > Tidalvess (shaman) > Sharkkis (hunter) > Karathress. Each advisor death empowers Karathress. Tank Karathress away from advisors. Interrupt Caribdis heals. Hunter kite Sharkkis's pet.",
+            "strategy": "POSITIONING: Tank Karathress in his starting position throughout the fight. Pull advisors to separate locations - assign one tank per advisor. KILL ORDER: Caribdis FIRST (interrupt all heals), Tidalvess second (kill totems), Sharkkis third (kite pet), Karathress last. Interrupt rotation is critical - 2-3 players should rotate kicks on Caribdis. As advisors die, Karathress gains their abilities - the fight gets progressively harder. At 25%, Karathress enrages - pop Bloodlust and all cooldowns. Keep the Karathress tank above 60% health AT ALL TIMES due to Cataclysmic Bolt.",
+            "commonMistakes": [
+              "Not interrupting Caribdis heals, making the fight take forever",
+              "Letting Karathress tank drop below 50% HP and dying to Cataclysmic Bolt",
+              "Not killing Spitfire Totems, causing heavy raid damage",
+              "Wrong kill order - killing Sharkkis first makes the fight significantly harder",
+              "Not positioning Karathress against a wall after Tidalvess dies, causing knockback chaos"
+            ],
             "lootHighlights": [
-              "Gloves of the Vanquished Defender",
-              "World Breaker"
+              "Gloves of the Vanquished Champion/Defender/Hero",
+              "World Breaker",
+              "Soul-Strider Boots",
+              "Bloodsea Brigand's Vest"
             ]
           },
           {
             "name": "Morogrim Tidewalker",
             "npcId": 21213,
             "difficulty": "Medium",
-            "description": "Giant water elemental that summons murlocs and throws players. A gear check fight requiring high raid DPS.",
+            "description": "A massive sea giant guarding the entrance to Lady Vashj's lair. Morogrim is a stamina and DPS check fight - your raid needs enough health to survive Watery Grave and enough AoE damage to quickly clear murloc waves. This fight punishes low DPS with endless murloc swarms overwhelming the raid.",
+            "phaseBreakdown": [
+              "Main Phase: Tank and spank Morogrim. Healers top off Watery Grave targets. Repeat until Earthquake.",
+              "Murloc Phase: Earthquake spawns 12 murlocs. AoE them down fast. Return to Main Phase.",
+              "Cycle: Alternates between these phases until Morogrim dies or healers run out of mana."
+            ],
             "abilities": [
               {
                 "name": "Tidal Wave",
                 "spellId": 37730,
-                "description": "Frontal cone dealing massive Frost damage.",
-                "handling": "Only the tank should be in front. All others stay behind."
+                "description": "Frontal cone attack dealing 5,000-7,000 Frost damage to anyone in a 25-yard cone in front of Morogrim. 2-second cast.",
+                "handling": "ONLY the tank should EVER be in front of Morogrim. Position raid behind and to the sides. Tank should have Frost Resistance Aura if available. This will one-shot or severely damage non-tanks."
               },
               {
                 "name": "Watery Grave",
                 "spellId": 38023,
-                "description": "Teleports 4 players to graves around the room, stunning and dealing damage.",
-                "handling": "Healers must quickly heal grave targets when they return."
-              },
-              {
-                "name": "Earthquake",
-                "spellId": 37764,
-                "description": "Raid-wide damage and spawns 12 Murlocs.",
-                "handling": "AoE the murlocs down. Mages and Warlocks should be ready."
+                "description": "Teleports 4 random players to graves in the corners of the room. They are stunned in a water bubble for 6 seconds, taking 4,500 Frost damage over the duration. When released, Watery Globules spawn and chase them.",
+                "handling": "Healers MUST pre-assign healing to grave targets. Each corner should have a healer watching. When players are released, they need immediate healing as they'll be at 25-40% health. The 4 second stun means HoTs applied beforehand help significantly."
               },
               {
                 "name": "Watery Globules",
                 "spellId": 37862,
-                "description": "Water globes move toward grave targets. Explode on contact.",
-                "handling": "Grave targets must run away from globes when released."
+                "description": "4 water globes spawn and slowly move toward the players who were just in Watery Grave. If a globe reaches its target, it explodes for 4,500 Frost damage to everyone within 10 yards.",
+                "handling": "Grave targets must RUN AWAY from their globe immediately upon release. Run THROUGH the raid toward the boss - the globes are slow. If you can't escape, make sure you're not near other players when it hits. Frost Nova and slows work on globes."
+              },
+              {
+                "name": "Earthquake",
+                "spellId": 37764,
+                "description": "Every 45-50 seconds, Morogrim stomps the ground, dealing 2,500 Nature damage to the entire raid and spawning 12 Murlocs from the water on both sides of the room.",
+                "handling": "This is your AoE CHECK. Mages use Blizzard/Flamestrike, Warlocks use Seed of Corruption, Warriors use Whirlwind. Murlocs have low HP (~4,000) but deal significant damage in groups. If murlocs aren't dead before the next Earthquake, they stack and eventually overwhelm the raid."
+              },
+              {
+                "name": "Murloc Tidal Spawn",
+                "spellId": 39088,
+                "description": "The 12 murlocs that spawn during Earthquake. They aggro random players and deal moderate melee damage. If left unchecked, subsequent waves stack.",
+                "handling": "Assign dedicated AoE positions. Two groups of ranged DPS should be positioned to catch murlocs spawning from each side. Tanks can help gather them with Challenging Shout or Thunder Clap. Kill ALL murlocs before returning to boss damage."
               }
             ],
-            "strategy": "Tank and spank with heavy AoE damage phases. During Earthquake, all ranged AoE the murloc spawns while melee stays on boss. Heal through Watery Graves quickly. This is a DPS race - boss must die before healers run out of mana.",
+            "strategy": "POSITIONING: Tank Morogrim facing away from raid. Spread healers to cover Watery Grave corners. Group ranged DPS in two positions to handle murlocs from both sides. MAIN PHASE: Simple tank and spank. Watch for Watery Grave - heal those targets immediately upon release. Grave targets run toward boss to escape Globules. MURLOC PHASE: When Earthquake hits, STOP BOSS DPS and AoE murlocs. This is critical - if you fall behind on murlocs, you will wipe. Once murlocs are dead, return to boss. ENRAGE: 10 minutes. The fight is a DPS and healer mana check. Bring mana potions and Dark Runes for healers.",
+            "commonMistakes": [
+              "Anyone besides the tank standing in front of Morogrim and eating Tidal Wave",
+              "Not healing Watery Grave targets immediately, letting them die to Globules",
+              "Grave targets running the wrong direction and exploding Globules on the raid",
+              "Not killing murlocs fast enough, causing waves to stack",
+              "Healers running out of mana because the fight took too long"
+            ],
             "lootHighlights": [
               "Mantle of the Tireless Tracker",
-              "Luminescent Rod of the Naaru"
+              "Luminescent Rod of the Naaru",
+              "Ring of Sundered Souls",
+              "Warboots of Obliteration"
             ]
           },
           {
             "name": "Lady Vashj",
             "npcId": 21212,
             "difficulty": "Very Hard",
-            "description": "The final boss of SSC. Complex three-phase encounter with multiple mechanics including a unique 'tainted core' relay mechanic.",
+            "description": "The Naga sea witch and final boss of Serpentshrine Cavern. Lady Vashj is one of the most complex and demanding encounters in TBC, requiring flawless coordination during the infamous Phase 2 Tainted Core relay system. This fight is the guild-breaker of Tier 5 - many raids never defeat her. Master Phase 2 or wipe forever.",
             "phaseBreakdown": [
-              "Phase 1 (100%-70%): Standard tank and spank with some abilities.",
-              "Phase 2 (70%-50%): Shield goes up. Must collect Tainted Cores from Elementals to deactivate 4 generators.",
-              "Phase 3 (50%-0%): All mechanics active plus increased damage. Burn phase."
+              "Phase 1 (100%-70% HP): Tank and spank with spreading mechanics. Learn the Static Charge and Entangle patterns.",
+              "Phase 2 (70%-50% HP): Vashj becomes IMMUNE. Four Shield Generators must be deactivated using Tainted Cores. Three add types spawn continuously. This phase tests raid coordination to the limit.",
+              "Phase 3 (50%-0% HP): Shield down, Vashj attackable again. All Phase 1 abilities plus Toxic Spore Bats. Pure chaos - burn her before healers run out of mana."
+            ],
+            "phase2Mechanics": {
+              "shieldGenerators": "Four generators in cardinal directions (N/E/S/W) must each be deactivated with a Tainted Core. Vashj is immune until all 4 are down.",
+              "taintedCores": "Dropped by Tainted Elementals. Player holding a core is ROOTED and takes 500 nature damage/sec. Must throw to another player (45 yard range) who catches and relays it to the generator.",
+              "coreRelay": "Assign relay teams for each generator direction. Looter picks up core → throws to relay 1 → relay 1 throws to relay 2 → relay 2 uses core on generator. Practice this!",
+              "coreThrowMacro": "/target [your relay partner name]\n/use Tainted Core"
+            },
+            "phase2Adds": [
+              {
+                "name": "Coilfang Elite",
+                "type": "Melee Naga",
+                "handling": "Spawn from the stairs. Must be tanked by off-tanks. They hit hard - keep tanks alive. Kill when there's downtime from cores."
+              },
+              {
+                "name": "Coilfang Strider",
+                "type": "Caster Naga",
+                "handling": "MOST DANGEROUS ADD. Mind Controls random players if it reaches them. Must be KITED by a Frost Mage or Hunter. NEVER let it reach the raid. Perma-slow and kite in circles."
+              },
+              {
+                "name": "Tainted Elemental",
+                "type": "Core Carrier",
+                "handling": "Spawn near generators. Kill immediately - they despawn after 15 seconds and drop the Tainted Core. Miss too many and Phase 2 becomes impossible."
+              },
+              {
+                "name": "Enchanted Elemental",
+                "type": "Small Adds",
+                "handling": "Weak adds that heal Vashj if they reach her. Kill with cleave damage or have a dedicated add tank."
+              }
             ],
             "abilities": [
               {
+                "name": "Shoot",
+                "spellId": 38295,
+                "description": "Ranged attack dealing 4,000-6,000 Physical damage. Used on her primary threat target in Phases 1 and 3. Also Multi-Shots in Phase 3.",
+                "handling": "Tank stands at max range. Use high-stamina gear. In Phase 3, this hurts more due to her damage buff."
+              },
+              {
                 "name": "Shock Blast",
                 "spellId": 38509,
-                "description": "AoE Nature damage around Vashj.",
-                "handling": "Melee run out when cast begins."
+                "description": "8-yard AoE around Vashj dealing 8,000-9,000 Nature damage. 5-second cast with visual warning.",
+                "handling": "MELEE RUN OUT when you see the cast bar. Return after it goes off. This will one-shot most melee if they don't move."
               },
               {
                 "name": "Static Charge",
                 "spellId": 38280,
-                "description": "Chains lightning between nearby players.",
-                "handling": "Spread out at least 10 yards apart."
+                "description": "Debuff on a random player that chains 2,000 Nature damage to anyone within 10 yards every 2 seconds for 20 seconds.",
+                "handling": "SPREAD OUT 12+ yards at all times. If you get Static Charge, do NOT move toward other players. Stay isolated until it expires. Getting Static Charged while grouped causes a chain reaction wipe."
               },
               {
                 "name": "Entangle",
                 "spellId": 38316,
-                "description": "Roots a player and spawns Spore Bats.",
-                "handling": "Kill bats quickly, they explode on death."
+                "description": "Roots 5 random players in place and spawns a Spore Bat on each. Bats explode for 2,000 Nature damage in a radius when killed.",
+                "handling": "Kill the bats fast, but not when people are clumped. Ranged DPS should focus bats. Rooted players can still cast and attack. The root breaks after a few seconds."
               },
               {
                 "name": "Tainted Core",
                 "spellId": 38132,
-                "description": "Dropped by Tainted Elementals. Must be thrown to deactivate generators.",
-                "handling": "Players must throw cores to each other (can't move while holding). Final player uses core on generator."
+                "description": "Phase 2 item dropped by Tainted Elementals. Holding it roots you and deals damage over time. Can be thrown to another player within 45 yards.",
+                "handling": "Assign core relay teams before the pull. The player who loots the core throws to their relay partner using a /use Tainted Core macro. The final person in the relay uses the core on the generator. Do NOT hold a core for more than 5-6 seconds or you die."
               },
               {
-                "name": "Toxic Spore",
+                "name": "Forked Lightning",
+                "spellId": 38145,
+                "description": "Phase 3 only. Chain lightning hitting multiple targets for 2,500 Nature damage each.",
+                "handling": "Stay spread. Healers need to react quickly to top people off. This adds significant raid damage in Phase 3."
+              },
+              {
+                "name": "Toxic Spore Bat",
                 "spellId": 38575,
-                "description": "Spawns Toxic Spore Bats in Phase 3.",
-                "handling": "Ranged kill bats before they reach melee."
+                "description": "Phase 3 only. Spawns bats that leave a poison cloud when they die. Clouds deal heavy Nature damage.",
+                "handling": "Ranged DPS kills bats AWAY from the raid. Do not kill them near melee or the tank. The clouds are deadly."
               }
             ],
-            "strategy": "Phase 1: Tank and spank, spread for Static Charge. Phase 2: Split raid - core team relays Tainted Cores to generators, others control adds. Striders must be kited by frost mages. Naga must be tanked. Phase 3: Bloodlust and burn. Heal through increasing damage. Most guilds wipe here if Phase 2 takes too long.",
+            "strategy": "PHASE 1: Tank Vashj at her platform. Raid spreads out 12+ yards for Static Charge. Melee run out during Shock Blast. Kill Spore Bats when Entangle happens. Simple phase - use it to learn the rhythm. PHASE 2: This is the guild-breaker. Split raid into 4 teams (one per generator direction). Each team has: 1 core looter, 1-2 relay throwers, 1 person to use core on generator. Tanks handle Coilfang Elites. Frost Mage kites Striders PERMANENTLY. When Tainted Elementals spawn, kill them fast, loot the core, relay to generator. You need 4 successful core relays to end Phase 2. Communication is CRITICAL. PHASE 3: Pop Heroism/Bloodlust immediately. All Phase 1 mechanics plus Forked Lightning and Spore Bats. Kill bats away from raid. Burn Vashj before healers go OOM. This phase is pure chaos - if Phase 2 took too long, you won't have the mana to finish.",
             "commonMistakes": [
-              "Holding Tainted Core too long (it kills you)",
-              "Not spreading for Static Charge",
-              "Letting Striders reach the raid",
-              "Running out of mana in Phase 3"
+              "Not spreading 12 yards for Static Charge - chains kill multiple people",
+              "Holding Tainted Core too long and dying instead of throwing it",
+              "Letting Striders reach the raid and Mind Control people",
+              "Missing Tainted Elemental spawns in Phase 2, extending the phase",
+              "Killing Spore Bats near the raid in Phase 3, creating death clouds",
+              "Not practicing core relay before pulling - Phase 2 requires precise coordination"
             ],
             "lootHighlights": [
-              "Vashj's Vial Remnant (attunement)",
-              "Helm of the Vanquished Champion",
-              "Fang of Vashj"
+              "Vashj's Vial Remnant (Hyjal attunement)",
+              "Helm of the Vanquished Champion/Defender/Hero",
+              "Fang of Vashj",
+              "Krakken-Heart Breastplate",
+              "Lightfathom Scepter"
             ]
           }
         ]
@@ -1056,173 +1267,304 @@
             "name": "Al'ar",
             "npcId": 19514,
             "difficulty": "Medium",
-            "description": "A majestic phoenix that flies between platforms. Two-phase fight with add management and rebirth mechanic.",
+            "description": "The magnificent phoenix of Tempest Keep. Al'ar is a two-phase fight where the boss flies between elevated platforms in Phase 1, then rebirths in the center for Phase 2. The fight teaches basic TK mechanics like tank swaps and coordinated movement. Beautiful to witness when executed properly.",
             "phaseBreakdown": [
-              "Phase 1: Al'ar flies between platforms, spawning adds. Must be tanked on each platform.",
-              "Phase 2 (at 0%): Al'ar dies and rebirths in the center with full health. Tank and burn."
+              "Phase 1 (Platform Phase): Al'ar flies between 4 upper platforms. Tanks must position on each platform and taunt when Al'ar lands. Raid handles adds and moves for Flame Quills.",
+              "Phase 2 (Ground Phase - 0% HP): Al'ar 'dies' and rebirths in the center with full HP. Standard tanking on the ground floor. Dodge Meteor dives and tank swap on Melt Armor."
             ],
+            "platformLayout": {
+              "description": "Four elevated platforms connected by ramps. Al'ar spawns on Platform 1 and rotates clockwise.",
+              "positioning": "Assign 2 tanks total - one on Platform 1 and 3 (opposite sides), one handles 2 and 4. Ranged DPS spreads on lower platforms/ramps."
+            },
             "abilities": [
               {
                 "name": "Flame Buffet",
                 "spellId": 34121,
-                "description": "Stacking fire debuff on the tank.",
-                "handling": "Tank swap when stacks get too high."
+                "description": "Stacking debuff increasing Fire damage taken by 10% per stack. Applied every few seconds to anyone in melee range. Stacks persist for 10 seconds.",
+                "handling": "Tank swap at 4-5 stacks. When Al'ar flies to a new platform, the current tank's stacks drop. This natural reset is part of the Phase 1 rhythm."
               },
               {
                 "name": "Flame Quills",
                 "spellId": 34229,
-                "description": "Al'ar flies to center and shoots flames at all platforms.",
-                "handling": "Everyone run to the ramp/center area - platforms are death zones."
+                "description": "Al'ar flies to the center of the room and shoots flames at ALL FOUR PLATFORMS simultaneously. Deals 8,000+ Fire damage per second to anyone on a platform. Lasts about 10 seconds.",
+                "handling": "EVERYONE evacuate platforms and stand on ramps/center floor. This is announced by Al'ar flying to room center. Return to platforms after Quills ends. Missing this = instant death."
+              },
+              {
+                "name": "Ember Blast",
+                "spellId": 34133,
+                "description": "When Al'ar transitions to a new platform, it spawns an Ember add at the previous location. Embers have ~25,000 HP and cast Ember Blast, a 2-second AoE dealing 8,000-10,000 Fire damage.",
+                "handling": "Kill Embers FAST. Assign 2-3 ranged DPS to focus Embers. If they cast Ember Blast, it hurts. Alternatively, have a tank grab them and cleave down."
+              },
+              {
+                "name": "Rebirth",
+                "spellId": 34342,
+                "description": "When Al'ar reaches 0% HP in Phase 1, it dies and immediately rebirths in the center of the room with full health. Phase 2 begins.",
+                "handling": "All raid members move to the center floor. Tank picks up Al'ar facing away. This is NOT the end of the fight - you must kill Al'ar again in Phase 2."
               },
               {
                 "name": "Meteor",
                 "spellId": 35181,
-                "description": "Phase 2 - Dives at a player's location dealing massive fire damage split among nearby players.",
-                "handling": "Stack loosely to split damage, but not too tight."
+                "description": "Phase 2 only. Al'ar flies into the air and dives at a random player's location, dealing 5,000-6,000 Fire damage split among everyone within 10 yards of impact.",
+                "handling": "Stack loosely in groups of 4-5 players to split damage. Solo-soaking a Meteor is deadly. Spread slightly to avoid overlap with other mechanics, but close enough to share Meteor damage."
               },
               {
                 "name": "Melt Armor",
                 "spellId": 35410,
-                "description": "Phase 2 - Reduces tank armor significantly.",
-                "handling": "Tank swap, use cooldowns, healers focus tank."
+                "description": "Phase 2 only. Reduces the tank's armor by 80% for 60 seconds. This makes the tank take massive physical damage.",
+                "handling": "IMMEDIATE tank swap when Melt Armor is applied. The debuffed tank should NOT have aggro. Use Shield Wall or other major cooldowns if you get caught with Melt Armor and aggro."
+              },
+              {
+                "name": "Charge",
+                "spellId": 35412,
+                "description": "Phase 2 only. Al'ar charges a random player, dealing Fire damage and knockback.",
+                "handling": "Healers be ready to top off charge targets. Not usually deadly but adds to the chaos."
               }
             ],
-            "strategy": "Phase 1: Tanks on platforms, taunt Al'ar as it moves. Kill adds, move to ramp during Flame Quills. Phase 2: Stack for Meteors, tank swap on Melt Armor. Save Bloodlust for Phase 2.",
+            "strategy": "PHASE 1: Two tanks alternate platforms. When Al'ar lands on your platform, taunt and tank facing away. When it moves, stay put - it'll come back. Kill Ember adds quickly. During Flame Quills (Al'ar flies to center), EVERYONE gets off platforms - stand on ramps or floor. Return after Quills ends. PHASE 2: Al'ar rebirths in center. Tank it on the floor, raid loosely stacks behind. Tank swap immediately when Melt Armor is applied. Spread slightly for Meteor but stay close enough to split damage. Pop Heroism/Bloodlust and burn. Phase 2 is simpler than Phase 1.",
+            "commonMistakes": [
+              "Standing on platforms during Flame Quills - instant death",
+              "Not tank swapping on Melt Armor - tank gets crushed",
+              "Letting Ember adds free-cast - huge raid damage",
+              "Thinking Phase 1 death means the fight is over - Phase 2 is the real fight",
+              "Solo-soaking Meteor instead of stacking - likely death"
+            ],
             "lootHighlights": [
-              "Ashes of Al'ar (mount)",
+              "Ashes of Al'ar (0.01% mount drop)",
               "Talon of Al'ar",
-              "Phoenix-Ring of Rebirth"
+              "Phoenix-Ring of Rebirth",
+              "Claw of the Phoenix"
             ]
           },
           {
             "name": "Void Reaver",
             "npcId": 19516,
             "difficulty": "Easy",
-            "description": "A giant robot. Known as 'Loot Reaver' for being an easy gear check boss. Avoid orbs, heal through Pounding.",
+            "description": "A massive Arcane Golem constructed by Kael'thas. Affectionately known as 'Loot Reaver' by the community because of how easy it is compared to other Tier 5 content. This fight serves as a gear check - if you can survive Pounding and avoid Arcane Orbs, you win. Many guilds kill Void Reaver before progressing through SSC.",
+            "phaseBreakdown": [
+              "Single Phase: Tank and spank the entire fight. No phase transitions. Simply avoid orbs and heal through Pounding."
+            ],
             "abilities": [
               {
                 "name": "Pounding",
                 "spellId": 34162,
-                "description": "Raid-wide AoE damage for 3 seconds.",
-                "handling": "Healers pre-cast AoE heals. Everyone should be topped off."
+                "description": "Every 12-14 seconds, Void Reaver channels for 3 seconds, dealing 1,350-1,650 Arcane damage to the entire raid every second (4,000-5,000 total). This is unavoidable.",
+                "handling": "Healers PRE-CAST AoE heals before Pounding ends. Chain Heal, Circle of Healing, Prayer of Healing. Everyone should be topped off before Pounding starts. If raid is low when Pounding begins, people will die."
               },
               {
                 "name": "Arcane Orb",
                 "spellId": 34172,
-                "description": "Launches an orb at a random ranged player. Explodes for massive AoE damage.",
-                "handling": "Spread out 15+ yards. If targeted, move away from others immediately."
+                "description": "Launches a slow-moving purple orb at a random player beyond 18 yards. The orb travels for several seconds, then EXPLODES for 6,000-7,000 Arcane damage to everyone within 20 yards of impact.",
+                "handling": "SPREAD OUT 20+ yards apart. Watch for orbs coming your direction. If one is heading for you, MOVE. The orb is slow - you have time to react. If an orb lands in a clump of players, multiple people die."
               },
               {
                 "name": "Knock Away",
                 "spellId": 25778,
-                "description": "Knocks the tank back and reduces threat.",
-                "handling": "Tank against a wall. Off-tank ready to taunt if needed."
+                "description": "Every 20-25 seconds, Void Reaver knocks the tank back and reduces their threat by 25%. This can cause aggro loss.",
+                "handling": "Tank with your back against a wall to prevent knockback distance. Have an off-tank ready to taunt if the main tank loses aggro. Warriors should have an emergency taunt ready."
+              },
+              {
+                "name": "Melee Attacks",
+                "spellId": 0,
+                "description": "Void Reaver hits hard in melee - approximately 5,000-7,000 damage per swing on a geared tank.",
+                "handling": "This is a tank gear check. Tanks need 15,000+ HP and good mitigation. Keep tank at high health to survive Pounding on top of melee."
               }
             ],
-            "strategy": "Extremely simple fight. Tank against wall, spread ranged out, heal through Pounding, avoid Arcane Orbs. This is a great entry boss for Tier 5.",
+            "strategy": "POSITIONING: Tank pulls Void Reaver to a wall and tanks with back against it (prevents knockback). Ranged and healers spread out in a wide semicircle at 20-30 yard range, at least 20 yards apart from each other. Melee stack behind the boss. THE FIGHT: Pure tank and spank. Tank holds threat (watch for Knock Away aggro resets). Ranged watches for Arcane Orbs and moves out of the way. Healers pre-heal before Pounding ends. That's it. This is legitimately one of the easiest bosses in Tier 5, which is why guilds farm it early for shoulder tokens.",
+            "commonMistakes": [
+              "Ranged not spreading out, causing Arcane Orb to hit multiple people",
+              "Not moving when an orb is clearly heading toward you",
+              "Tank not against a wall, getting knocked far and losing aggro",
+              "Healers not pre-casting heals, letting Pounding kill low-HP players",
+              "Underestimating the fight and bringing undergeared tanks"
+            ],
             "lootHighlights": [
+              "Pauldrons of the Vanquished Champion/Defender/Hero (Tier 5 Shoulders)",
               "Void Reaver Greaves",
-              "Pauldrons of the Vanquished Champion"
+              "Fel Reaver's Piston",
+              "Wristguards of Determination"
             ]
           },
           {
             "name": "High Astromancer Solarian",
             "npcId": 18805,
             "difficulty": "Medium",
-            "description": "Alternates between Astromancer form and Void form. Players get turned into bombs.",
+            "description": "A Blood Elf astromancer who calls upon the power of the stars and eventually transforms into a voidwalker. The infamous 'bomb' mechanic tests your raid's awareness - one person not running out can wipe the entire group. Also features split phases where Solarian disappears and adds spawn.",
+            "phaseBreakdown": [
+              "Phase 1 (100%-20% HP): Solarian cycles between attacking and disappearing to spawn adds. Bomb mechanic is active.",
+              "Split Phase: Every 50 seconds, Solarian vanishes and spawns adds in a specific location. Kill adds, she returns.",
+              "Phase 2 (20%-0% HP): Solarian transforms into a Voidwalker. No more bombs, just burn her down."
+            ],
             "abilities": [
               {
                 "name": "Arcane Missiles",
                 "spellId": 33031,
-                "description": "Channels missiles at the tank.",
-                "handling": "Healers keep tank topped off during channel."
+                "description": "Channels a barrage of Arcane Missiles at the tank, dealing 2,500-3,500 damage per missile (5-6 missiles total).",
+                "handling": "Tank damage is moderate but consistent. Healers should maintain steady healing on the tank. Not particularly dangerous if tank is geared."
               },
               {
                 "name": "Wrath of the Astromancer",
                 "spellId": 33045,
-                "description": "Turns a player into a living bomb. Explodes after 6 seconds.",
-                "handling": "Bomb player must run away from raid immediately. 10+ yards minimum."
+                "description": "Marks a random player as a LIVING BOMB. After 6 seconds, they explode for 5,400-6,600 Arcane damage to everyone within 10 yards. The bomb player takes moderate damage as well.",
+                "handling": "THE MOST IMPORTANT MECHANIC. If you get the bomb debuff, RUN AWAY FROM EVERYONE immediately. Get at least 15 yards from any other player. Do NOT run toward the healers. If you explode near the raid, you likely wipe. Watch your debuffs!"
               },
               {
                 "name": "Blinding Light",
                 "spellId": 33009,
-                "description": "AoE knockback and damage.",
-                "handling": "Melee be prepared to run back in."
+                "description": "AoE knockback and 2,500-3,500 Arcane damage to everyone within 20 yards. Also disorients for 2 seconds.",
+                "handling": "Melee should expect to be knocked back and disoriented. Run back in after it fades. Tanks should be positioned to avoid getting knocked away from the boss."
+              },
+              {
+                "name": "Split Phase - Adds",
+                "spellId": 0,
+                "description": "Every 50 seconds, Solarian teleports to a random room location, goes immune, and spawns 4 Solarium Agents (weak casters) and 2 Solarium Priests (healers that buff Agents).",
+                "handling": "Kill Agents first - they cast Arcane damage on the raid. Then kill Priests. The Agents will gain Blessing of Might from Priests if you let Priests live. AoE damage works well. Solarian returns after 15-20 seconds."
+              },
+              {
+                "name": "Solarium Agent",
+                "spellId": 0,
+                "description": "Weak caster adds spawning during Split Phase. Cast Arcane spells at random targets.",
+                "handling": "Kill quickly with AoE. Low HP but annoying if left alive."
+              },
+              {
+                "name": "Solarium Priest",
+                "spellId": 0,
+                "description": "Healer adds spawning during Split Phase. Cast Greater Heal on Agents and buff them with Blessing of Might.",
+                "handling": "Lower priority than Agents but should die second. Interrupt heals if possible."
               },
               {
                 "name": "Void Form",
                 "spellId": 39625,
-                "description": "At 20%, transforms into a Voidwalker permanently.",
-                "handling": "Simple tank and spank. Just heal through increased damage."
+                "description": "At 20% HP, Solarian permanently transforms into a Voidwalker. She gains: Void Bolt (6,000 Shadow damage nuke), and Psychic Scream (AoE fear). No more bombs or split phases.",
+                "handling": "Pop Heroism/Bloodlust and burn. Tank faces her away. Tremor Totems and Fear Ward help with Psychic Scream. This phase is simple - just avoid the fear and kill her."
               }
             ],
-            "strategy": "Phase 1: Tank and spank, bomb players run out. During add phase, AoE priests and kill Solarium Agents fast. Phase 2 (Void): Burn with Bloodlust. No more bombs, just increased damage.",
+            "strategy": "POSITIONING: Tank Solarian in the center of the room. Raid spreads loosely around her - at least 10 yards between players for bomb explosions. Mark a 'bomb spot' far from the raid where bomb targets should run. PHASE 1: Tank and spank until bomb. When you get bomb, IMMEDIATELY run to the designated safe spot. During Split Phase (she vanishes), group up and AoE the adds - Agents first, then Priests. Return to spread positions when she comes back. PHASE 2 (Void Form at 20%): Pop cooldowns, group up for cleave/AoE heals, burn her down. Fear management with Tremor Totems helps. Simple burn phase.",
+            "commonMistakes": [
+              "Not running out when you get bomb - wipes the melee or healers",
+              "Running the wrong direction with bomb - toward healers instead of away",
+              "Not spreading out enough during Phase 1",
+              "Ignoring adds during Split Phase, causing them to overwhelm healers",
+              "Panicking during Void Form fear instead of using Tremor/Fear Ward"
+            ],
             "lootHighlights": [
+              "Leggings of the Vanquished Champion/Defender/Hero (Tier 5 Legs)",
               "Void Star Talisman",
-              "Leggings of the Vanquished Champion"
+              "Girdle of the Righteous Path",
+              "Ethereum Life-Staff"
             ]
           },
           {
             "name": "Kael'thas Sunstrider",
             "npcId": 19622,
             "difficulty": "Very Hard",
-            "description": "The most complex fight in TBC. Five-phase encounter lasting 15-20 minutes with unique legendary weapon mechanics.",
+            "description": "The Lord of the Blood Elves and the most complex encounter in The Burning Crusade. This 5-phase, 15-20 minute fight is legendary for its difficulty and is considered by many to be the hardest boss in TBC. The fight features four advisors, seven legendary weapons, and the famous Gravity Lapse mechanic. Guilds spend weeks learning this encounter. Prepare for many, many wipes.",
             "phaseBreakdown": [
-              "Phase 1: Kill 4 advisors one at a time.",
-              "Phase 2: Legendary weapons come alive - kill them to loot and equip them.",
-              "Phase 3: All 4 advisors resurrect simultaneously. Kill them again.",
-              "Phase 4: Kael'thas becomes active. Manage Phoenix adds and Mind Control.",
-              "Phase 5 (at 50%): Gravity Lapse - everyone flies. Avoid orbs, DPS Kael'thas."
+              "Phase 1 (Advisors): Four advisors engage one at a time with 10-second gaps. Kill each before the next activates. ~3 minutes.",
+              "Phase 2 (Weapons): Seven legendary weapons animate and attack. Kill and LOOT them - they provide crucial buffs for later phases. ~2 minutes.",
+              "Phase 3 (Advisors Resurrected): ALL FOUR advisors resurrect at once. Kill them again while using your new weapons. ~2-3 minutes.",
+              "Phase 4 (Kael'thas Active): Kael'thas himself joins the fight. Manage Phoenixes, Mind Control, and high tank damage. ~5-6 minutes.",
+              "Phase 5 (Gravity Lapse - 50% HP): Everyone floats in the air. Avoid Nether Vapor orbs while DPSing Kael'thas. Cycles between flight and ground phases until dead."
+            ],
+            "advisors": [
+              {
+                "name": "Thaladred the Darkener (First)",
+                "role": "Melee - NO AGGRO TABLE",
+                "abilities": "Gaze: Fixates on a random player and chases them. Silence: AoE silence around him. Psychic Blow: Huge knockback on current target.",
+                "strategy": "KITE HIM. Whoever gets Gaze runs away while ranged DPS kills him. He cannot be tanked traditionally. Stay spread to avoid Silence hitting multiple people."
+              },
+              {
+                "name": "Lord Sanguinar (Second)",
+                "role": "Paladin Tank",
+                "abilities": "Bellowing Roar: AoE fear. Standard melee attacks.",
+                "strategy": "Normal tanking. Use Tremor Totem and Fear Ward for fear. Simple tank and spank compared to Thaladred."
+              },
+              {
+                "name": "Grand Astromancer Capernian (Third)",
+                "role": "Mage - EXTREMELY DANGEROUS",
+                "abilities": "Fireball: 5,500-6,500 Fire damage. Conflagration: AoE 6,000+ Fire damage + DoT. Arcane Burst: 10,000+ damage if anyone is within 10 yards.",
+                "strategy": "RANGED ONLY TANK. A Mage or Warlock tanks her at max range. She cannot be approached in melee due to Arcane Burst. Interrupt Fireballs if possible."
+              },
+              {
+                "name": "Master Engineer Telonicus (Fourth)",
+                "role": "Engineer with Gadgets",
+                "abilities": "Bomb: Stuns target for 4 seconds. Remote Toy: Spawns robots that must be killed.",
+                "strategy": "Normal tanking. Kill robots when they spawn. Watch for Bomb stuns on tanks - off-tank should be ready."
+              }
+            ],
+            "legendaryWeapons": [
+              {"name": "Staff of Disintegration", "priority": "Warlock", "effect": "+200% melee damage, reduces threat. CRITICAL for Phase 3+ DPS."},
+              {"name": "Cosmic Infuser", "priority": "Holy Paladin/Priest", "effect": "+100% healing, AoE heal on use."},
+              {"name": "Devastation", "priority": "Warrior/Rogue", "effect": "+200% melee damage, stun proc."},
+              {"name": "Netherstrand Longbow", "priority": "Hunter", "effect": "+200% ranged damage, multi-shot proc."},
+              {"name": "Infinity Blade", "priority": "Rogue/Fury Warrior", "effect": "+200% melee damage, attack speed increase."},
+              {"name": "Warp Slicer", "priority": "Rogue/DPS Warrior", "effect": "+200% melee damage, armor ignore."},
+              {"name": "Phaseshift Bulwark", "priority": "Tank", "effect": "Absorb shield on use. CRITICAL for Phase 5."}
             ],
             "abilities": [
               {
                 "name": "Fireball",
                 "spellId": 36805,
-                "description": "Standard nuke on the tank.",
-                "handling": "Healers keep tank topped."
+                "description": "Standard 3-second cast dealing 15,000-20,000 Fire damage to the tank. Cast frequently.",
+                "handling": "Tank needs to stay topped off at all times. Fire Resistance Aura and Fire protection potions help. Interruptible but Kael'thas has fast cast recovery."
               },
               {
                 "name": "Flamestrike",
                 "spellId": 36735,
-                "description": "Fire zone on the ground.",
-                "handling": "Move out immediately."
+                "description": "Places a Flamestrike on a random player's location. Deals 6,000-8,000 initial Fire damage plus 3,000/sec for 8 seconds in the zone.",
+                "handling": "MOVE OUT of the red circle immediately. These zones persist and restrict movement space over time."
               },
               {
                 "name": "Phoenix",
                 "spellId": 36723,
-                "description": "Spawns a Phoenix add that leaves fire on the ground.",
-                "handling": "Kite Phoenix, kill it, then kill the egg before it respawns."
+                "description": "Summons a Phoenix add that leaves a trail of fire as it moves. When killed, it drops an egg. If the egg is not destroyed in 15 seconds, the Phoenix respawns.",
+                "handling": "Assign a tank to kite the Phoenix away from the raid. Ranged DPS kills it, then IMMEDIATELY kills the egg. Missing an egg means dealing with another Phoenix."
               },
               {
                 "name": "Mind Control",
                 "spellId": 36797,
-                "description": "Mind Controls a player.",
-                "handling": "CC the MC'd player until it breaks."
-              },
-              {
-                "name": "Gravity Lapse",
-                "spellId": 35941,
-                "description": "Everyone floats in the air. Nether Vapor orbs spawn.",
-                "handling": "Swim through the air, avoid orbs, DPS Kael'thas, stay spread."
+                "description": "Mind Controls a random player. The MC'd player gains 30% increased damage and can attack allies.",
+                "handling": "CC the MC'd player with Polymorph, Fear, or other control. Do NOT kill them. The MC breaks after ~30 seconds or can be broken by the Staff of Disintegration weapon."
               },
               {
                 "name": "Shock Barrier",
                 "spellId": 36815,
-                "description": "Kael'thas shields himself and casts Pyroblast.",
-                "handling": "Break the shield FAST or Pyroblast one-shots someone."
+                "description": "At set intervals, Kael'thas shields himself (100,000 damage absorb) and begins casting Pyroblast (10,000-12,000 Fire damage). If Pyroblast completes, someone dies.",
+                "handling": "ALL DPS must STOP EVERYTHING and burn the Shock Barrier immediately. Breaking the barrier interrupts Pyroblast. This is a DPS check - failing means death."
+              },
+              {
+                "name": "Gravity Lapse",
+                "spellId": 35941,
+                "description": "Phase 5: Everyone is lifted into the air and can 'swim' in 3D space. Nether Vapor orbs spawn and deal 2,000 Shadow damage on contact. Lasts 30 seconds, then drops everyone to the ground.",
+                "handling": "USE YOUR PHASESHIFT BULWARK before you hit the ground to absorb fall damage. While flying, avoid all orbs - they spawn from Kael'thas and drift toward players. Stay spread, keep DPSing. After landing, normal combat resumes until next Gravity Lapse."
+              },
+              {
+                "name": "Nether Vapor",
+                "spellId": 35859,
+                "description": "Small purple orbs that spawn during Gravity Lapse. Each orb deals 2,000 Shadow damage and reduces max HP by 10% for 30 seconds on contact.",
+                "handling": "AVOID ALL ORBS. The HP reduction stacks. Touching 3-4 orbs means you die when Gravity Lapse ends. Navigate carefully - they move slowly."
+              },
+              {
+                "name": "Nether Beam",
+                "spellId": 35873,
+                "description": "During Gravity Lapse, Kael'thas fires Shadow beams at random players for 3,000 damage.",
+                "handling": "Healers continue healing during Gravity Lapse. This is unavoidable damage."
               }
             ],
-            "strategy": "Phase 1: Kill advisors in order - Thaladred > Sanguinar > Capernian > Telonicus. Phase 2: Loot weapons - Staff goes to Warlock, Bow to Hunter, Dagger to Rogue, etc. Phase 3: CC Capernian, burn others. Phase 4: Tank and spank while handling Phoenixes. Phase 5: Swim, avoid orbs, DPS hard.",
+            "strategy": "PHASE 1: Kill advisors in order - Thaladred (kite), Sanguinar (tank), Capernian (ranged tank), Telonicus (tank). 10 seconds between each activation. PHASE 2: Kill all 7 weapons and LOOT THEM. Assign weapons before pull. Staff goes to Warlock, Bow to Hunter, etc. PHASE 3: All 4 advisors resurrect. CC Capernian immediately (Polymorph). Kill Thaladred first (still kite), then Sanguinar, then Telonicus, then Capernian. PHASE 4: Kael'thas is active. Tank and spank. Off-tank kites Phoenix, DPS kills Phoenix and egg. CC Mind Controlled players. When Shock Barrier appears, ALL DPS switches and breaks it before Pyroblast. PHASE 5 (50% HP): Gravity Lapse cycles. When flying, avoid orbs, DPS Kael'thas. Before landing, USE PHASESHIFT BULWARK. Ground phase resumes until next Gravity Lapse. Repeat until dead. Pop Heroism during a ground phase below 30%.",
             "commonMistakes": [
-              "Not equipping legendary weapons in Phase 2",
-              "Letting Phoenix eggs hatch",
-              "Not breaking Shock Barrier in time",
-              "Touching Nether Vapor orbs during Gravity Lapse"
+              "Not looting weapons in Phase 2 - massive DPS and utility loss",
+              "Not using Phaseshift Bulwark before landing during Gravity Lapse - death",
+              "Failing to break Shock Barrier in time - Pyroblast kills someone",
+              "Letting Phoenix eggs hatch - doubled Phoenix problems",
+              "Standing near Capernian in Phase 3 - Arcane Burst kills melee",
+              "Touching multiple Nether Vapor orbs - HP reduction stacks = death"
             ],
             "lootHighlights": [
-              "Verdant Sphere (attunement)",
-              "Ashes of Al'ar",
-              "Chestguard of the Vanquished Champion"
+              "Verdant Sphere (Mount Hyjal attunement)",
+              "Chestguard of the Vanquished Champion/Defender/Hero (Tier 5 Chest)",
+              "Ashes of Al'ar (from Al'ar, not Kael'thas)",
+              "Thalassian Wildercloak",
+              "Royal Gauntlets of Silvermoon"
             ]
           }
         ]
