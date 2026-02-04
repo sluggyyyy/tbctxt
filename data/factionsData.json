@@ -1,0 +1,59 @@
+{
+  "factions": [
+    { "id": "honor-hold", "name": "Honor Hold", "alliance": true, "horde": false, "category": "Outland" },
+    { "id": "thrallmar", "name": "Thrallmar", "alliance": false, "horde": true, "category": "Outland" },
+    { "id": "cenarion-expedition", "name": "Cenarion Expedition", "category": "Outland" },
+    { "id": "lower-city", "name": "Lower City", "category": "Shattrath" },
+    { "id": "sha-tar", "name": "The Sha'tar", "category": "Shattrath" },
+    { "id": "keepers-of-time", "name": "Keepers of Time", "category": "Caverns of Time" },
+    { "id": "aldor", "name": "The Aldor", "exclusive": "scryers", "category": "Shattrath" },
+    { "id": "scryers", "name": "The Scryers", "exclusive": "aldor", "category": "Shattrath" },
+    { "id": "violet-eye", "name": "The Violet Eye", "category": "Karazhan" },
+    { "id": "consortium", "name": "The Consortium", "category": "Outland" },
+    { "id": "kurenai", "name": "Kurenai", "alliance": true, "horde": false, "category": "Nagrand" },
+    { "id": "mag-har", "name": "The Mag'har", "alliance": false, "horde": true, "category": "Nagrand" },
+    { "id": "sporeggar", "name": "Sporeggar", "category": "Zangarmarsh" },
+    { "id": "netherwing", "name": "Netherwing", "category": "Shadowmoon Valley" },
+    { "id": "ogri-la", "name": "Ogri'la", "category": "Blade's Edge Mountains" },
+    { "id": "sha-tari-skyguard", "name": "Sha'tari Skyguard", "category": "Terokkar Forest" },
+    { "id": "ashtongue-deathsworn", "name": "Ashtongue Deathsworn", "category": "Black Temple" },
+    { "id": "scale-of-sands", "name": "The Scale of the Sands", "category": "Mount Hyjal" },
+    { "id": "shattered-sun", "name": "Shattered Sun Offensive", "category": "Isle of Quel'Danas" }
+  ],
+  "standings": [
+    { "id": "hated", "name": "Hated", "min": -42000, "max": -6001, "color": "#cc2222" },
+    { "id": "hostile", "name": "Hostile", "min": -6000, "max": -3001, "color": "#dd3333" },
+    { "id": "unfriendly", "name": "Unfriendly", "min": -3000, "max": -1, "color": "#ee4444" },
+    { "id": "neutral", "name": "Neutral", "min": 0, "max": 2999, "color": "#ffff00" },
+    { "id": "friendly", "name": "Friendly", "min": 3000, "max": 8999, "color": "#00ff00" },
+    { "id": "honored", "name": "Honored", "min": 9000, "max": 20999, "color": "#00ff55" },
+    { "id": "revered", "name": "Revered", "min": 21000, "max": 41999, "color": "#00aaff" },
+    { "id": "exalted", "name": "Exalted", "min": 42000, "max": 42999, "color": "#aa55ff" }
+  ],
+  "rewards": {
+    "honor-hold": {
+      "honored": ["Flamewrought Key (Heroic Access)"],
+      "revered": ["Enchant Bracer - Superior Healing", "Felbane Slugs"],
+      "exalted": ["Blade of the Archmage", "Honor's Call"]
+    },
+    "cenarion-expedition": {
+      "honored": ["Reservoir Key (Heroic Access)", "Warden's Hauberk"],
+      "revered": ["Glyph of Ferocity", "Earthwarden Recipe"],
+      "exalted": ["Cenarion War Hippogryph", "Windcaller's Orb"]
+    },
+    "sha-tar": {
+      "honored": ["Warpforged Key (Heroic Access)"],
+      "revered": ["Various Epic Shoulder Inscriptions"],
+      "exalted": ["A'dal's Command", "Sha'tari Skyguard Reputation Unlocked"]
+    },
+    "netherwing": {
+      "exalted": ["Netherdrake Mounts (6 colors)"]
+    },
+    "violet-eye": {
+      "friendly": ["Violet Signet (Ring, upgrades with rep)"],
+      "honored": ["Violet Signet +1"],
+      "revered": ["Violet Signet +2"],
+      "exalted": ["Violet Signet +3 (Epic)"]
+    }
+  }
+}

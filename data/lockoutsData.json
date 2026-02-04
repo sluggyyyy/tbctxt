@@ -1,0 +1,21 @@
+{
+  "raids": [
+    { "id": "karazhan", "name": "Karazhan", "resetDays": 7, "size": 10, "phase": 1, "bosses": 12 },
+    { "id": "gruul", "name": "Gruul's Lair", "resetDays": 7, "size": 25, "phase": 1, "bosses": 2 },
+    { "id": "magtheridon", "name": "Magtheridon's Lair", "resetDays": 7, "size": 25, "phase": 1, "bosses": 1 },
+    { "id": "ssc", "name": "Serpentshrine Cavern", "resetDays": 7, "size": 25, "phase": 2, "bosses": 6 },
+    { "id": "tk", "name": "Tempest Keep: The Eye", "resetDays": 7, "size": 25, "phase": 2, "bosses": 4 },
+    { "id": "hyjal", "name": "Mount Hyjal", "resetDays": 7, "size": 25, "phase": 3, "bosses": 5 },
+    { "id": "bt", "name": "Black Temple", "resetDays": 7, "size": 25, "phase": 3, "bosses": 9 },
+    { "id": "za", "name": "Zul'Aman", "resetDays": 3, "size": 10, "phase": 4, "bosses": 6 },
+    { "id": "sunwell", "name": "Sunwell Plateau", "resetDays": 7, "size": 25, "phase": 5, "bosses": 6 }
+  ],
+  "worldBosses": [
+    { "id": "kazzak", "name": "Doom Lord Kazzak", "zone": "Hellfire Peninsula", "respawnHours": "48-72" },
+    { "id": "doomwalker", "name": "Doomwalker", "zone": "Shadowmoon Valley", "respawnHours": "48-72" }
+  ],
+  "resetSchedule": {
+    "NA": { "day": "Tuesday", "time": "11:00 AM EST" },
+    "EU": { "day": "Wednesday", "time": "07:00 AM CET" }
+  }
+}

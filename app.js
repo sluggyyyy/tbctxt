@@ -13,6 +13,9 @@ let recipesData = {};
 let raidsData = {};
 let collectionsData = {};
 let attunementsData = {};
+let heroicsData = {};
+let factionsData = {};
+let lockoutsData = {};
 let enchantSpellIds = {};
 let talentSpellIds = {};
 let questIds = {};
@@ -125,6 +128,10 @@ let currentProfession = 'blacksmithing';
 let currentAttunement = 'karazhan';
 const FADE_TRANSITION_MS = 200;
 const ATTUNEMENT_STORAGE_KEY = 'tbctxt_attunements';
+const BIS_STORAGE_KEY = 'tbctxt_bis';
+const REP_STORAGE_KEY = 'tbctxt_reputation';
+const LOCKOUT_STORAGE_KEY = 'tbctxt_lockouts';
+const GUILD_PROGRESS_KEY = 'tbctxt_guild_progress';
 function showLoading() {
     document.getElementById('main-content').innerHTML = `
         <div class="text-terminal-dim text-center py-10">
@@ -141,7 +148,7 @@ async function loadAllData() {
         return res.json();
     }
     try {
-        const [items, classes, recipes, raids, reference, stats, collections, attunements] = await Promise.all([
+        const [items, classes, recipes, raids, reference, stats, collections, attunements, heroics, factions, lockouts] = await Promise.all([
             fetchJSON('data/itemIds.json'),
             fetchJSON('data/classData.json'),
             fetchJSON('data/recipesData.json'),
@@ -149,7 +156,10 @@ async function loadAllData() {
             fetchJSON('data/referenceData.json'),
             fetchJSON('data/itemStats.json'),
             fetchJSON('data/collectionsData.json'),
-            fetchJSON('data/attunementsData.json')
+            fetchJSON('data/attunementsData.json'),
+            fetchJSON('data/heroicsData.json'),
+            fetchJSON('data/factionsData.json'),
+            fetchJSON('data/lockoutsData.json')
         ]);
         itemIds = items;
         classData = classes;
@@ -157,6 +167,9 @@ async function loadAllData() {
         raidsData = raids;
         collectionsData = collections;
         attunementsData = attunements;
+        heroicsData = heroics;
+        factionsData = factions;
+        lockoutsData = lockouts;
         enchantSpellIds = reference.enchantSpellIds;
         talentSpellIds = reference.talentSpellIds;
         questIds = reference.questIds;
@@ -166,7 +179,9 @@ async function loadAllData() {
             classes: Object.keys(classData).length,
             professions: Object.keys(recipesData).length,
             raidPhases: Object.keys(raidsData).length,
-            itemStats: Object.keys(itemStats).length
+            itemStats: Object.keys(itemStats).length,
+            heroicZones: Object.keys(heroicsData).length,
+            factions: factionsData.factions?.length || 0
         });
         // Initialize the app
         initClassSelector();
@@ -627,9 +642,19 @@ function generateBisTable(bisData, specData) {
         'RANGED': ['Ranged Weapon'],
         'RANGED WEAPON': ['Ranged Weapon']
     };
-    // Generate table rows with grouped items
+    // Load BiS progress
+    const bisProgress = loadBisProgress();
+    // Generate table rows with grouped items and checkboxes
     return Object.entries(groupedBySlot).map(([slot, items]) => {
-        const itemsHtml = items.map(i => generateItemCell(i.item)).join('<br>');
+        const itemsHtml = items.map(i => {
+            const itemKey = getBisItemKey(currentClass, currentSpec, currentPhase, slot, i.item);
+            const isChecked = bisProgress[itemKey] ? 'checked' : '';
+            const checkboxId = `bis-${itemKey}`;
+            return `<div class="flex items-start gap-2">
+                <input type="checkbox" id="${checkboxId}" class="bis-checkbox attunement-checkbox mt-1" data-item-key="${itemKey}" ${isChecked}>
+                <label for="${checkboxId}" class="cursor-pointer ${isChecked ? 'line-through opacity-50' : ''}">${generateItemCell(i.item)}</label>
+            </div>`;
+        }).join('');
         const sourcesHtml = items.map(i => generateSourceCell(i.source)).join('<br>');
         // Find matching enchant for this slot
         let enchantHtml = '';
@@ -1174,6 +1199,132 @@ function renderProgressBar(completed, total) {
     return `<span class="text-terminal-accent">[${bar}]</span> <span class="text-terminal-dim">${percent}% (${completed}/${total})</span>`;
 }
 
+// ===== BIS CHECKBOX FUNCTIONS =====
+function loadBisProgress() {
+    try {
+        const saved = localStorage.getItem(BIS_STORAGE_KEY);
+        return saved ? JSON.parse(saved) : {};
+    } catch (e) {
+        console.error('Error loading BiS progress:', e);
+        return {};
+    }
+}
+
+function saveBisProgress(itemKey, completed) {
+    try {
+        const progress = loadBisProgress();
+        if (completed) {
+            progress[itemKey] = true;
+        } else {
+            delete progress[itemKey];
+        }
+        localStorage.setItem(BIS_STORAGE_KEY, JSON.stringify(progress));
+    } catch (e) {
+        console.error('Error saving BiS progress:', e);
+    }
+}
+
+function getBisItemKey(className, specName, phase, slot, itemName) {
+    return `${className}-${specName}-${phase}-${slot}-${stripPriorityLabel(itemName).toLowerCase().replace(/[^a-z0-9]/g, '')}`;
+}
+
+// ===== REPUTATION TRACKER FUNCTIONS =====
+// factionsData.factions and factionsData.standings are loaded from factionsData.json
+
+function loadRepProgress() {
+    try {
+        const saved = localStorage.getItem(REP_STORAGE_KEY);
+        return saved ? JSON.parse(saved) : {};
+    } catch (e) {
+        console.error('Error loading reputation progress:', e);
+        return {};
+    }
+}
+
+function saveRepProgress(factionId, standing) {
+    try {
+        const progress = loadRepProgress();
+        progress[factionId] = standing;
+        localStorage.setItem(REP_STORAGE_KEY, JSON.stringify(progress));
+    } catch (e) {
+        console.error('Error saving reputation progress:', e);
+    }
+}
+
+// ===== RAID LOCKOUT TRACKER FUNCTIONS =====
+// lockoutsData.raids is loaded from lockoutsData.json
+
+function loadLockoutProgress() {
+    try {
+        const saved = localStorage.getItem(LOCKOUT_STORAGE_KEY);
+        return saved ? JSON.parse(saved) : {};
+    } catch (e) {
+        console.error('Error loading lockout progress:', e);
+        return {};
+    }
+}
+
+function saveLockoutProgress(raidId, locked, timestamp = null) {
+    try {
+        const progress = loadLockoutProgress();
+        if (locked) {
+            progress[raidId] = { locked: true, timestamp: timestamp || Date.now() };
+        } else {
+            delete progress[raidId];
+        }
+        localStorage.setItem(LOCKOUT_STORAGE_KEY, JSON.stringify(progress));
+    } catch (e) {
+        console.error('Error saving lockout progress:', e);
+    }
+}
+
+function checkLockoutExpiry() {
+    const progress = loadLockoutProgress();
+    const now = Date.now();
+    let changed = false;
+
+    for (const raid of lockoutsData.raids) {
+        if (progress[raid.id]) {
+            const lockoutTime = progress[raid.id].timestamp;
+            const expiryTime = lockoutTime + (raid.resetDays * 24 * 60 * 60 * 1000);
+            if (now >= expiryTime) {
+                delete progress[raid.id];
+                changed = true;
+            }
+        }
+    }
+
+    if (changed) {
+        localStorage.setItem(LOCKOUT_STORAGE_KEY, JSON.stringify(progress));
+    }
+    return progress;
+}
+
+// ===== GUILD PROGRESS TRACKER FUNCTIONS =====
+function loadGuildProgress() {
+    try {
+        const saved = localStorage.getItem(GUILD_PROGRESS_KEY);
+        return saved ? JSON.parse(saved) : {};
+    } catch (e) {
+        console.error('Error loading guild progress:', e);
+        return {};
+    }
+}
+
+function saveGuildProgress(bossId, killCount) {
+    try {
+        const progress = loadGuildProgress();
+        if (killCount > 0) {
+            progress[bossId] = killCount;
+        } else {
+            delete progress[bossId];
+        }
+        localStorage.setItem(GUILD_PROGRESS_KEY, JSON.stringify(progress));
+    } catch (e) {
+        console.error('Error saving guild progress:', e);
+    }
+}
+
 function renderAttunementsContent(attunementKey = 'karazhan') {
     currentClass = null;
     currentAttunement = attunementKey;
@@ -1676,6 +1827,7 @@ function attachEventListeners(specData) {
             document.getElementById('bis-header').textContent = `[ BEST IN SLOT - ${phaseData.name} ]`;
             document.getElementById('bis-table').innerHTML = generateBisTable(phaseData.bis, specData);
             processItemLinks();
+            attachBisCheckboxListeners();
         });
     });
     // Spec tab listeners
@@ -1688,6 +1840,27 @@ function attachEventListeners(specData) {
                 currentSpec = newSpec;
                 currentPhase = 1;
                 window.location.hash = `#${currentClass}/${newSpec}`;
+            }
+        });
+    });
+    // BiS checkbox listeners
+    attachBisCheckboxListeners();
+}
+
+function attachBisCheckboxListeners() {
+    document.querySelectorAll('.bis-checkbox').forEach(cb => {
+        cb.addEventListener('change', function() {
+            const itemKey = this.getAttribute('data-item-key');
+            const isChecked = this.checked;
+            saveBisProgress(itemKey, isChecked);
+            // Update label styling
+            const label = this.nextElementSibling;
+            if (label) {
+                if (isChecked) {
+                    label.classList.add('line-through', 'opacity-50');
+                } else {
+                    label.classList.remove('line-through', 'opacity-50');
+                }
             }
         });
     });
@@ -2864,6 +3037,584 @@ Wastewalker Shoulderpads
     }, FADE_TRANSITION_MS);
 }
 
+// ===== HEROIC DUNGEONS GUIDE =====
+let currentHeroicZone = 'hellfire';
+
+function renderHeroicsContent(zone = 'hellfire') {
+    currentClass = null;
+    currentHeroicZone = zone;
+    document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
+    const heroicsLink = document.querySelector('.nav-link[data-view="heroics"]');
+    if (heroicsLink) heroicsLink.parentElement.classList.add('active');
+
+    const zoneButtons = Object.entries(heroicsData).map(([key, z]) =>
+        `<a href="#heroics/${key}" class="heroic-zone-btn ${key === zone ? 'bg-terminal-accent text-terminal-bg' : 'bg-transparent text-terminal-accent'} border border-terminal-accent px-3 py-2 cursor-pointer font-mono text-xs transition-all select-none hover:bg-terminal-accent hover:text-terminal-bg no-underline md:px-2.5 md:py-1.5 md:text-[11px] sm:px-2 sm:py-1 sm:text-[10px]" data-zone="${key}">${z.name}</a>`
+    ).join('');
+
+    const zoneData = heroicsData[zone];
+    const dungeonsHtml = zoneData.dungeons.map(d => {
+        const difficultyColor = {
+            'Easy': 'text-green-400',
+            'Medium': 'text-yellow-400',
+            'Hard': 'text-orange-400',
+            'Very Hard': 'text-red-400'
+        }[d.difficulty] || 'text-terminal-dim';
+
+        return `
+            <div class="border border-terminal-dim p-4 mb-4 md:p-3 sm:p-2.5">
+                <div class="flex justify-between items-start mb-2 flex-wrap gap-2">
+                    <h4 class="text-terminal-text text-sm font-semibold md:text-xs">${d.name}</h4>
+                    <span class="${difficultyColor} text-xs">[${d.difficulty}]</span>
+                </div>
+                <div class="text-terminal-dim text-xs mb-3 md:text-[11px] sm:text-[10px]">
+                    <span class="text-terminal-accent">Bosses:</span> ${d.bosses.join(' → ')}
+                </div>
+                <div class="bg-terminal-bg/50 border border-terminal-dim/50 p-2 text-xs text-terminal-dim md:text-[11px] sm:text-[10px]">
+                    <span class="text-yellow-400">💡 Tips:</span> ${d.tips}
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    const html = `
+        <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">./heroic-guide --zone=${zone}</div>
+        <h2 class="text-terminal-accent text-lg mb-2 uppercase tracking-wide md:text-base sm:text-sm">⚔️ [ HEROIC DUNGEONS GUIDE ]</h2>
+        <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">TBC Heroic dungeon strategies and key requirements</p>
+
+        <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">🗝️ [ ZONE SELECT ]</h3>
+        <div class="flex flex-wrap gap-2 mb-6 md:gap-1.5 md:mb-4">${zoneButtons}</div>
+
+        <div class="border border-terminal-accent/50 bg-terminal-bg/30 p-4 mb-6 md:p-3 md:mb-4 sm:p-2.5">
+            <h3 class="text-terminal-accent text-sm mb-2 md:text-xs">${zoneData.name}</h3>
+            <div class="grid grid-cols-2 gap-4 text-xs md:grid-cols-1 md:gap-2 md:text-[11px] sm:text-[10px]">
+                <div><span class="text-terminal-dim">Key:</span> <span class="text-terminal-text">${zoneData.key}</span></div>
+                <div><span class="text-terminal-dim">Faction:</span> <span class="text-terminal-text">${zoneData.faction}</span></div>
+                <div><span class="text-terminal-dim">Rep Required:</span> <span class="text-yellow-400">${zoneData.repRequired}</span></div>
+            </div>
+        </div>
+
+        <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">🏰 [ DUNGEONS ]</h3>
+        ${dungeonsHtml}
+    `;
+
+    const mainContent = document.getElementById('main-content');
+    mainContent.style.opacity = '0.3';
+    setTimeout(() => {
+        mainContent.innerHTML = html;
+        mainContent.style.opacity = '1';
+        // Zone button listeners
+        document.querySelectorAll('.heroic-zone-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                if (e.ctrlKey || e.metaKey || e.button === 1) return;
+                e.preventDefault();
+                window.location.hash = this.getAttribute('href');
+            });
+        });
+    }, FADE_TRANSITION_MS);
+}
+
+// ===== REPUTATION TRACKER =====
+function renderReputationTracker() {
+    currentClass = null;
+    document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
+    const repLink = document.querySelector('.nav-link[data-view="reputation"]');
+    if (repLink) repLink.parentElement.classList.add('active');
+
+    const repProgress = loadRepProgress();
+
+    const factionsHtml = factionsData.factions.map(faction => {
+        const currentStanding = repProgress[faction.id] || 'neutral';
+        const standingIndex = factionsData.standings.findIndex(s => s.id === currentStanding);
+        const standingData = factionsData.standings[standingIndex] || factionsData.standings[3]; // Default neutral
+
+        const standingColors = {
+            'hated': 'text-red-600',
+            'hostile': 'text-red-500',
+            'unfriendly': 'text-red-400',
+            'neutral': 'text-yellow-400',
+            'friendly': 'text-green-400',
+            'honored': 'text-green-500',
+            'revered': 'text-blue-400',
+            'exalted': 'text-purple-400'
+        };
+
+        const progressPercent = Math.max(0, ((standingIndex + 1) / factionsData.standings.length) * 100);
+
+        const selectOptions = factionsData.standings.map(s =>
+            `<option value="${s.id}" ${s.id === currentStanding ? 'selected' : ''}>${s.name}</option>`
+        ).join('');
+
+        let factionNote = '';
+        if (faction.alliance) factionNote = '<span class="text-blue-400 text-[10px]">[A]</span>';
+        if (faction.horde) factionNote = '<span class="text-red-400 text-[10px]">[H]</span>';
+        if (faction.exclusive) factionNote = '<span class="text-yellow-400 text-[10px]">[Exclusive]</span>';
+
+        return `
+            <div class="border border-terminal-dim p-3 md:p-2.5 sm:p-2">
+                <div class="flex justify-between items-center mb-2 flex-wrap gap-2">
+                    <span class="text-terminal-text text-xs font-semibold md:text-[11px]">${faction.name} ${factionNote}</span>
+                    <select class="rep-select bg-terminal-bg border border-terminal-dim ${standingColors[currentStanding]} px-2 py-1 text-xs font-mono cursor-pointer md:text-[11px] sm:text-[10px]" data-faction="${faction.id}">
+                        ${selectOptions}
+                    </select>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: ${progressPercent}%; background: ${standingIndex >= 5 ? '#1eff00' : standingIndex >= 3 ? '#facc15' : '#f87171'}"></div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    const html = `
+        <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">./rep-tracker --show-all</div>
+        <h2 class="text-terminal-accent text-lg mb-2 uppercase tracking-wide md:text-base sm:text-sm">🏆 [ REPUTATION TRACKER ]</h2>
+        <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">Track your TBC faction standings. Progress is saved locally.</p>
+
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-terminal-text text-sm uppercase md:text-[13px] sm:text-xs">📊 [ FACTIONS ]</h3>
+            <button onclick="if(confirm('Reset all reputation progress?')) { localStorage.removeItem('${REP_STORAGE_KEY}'); renderReputationTracker(); }" class="text-xs text-terminal-dim hover:text-red-400 cursor-pointer bg-transparent border-none font-mono">[Reset All]</button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 md:grid-cols-1 md:gap-2">
+            ${factionsHtml}
+        </div>
+
+        <div class="mt-6 p-4 border border-terminal-dim/50 bg-terminal-bg/30 md:mt-4 md:p-3 sm:mt-3 sm:p-2.5">
+            <h4 class="text-terminal-accent text-xs mb-2">💡 Key Reputation Notes</h4>
+            <ul class="text-terminal-dim text-xs space-y-1 md:text-[11px] sm:text-[10px]">
+                <li>• <span class="text-yellow-400">Honored</span> with dungeon factions unlocks Heroic keys</li>
+                <li>• <span class="text-blue-400">Revered</span> with The Violet Eye unlocks Karazhan ring upgrades</li>
+                <li>• <span class="text-purple-400">Exalted</span> with Netherwing unlocks Netherdrake mounts</li>
+                <li>• Aldor and Scryers are mutually exclusive - choose wisely!</li>
+            </ul>
+        </div>
+    `;
+
+    const mainContent = document.getElementById('main-content');
+    mainContent.style.opacity = '0.3';
+    setTimeout(() => {
+        mainContent.innerHTML = html;
+        mainContent.style.opacity = '1';
+        // Rep select listeners
+        document.querySelectorAll('.rep-select').forEach(select => {
+            select.addEventListener('change', function() {
+                const factionId = this.getAttribute('data-faction');
+                const newStanding = this.value;
+                saveRepProgress(factionId, newStanding);
+                renderReputationTracker();
+            });
+        });
+    }, FADE_TRANSITION_MS);
+}
+
+// ===== RAID LOCKOUT TRACKER =====
+function renderLockoutTracker() {
+    currentClass = null;
+    document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
+    const lockoutLink = document.querySelector('.nav-link[data-view="lockouts"]');
+    if (lockoutLink) lockoutLink.parentElement.classList.add('active');
+
+    // Check for expired lockouts
+    const lockoutProgress = checkLockoutExpiry();
+
+    const raidsHtml = lockoutsData.raids.map(raid => {
+        const lockout = lockoutProgress[raid.id];
+        const isLocked = lockout && lockout.locked;
+        let timeRemaining = '';
+
+        if (isLocked) {
+            const expiryTime = lockout.timestamp + (raid.resetDays * 24 * 60 * 60 * 1000);
+            const remaining = expiryTime - Date.now();
+            if (remaining > 0) {
+                const days = Math.floor(remaining / (24 * 60 * 60 * 1000));
+                const hours = Math.floor((remaining % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+                timeRemaining = `${days}d ${hours}h`;
+            }
+        }
+
+        return `
+            <div class="border ${isLocked ? 'border-red-400/50 bg-red-400/5' : 'border-terminal-dim'} p-4 md:p-3 sm:p-2.5">
+                <div class="flex justify-between items-center mb-2">
+                    <div>
+                        <span class="text-terminal-text text-sm font-semibold md:text-xs">${raid.name}</span>
+                        <span class="text-terminal-dim text-xs ml-2 md:text-[11px]">(${raid.resetDays === 3 ? '3-day' : 'Weekly'})</span>
+                    </div>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" class="lockout-checkbox attunement-checkbox" data-raid="${raid.id}" ${isLocked ? 'checked' : ''}>
+                        <span class="text-xs ${isLocked ? 'text-red-400' : 'text-green-400'} md:text-[11px]">${isLocked ? 'LOCKED' : 'AVAILABLE'}</span>
+                    </label>
+                </div>
+                ${isLocked ? `<div class="text-terminal-dim text-xs md:text-[11px] sm:text-[10px]">Resets in: <span class="text-yellow-400">${timeRemaining}</span></div>` : ''}
+            </div>
+        `;
+    }).join('');
+
+    const html = `
+        <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">./lockout-tracker --check-resets</div>
+        <h2 class="text-terminal-accent text-lg mb-2 uppercase tracking-wide md:text-base sm:text-sm">🔒 [ RAID LOCKOUT TRACKER ]</h2>
+        <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">Track your weekly raid lockouts. Check a raid when you\'ve saved to it.</p>
+
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-terminal-text text-sm uppercase md:text-[13px] sm:text-xs">🏰 [ RAID INSTANCES ]</h3>
+            <button onclick="if(confirm('Clear all lockouts?')) { localStorage.removeItem('${LOCKOUT_STORAGE_KEY}'); renderLockoutTracker(); }" class="text-xs text-terminal-dim hover:text-red-400 cursor-pointer bg-transparent border-none font-mono">[Clear All]</button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 md:grid-cols-1 md:gap-2">
+            ${raidsHtml}
+        </div>
+
+        <div class="mt-6 p-4 border border-terminal-dim/50 bg-terminal-bg/30 md:mt-4 md:p-3 sm:mt-3 sm:p-2.5">
+            <h4 class="text-terminal-accent text-xs mb-2">📅 Reset Schedule</h4>
+            <ul class="text-terminal-dim text-xs space-y-1 md:text-[11px] sm:text-[10px]">
+                <li>• <span class="text-terminal-text">Weekly raids</span> reset Tuesday (NA) / Wednesday (EU) at server reset</li>
+                <li>• <span class="text-terminal-text">Zul'Aman</span> resets every 3 days</li>
+                <li>• Lockouts are estimated based on when you checked the box</li>
+            </ul>
+        </div>
+    `;
+
+    const mainContent = document.getElementById('main-content');
+    mainContent.style.opacity = '0.3';
+    setTimeout(() => {
+        mainContent.innerHTML = html;
+        mainContent.style.opacity = '1';
+        // Lockout checkbox listeners
+        document.querySelectorAll('.lockout-checkbox').forEach(cb => {
+            cb.addEventListener('change', function() {
+                const raidId = this.getAttribute('data-raid');
+                saveLockoutProgress(raidId, this.checked);
+                renderLockoutTracker();
+            });
+        });
+    }, FADE_TRANSITION_MS);
+}
+
+// ===== GUILD PROGRESS TRACKER =====
+function renderGuildProgress() {
+    currentClass = null;
+    document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
+    const guildLink = document.querySelector('.nav-link[data-view="guildprogress"]');
+    if (guildLink) guildLink.parentElement.classList.add('active');
+
+    const guildProgress = loadGuildProgress();
+
+    // Get all bosses from raidsData
+    let allBosses = [];
+    for (const [phaseKey, phaseData] of Object.entries(raidsData)) {
+        for (const [raidKey, raid] of Object.entries(phaseData.raids)) {
+            if (raid.bosses && raid.bosses.length > 0) {
+                raid.bosses.forEach(boss => {
+                    allBosses.push({
+                        id: `${raidKey}-${boss.name.toLowerCase().replace(/[^a-z0-9]/g, '')}`,
+                        name: boss.name,
+                        raid: raid.name,
+                        phase: phaseData.name,
+                        npcId: boss.npcId
+                    });
+                });
+            }
+        }
+    }
+
+    // Group bosses by raid
+    const bossesByRaid = {};
+    allBosses.forEach(boss => {
+        if (!bossesByRaid[boss.raid]) {
+            bossesByRaid[boss.raid] = { phase: boss.phase, bosses: [] };
+        }
+        bossesByRaid[boss.raid].bosses.push(boss);
+    });
+
+    const raidsHtml = Object.entries(bossesByRaid).map(([raidName, raidData]) => {
+        const bossesHtml = raidData.bosses.map(boss => {
+            const killCount = guildProgress[boss.id] || 0;
+            return `
+                <div class="flex items-center justify-between py-2 border-b border-terminal-dim/30 last:border-0">
+                    <span class="text-terminal-text text-xs md:text-[11px]">${boss.name}</span>
+                    <div class="flex items-center gap-2">
+                        <button class="kill-decrement text-terminal-dim hover:text-red-400 px-2 py-0.5 text-xs border border-terminal-dim/50 hover:border-red-400" data-boss="${boss.id}">-</button>
+                        <input type="number" class="kill-count-input bg-terminal-bg border border-terminal-dim text-terminal-accent text-center w-12 px-1 py-0.5 text-xs font-mono" data-boss="${boss.id}" value="${killCount}" min="0">
+                        <button class="kill-increment text-terminal-dim hover:text-green-400 px-2 py-0.5 text-xs border border-terminal-dim/50 hover:border-green-400" data-boss="${boss.id}">+</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        const totalKills = raidData.bosses.reduce((sum, boss) => sum + (guildProgress[boss.id] || 0), 0);
+        const clearedCount = raidData.bosses.filter(boss => (guildProgress[boss.id] || 0) > 0).length;
+
+        return `
+            <div class="border border-terminal-dim mb-4 md:mb-3">
+                <div class="bg-terminal-dim/20 p-3 flex justify-between items-center md:p-2.5 sm:p-2">
+                    <div>
+                        <span class="text-terminal-accent text-sm font-semibold md:text-xs">${raidName}</span>
+                        <span class="text-terminal-dim text-xs ml-2 md:text-[11px]">${raidData.phase}</span>
+                    </div>
+                    <div class="text-xs text-terminal-dim md:text-[11px]">
+                        <span class="${clearedCount === raidData.bosses.length ? 'text-green-400' : ''}">${clearedCount}/${raidData.bosses.length}</span> bosses |
+                        <span class="text-terminal-accent">${totalKills}</span> total kills
+                    </div>
+                </div>
+                <div class="p-3 md:p-2.5 sm:p-2">
+                    ${bossesHtml}
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    const totalAllKills = Object.values(guildProgress).reduce((sum, count) => sum + count, 0);
+
+    const html = `
+        <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">./guild-progress --show-kills</div>
+        <h2 class="text-terminal-accent text-lg mb-2 uppercase tracking-wide md:text-base sm:text-sm">🎖️ [ GUILD PROGRESS TRACKER ]</h2>
+        <p class="text-terminal-dim text-xs mb-2 md:mb-1.5 sm:mb-1">Track your guild's boss kill counts across all TBC raids.</p>
+        <p class="text-terminal-accent text-sm mb-6 md:text-xs md:mb-4 sm:mb-3">Total Boss Kills: <span class="text-yellow-400">${totalAllKills}</span></p>
+
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-terminal-text text-sm uppercase md:text-[13px] sm:text-xs">🏆 [ KILL COUNTERS ]</h3>
+            <button onclick="if(confirm('Reset all guild progress?')) { localStorage.removeItem('${GUILD_PROGRESS_KEY}'); renderGuildProgress(); }" class="text-xs text-terminal-dim hover:text-red-400 cursor-pointer bg-transparent border-none font-mono">[Reset All]</button>
+        </div>
+
+        ${raidsHtml}
+    `;
+
+    const mainContent = document.getElementById('main-content');
+    mainContent.style.opacity = '0.3';
+    setTimeout(() => {
+        mainContent.innerHTML = html;
+        mainContent.style.opacity = '1';
+        // Kill count input listeners
+        document.querySelectorAll('.kill-count-input').forEach(input => {
+            input.addEventListener('change', function() {
+                const bossId = this.getAttribute('data-boss');
+                const count = parseInt(this.value) || 0;
+                saveGuildProgress(bossId, Math.max(0, count));
+                renderGuildProgress();
+            });
+        });
+        // Increment/decrement buttons
+        document.querySelectorAll('.kill-increment').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const bossId = this.getAttribute('data-boss');
+                const current = guildProgress[bossId] || 0;
+                saveGuildProgress(bossId, current + 1);
+                renderGuildProgress();
+            });
+        });
+        document.querySelectorAll('.kill-decrement').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const bossId = this.getAttribute('data-boss');
+                const current = guildProgress[bossId] || 0;
+                saveGuildProgress(bossId, Math.max(0, current - 1));
+                renderGuildProgress();
+            });
+        });
+    }, FADE_TRANSITION_MS);
+}
+
+// ===== CHARACTER IMPORT =====
+const CHAR_IMPORT_KEY = 'tbctxt_character';
+let importedCharacter = null;
+
+function loadSavedCharacter() {
+    try {
+        const saved = localStorage.getItem(CHAR_IMPORT_KEY);
+        return saved ? JSON.parse(saved) : null;
+    } catch (e) {
+        return null;
+    }
+}
+
+function saveCharacter(charData) {
+    try {
+        localStorage.setItem(CHAR_IMPORT_KEY, JSON.stringify(charData));
+        importedCharacter = charData;
+    } catch (e) {
+        console.error('Error saving character:', e);
+    }
+}
+
+function parseGearText(text) {
+    const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+    const foundItems = [];
+
+    for (const line of lines) {
+        // Try to match item names from our database
+        const cleanLine = line.replace(/^\d+\.\s*/, '').replace(/\[|\]/g, '').trim();
+        const itemId = findItemId(cleanLine);
+        if (itemId) {
+            foundItems.push({
+                name: cleanLine,
+                itemId: itemId,
+                quality: getItemQuality(cleanLine)
+            });
+        } else {
+            // Try fuzzy matching - look for partial matches
+            const lowerLine = cleanLine.toLowerCase();
+            for (const [itemName, id] of Object.entries(itemIds)) {
+                if (itemName.includes(lowerLine) || lowerLine.includes(itemName)) {
+                    foundItems.push({
+                        name: itemName,
+                        itemId: id,
+                        quality: getItemQuality(itemName)
+                    });
+                    break;
+                }
+            }
+        }
+    }
+
+    return foundItems;
+}
+
+function renderCharacterImport() {
+    currentClass = null;
+    document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
+    const importLink = document.querySelector('.nav-link[data-view="charimport"]');
+    if (importLink) importLink.parentElement.classList.add('active');
+
+    const savedChar = loadSavedCharacter();
+
+    let savedCharHtml = '';
+    if (savedChar && savedChar.gear && savedChar.gear.length > 0) {
+        const gearHtml = savedChar.gear.map(item => {
+            const qualityClass = `item-quality-${item.quality}`;
+            return `<div class="${qualityClass}"><a href="https://tbc.wowhead.com/item=${item.itemId}" data-wowhead="item=${item.itemId}">${item.name}</a></div>`;
+        }).join('');
+
+        savedCharHtml = `
+            <div class="border border-terminal-accent/50 bg-terminal-bg/30 p-4 mb-6 md:p-3 md:mb-4 sm:p-2.5">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-terminal-accent text-sm md:text-xs">${savedChar.name || 'Imported Character'} ${savedChar.realm ? `- ${savedChar.realm}` : ''}</h3>
+                    <button onclick="localStorage.removeItem('${CHAR_IMPORT_KEY}'); renderCharacterImport();" class="text-xs text-terminal-dim hover:text-red-400 cursor-pointer bg-transparent border-none font-mono">[Clear]</button>
+                </div>
+                <p class="text-terminal-dim text-xs mb-2 md:text-[11px]">${savedChar.gear.length} items recognized</p>
+                <div class="text-xs space-y-1 max-h-60 overflow-y-auto md:text-[11px] sm:text-[10px]">
+                    ${gearHtml}
+                </div>
+            </div>
+        `;
+    }
+
+    const html = `
+        <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">./char-import --parse</div>
+        <h2 class="text-terminal-accent text-lg mb-2 uppercase tracking-wide md:text-base sm:text-sm">📥 [ CHARACTER IMPORT ]</h2>
+        <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">Import your character's gear by pasting item names. Works with addon exports, wowhead lists, or manual entry.</p>
+
+        ${savedCharHtml}
+
+        <div class="grid grid-cols-2 gap-4 mb-4 md:grid-cols-1">
+            <div>
+                <label class="text-terminal-dim text-xs block mb-2">Character Name</label>
+                <input type="text" id="char-name" class="w-full bg-terminal-bg border border-terminal-dim text-terminal-text px-3 py-2 text-xs font-mono" placeholder="Legolas" value="${savedChar?.name || ''}">
+            </div>
+            <div>
+                <label class="text-terminal-dim text-xs block mb-2">Realm</label>
+                <input type="text" id="char-realm" class="w-full bg-terminal-bg border border-terminal-dim text-terminal-text px-3 py-2 text-xs font-mono" placeholder="Faerlina" value="${savedChar?.realm || ''}">
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label class="text-terminal-dim text-xs block mb-2">📋 PASTE GEAR LIST <span class="text-terminal-accent">(one item per line)</span></label>
+            <textarea id="char-gear-input" class="w-full bg-terminal-bg border border-terminal-text text-terminal-text px-3 py-2 text-xs font-mono h-48 resize-y" placeholder="Paste your gear list here...
+
+Examples of accepted formats:
+- Helm of the Fallen Hero
+- [Legguards of the Fallen Crusader]
+- 1. Shoulderpads of the Stranger
+- Tier 5 Chest - Robes of Tirisfal
+
+The parser will try to match items from our database."></textarea>
+        </div>
+
+        <div class="flex gap-3 mb-6 flex-wrap">
+            <button id="parse-gear-btn" class="bg-terminal-accent text-terminal-bg px-6 py-2 font-mono text-xs font-bold cursor-pointer hover:bg-terminal-text transition-colors">
+                [ PARSE GEAR ]
+            </button>
+            <button id="clear-input-btn" class="border border-terminal-dim text-terminal-dim px-4 py-2 font-mono text-xs cursor-pointer hover:border-terminal-text hover:text-terminal-text transition-colors bg-transparent">
+                [ CLEAR ]
+            </button>
+        </div>
+
+        <div id="parse-results" class="hidden">
+            <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">✅ [ PARSED ITEMS ]</h3>
+            <div id="parsed-items-list" class="border border-terminal-dim p-4 mb-4 max-h-80 overflow-y-auto md:p-3 sm:p-2.5"></div>
+            <button id="save-char-btn" class="bg-terminal-text text-terminal-bg px-6 py-2 font-mono text-xs font-bold cursor-pointer hover:bg-terminal-accent transition-colors">
+                [ SAVE CHARACTER ]
+            </button>
+        </div>
+
+        <div class="mt-6 p-4 border border-terminal-dim/50 bg-terminal-bg/30 md:mt-4 md:p-3 sm:mt-3 sm:p-2.5">
+            <h4 class="text-terminal-accent text-xs mb-2">💡 Import Tips</h4>
+            <ul class="text-terminal-dim text-xs space-y-1 md:text-[11px] sm:text-[10px]">
+                <li>• Copy gear lists from Wowhead, Seventyupgrades, or addon exports</li>
+                <li>• The parser tries to fuzzy-match item names from our 36,000+ item database</li>
+                <li>• Items not found will be skipped - check spelling for missing items</li>
+                <li>• Saved character data persists in your browser</li>
+            </ul>
+        </div>
+    `;
+
+    const mainContent = document.getElementById('main-content');
+    mainContent.style.opacity = '0.3';
+    setTimeout(() => {
+        mainContent.innerHTML = html;
+        mainContent.style.opacity = '1';
+        processItemLinks();
+
+        // Parse button
+        document.getElementById('parse-gear-btn').addEventListener('click', function() {
+            const gearText = document.getElementById('char-gear-input').value;
+            const parsedItems = parseGearText(gearText);
+
+            const resultsDiv = document.getElementById('parse-results');
+            const itemsListDiv = document.getElementById('parsed-items-list');
+
+            if (parsedItems.length > 0) {
+                const itemsHtml = parsedItems.map(item => {
+                    const qualityClass = `item-quality-${item.quality}`;
+                    return `<div class="${qualityClass} py-1"><a href="https://tbc.wowhead.com/item=${item.itemId}" data-wowhead="item=${item.itemId}">${item.name}</a></div>`;
+                }).join('');
+
+                itemsListDiv.innerHTML = `
+                    <p class="text-terminal-accent text-xs mb-3">${parsedItems.length} items recognized</p>
+                    ${itemsHtml}
+                `;
+                resultsDiv.classList.remove('hidden');
+                processItemLinks();
+
+                // Store parsed items for saving
+                window._parsedCharItems = parsedItems;
+            } else {
+                itemsListDiv.innerHTML = '<p class="text-red-400 text-xs">No items recognized. Check item names and try again.</p>';
+                resultsDiv.classList.remove('hidden');
+            }
+        });
+
+        // Clear button
+        document.getElementById('clear-input-btn').addEventListener('click', function() {
+            document.getElementById('char-gear-input').value = '';
+            document.getElementById('parse-results').classList.add('hidden');
+        });
+
+        // Save button
+        document.getElementById('save-char-btn')?.addEventListener('click', function() {
+            const charName = document.getElementById('char-name').value.trim();
+            const charRealm = document.getElementById('char-realm').value.trim();
+            const gear = window._parsedCharItems || [];
+
+            if (gear.length > 0) {
+                saveCharacter({
+                    name: charName || 'Unknown',
+                    realm: charRealm || '',
+                    gear: gear,
+                    savedAt: Date.now()
+                });
+                renderCharacterImport();
+            }
+        });
+    }, FADE_TRANSITION_MS);
+}
+
 function renderApiDocs() {
     currentClass = null;
     document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
@@ -2947,10 +3698,20 @@ function navigateToHash(hash) {
         if (parts[1]) currentRaidPhase = parts[1];
         if (parts[2]) currentRaid = parts[2];
         renderRaidsContent();
+    } else if (page === 'heroics') {
+        renderHeroicsContent(parts[1] || 'hellfire');
     } else if (page === 'collections') {
         renderCollectionsContent(parts[1] || 'mounts');
     } else if (page === 'attunements') {
         renderAttunementsContent(parts[1] || 'karazhan');
+    } else if (page === 'reputation') {
+        renderReputationTracker();
+    } else if (page === 'lockouts') {
+        renderLockoutTracker();
+    } else if (page === 'guildprogress') {
+        renderGuildProgress();
+    } else if (page === 'charimport') {
+        renderCharacterImport();
     } else if (page === 'raidready') {
         renderPreRaidChecker();
     } else if (page === 'api') {

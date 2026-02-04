@@ -1,0 +1,184 @@
+{
+  "hellfire": {
+    "name": "Hellfire Citadel",
+    "key": "Flamewrought Key",
+    "keyItemId": 30622,
+    "faction": "Honor Hold / Thrallmar",
+    "repRequired": "Honored",
+    "dungeons": [
+      {
+        "id": "ramparts",
+        "name": "Hellfire Ramparts",
+        "bosses": ["Watchkeeper Gargolmar", "Omor the Unscarred", "Vazruden the Herald"],
+        "difficulty": "Easy",
+        "tips": "Good starter heroic. Omor fears - spread out.",
+        "loot": ["Figurine of the Colossus", "Feltooth Eviscerator"]
+      },
+      {
+        "id": "blood-furnace",
+        "name": "The Blood Furnace",
+        "bosses": ["The Maker", "Broggok", "Keli'dan the Breaker"],
+        "difficulty": "Easy",
+        "tips": "Broggok event - kill adds quickly. Keli'dan - run out on Burning Nova.",
+        "loot": ["Wastewalker Tunic", "Bloodsworn Warblades"]
+      },
+      {
+        "id": "shattered-halls",
+        "name": "The Shattered Halls",
+        "bosses": ["Grand Warlock Nethekurse", "Warbringer O'mrogg", "Warchief Kargath Bladefist"],
+        "difficulty": "Hard",
+        "tips": "Timed run for Trial of the Naaru. Heavy AoE trash. CC essential.",
+        "loot": ["Greaves of the Shatterer", "Hallowed Handwraps"]
+      }
+    ]
+  },
+  "coilfang": {
+    "name": "Coilfang Reservoir",
+    "key": "Reservoir Key",
+    "keyItemId": 30623,
+    "faction": "Cenarion Expedition",
+    "repRequired": "Honored",
+    "dungeons": [
+      {
+        "id": "slave-pens",
+        "name": "The Slave Pens",
+        "bosses": ["Mennu the Betrayer", "Rokmar the Crackler", "Quagmirran"],
+        "difficulty": "Easy",
+        "tips": "Watch for patrol paths. Quagmirran - cleave and poison.",
+        "loot": ["Spaulders of the Righteous", "Mana-Etched Gloves"]
+      },
+      {
+        "id": "underbog",
+        "name": "The Underbog",
+        "bosses": ["Hungerfen", "Ghaz'an", "Swamplord Musel'ek", "The Black Stalker"],
+        "difficulty": "Medium",
+        "tips": "Black Stalker - spread for Chain Lightning, levitate on suspending.",
+        "loot": ["Stormsong Kilt", "Barkchip Boots"]
+      },
+      {
+        "id": "steamvault",
+        "name": "The Steamvault",
+        "bosses": ["Hydromancer Thespia", "Mekgineer Steamrigger", "Warlord Kalithresh"],
+        "difficulty": "Hard",
+        "tips": "Kill Kalithresh's tanks when he channels. Thespia - interrupt Lung Burst.",
+        "loot": ["Devilshark Cape", "Steam-Hinge Chain of Valor"]
+      }
+    ]
+  },
+  "auchindoun": {
+    "name": "Auchindoun",
+    "key": "Auchenai Key",
+    "keyItemId": 30633,
+    "faction": "Lower City",
+    "repRequired": "Honored",
+    "dungeons": [
+      {
+        "id": "mana-tombs",
+        "name": "Mana-Tombs",
+        "bosses": ["Pandemonius", "Tavarok", "Nexus-Prince Shaffar", "Yor (Summoned)"],
+        "difficulty": "Medium",
+        "tips": "Pandemonius - stop DPS during Dark Shell. Summon Yor for extra loot!",
+        "loot": ["Shaffar's Stasis Chamber Key", "Scepter of Sha'tar"]
+      },
+      {
+        "id": "auchenai",
+        "name": "Auchenai Crypts",
+        "bosses": ["Shirrak the Dead Watcher", "Exarch Maladaar"],
+        "difficulty": "Medium",
+        "tips": "Shirrak - range him, deadly focus fire. Maladaar - kill Avatar of Martyred.",
+        "loot": ["Boots of the Unjust", "Maladaar's Blessed Chaplet"]
+      },
+      {
+        "id": "sethekk",
+        "name": "Sethekk Halls",
+        "bosses": ["Darkweaver Syth", "Talon King Ikiss", "Anzu (Druid Summon)"],
+        "difficulty": "Medium",
+        "tips": "Ikiss - LOS Arcane Explosion. Anzu drops epic mount!",
+        "loot": ["Reins of the Raven Lord", "Shoulderpads of Assassination"]
+      },
+      {
+        "id": "shadow-lab",
+        "name": "Shadow Labyrinth",
+        "bosses": ["Ambassador Hellmaw", "Blackheart the Inciter", "Grandmaster Vorpil", "Murmur"],
+        "difficulty": "Hard",
+        "tips": "First key fragment. Blackheart - spread for Incite Chaos. Murmur - touch on Sonic Boom.",
+        "loot": ["First Key Fragment", "Sonic Spear", "Shattered Sun Pendant Neck"]
+      }
+    ]
+  },
+  "tempest": {
+    "name": "Tempest Keep",
+    "key": "Warpforged Key",
+    "keyItemId": 30634,
+    "faction": "The Sha'tar",
+    "repRequired": "Honored",
+    "dungeons": [
+      {
+        "id": "mechanar",
+        "name": "The Mechanar",
+        "bosses": ["Mechano-Lord Capacitus", "Nethermancer Sepethrea", "Pathaleon the Calculator"],
+        "difficulty": "Medium",
+        "tips": "Capacitus - bring reflective damage. Sepethrea - kill fire elementals fast.",
+        "loot": ["Boots of the Pious", "Jade-Skull Breastplate"]
+      },
+      {
+        "id": "botanica",
+        "name": "The Botanica",
+        "bosses": ["Commander Sarannis", "High Botanist Freywinn", "Thorngrin the Tender", "Laj", "Warp Splinter"],
+        "difficulty": "Medium",
+        "tips": "Long dungeon. Freywinn - kill saplings. Warp Splinter - kill adds, they heal him.",
+        "loot": ["Hatchling's Vest", "Netherfury Leggings"]
+      },
+      {
+        "id": "arcatraz",
+        "name": "The Arcatraz",
+        "bosses": ["Zereketh the Unbound", "Dalliah the Doomsayer", "Wrath-Scryer Soccothrates", "Harbinger Skyriss"],
+        "difficulty": "Hard",
+        "tips": "Key fragment. Skyriss splits - save cooldowns. Save Millhouse for Trial of Naaru!",
+        "loot": ["Second Key Fragment", "Hallowed Crown", "Bracers of Recklessness"]
+      }
+    ]
+  },
+  "caverns": {
+    "name": "Caverns of Time",
+    "key": "Key of Time",
+    "keyItemId": 30635,
+    "faction": "Keepers of Time",
+    "repRequired": "Honored",
+    "dungeons": [
+      {
+        "id": "old-hillsbrad",
+        "name": "Old Hillsbrad Foothills",
+        "bosses": ["Lieutenant Drake", "Captain Skarloc", "Epoch Hunter"],
+        "difficulty": "Easy",
+        "tips": "Fun RP instance. Escort Thrall - he's tanky but don't let mobs stack.",
+        "loot": ["Handguards of Assassination", "Wyrmfury Pauldrons"]
+      },
+      {
+        "id": "black-morass",
+        "name": "The Black Morass",
+        "bosses": ["Chrono Lord Deja", "Temporus", "Aeonus"],
+        "difficulty": "Hard",
+        "tips": "Wave defense. Keep Medivh shield above 0%. Beacons must die fast. Key quest!",
+        "loot": ["Third Key Fragment", "Hourglass of the Unraveller", "Scarab of Infinite Cycle"]
+      }
+    ]
+  },
+  "magister": {
+    "name": "Magisters' Terrace",
+    "key": "None (Attunement)",
+    "keyItemId": null,
+    "faction": "Shattered Sun Offensive",
+    "repRequired": "None",
+    "dungeons": [
+      {
+        "id": "magisters",
+        "name": "Magisters' Terrace",
+        "bosses": ["Selin Fireheart", "Vexallus", "Priestess Delrissa", "Kael'thas Sunstrider"],
+        "difficulty": "Very Hard",
+        "tips": "Mini-raid difficulty. Delrissa - PvP fight, CC and focus. Kael drops mount!",
+        "loot": ["Swift White Hawkstrider", "Sun-Infused Focus Staff", "Sunrage Treads"]
+      }
+    ]
+  }
+}
