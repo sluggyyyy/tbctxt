@@ -3126,69 +3126,132 @@ function renderHeroicsContent(zone = 'hellfire', dungeon = null) {
     // Generate content based on whether a dungeon is selected
     let contentHtml = '';
 
+    const getDifficultyColor = (diff) => ({
+        'Easy': 'text-green-400',
+        'Easy-Medium': 'text-green-300',
+        'Medium': 'text-yellow-400',
+        'Medium-Hard': 'text-orange-300',
+        'Hard': 'text-orange-400',
+        'Very Hard': 'text-red-400'
+    }[diff] || 'text-terminal-dim');
+
     if (dungeon) {
         // Show individual dungeon guide
         const selectedDungeon = zoneData.dungeons.find(d => d.id === dungeon);
         if (selectedDungeon) {
-            const difficultyColor = {
-                'Easy': 'text-green-400',
-                'Medium': 'text-yellow-400',
-                'Hard': 'text-orange-400',
-                'Very Hard': 'text-red-400'
-            }[selectedDungeon.difficulty] || 'text-terminal-dim';
+            const difficultyColor = getDifficultyColor(selectedDungeon.difficulty);
 
-            const bossesHtml = selectedDungeon.bosses.map((boss, idx) => `
-                <div class="border border-terminal-dim/50 p-3 md:p-2.5 sm:p-2">
-                    <div class="flex items-center gap-2 mb-1">
-                        <span class="text-terminal-accent text-xs">[${idx + 1}]</span>
-                        <span class="text-terminal-text text-sm font-semibold md:text-xs">${boss}</span>
+            // Build detailed boss guides
+            const bossesHtml = selectedDungeon.bosses.map((boss, idx) => {
+                const bossName = typeof boss === 'string' ? boss : boss.name;
+                const bossDiff = boss.difficulty ? getDifficultyColor(boss.difficulty) : '';
+
+                // If boss is just a string (old format), show simple version
+                if (typeof boss === 'string') {
+                    return `
+                        <div class="border border-terminal-dim/50 p-3 md:p-2.5 sm:p-2">
+                            <div class="flex items-center gap-2">
+                                <span class="text-terminal-accent text-xs">[${idx + 1}]</span>
+                                <span class="text-terminal-text text-sm font-semibold md:text-xs">${boss}</span>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Detailed boss format
+                const abilitiesHtml = boss.abilities ? boss.abilities.map(ability => `
+                    <div class="border-l-2 border-terminal-accent/50 pl-3 mb-3 md:pl-2 md:mb-2">
+                        <div class="text-terminal-text text-xs font-semibold mb-1 md:text-[11px]">${ability.name}</div>
+                        <div class="text-terminal-dim text-xs mb-1 md:text-[11px] sm:text-[10px]">${ability.description}</div>
+                        <div class="text-yellow-400 text-xs md:text-[11px] sm:text-[10px]">→ ${ability.handling}</div>
                     </div>
-                </div>
-            `).join('');
+                `).join('') : '';
 
-            const lootHtml = selectedDungeon.loot ? selectedDungeon.loot.map(item =>
-                `<span class="text-wow-epic">• ${item}</span>`
-            ).join('<br>') : '<span class="text-terminal-dim">No notable loot listed</span>';
+                const lootHtml = boss.loot ? boss.loot.map(item =>
+                    `<span class="text-wow-epic">• ${item}</span>`
+                ).join(' ') : '';
 
-            contentHtml = `
-                <div class="border border-terminal-accent p-5 mb-4 md:p-4 sm:p-3">
-                    <div class="flex justify-between items-start mb-4 flex-wrap gap-2">
+                return `
+                    <div class="border border-terminal-dim p-4 mb-4 md:p-3 sm:p-2.5">
+                        <div class="flex justify-between items-start mb-3 flex-wrap gap-2">
+                            <div class="flex items-center gap-2">
+                                <span class="text-terminal-accent text-sm font-bold md:text-xs">[${idx + 1}]</span>
+                                <span class="text-terminal-text text-base font-semibold md:text-sm">${boss.name}</span>
+                            </div>
+                            ${boss.difficulty ? `<span class="${bossDiff} text-xs border border-current px-2 py-0.5">[${boss.difficulty}]</span>` : ''}
+                        </div>
+
+                        ${boss.description ? `<p class="text-terminal-dim text-xs mb-4 md:text-[11px] sm:text-[10px]">${boss.description}</p>` : ''}
+
+                        ${abilitiesHtml ? `
+                            <div class="mb-4 md:mb-3">
+                                <h5 class="text-terminal-accent text-xs mb-2 uppercase md:text-[11px]">⚡ Abilities</h5>
+                                ${abilitiesHtml}
+                            </div>
+                        ` : ''}
+
+                        ${boss.strategy ? `
+                            <div class="mb-4 md:mb-3">
+                                <h5 class="text-terminal-accent text-xs mb-2 uppercase md:text-[11px]">📋 Strategy</h5>
+                                <div class="bg-terminal-bg/50 border border-terminal-accent/30 p-3 text-xs text-terminal-text md:p-2 md:text-[11px] sm:text-[10px]">
+                                    ${boss.strategy}
+                                </div>
+                            </div>
+                        ` : ''}
+
+                        ${lootHtml ? `
+                            <div>
+                                <h5 class="text-terminal-accent text-xs mb-2 uppercase md:text-[11px]">🎁 Loot</h5>
+                                <div class="text-xs md:text-[11px] sm:text-[10px]">${lootHtml}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+
+            // Dungeon overview info
+            const overviewHtml = `
+                <div class="border border-terminal-accent/50 bg-terminal-bg/30 p-4 mb-6 md:p-3 md:mb-4 sm:p-2.5">
+                    <div class="flex justify-between items-start mb-3 flex-wrap gap-2">
                         <h3 class="text-terminal-accent text-lg font-semibold md:text-base sm:text-sm">${selectedDungeon.name}</h3>
                         <span class="${difficultyColor} text-sm border border-current px-2 py-1 md:text-xs">[${selectedDungeon.difficulty}]</span>
                     </div>
 
-                    <div class="mb-6 md:mb-4">
-                        <h4 class="text-terminal-text text-sm mb-3 uppercase md:text-xs md:mb-2">👹 [ BOSS ORDER ]</h4>
-                        <div class="grid gap-2">
-                            ${bossesHtml}
-                        </div>
+                    ${selectedDungeon.description ? `<p class="text-terminal-dim text-xs mb-4 md:text-[11px] sm:text-[10px]">${selectedDungeon.description}</p>` : ''}
+
+                    <div class="grid grid-cols-2 gap-3 text-xs md:grid-cols-1 md:gap-2 md:text-[11px] sm:text-[10px]">
+                        ${selectedDungeon.estimatedTime ? `<div><span class="text-terminal-dim">Time:</span> <span class="text-terminal-text">${selectedDungeon.estimatedTime}</span></div>` : ''}
+                        ${selectedDungeon.composition ? `<div><span class="text-terminal-dim">Comp:</span> <span class="text-terminal-text">${selectedDungeon.composition.recommended}</span></div>` : ''}
                     </div>
 
-                    <div class="mb-6 md:mb-4">
-                        <h4 class="text-terminal-text text-sm mb-3 uppercase md:text-xs md:mb-2">💡 [ STRATEGY TIPS ]</h4>
-                        <div class="bg-terminal-bg/50 border border-yellow-400/30 p-4 text-xs text-terminal-text md:p-3 md:text-[11px] sm:p-2.5 sm:text-[10px]">
-                            ${selectedDungeon.tips}
+                    ${selectedDungeon.composition?.notes ? `
+                        <div class="mt-3 text-xs text-yellow-400 md:text-[11px] sm:text-[10px]">
+                            💡 ${selectedDungeon.composition.notes}
                         </div>
-                    </div>
-
-                    <div>
-                        <h4 class="text-terminal-text text-sm mb-3 uppercase md:text-xs md:mb-2">🎁 [ NOTABLE LOOT ]</h4>
-                        <div class="text-xs space-y-1 md:text-[11px] sm:text-[10px]">
-                            ${lootHtml}
-                        </div>
-                    </div>
+                    ` : ''}
                 </div>
+            `;
+
+            // Trash tips section
+            const trashHtml = selectedDungeon.trashTips ? `
+                <div class="border border-terminal-dim/50 p-4 mb-6 md:p-3 md:mb-4 sm:p-2.5">
+                    <h4 class="text-terminal-text text-sm mb-2 uppercase md:text-xs">🗑️ [ TRASH TIPS ]</h4>
+                    <p class="text-terminal-dim text-xs md:text-[11px] sm:text-[10px]">${selectedDungeon.trashTips}</p>
+                </div>
+            ` : '';
+
+            contentHtml = `
+                ${overviewHtml}
+                ${trashHtml}
+                <h4 class="text-terminal-text text-sm my-4 uppercase md:text-xs md:my-3">👹 [ BOSS GUIDES ]</h4>
+                ${bossesHtml}
             `;
         }
     } else {
         // Show all dungeons overview
         const dungeonsHtml = zoneData.dungeons.map(d => {
-            const difficultyColor = {
-                'Easy': 'text-green-400',
-                'Medium': 'text-yellow-400',
-                'Hard': 'text-orange-400',
-                'Very Hard': 'text-red-400'
-            }[d.difficulty] || 'text-terminal-dim';
+            const difficultyColor = getDifficultyColor(d.difficulty);
+            const bossNames = d.bosses.map(b => typeof b === 'string' ? b : b.name).join(' → ');
 
             return `
                 <div class="border border-terminal-dim p-4 mb-4 md:p-3 sm:p-2.5">
@@ -3196,12 +3259,11 @@ function renderHeroicsContent(zone = 'hellfire', dungeon = null) {
                         <a href="#heroics/${zone}/${d.id}" class="text-terminal-text text-sm font-semibold hover:text-terminal-accent cursor-pointer no-underline md:text-xs">${d.name}</a>
                         <span class="${difficultyColor} text-xs">[${d.difficulty}]</span>
                     </div>
-                    <div class="text-terminal-dim text-xs mb-3 md:text-[11px] sm:text-[10px]">
-                        <span class="text-terminal-accent">Bosses:</span> ${d.bosses.join(' → ')}
+                    ${d.description ? `<p class="text-terminal-dim text-xs mb-2 md:text-[11px] sm:text-[10px]">${d.description}</p>` : ''}
+                    <div class="text-terminal-dim text-xs mb-2 md:text-[11px] sm:text-[10px]">
+                        <span class="text-terminal-accent">Bosses:</span> ${bossNames}
                     </div>
-                    <div class="bg-terminal-bg/50 border border-terminal-dim/50 p-2 text-xs text-terminal-dim md:text-[11px] sm:text-[10px]">
-                        <span class="text-yellow-400">💡 Tips:</span> ${d.tips}
-                    </div>
+                    ${d.estimatedTime ? `<div class="text-terminal-dim text-xs md:text-[11px] sm:text-[10px]"><span class="text-terminal-accent">Time:</span> ${d.estimatedTime}</div>` : ''}
                 </div>
             `;
         }).join('');
@@ -3211,7 +3273,7 @@ function renderHeroicsContent(zone = 'hellfire', dungeon = null) {
     const html = `
         <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">./heroic-guide --zone=${zone}${dungeon ? ` --dungeon=${dungeon}` : ''}</div>
         <h2 class="text-terminal-accent text-lg mb-2 uppercase tracking-wide md:text-base sm:text-sm">⚔️ [ HEROIC DUNGEONS GUIDE ]</h2>
-        <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">TBC Heroic dungeon strategies and key requirements</p>
+        <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">${zoneData.description || 'TBC Heroic dungeon strategies and key requirements'}</p>
 
         <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">🗝️ [ ZONE SELECT ]</h3>
         <div class="flex flex-wrap gap-2 mb-4 md:gap-1.5 md:mb-3">${zoneButtons}</div>

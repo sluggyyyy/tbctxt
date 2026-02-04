@@ -5,30 +5,297 @@
     "keyItemId": 30622,
     "faction": "Honor Hold / Thrallmar",
     "repRequired": "Honored",
+    "description": "The first dungeon hub most players encounter in Outland. Located in the heart of Hellfire Peninsula, these three dungeons range from beginner-friendly to one of the hardest heroics in the game.",
     "dungeons": [
       {
         "id": "ramparts",
         "name": "Hellfire Ramparts",
-        "bosses": ["Watchkeeper Gargolmar", "Omor the Unscarred", "Vazruden the Herald"],
         "difficulty": "Easy",
-        "tips": "Good starter heroic. Omor fears - spread out.",
-        "loot": ["Figurine of the Colossus", "Feltooth Eviscerator"]
+        "description": "The easiest heroic in TBC and an excellent starting point. Short, linear, and forgiving. Great for learning heroic mechanics and farming badges.",
+        "estimatedTime": "25-35 minutes",
+        "composition": {
+          "recommended": "1 tank, 1 healer, 3 DPS",
+          "notes": "No special requirements. Any composition works."
+        },
+        "trashTips": "Trash hits harder than normal but has no special mechanics. Pull carefully and use CC on double pulls if undergeared.",
+        "bosses": [
+          {
+            "name": "Watchkeeper Gargolmar",
+            "npcId": 17306,
+            "difficulty": "Easy",
+            "description": "A straightforward tank-and-spank with two healers that must be killed first.",
+            "abilities": [
+              {
+                "name": "Mortal Wound",
+                "description": "Reduces healing received by 10% per stack, stacks up to 5 times.",
+                "handling": "Unavoidable. Healer needs to compensate. Stacks reset when boss changes targets briefly."
+              },
+              {
+                "name": "Surge",
+                "description": "Charges a random distant player.",
+                "handling": "Minor damage. Ranged should stay loosely spread."
+              }
+            ],
+            "strategy": "Kill the two Hellfire Watchers (healers) first - they will heal Gargolmar if left alive. After both healers are dead, focus the boss. Tank and spank.",
+            "loot": ["Pauldrons of Arcane Rage", "Blood Knight Defender"]
+          },
+          {
+            "name": "Omor the Unscarred",
+            "npcId": 17308,
+            "difficulty": "Easy-Medium",
+            "description": "A demon boss with a fear mechanic. The main challenge is positioning to avoid feared players pulling extra trash.",
+            "abilities": [
+              {
+                "name": "Treacherous Aura",
+                "description": "Deals shadow damage to nearby players.",
+                "handling": "Ranged and healers stay at max range. Only tank and melee in aura range."
+              },
+              {
+                "name": "Demonic Shield",
+                "description": "Absorbs damage and reflects some back to attackers.",
+                "handling": "Continue DPS through it. Reflected damage is minor."
+              },
+              {
+                "name": "Orbital Strike",
+                "description": "Summons a felhound that runs to a random player and explodes.",
+                "handling": "Move away from the felhound. If it reaches you, it deals significant damage."
+              },
+              {
+                "name": "Shadow Whip",
+                "description": "Pulls the current target to the boss.",
+                "handling": "Tank repositions after being pulled. Can be annoying but not dangerous."
+              }
+            ],
+            "strategy": "Clear ALL trash in the room before engaging - feared players can easily pull extra groups. Tank Omor in the center of the room. Ranged spread out at max range. Kill felhounds when they spawn or move away from them.",
+            "loot": ["Figurine of the Colossus", "Heart Fire Warhammer"]
+          },
+          {
+            "name": "Vazruden the Herald",
+            "npcId": 17537,
+            "difficulty": "Medium",
+            "description": "A two-phase fight. Phase 1 is against Vazruden's dragon mount Nazan. Phase 2 adds Vazruden himself when Nazan lands.",
+            "abilities": [
+              {
+                "name": "Fireball (Nazan)",
+                "description": "Ranged fire attack while Nazan is airborne.",
+                "handling": "Unavoidable in Phase 1. Healers must keep group topped."
+              },
+              {
+                "name": "Cone of Fire (Nazan)",
+                "description": "Frontal cone breath attack dealing heavy fire damage.",
+                "handling": "Tank faces Nazan away from group. Never stand in front of the dragon."
+              },
+              {
+                "name": "Liquid Fire (Nazan)",
+                "description": "Fire patches on the ground that deal damage over time.",
+                "handling": "Move out of fire immediately. These persist for a while."
+              },
+              {
+                "name": "Revenge (Vazruden)",
+                "description": "Extra damage attack on tank.",
+                "handling": "Healer watches for damage spikes on tank."
+              }
+            ],
+            "strategy": "Phase 1: Nazan flies around dropping fireballs. Ranged can DPS him in the air. When Nazan lands (around 50% health), tank picks him up and faces him away. Phase 2: Vazruden dismounts and must be tanked. You can either kill them together (cleave) or focus one at a time. Kill Vazruden first if struggling - Nazan alone is easier.",
+            "loot": ["Feltooth Eviscerator", "Nazan's Riding Crop", "Reinforced Fel Iron Chest (badge)"]
+          }
+        ],
+        "loot": ["Figurine of the Colossus", "Feltooth Eviscerator", "Nazan's Riding Crop"]
       },
       {
         "id": "blood-furnace",
         "name": "The Blood Furnace",
-        "bosses": ["The Maker", "Broggok", "Keli'dan the Breaker"],
         "difficulty": "Easy",
-        "tips": "Broggok event - kill adds quickly. Keli'dan - run out on Burning Nova.",
-        "loot": ["Wastewalker Tunic", "Bloodsworn Warblades"]
+        "description": "Another beginner-friendly heroic with straightforward mechanics. The gauntlet event before the second boss is the main challenge.",
+        "estimatedTime": "30-40 minutes",
+        "composition": {
+          "recommended": "1 tank, 1 healer, 3 DPS",
+          "notes": "AoE damage helps with the Broggok event."
+        },
+        "trashTips": "Felguard Annihilators hit hard - CC or burn them fast. The Technicians can mind control players briefly.",
+        "bosses": [
+          {
+            "name": "The Maker",
+            "npcId": 17381,
+            "difficulty": "Easy",
+            "description": "A simple boss with a mind control mechanic. Can be chaotic but rarely causes wipes.",
+            "abilities": [
+              {
+                "name": "Domination",
+                "description": "Mind controls a random player for 10 seconds, increasing their damage dealt.",
+                "handling": "CC the mind-controlled player if possible. They hit HARD while controlled. Don't blow cooldowns that could kill allies."
+              },
+              {
+                "name": "Acid Spray",
+                "description": "Frontal cone dealing nature damage.",
+                "handling": "Don't stand in front of the boss unless tanking."
+              },
+              {
+                "name": "Throw Beaker",
+                "description": "Throws a potion dealing AoE damage and knockback.",
+                "handling": "Spread out to minimize splash damage."
+              }
+            ],
+            "strategy": "Tank and spank with awareness. When someone gets mind controlled, use CC (sheep, fear, stun) to keep them locked down. If the tank gets MCed, off-tank or kite until it wears off. Don't use big cooldowns that could kill your allies.",
+            "loot": ["Diamond Prism of Recurrence", "Bloodlord Legplates"]
+          },
+          {
+            "name": "Broggok",
+            "npcId": 17380,
+            "difficulty": "Medium",
+            "description": "A gauntlet event followed by a boss fight. Four waves of orcs must be killed before Broggok becomes active.",
+            "abilities": [
+              {
+                "name": "Poison Cloud",
+                "description": "Creates poison clouds that deal heavy nature damage over time.",
+                "handling": "Move out of green clouds immediately. They spawn throughout the fight."
+              },
+              {
+                "name": "Slime Spray",
+                "description": "Frontal cone nature damage.",
+                "handling": "Tank faces boss away from group."
+              },
+              {
+                "name": "Poison Bolt",
+                "description": "Ranged poison attack on random players.",
+                "handling": "Healers dispel poison and heal through it."
+              }
+            ],
+            "strategy": "Before the boss: Four cells of orcs open one at a time. Kill each wave quickly before the next opens. AoE is very helpful here. Don't let waves stack up. After all four waves: Broggok activates. Tank him in the center and move out of poison clouds. Keep the room clear of poison and burn him down.",
+            "loot": ["Wastewalker Tunic", "Embroidered Spellpyre Boots"]
+          },
+          {
+            "name": "Keli'dan the Breaker",
+            "npcId": 17377,
+            "difficulty": "Medium",
+            "description": "The final boss with a deadly AoE that requires everyone to run out. Wipes groups that don't pay attention.",
+            "abilities": [
+              {
+                "name": "Burning Nova",
+                "description": "Keli'dan channels for 5 seconds then deals MASSIVE fire damage to everyone within 20 yards. Will one-shot most players.",
+                "handling": "WHEN HE CHANNELS, RUN OUT IMMEDIATELY. You have 5 seconds to get 20+ yards away. This is the only mechanic that matters."
+              },
+              {
+                "name": "Fire Nova",
+                "description": "Smaller fire AoE dealing moderate damage.",
+                "handling": "Healable. Don't confuse with Burning Nova."
+              },
+              {
+                "name": "Shadow Bolt Volley",
+                "description": "AoE shadow damage to the group.",
+                "handling": "Healers keep group topped for this."
+              },
+              {
+                "name": "Corruption",
+                "description": "DoT on random players.",
+                "handling": "Dispel if possible, otherwise heal through it."
+              }
+            ],
+            "strategy": "Kill the five channelers first - they don't fight back much. Once Keli'dan activates, tank him in the center of the room. DPS normally. WHEN HE YELLS AND STARTS CHANNELING BURNING NOVA, EVERYONE RUNS TO THE EDGE OF THE ROOM. Wait for the explosion, then run back in and continue. Repeat until dead. Missing the run-out is the only way to wipe here.",
+            "loot": ["Bloodsworn Warblades", "Mantle of the Dusk-Dweller", "Reinforced Fel Iron Chest (badge)"]
+          }
+        ],
+        "loot": ["Wastewalker Tunic", "Bloodsworn Warblades", "Mantle of the Dusk-Dweller"]
       },
       {
         "id": "shattered-halls",
         "name": "The Shattered Halls",
-        "bosses": ["Grand Warlock Nethekurse", "Warbringer O'mrogg", "Warchief Kargath Bladefist"],
         "difficulty": "Hard",
-        "tips": "Timed run for Trial of the Naaru. Heavy AoE trash. CC essential.",
-        "loot": ["Greaves of the Shatterer", "Hallowed Handwraps"]
+        "description": "One of the hardest heroics in TBC. Heavy AoE trash pulls and punishing boss mechanics. Required for the Trial of the Naaru attunement (timed run).",
+        "estimatedTime": "45-75 minutes",
+        "composition": {
+          "recommended": "1 tank, 1-2 healers, 2-3 DPS",
+          "notes": "CC is essential. Mage and Hunter highly valuable. A second healer makes trash much safer. For timed runs, you need good DPS and coordination."
+        },
+        "trashTips": "The trash in Shattered Halls is brutal. Legionnaires hit hard, Reavers do whirlwind, Sharpshooters can 2-shot cloth. Use extensive CC. Pull one group at a time. The gauntlet before Kargath requires constant movement and strong AoE.",
+        "bosses": [
+          {
+            "name": "Grand Warlock Nethekurse",
+            "npcId": 16807,
+            "difficulty": "Medium",
+            "description": "Starts with four orc peons that he sacrifices for power. Can be skipped on timed runs by hugging the left wall.",
+            "abilities": [
+              {
+                "name": "Death Coil",
+                "description": "Fear + damage + heal on a random target.",
+                "handling": "Unavoidable. Tremor Totem helps. Feared players may run into other mobs."
+              },
+              {
+                "name": "Dark Spin",
+                "description": "Whirlwind dealing shadow damage to everyone in melee range.",
+                "handling": "Melee run out when he starts spinning. Ranged continue DPS."
+              },
+              {
+                "name": "Shadow Fissure",
+                "description": "Creates a void zone that deals massive damage after 2 seconds.",
+                "handling": "MOVE OUT IMMEDIATELY. This will kill you if you stand in it."
+              },
+              {
+                "name": "Lesser Shadow Fissure",
+                "description": "Multiple smaller void zones.",
+                "handling": "Keep moving to avoid standing in them."
+              }
+            ],
+            "strategy": "He starts by sacrificing peons - let this happen, don't waste time killing them. Once he engages, tank him and watch for Shadow Fissures (purple circles). Move out immediately. When he spins, melee back off. After 25% health, he stops casting and just melees - burn him down.",
+            "loot": ["Greathelm of the Unbreakable", "Bands of Nethekurse"]
+          },
+          {
+            "name": "Warbringer O'mrogg",
+            "npcId": 16809,
+            "difficulty": "Hard",
+            "description": "A two-headed ogre that randomly swaps aggro between heads. Extremely dangerous if tanks aren't prepared.",
+            "abilities": [
+              {
+                "name": "Aggro Reset",
+                "description": "Every 20-30 seconds, O'mrogg's threat resets and he attacks a random player.",
+                "handling": "You MUST have two tanks taunting back and forth. Without two tanks, he will kill healers and DPS."
+              },
+              {
+                "name": "Beatdown",
+                "description": "Increases damage dealt and reduces damage taken temporarily.",
+                "handling": "Tank cooldowns and healer awareness. Big damage spike."
+              },
+              {
+                "name": "Fear",
+                "description": "AoE fear on nearby players.",
+                "handling": "Tremor Totem, Fear Ward, or Berserker Rage. Don't tank near extra mobs."
+              },
+              {
+                "name": "Burning Maul",
+                "description": "Fire damage on melee attacks.",
+                "handling": "Extra healing on tanks required."
+              }
+            ],
+            "strategy": "Two tanks are mandatory. When threat resets, the tank without aggro immediately taunts. Trade taunt cooldowns back and forth. If you only have one tank, the boss will randomly attack and likely kill a healer or DPS. Clear the room of all trash first - feared players must not pull adds.",
+            "loot": ["Skyfire Hawk-Bow", "Runesong Dagger"]
+          },
+          {
+            "name": "Warchief Kargath Bladefist",
+            "npcId": 16808,
+            "difficulty": "Hard",
+            "description": "The final boss and one of the hardest heroic encounters. Requires excellent positioning and add management. For Trial of the Naaru, you must reach him within 55 minutes AND save the hostage.",
+            "abilities": [
+              {
+                "name": "Blade Dance",
+                "description": "Kargath spins wildly, dealing heavy damage to anyone he passes. He moves erratically and is untargetable during this.",
+                "handling": "Run away and spread out. Healers use instant heals. Stay near walls to reduce his movement area."
+              },
+              {
+                "name": "Sweeping Strikes",
+                "description": "Hits two targets with each melee attack.",
+                "handling": "Off-tank or second melee in range will take hits. Healers must watch both."
+              },
+              {
+                "name": "Summon Assassins",
+                "description": "Every 30 seconds, two Shattered Hand Assassins spawn and attack random players. They deal high damage and can stun.",
+                "handling": "Kill assassins IMMEDIATELY. They can two-shot cloth wearers. AoE or focus fire them down."
+              }
+            ],
+            "strategy": "Position in a corner to limit Blade Dance range. Keep spread out. When assassins spawn, all DPS switch to them immediately - these are the real threat, not Kargath. After assassins die, return to boss. During Blade Dance, run away and use defensive cooldowns. For the timed Trial of the Naaru, you must also avoid killing the prisoner in the corner - Kargath will execute him if you take too long.",
+            "loot": ["Hallowed Handwraps", "Greaves of the Shatterer", "Reinforced Fel Iron Chest (badge)", "Warchief's Mantle"]
+          }
+        ],
+        "loot": ["Greaves of the Shatterer", "Hallowed Handwraps", "Skyfire Hawk-Bow"]
       }
     ]
   },
@@ -38,30 +305,327 @@
     "keyItemId": 30623,
     "faction": "Cenarion Expedition",
     "repRequired": "Honored",
+    "description": "An underwater dungeon complex beneath Zangarmarsh. Home to Lady Vashj's naga forces. Ranges from easy to challenging heroics.",
     "dungeons": [
       {
         "id": "slave-pens",
         "name": "The Slave Pens",
-        "bosses": ["Mennu the Betrayer", "Rokmar the Crackler", "Quagmirran"],
         "difficulty": "Easy",
-        "tips": "Watch for patrol paths. Quagmirran - cleave and poison.",
-        "loot": ["Spaulders of the Righteous", "Mana-Etched Gloves"]
+        "description": "One of the easier heroics. Linear layout with manageable mechanics. Good for badge farming.",
+        "estimatedTime": "30-40 minutes",
+        "composition": {
+          "recommended": "1 tank, 1 healer, 3 DPS",
+          "notes": "No special requirements."
+        },
+        "trashTips": "Watch for patrols - getting two groups at once is dangerous. The Coilfang Champions can be chain CC'd. Mind Control from Enchantresses is annoying but not lethal.",
+        "bosses": [
+          {
+            "name": "Mennu the Betrayer",
+            "npcId": 17941,
+            "difficulty": "Easy",
+            "description": "A shaman boss with totem mechanics. Kill totems and he's trivial.",
+            "abilities": [
+              {
+                "name": "Healing Ward",
+                "description": "Places a totem that heals Mennu.",
+                "handling": "Kill the totem immediately or the fight takes forever."
+              },
+              {
+                "name": "Lightning Bolt",
+                "description": "Direct damage spell.",
+                "handling": "Interrupt if possible, otherwise healable."
+              },
+              {
+                "name": "Earthgrab Totem",
+                "description": "Roots nearby players.",
+                "handling": "Kill the totem. Roots aren't dangerous, just annoying."
+              },
+              {
+                "name": "Fire Nova Totem",
+                "description": "AoE fire damage after a delay.",
+                "handling": "Kill the totem before it explodes or move away."
+              }
+            ],
+            "strategy": "Kill every totem as soon as it spawns. Priority: Healing Ward > Fire Nova > others. Without totems, Mennu does almost nothing. Tank and spank while killing totems.",
+            "loot": ["Wastewalker Shoulderpads", "Cord of Belief"]
+          },
+          {
+            "name": "Rokmar the Crackler",
+            "npcId": 17991,
+            "difficulty": "Easy-Medium",
+            "description": "A large lobster boss. Cleave and poison are the main concerns.",
+            "abilities": [
+              {
+                "name": "Grievous Wound",
+                "description": "A bleed that persists until the target is healed to full health.",
+                "handling": "Healers must top off any player with this debuff to remove it."
+              },
+              {
+                "name": "Water Spit",
+                "description": "Frontal cone attack.",
+                "handling": "Only tank in front. Melee stand behind."
+              },
+              {
+                "name": "Frenzy",
+                "description": "Increases attack speed at low health.",
+                "handling": "Save cooldowns for the burn phase. Healers be ready for increased tank damage."
+              }
+            ],
+            "strategy": "Tank facing away from group. When anyone gets Grievous Wound, heal them to full to remove it. At 20% health Rokmar frenzies - use cooldowns and burn. Straightforward fight.",
+            "loot": ["Coilfang Needler", "Skeletal Necklace of Battlerage"]
+          },
+          {
+            "name": "Quagmirran",
+            "npcId": 17942,
+            "difficulty": "Medium",
+            "description": "A fungal giant with cleave and poison. Simple but requires positioning awareness.",
+            "abilities": [
+              {
+                "name": "Acid Spray",
+                "description": "Frontal cone dealing heavy nature damage.",
+                "handling": "Only tank in front. This hits HARD - melee stay behind at all times."
+              },
+              {
+                "name": "Poison Bolt Volley",
+                "description": "AoE poison to the entire group.",
+                "handling": "Dispel poison. If not dispelled, it does significant damage over time."
+              },
+              {
+                "name": "Cleave",
+                "description": "Hits multiple targets in front.",
+                "handling": "Never stand next to the tank."
+              },
+              {
+                "name": "Uppercut",
+                "description": "Knocks a target back.",
+                "handling": "Tank against a wall to avoid knockback issues."
+              }
+            ],
+            "strategy": "Tank against a wall with the boss facing away. ALL DPS behind the boss. The frontal cone is lethal to non-tanks. Dispel poison volley when it goes out. Otherwise a simple tank-and-spank.",
+            "loot": ["Spaulders of the Righteous", "Mana-Etched Gloves", "Reinforced Fel Iron Chest (badge)"]
+          }
+        ],
+        "loot": ["Spaulders of the Righteous", "Mana-Etched Gloves", "Coilfang Needler"]
       },
       {
         "id": "underbog",
         "name": "The Underbog",
-        "bosses": ["Hungerfen", "Ghaz'an", "Swamplord Musel'ek", "The Black Stalker"],
         "difficulty": "Medium",
-        "tips": "Black Stalker - spread for Chain Lightning, levitate on suspending.",
-        "loot": ["Stormsong Kilt", "Barkchip Boots"]
+        "description": "A swampy dungeon with four bosses. The Black Stalker at the end is the main challenge.",
+        "estimatedTime": "35-50 minutes",
+        "composition": {
+          "recommended": "1 tank, 1 healer, 3 DPS",
+          "notes": "Bring interrupts for Hungerfen. Ranged DPS helpful for Black Stalker."
+        },
+        "trashTips": "The bog giants hit hard and have a knockback. Underbats come in packs - AoE them down. The Wrathfin Myrmidon can fear.",
+        "bosses": [
+          {
+            "name": "Hungerfen",
+            "npcId": 17770,
+            "difficulty": "Easy-Medium",
+            "description": "A bog giant with a mushroom spawning mechanic.",
+            "abilities": [
+              {
+                "name": "Foul Spores",
+                "description": "Spawns mushrooms around the room that explode, dealing nature damage and applying a stacking DoT.",
+                "handling": "Kill mushrooms before they explode, or spread out to avoid chain explosions."
+              },
+              {
+                "name": "Spore Cloud",
+                "description": "AoE nature damage around Hungerfen.",
+                "handling": "Melee will take constant damage. Healers compensate."
+              }
+            ],
+            "strategy": "Tank in place and kill mushrooms when they spawn. If mushrooms stack up, the explosion damage becomes lethal. Keep the area clear and the fight is easy.",
+            "loot": ["Boggspine Knuckles", "Starlight Gauntlets"]
+          },
+          {
+            "name": "Ghaz'an",
+            "npcId": 18105,
+            "difficulty": "Easy",
+            "description": "A hydra boss with breath and tail swipe. Standard dragon positioning.",
+            "abilities": [
+              {
+                "name": "Acid Breath",
+                "description": "Frontal cone dealing nature damage and reducing armor.",
+                "handling": "Only tank in front. Armor reduction makes tank damage spike."
+              },
+              {
+                "name": "Tail Sweep",
+                "description": "Damages and knocks back anyone behind the boss.",
+                "handling": "Melee stand at the sides, not directly behind."
+              },
+              {
+                "name": "Acid Spit",
+                "description": "Ranged attack on random players.",
+                "handling": "Healable. Spread loosely."
+              }
+            ],
+            "strategy": "Classic dragon positioning: tank in front, melee at sides, ranged spread behind at max range. Don't stand in front or behind. Easy fight with proper positioning.",
+            "loot": ["Girdle of Siege", "Hydra-fang Necklace"]
+          },
+          {
+            "name": "Swamplord Musel'ek",
+            "npcId": 17826,
+            "difficulty": "Medium",
+            "description": "A hunter boss with a bear pet named Claw. The bear must be CC'd or killed.",
+            "abilities": [
+              {
+                "name": "Throw Freezing Trap",
+                "description": "Throws an ice trap that freezes players who step on it.",
+                "handling": "Watch the ground and don't walk into traps."
+              },
+              {
+                "name": "Multi-Shot",
+                "description": "Hits multiple targets with arrows.",
+                "handling": "Spread out to avoid hitting multiple people."
+              },
+              {
+                "name": "Aimed Shot",
+                "description": "High damage shot at the current target.",
+                "handling": "Tank holds threat. Big damage spike."
+              },
+              {
+                "name": "Bear Form (Claw)",
+                "description": "Claw hits hard and can stun.",
+                "handling": "Off-tank Claw, CC him, or kill him first."
+              }
+            ],
+            "strategy": "You must deal with Claw the bear. Options: 1) Off-tank holds Claw while you kill Musel'ek. 2) CC Claw (hibernate, fear) and kill Musel'ek first. 3) Kill Claw first then Musel'ek. Most groups CC or off-tank Claw while focusing the hunter.",
+            "loot": ["Hands of the Sun", "Weathered Band of the Swamplord"]
+          },
+          {
+            "name": "The Black Stalker",
+            "npcId": 17882,
+            "difficulty": "Hard",
+            "description": "The hardest boss in Underbog. Chain Lightning and the levitate mechanic can cause wipes.",
+            "abilities": [
+              {
+                "name": "Chain Lightning",
+                "description": "Jumps between nearby players, dealing increasing damage with each jump.",
+                "handling": "SPREAD OUT at least 10 yards apart. This is the main killer."
+              },
+              {
+                "name": "Static Charge",
+                "description": "Places a debuff that damages nearby allies.",
+                "handling": "Run away from the group if you get this."
+              },
+              {
+                "name": "Levitate",
+                "description": "Suspends a random player in the air, making them unable to act.",
+                "handling": "Wait it out. Healers keep the levitated player alive. They'll drop down after a few seconds."
+              },
+              {
+                "name": "Summon Spore Striders",
+                "description": "Adds spawn and attack random players.",
+                "handling": "Kill adds quickly or they overwhelm the healer."
+              }
+            ],
+            "strategy": "Spread out in a wide circle around the boss - at least 10 yards between each player. This prevents Chain Lightning from chaining and killing people. When adds spawn, kill them quickly. When someone gets levitated, healers keep them alive until they drop. The fight is about positioning.",
+            "loot": ["Stormsong Kilt", "Barkchip Boots", "Reinforced Fel Iron Chest (badge)"]
+          }
+        ],
+        "loot": ["Stormsong Kilt", "Barkchip Boots", "Hands of the Sun"]
       },
       {
         "id": "steamvault",
         "name": "The Steamvault",
-        "bosses": ["Hydromancer Thespia", "Mekgineer Steamrigger", "Warlord Kalithresh"],
         "difficulty": "Hard",
-        "tips": "Kill Kalithresh's tanks when he channels. Thespia - interrupt Lung Burst.",
-        "loot": ["Devilshark Cape", "Steam-Hinge Chain of Valor"]
+        "description": "One of the harder heroics. Required for the Second Key Fragment (Karazhan attunement). All three bosses have punishing mechanics.",
+        "estimatedTime": "45-60 minutes",
+        "composition": {
+          "recommended": "1 tank, 1 healer, 3 DPS",
+          "notes": "Interrupts mandatory for Thespia. Ranged DPS helpful throughout."
+        },
+        "trashTips": "Coilfang Engineers drop landmines - watch your feet. The Bog Overlords hit extremely hard. Steam Surgers have a knockback. Take it slow.",
+        "bosses": [
+          {
+            "name": "Hydromancer Thespia",
+            "npcId": 17797,
+            "difficulty": "Hard",
+            "description": "A mage boss with adds. Lung Burst MUST be interrupted or players die.",
+            "abilities": [
+              {
+                "name": "Lung Burst",
+                "description": "Channels on a random player, dealing massive damage over 3 seconds. Will kill most players if not interrupted.",
+                "handling": "INTERRUPT THIS IMMEDIATELY. Assign multiple interrupters and call out kicks."
+              },
+              {
+                "name": "Enveloping Winds",
+                "description": "Stuns a random player for 6 seconds.",
+                "handling": "Can't be prevented. Healers keep the stunned player alive."
+              },
+              {
+                "name": "Lightning Cloud",
+                "description": "Places a cloud that deals damage to anyone inside.",
+                "handling": "Move out of clouds. They persist for a while."
+              },
+              {
+                "name": "Water Elementals",
+                "description": "Two adds spawn periodically.",
+                "handling": "Kill the adds or they overwhelm healing."
+              }
+            ],
+            "strategy": "Assign 2+ players to interrupt Lung Burst - this is mandatory or people die. Kill water elemental adds when they spawn. Move out of lightning clouds. The fight is hectic but manageable with good interrupts.",
+            "loot": ["Incanter's Gloves", "Cloak of Whispering Shells"]
+          },
+          {
+            "name": "Mekgineer Steamrigger",
+            "npcId": 17796,
+            "difficulty": "Medium",
+            "description": "A goblin engineer with gnome adds that heal him. Kill the adds or the fight is impossible.",
+            "abilities": [
+              {
+                "name": "Summon Gnomes",
+                "description": "Spawns three gnome adds at set health percentages. They will heal Steamrigger.",
+                "handling": "KILL ALL GNOMES IMMEDIATELY. If they heal him, you'll never kill the boss."
+              },
+              {
+                "name": "Electrified Net",
+                "description": "Roots and damages a random player.",
+                "handling": "Dispellable. Break the net if possible."
+              },
+              {
+                "name": "Super Shrink Ray",
+                "description": "Reduces a player's size and damage dealt.",
+                "handling": "Wait it out. Annoying but not dangerous."
+              },
+              {
+                "name": "Saw Blade",
+                "description": "Throws a saw blade that bounces between players.",
+                "handling": "Spread out to limit bounces."
+              }
+            ],
+            "strategy": "DPS the boss until gnomes spawn (at 75%, 50%, 25% health). When gnomes appear, STOP ATTACKING BOSS and kill all three gnomes immediately. They will heal Steamrigger to full if left alive. After gnomes are dead, resume boss damage. Repeat at each threshold.",
+            "loot": ["Earth Mantle Handwraps", "Serpentcrest Life-Staff"]
+          },
+          {
+            "name": "Warlord Kalithresh",
+            "npcId": 17798,
+            "difficulty": "Hard",
+            "description": "The final boss and the hardest part of Steamvault. He channels from tanks that MUST be destroyed.",
+            "abilities": [
+              {
+                "name": "Impale",
+                "description": "Heavy physical damage to the tank.",
+                "handling": "Tank cooldowns and healer focus."
+              },
+              {
+                "name": "Spell Reflection",
+                "description": "Reflects spells back at casters.",
+                "handling": "Stop casting when he has the buff up. Wait for it to fade."
+              },
+              {
+                "name": "Naga Distiller Channel",
+                "description": "Kalithresh runs to a tank and channels from it, gaining massive damage and haste buffs.",
+                "handling": "DPS MUST SWITCH TO THE TANK AND DESTROY IT before the channel completes. If he finishes channeling, he'll likely one-shot the tank."
+              }
+            ],
+            "strategy": "The tanks around the room are the key mechanic. When Kalithresh runs to a tank and starts channeling, ALL DPS immediately switch to that tank and destroy it. If you fail to destroy the tank, Kalithresh gets huge buffs and will wipe the group. Stop casting during Spell Reflection. Otherwise tank and spank.",
+            "loot": ["Devilshark Cape", "Steam-Hinge Chain of Valor", "Reinforced Fel Iron Chest (badge)", "Second Key Fragment"]
+          }
+        ],
+        "loot": ["Devilshark Cape", "Steam-Hinge Chain of Valor", "Second Key Fragment"]
       }
     ]
   },
@@ -71,38 +635,422 @@
     "keyItemId": 30633,
     "faction": "Lower City",
     "repRequired": "Honored",
+    "description": "A massive draenei burial complex in the Bone Wastes of Terokkar Forest. Four wings with varying difficulty. Shadow Labyrinth is essential for Karazhan attunement.",
     "dungeons": [
       {
         "id": "mana-tombs",
         "name": "Mana-Tombs",
-        "bosses": ["Pandemonius", "Tavarok", "Nexus-Prince Shaffar", "Yor (Summoned)"],
         "difficulty": "Medium",
-        "tips": "Pandemonius - stop DPS during Dark Shell. Summon Yor for extra loot!",
-        "loot": ["Shaffar's Stasis Chamber Key", "Scepter of Sha'tar"]
+        "description": "An ethereal-themed dungeon. Features Pandemonius's Dark Shell mechanic and an optional summonable boss.",
+        "estimatedTime": "35-45 minutes",
+        "composition": {
+          "recommended": "1 tank, 1 healer, 3 DPS",
+          "notes": "Players must stop DPS during Dark Shell. Bring the quest item to summon Yor for extra loot."
+        },
+        "trashTips": "Ethereal Spellbinders can sheep players. Nexus Stalkers stealth and ambush. The mana leeches are annoying but not lethal.",
+        "bosses": [
+          {
+            "name": "Pandemonius",
+            "npcId": 18341,
+            "difficulty": "Medium",
+            "description": "A void lord with a damage reflection shield. Dark Shell is the key mechanic.",
+            "abilities": [
+              {
+                "name": "Dark Shell",
+                "description": "Absorbs damage and reflects 1000% of absorbed damage back to attackers. Lasts 6 seconds.",
+                "handling": "STOP ALL DAMAGE WHEN DARK SHELL IS ACTIVE. Continue attacking = dead DPS."
+              },
+              {
+                "name": "Void Blast",
+                "description": "Frontal cone shadow damage.",
+                "handling": "Only tank in front. Hits hard."
+              }
+            ],
+            "strategy": "Tank and spank, but STOP ALL DAMAGE when Dark Shell activates. The boss gets a visible shield effect. Wait 6 seconds then resume. DoTs should be avoided or carefully timed. Simple fight if DPS pays attention.",
+            "loot": ["Mindrage Pauldrons", "Bands of the Comprehending"]
+          },
+          {
+            "name": "Tavarok",
+            "npcId": 18343,
+            "difficulty": "Easy",
+            "description": "A giant ethereal. Simple tank-and-spank with knockback.",
+            "abilities": [
+              {
+                "name": "Earthquake",
+                "description": "AoE damage and knockback to everyone in range.",
+                "handling": "Ranged stay at max range to avoid it."
+              },
+              {
+                "name": "Crystal Prison",
+                "description": "Encases a random player in crystal, stunning them briefly.",
+                "handling": "Wait it out. Not dangerous."
+              },
+              {
+                "name": "Arcing Smash",
+                "description": "Frontal cleave.",
+                "handling": "Only tank in front."
+              }
+            ],
+            "strategy": "Simple tank and spank. Ranged stay at max range to avoid Earthquake knockback. Crystal Prison is just annoying, not dangerous.",
+            "loot": ["Lightning-Rod Pauldrons", "Mantle of the Sea Wolf"]
+          },
+          {
+            "name": "Nexus-Prince Shaffar",
+            "npcId": 18344,
+            "difficulty": "Medium",
+            "description": "The final boss with ethereal adds. Kill adds or get overwhelmed.",
+            "abilities": [
+              {
+                "name": "Fireball",
+                "description": "Direct fire damage.",
+                "handling": "Interrupt when possible."
+              },
+              {
+                "name": "Frostbolt",
+                "description": "Direct frost damage with slow.",
+                "handling": "Interrupt when possible."
+              },
+              {
+                "name": "Frost Nova",
+                "description": "AoE root.",
+                "handling": "Melee get rooted. Ranged unaffected."
+              },
+              {
+                "name": "Summon Ethereal Beacons",
+                "description": "Summons beacons that spawn adds if not killed quickly.",
+                "handling": "Kill beacons immediately before they spawn too many adds."
+              }
+            ],
+            "strategy": "Kill beacons when they spawn - they summon adds if left alive. Interrupt his casts when possible. If adds stack up, AoE them down. The fight snowballs if you ignore adds.",
+            "loot": ["Scepter of Sha'tar", "Ethereal Warp-Bow", "Reinforced Fel Iron Chest (badge)"]
+          },
+          {
+            "name": "Yor (Summoned)",
+            "npcId": 22930,
+            "difficulty": "Medium",
+            "description": "An optional boss summoned using the Shaffar's Stasis Chamber Key. Drops extra loot.",
+            "abilities": [
+              {
+                "name": "Stomp",
+                "description": "AoE damage and knockback.",
+                "handling": "Spread out. Tanks against a wall."
+              },
+              {
+                "name": "Double Breath",
+                "description": "Two frontal cone attacks in sequence.",
+                "handling": "Only tank in front."
+              }
+            ],
+            "strategy": "Use the key at the stasis chamber after Shaffar to summon Yor. Tank against a wall. Simple fight with good positioning. Free extra loot.",
+            "loot": ["Shaffar's Stasis Chamber Key (to summon)", "Various BoE blues"]
+          }
+        ],
+        "loot": ["Scepter of Sha'tar", "Mindrage Pauldrons", "Ethereal Warp-Bow"]
       },
       {
         "id": "auchenai",
         "name": "Auchenai Crypts",
-        "bosses": ["Shirrak the Dead Watcher", "Exarch Maladaar"],
         "difficulty": "Medium",
-        "tips": "Shirrak - range him, deadly focus fire. Maladaar - kill Avatar of Martyred.",
-        "loot": ["Boots of the Unjust", "Maladaar's Blessed Chaplet"]
+        "description": "A draenei tomb full of undead. Shirrak's focus mechanic and Maladaar's Avatar phase are the main challenges.",
+        "estimatedTime": "30-40 minutes",
+        "composition": {
+          "recommended": "1 tank, 1 healer, 3 DPS",
+          "notes": "Ranged DPS highly recommended for Shirrak. Shackle Undead useful on trash."
+        },
+        "trashTips": "Raging Souls explode on death - back away when they're low. Auchenai Monks can disarm tanks. Use Shackle Undead liberally.",
+        "bosses": [
+          {
+            "name": "Shirrak the Dead Watcher",
+            "npcId": 18371,
+            "difficulty": "Medium-Hard",
+            "description": "Shirrak focuses on players, dealing massive damage. Must be kited at range.",
+            "abilities": [
+              {
+                "name": "Carnivorous Bite",
+                "description": "Melee attack that reduces healing received by 75%.",
+                "handling": "Tank will take reduced healing. Overcompensate."
+              },
+              {
+                "name": "Focus Fire",
+                "description": "Fixates on a random player, channeling a beam that deals massive damage. Damage decreases with distance.",
+                "handling": "WHEN FOCUSED, RUN TO MAX RANGE. At 30+ yards the damage is manageable. Up close it's lethal."
+              },
+              {
+                "name": "Inhibit Magic",
+                "description": "Aura that increases cast time of spells when close to Shirrak.",
+                "handling": "Casters stay at max range at all times."
+              }
+            ],
+            "strategy": "This is a range fight. Everyone stays at maximum range except the tank. When Focus Fire targets someone, they RUN AWAY to max range immediately. Casters will have slow casts if too close. The tank slowly kites backward if possible. Hunters and other ranged excel here.",
+            "loot": ["Scintillating Headdress of Second Sight", "Wrathfire Hand-Cannon"]
+          },
+          {
+            "name": "Exarch Maladaar",
+            "npcId": 18373,
+            "difficulty": "Medium",
+            "description": "The final boss with a dangerous Avatar phase. You must kill the Avatar or face two enemies.",
+            "abilities": [
+              {
+                "name": "Soul Scream",
+                "description": "AoE shadow damage and mana burn.",
+                "handling": "Healers manage mana. Shadow protection helps."
+              },
+              {
+                "name": "Ribbon of Souls",
+                "description": "Channels damage at the current target.",
+                "handling": "Can be interrupted. Tank takes steady damage."
+              },
+              {
+                "name": "Summon Avatar of the Martyred",
+                "description": "At 25% health, summons a powerful Avatar. If not killed in 10 seconds, both attack the group.",
+                "handling": "ALL DPS SWITCH TO AVATAR and burn it down fast. Don't let it stay alive."
+              },
+              {
+                "name": "Avatar Phase 2",
+                "description": "If Avatar survives, Maladaar heals and you fight both.",
+                "handling": "This is usually a wipe. Kill the Avatar."
+              }
+            ],
+            "strategy": "DPS Maladaar normally until 25% health. When the Avatar spawns, EVERYONE switches to it and burns it down within 10 seconds. If the Avatar dies in time, Maladaar is easy to finish. If the Avatar survives, you'll likely wipe. Save cooldowns for Avatar.",
+            "loot": ["Boots of the Unjust", "Maladaar's Blessed Chaplet", "Reinforced Fel Iron Chest (badge)"]
+          }
+        ],
+        "loot": ["Boots of the Unjust", "Maladaar's Blessed Chaplet", "Scintillating Headdress of Second Sight"]
       },
       {
         "id": "sethekk",
         "name": "Sethekk Halls",
-        "bosses": ["Darkweaver Syth", "Talon King Ikiss", "Anzu (Druid Summon)"],
         "difficulty": "Medium",
-        "tips": "Ikiss - LOS Arcane Explosion. Anzu drops epic mount!",
-        "loot": ["Reins of the Raven Lord", "Shoulderpads of Assassination"]
+        "description": "An arakkoa dungeon. Features the coveted Raven Lord mount from the optional druid-summoned boss Anzu.",
+        "estimatedTime": "35-45 minutes",
+        "composition": {
+          "recommended": "1 tank, 1 healer, 3 DPS",
+          "notes": "Bring a druid with epic flight form to summon Anzu for the mount chance."
+        },
+        "trashTips": "Time-Lost Controllers can mind control - kill them fast. Sethekk Prophets heal - interrupt or CC. The birds do a lot of damage.",
+        "bosses": [
+          {
+            "name": "Darkweaver Syth",
+            "npcId": 18472,
+            "difficulty": "Medium",
+            "description": "Spawns elemental adds at health thresholds. AoE helps.",
+            "abilities": [
+              {
+                "name": "Summon Elemental",
+                "description": "At 75%, 50%, and 25% health, spawns four elemental adds.",
+                "handling": "AoE them down quickly or they overwhelm healing."
+              },
+              {
+                "name": "Chain Lightning",
+                "description": "Hits multiple targets if they're close together.",
+                "handling": "Spread out slightly."
+              },
+              {
+                "name": "Frost Shock",
+                "description": "Slows movement speed.",
+                "handling": "Annoying but not dangerous."
+              },
+              {
+                "name": "Flame Shock",
+                "description": "DoT damage.",
+                "handling": "Dispel or heal through."
+              }
+            ],
+            "strategy": "DPS Syth until 75%, then kill all four elemental adds. Resume DPS until 50%, kill adds again. Repeat at 25%. If adds stack up the damage becomes unmanageable. AoE makes this fight easy.",
+            "loot": ["Sky-Hunter Swift Boots", "Light-Woven Slippers"]
+          },
+          {
+            "name": "Anzu (Druid Summon)",
+            "npcId": 23035,
+            "difficulty": "Medium-Hard",
+            "description": "Optional boss summoned only by druids with epic flight form. Drops the Reins of the Raven Lord mount.",
+            "abilities": [
+              {
+                "name": "Spell Bomb",
+                "description": "Places a debuff that explodes for AoE damage when the target casts a spell.",
+                "handling": "If you have Spell Bomb, STOP CASTING until it expires. Melee are unaffected."
+              },
+              {
+                "name": "Cyclone",
+                "description": "Tosses a random player into the air, making them unable to act.",
+                "handling": "Wait it out. Healers keep them alive when they land."
+              },
+              {
+                "name": "Banish Self",
+                "description": "Anzu banishes himself and summons bird adds.",
+                "handling": "Kill all adds to bring Anzu back. He returns faster if you kill them quickly."
+              },
+              {
+                "name": "Paralyzing Screech",
+                "description": "Stuns everyone nearby.",
+                "handling": "The druid who summoned can use the statues to break the stun."
+              }
+            ],
+            "strategy": "Tank Anzu normally. When Spell Bomb goes out, that player stops casting. When Anzu banishes himself, AoE down the bird adds quickly. The summoning druid should use the stone raven statues to help when needed. The fight is longer than most but not complicated.",
+            "loot": ["Reins of the Raven Lord (mount)", "Band of Frigid Elements"]
+          },
+          {
+            "name": "Talon King Ikiss",
+            "npcId": 18473,
+            "difficulty": "Medium",
+            "description": "The final boss with a deadly Arcane Explosion that must be line-of-sighted.",
+            "abilities": [
+              {
+                "name": "Arcane Volley",
+                "description": "AoE arcane damage to the group.",
+                "handling": "Healable. Shadow resistance does not help (it's arcane)."
+              },
+              {
+                "name": "Polymorph",
+                "description": "Polymorphs a random player into a bird.",
+                "handling": "Wait it out. Heal them up after."
+              },
+              {
+                "name": "Arcane Explosion",
+                "description": "Massive AoE damage to anyone in line of sight. Ikiss blinks to center and channels this.",
+                "handling": "WHEN HE BLINKS TO CENTER, EVERYONE HIDE BEHIND A PILLAR. Line of sight the explosion or die."
+              },
+              {
+                "name": "Slow",
+                "description": "Reduces movement and attack speed.",
+                "handling": "Dispel if possible, otherwise ignore."
+              }
+            ],
+            "strategy": "Tank near a pillar. DPS normally. WHEN IKISS BLINKS TO THE CENTER AND STARTS CHANNELING, everyone runs behind a pillar to break line of sight. The explosion will one-shot anyone in the open. After the explosion, return to the boss. Repeat until dead.",
+            "loot": ["Shoulderpads of Assassination", "Terokk's Shadowstaff", "Reinforced Fel Iron Chest (badge)"]
+          }
+        ],
+        "loot": ["Reins of the Raven Lord", "Shoulderpads of Assassination", "Terokk's Shadowstaff"]
       },
       {
         "id": "shadow-lab",
         "name": "Shadow Labyrinth",
-        "bosses": ["Ambassador Hellmaw", "Blackheart the Inciter", "Grandmaster Vorpil", "Murmur"],
         "difficulty": "Hard",
-        "tips": "First key fragment. Blackheart - spread for Incite Chaos. Murmur - touch on Sonic Boom.",
-        "loot": ["First Key Fragment", "Sonic Spear", "Shattered Sun Pendant Neck"]
+        "description": "The hardest Auchindoun wing and one of the hardest heroics overall. Required for the First Key Fragment (Karazhan attunement). All bosses are challenging.",
+        "estimatedTime": "60-90 minutes",
+        "composition": {
+          "recommended": "1 tank, 1-2 healers, 2-3 DPS",
+          "notes": "CC is mandatory. Fear Ward or Tremor Totem highly recommended. Interrupts essential."
+        },
+        "trashTips": "The trash in Shadow Lab is brutal. Cabal Fanatics can MC and hit hard. Cabal Assassins stealth and ambush. The warlocks summon voidwalkers. Use CC on every pull. The gauntlet before Murmur is especially dangerous.",
+        "bosses": [
+          {
+            "name": "Ambassador Hellmaw",
+            "npcId": 18731,
+            "difficulty": "Medium",
+            "description": "A demon boss with fear and a corrosive breath. Fear control is essential.",
+            "abilities": [
+              {
+                "name": "Corrosive Acid",
+                "description": "Frontal cone nature damage and armor reduction.",
+                "handling": "Only tank in front. Armor reduction hurts."
+              },
+              {
+                "name": "Fear",
+                "description": "AoE fear on the entire group.",
+                "handling": "Fear Ward the tank. Tremor Totem. Berserker Rage. PvP trinkets."
+              },
+              {
+                "name": "Enrage",
+                "description": "Below 20% health, Hellmaw enrages with increased damage.",
+                "handling": "Save cooldowns and burn. Tank uses defensives."
+              }
+            ],
+            "strategy": "Clear ALL trash in the room first - feared players will pull adds. Fear Ward the tank or have Tremor Totem down. Position facing away. At 20% he enrages - burn hard. Fear control makes or breaks this fight.",
+            "loot": ["Dream-Wing Helm", "Ornate Boots of the Sanctified"]
+          },
+          {
+            "name": "Blackheart the Inciter",
+            "npcId": 18667,
+            "difficulty": "Hard",
+            "description": "Forces the entire group to fight each other with Incite Chaos. Extremely dangerous in melee-heavy groups.",
+            "abilities": [
+              {
+                "name": "Incite Chaos",
+                "description": "Mind controls the ENTIRE GROUP for 8 seconds. Everyone attacks each other with full damage abilities.",
+                "handling": "SPREAD OUT before this hits. Remove all DoTs from allies. Save defensive cooldowns."
+              },
+              {
+                "name": "War Stomp",
+                "description": "AoE stun and damage.",
+                "handling": "Stay spread to avoid multiple people being stunned."
+              },
+              {
+                "name": "Charge",
+                "description": "Charges a random player.",
+                "handling": "Minor damage. Keep spread."
+              }
+            ],
+            "strategy": "SPREAD OUT at least 15 yards apart before the pull. When Incite Chaos hits, you have no control - your character will attack allies. If everyone is spread out, you can't reach each other. Melee-heavy groups may kill each other. Warlocks should dismiss pets. Remove DoTs from allies between Chaos phases. This fight is about preparation and spacing.",
+            "loot": ["Brooch of Heightened Potential", "Moonglade Handwraps"]
+          },
+          {
+            "name": "Grandmaster Vorpil",
+            "npcId": 18732,
+            "difficulty": "Medium",
+            "description": "A warlock boss that teleports the group into void zones. Requires constant movement.",
+            "abilities": [
+              {
+                "name": "Draw Shadows",
+                "description": "Teleports all players to Vorpil's location, into a void zone.",
+                "handling": "IMMEDIATELY move away after being teleported. Standing in the void kills you fast."
+              },
+              {
+                "name": "Rain of Fire",
+                "description": "AoE fire damage in an area.",
+                "handling": "Move out of the fire."
+              },
+              {
+                "name": "Shadow Bolt Volley",
+                "description": "AoE shadow damage.",
+                "handling": "Healable. Shadow resistance helps."
+              },
+              {
+                "name": "Summon Voidwalker",
+                "description": "Summons a voidwalker add.",
+                "handling": "Kill it or ignore it depending on group strength."
+              }
+            ],
+            "strategy": "Tank at one end of the room. When you get teleported to Vorpil, immediately run back to your position - you're standing in a void zone. The fight is about quickly repositioning after each teleport. Kill voidwalkers if they become a problem.",
+            "loot": ["Hallowed Pauldrons", "Blackheart Enforcer's Boots"]
+          },
+          {
+            "name": "Murmur",
+            "npcId": 18708,
+            "difficulty": "Hard",
+            "description": "The final boss and one of the most unique fights in TBC. You must RUN INTO THE BOSS during Sonic Boom, not away.",
+            "abilities": [
+              {
+                "name": "Sonic Boom",
+                "description": "Massive AoE damage to everyone MORE than 15 yards away. Deals 70% of max health as damage.",
+                "handling": "WHEN HE CASTS SONIC BOOM, RUN INTO MELEE RANGE. Being far away kills you."
+              },
+              {
+                "name": "Murmur's Touch",
+                "description": "Places a debuff on a random player. After 12 seconds, it explodes and damages nearby players.",
+                "handling": "The affected player runs AWAY from the group before the debuff expires."
+              },
+              {
+                "name": "Resonance",
+                "description": "Pulse damage to players very close to Murmur.",
+                "handling": "After Sonic Boom, ranged move back out. Only melee stays in."
+              },
+              {
+                "name": "Magnetic Pull",
+                "description": "Pulls the current target to Murmur.",
+                "handling": "Tank repositions after the pull."
+              },
+              {
+                "name": "Thundering Storm",
+                "description": "Nature damage to distant players.",
+                "handling": "Healable if you're at proper range."
+              }
+            ],
+            "strategy": "THIS FIGHT IS COUNTERINTUITIVE. Everyone spreads out at about 20 yards (outside Resonance, inside Sonic Boom). When Murmur channels Sonic Boom, EVERYONE RUNS IN AND HUGS THE BOSS. After Sonic Boom finishes, ranged moves back out to avoid Resonance. When you get Murmur's Touch debuff, run far away before it explodes. Repeat this dance until Murmur dies.",
+            "loot": ["Sonic Spear", "Spaulders of Oblivion", "Reinforced Fel Iron Chest (badge)", "First Key Fragment"]
+          }
+        ],
+        "loot": ["Sonic Spear", "Spaulders of Oblivion", "First Key Fragment"]
       }
     ]
   },
@@ -112,30 +1060,377 @@
     "keyItemId": 30634,
     "faction": "The Sha'tar",
     "repRequired": "Honored",
+    "description": "A series of satellite structures around Tempest Keep in Netherstorm. Home to blood elves and their magical experiments. Arcatraz is required for Karazhan attunement.",
     "dungeons": [
       {
         "id": "mechanar",
         "name": "The Mechanar",
-        "bosses": ["Mechano-Lord Capacitus", "Nethermancer Sepethrea", "Pathaleon the Calculator"],
         "difficulty": "Medium",
-        "tips": "Capacitus - bring reflective damage. Sepethrea - kill fire elementals fast.",
-        "loot": ["Boots of the Pious", "Jade-Skull Breastplate"]
+        "description": "A short dungeon with challenging bosses. The elevator boss is infamous for killing unprepared groups.",
+        "estimatedTime": "30-40 minutes",
+        "composition": {
+          "recommended": "1 tank, 1 healer, 3 DPS",
+          "notes": "AoE helps with the fire elemental adds on Sepethrea."
+        },
+        "trashTips": "The Sunseeker Astromages are dangerous casters. The Mechanar Wreckers enrage at low health. The Tempest-Forge Destroyer packs hit hard.",
+        "bosses": [
+          {
+            "name": "Mechano-Lord Capacitus",
+            "npcId": 19219,
+            "difficulty": "Medium",
+            "description": "An arcane golem with damage reflection. Melee must watch the buff bar.",
+            "abilities": [
+              {
+                "name": "Reflective Damage Shield",
+                "description": "Reflects melee damage back to attackers for 10 seconds.",
+                "handling": "MELEE STOP ATTACKING when the shield is up. Ranged can continue."
+              },
+              {
+                "name": "Reflective Magic Shield",
+                "description": "Reflects spell damage back to casters for 10 seconds.",
+                "handling": "CASTERS STOP CASTING when this shield is up. Melee can continue."
+              },
+              {
+                "name": "Head Crack",
+                "description": "Heavy damage and stun on the tank.",
+                "handling": "Healers watch for damage spikes."
+              },
+              {
+                "name": "Polarity Shift",
+                "description": "Positive and negative charges on players. Same charges near each other deal damage.",
+                "handling": "Players with the same charge spread apart."
+              }
+            ],
+            "strategy": "Watch his buff bar carefully. When Reflective Damage Shield is up, melee stop attacking. When Reflective Magic Shield is up, casters stop casting. Alternate DPS based on which shield is active. Warlocks can use curse of doom and wand during magic reflection.",
+            "loot": ["Jade-Skull Breastplate", "Capacitus' Cloak of Calibration"]
+          },
+          {
+            "name": "Nethermancer Sepethrea",
+            "npcId": 19221,
+            "difficulty": "Hard",
+            "description": "A fire mage with two fire elemental adds. The adds MUST be controlled or they wipe the group.",
+            "abilities": [
+              {
+                "name": "Summon Raging Flames",
+                "description": "Two fire elemental adds that fixate on random players and deal heavy fire damage.",
+                "handling": "Kite them, CC them, or burn them down. They cannot be tanked traditionally."
+              },
+              {
+                "name": "Dragon's Breath",
+                "description": "Frontal cone fire damage and disorient.",
+                "handling": "Only tank in front."
+              },
+              {
+                "name": "Frost Attack",
+                "description": "Slows movement speed.",
+                "handling": "Makes kiting elementals harder. Dispel if possible."
+              },
+              {
+                "name": "Arcane Blast",
+                "description": "Direct arcane damage.",
+                "handling": "Interrupt if possible."
+              }
+            ],
+            "strategy": "The fire elementals are the real boss. They spawn at the start and fixate on random players - whoever they're chasing must kite them. Mages can Frost Nova, Hunters can trap, Warlocks can fear. If the elementals reach their target, they deal massive damage. Kill Sepethrea while controlling the adds. The fight is chaotic but manageable with good kiting.",
+            "loot": ["Boots of the Pious", "Manual of the Nethermancer"]
+          },
+          {
+            "name": "Pathaleon the Calculator",
+            "npcId": 19220,
+            "difficulty": "Medium",
+            "description": "The final boss with mind control and a Mana Tap mechanic.",
+            "abilities": [
+              {
+                "name": "Domination",
+                "description": "Mind controls a random player.",
+                "handling": "CC the mind-controlled player. They do increased damage while controlled."
+              },
+              {
+                "name": "Mana Tap",
+                "description": "Drains mana from mana users.",
+                "handling": "Casters and healers will struggle with mana. Use consumables."
+              },
+              {
+                "name": "Arcane Torrent",
+                "description": "AoE arcane damage.",
+                "handling": "Healable. Stay topped up."
+              },
+              {
+                "name": "Summon Nether Wraiths",
+                "description": "Summons multiple adds at health thresholds.",
+                "handling": "AoE them down quickly."
+              }
+            ],
+            "strategy": "CC mind-controlled players. Kill adds when they spawn. Mana users should bring mana potions - the Mana Tap is aggressive. Otherwise a straightforward fight.",
+            "loot": ["Molten Earth Kilt", "Tunic of the Raging Elements", "Reinforced Fel Iron Chest (badge)"]
+          }
+        ],
+        "loot": ["Boots of the Pious", "Jade-Skull Breastplate", "Tunic of the Raging Elements"]
       },
       {
         "id": "botanica",
         "name": "The Botanica",
-        "bosses": ["Commander Sarannis", "High Botanist Freywinn", "Thorngrin the Tender", "Laj", "Warp Splinter"],
         "difficulty": "Medium",
-        "tips": "Long dungeon. Freywinn - kill saplings. Warp Splinter - kill adds, they heal him.",
-        "loot": ["Hatchling's Vest", "Netherfury Leggings"]
+        "description": "A long dungeon with five bosses and lots of trash. Features interesting plant-themed mechanics.",
+        "estimatedTime": "50-70 minutes",
+        "composition": {
+          "recommended": "1 tank, 1 healer, 3 DPS",
+          "notes": "This is a long dungeon. Bring consumables. AoE helps with add-heavy fights."
+        },
+        "trashTips": "The Bloodwarders hit hard and have a whirlwind. The plant mobs have various debuffs. The Frayers can fear. Careful pulling - many patrols.",
+        "bosses": [
+          {
+            "name": "Commander Sarannis",
+            "npcId": 17976,
+            "difficulty": "Easy-Medium",
+            "description": "A blood elf commander who summons reinforcements.",
+            "abilities": [
+              {
+                "name": "Summon Reinforcements",
+                "description": "Calls blood elf adds throughout the fight.",
+                "handling": "Kill adds quickly or they overwhelm healing."
+              },
+              {
+                "name": "Arcane Resonance",
+                "description": "Increases arcane damage taken.",
+                "handling": "Dispel if possible. Increases damage from her other abilities."
+              }
+            ],
+            "strategy": "Kill adds when they spawn. Focus the boss between add waves. Simple fight with good add management.",
+            "loot": ["Towering Mantle of the Hunt", "Arcane Netherband"]
+          },
+          {
+            "name": "High Botanist Freywinn",
+            "npcId": 17975,
+            "difficulty": "Medium",
+            "description": "A botanist who turns into a tree and summons plant adds.",
+            "abilities": [
+              {
+                "name": "Tree Form",
+                "description": "Freywinn becomes a tree and summons Frayer Protector adds. He heals while in tree form.",
+                "handling": "Kill ALL adds to force him out of tree form."
+              },
+              {
+                "name": "Frayer Protectors",
+                "description": "Plant adds that spawn during tree form.",
+                "handling": "Kill them quickly. They hit hard and he won't come out until they die."
+              },
+              {
+                "name": "Plant Red/Blue/Green Seedling",
+                "description": "Seeds that grow into plants with various effects.",
+                "handling": "Kill seedlings before they mature."
+              }
+            ],
+            "strategy": "DPS Freywinn until he goes into tree form. When he transforms, ignore him and kill all the adds and seedlings. Once adds are dead, he returns to normal. Repeat until dead. The healing he does in tree form is why you must kill adds fast.",
+            "loot": ["Energis Armwraps", "Gronn-Stitched Girdle"]
+          },
+          {
+            "name": "Thorngrin the Tender",
+            "npcId": 17978,
+            "difficulty": "Medium",
+            "description": "A satyr with enrage and sacrifice mechanics.",
+            "abilities": [
+              {
+                "name": "Sacrifice",
+                "description": "Sacrifices an add, healing himself and increasing his damage.",
+                "handling": "Kill adds before he can sacrifice them."
+              },
+              {
+                "name": "Hellfire",
+                "description": "AoE fire damage around Thorngrin.",
+                "handling": "Melee back out during Hellfire."
+              },
+              {
+                "name": "Enrage",
+                "description": "Increases attack speed and damage.",
+                "handling": "Tank cooldowns. Hunter Tranq Shot can remove it."
+              }
+            ],
+            "strategy": "Kill the lasher adds before Thorngrin can sacrifice them for healing. Back out during Hellfire. Tranq Shot the enrage if possible. Straightforward with add priority.",
+            "loot": ["Expedition Scout's Epaulets", "Goldenvine Wraps"]
+          },
+          {
+            "name": "Laj",
+            "npcId": 17980,
+            "difficulty": "Easy",
+            "description": "A large plant elemental with teleport and color-based damage vulnerabilities.",
+            "abilities": [
+              {
+                "name": "Teleport",
+                "description": "Teleports around the room.",
+                "handling": "Reacquire threat after teleport."
+              },
+              {
+                "name": "Allergic Reaction",
+                "description": "Nature damage and DoT.",
+                "handling": "Dispel poison. Nature resistance helps."
+              },
+              {
+                "name": "Color Changes",
+                "description": "Laj changes colors, altering damage vulnerabilities.",
+                "handling": "Adapt DPS if possible, but not critical."
+              }
+            ],
+            "strategy": "Tank and spank with teleport reacquisition. The color changes are flavor - just burn him down.",
+            "loot": ["Manaforge Spawner", "Laj's Bane Cuffs"]
+          },
+          {
+            "name": "Warp Splinter",
+            "npcId": 17977,
+            "difficulty": "Medium",
+            "description": "A massive treant that spawns healing adds. The adds MUST die or Warp Splinter heals forever.",
+            "abilities": [
+              {
+                "name": "Summon Saplings",
+                "description": "Spawns treant adds that heal Warp Splinter for significant amounts.",
+                "handling": "KILL ALL SAPLINGS IMMEDIATELY. They heal the boss if they reach him."
+              },
+              {
+                "name": "Stomp",
+                "description": "AoE damage and knockback.",
+                "handling": "Tank against a wall."
+              },
+              {
+                "name": "Arcane Volley",
+                "description": "AoE arcane damage.",
+                "handling": "Healable. Spread out slightly."
+              }
+            ],
+            "strategy": "Kill ALL saplings when they spawn. This is non-negotiable - if saplings reach the boss, they heal him for large amounts and the fight becomes impossible. AoE the saplings down, then return to boss. Tank against a wall to avoid knockback issues.",
+            "loot": ["Netherfury Leggings", "Hatchling's Vest", "Reinforced Fel Iron Chest (badge)"]
+          }
+        ],
+        "loot": ["Hatchling's Vest", "Netherfury Leggings", "Energis Armwraps"]
       },
       {
         "id": "arcatraz",
         "name": "The Arcatraz",
-        "bosses": ["Zereketh the Unbound", "Dalliah the Doomsayer", "Wrath-Scryer Soccothrates", "Harbinger Skyriss"],
         "difficulty": "Hard",
-        "tips": "Key fragment. Skyriss splits - save cooldowns. Save Millhouse for Trial of Naaru!",
-        "loot": ["Second Key Fragment", "Hallowed Crown", "Bracers of Recklessness"]
+        "description": "A prison for the most dangerous creatures in Outland. One of the hardest heroics. Required for the Third Key Fragment and important for Trial of the Naaru (saving Millhouse Manastorm).",
+        "estimatedTime": "60-90 minutes",
+        "composition": {
+          "recommended": "1 tank, 1-2 healers, 2-3 DPS",
+          "notes": "CC is essential. A second healer is recommended. For Trial of the Naaru, Millhouse must survive the Skyriss fight."
+        },
+        "trashTips": "The trash in Arcatraz is extremely dangerous. Protean Horrors enrage. Negaton Warp-Masters can one-shot players. Ethereum Life-Binders heal other mobs. Use CC on every pack.",
+        "bosses": [
+          {
+            "name": "Zereketh the Unbound",
+            "npcId": 20870,
+            "difficulty": "Medium",
+            "description": "A voidlord with shadow damage and void zones.",
+            "abilities": [
+              {
+                "name": "Void Zone",
+                "description": "Creates a void zone that deals heavy shadow damage.",
+                "handling": "MOVE OUT immediately. Standing in void kills you fast."
+              },
+              {
+                "name": "Shadow Nova",
+                "description": "AoE shadow damage to everyone.",
+                "handling": "Healable. Shadow resistance helps."
+              },
+              {
+                "name": "Seed of Corruption",
+                "description": "Places a debuff that explodes after taking damage.",
+                "handling": "Stop DoTs on afflicted players. Let the seed expire naturally or have the player run out."
+              }
+            ],
+            "strategy": "Move out of void zones immediately. When someone gets Seed of Corruption, stop attacking them and let them move away before it detonates. Keep moving and this fight is easy.",
+            "loot": ["Cloak of the Betrayed", "Bracers of the Recluse"]
+          },
+          {
+            "name": "Dalliah the Doomsayer",
+            "npcId": 20885,
+            "difficulty": "Medium",
+            "description": "A female eredar with whirlwind and healing. Shares a room with Soccothrates.",
+            "abilities": [
+              {
+                "name": "Gift of the Doomsayer",
+                "description": "Places a debuff that heals Dalliah when it expires or is dispelled.",
+                "handling": "DO NOT DISPEL THIS. Let it expire naturally to avoid healing her."
+              },
+              {
+                "name": "Whirlwind",
+                "description": "Spins dealing heavy melee damage to anyone nearby.",
+                "handling": "Melee run out during whirlwind."
+              },
+              {
+                "name": "Shadow Wave",
+                "description": "AoE shadow damage.",
+                "handling": "Healable."
+              },
+              {
+                "name": "Heal",
+                "description": "Heals herself for a moderate amount.",
+                "handling": "Interrupt this if possible."
+              }
+            ],
+            "strategy": "Do NOT dispel Gift of the Doomsayer - it heals her when removed. Let it expire naturally. Interrupt her heals when possible. Melee back out during Whirlwind. Can be pulled separately from Soccothrates with care.",
+            "loot": ["Hands of the Unbroken", "Worldfire Chestguard"]
+          },
+          {
+            "name": "Wrath-Scryer Soccothrates",
+            "npcId": 20886,
+            "difficulty": "Medium",
+            "description": "A male eredar with charge and knockback. Shares a room with Dalliah.",
+            "abilities": [
+              {
+                "name": "Charge",
+                "description": "Charges a random player, leaving a fire trail.",
+                "handling": "Don't stand in the fire trail. Spread out loosely."
+              },
+              {
+                "name": "Felfire Shock",
+                "description": "Fire damage to the current target.",
+                "handling": "Healable tank damage."
+              },
+              {
+                "name": "Knock Away",
+                "description": "Knockback on the tank.",
+                "handling": "Tank against a wall."
+              },
+              {
+                "name": "Fel Immolation",
+                "description": "Fire aura dealing damage to nearby players.",
+                "handling": "Melee will take constant damage. Healers compensate."
+              }
+            ],
+            "strategy": "Tank against a wall to avoid knockback. Avoid fire trails from his charges. Heal through melee damage from Fel Immolation. Can be pulled separately from Dalliah.",
+            "loot": ["Cloak of Scintillating Auras", "Wristguards of Determination"]
+          },
+          {
+            "name": "Harbinger Skyriss",
+            "npcId": 20912,
+            "difficulty": "Very Hard",
+            "description": "The final boss and one of the hardest encounters in TBC heroics. Splits into multiple copies at health thresholds. For Trial of the Naaru: Tenacity, Millhouse Manastorm must survive this fight.",
+            "abilities": [
+              {
+                "name": "Mind Rend",
+                "description": "Channels shadow damage on a target.",
+                "handling": "Interrupt if possible. Heavy damage if not."
+              },
+              {
+                "name": "Fear",
+                "description": "Fears a random target.",
+                "handling": "Fear Ward, Tremor Totem, Berserker Rage."
+              },
+              {
+                "name": "Domination",
+                "description": "Mind controls a random player.",
+                "handling": "CC the mind-controlled player."
+              },
+              {
+                "name": "Split (66% and 33%)",
+                "description": "At 66% and 33% health, Skyriss creates a copy of himself. Both copies have full abilities and must be dealt with.",
+                "handling": "You must tank and kill both Skyriss and his copy. Save cooldowns for split phases."
+              }
+            ],
+            "strategy": "Before the pull, Millhouse and other prisoners help fight (for Trial of the Naaru, protect Millhouse). DPS Skyriss to 66% - he creates a copy. You now fight TWO Skyriss. Kill one copy quickly, then continue on the original. At 33%, another copy spawns. THREE Skyriss if you haven't killed the first copy. Save all cooldowns for the split phases. This is a DPS race with heavy healing requirements.",
+            "loot": ["Bracers of Recklessness", "Hallowed Crown", "Reinforced Fel Iron Chest (badge)", "Third Key Fragment"]
+          }
+        ],
+        "loot": ["Hallowed Crown", "Bracers of Recklessness", "Third Key Fragment"]
       }
     ]
   },
@@ -145,22 +1440,212 @@
     "keyItemId": 30635,
     "faction": "Keepers of Time",
     "repRequired": "Honored",
+    "description": "Time-traveling dungeons where you protect key events in Azeroth's history. Located in Tanaris. Black Morass is essential for Karazhan attunement.",
     "dungeons": [
       {
         "id": "old-hillsbrad",
         "name": "Old Hillsbrad Foothills",
-        "bosses": ["Lieutenant Drake", "Captain Skarloc", "Epoch Hunter"],
         "difficulty": "Easy",
-        "tips": "Fun RP instance. Escort Thrall - he's tanky but don't let mobs stack.",
-        "loot": ["Handguards of Assassination", "Wyrmfury Pauldrons"]
+        "description": "Travel back to free Thrall from Durnholde Keep. A fun RP-heavy instance with easy heroic mechanics.",
+        "estimatedTime": "40-55 minutes",
+        "composition": {
+          "recommended": "1 tank, 1 healer, 3 DPS",
+          "notes": "No special requirements. The dungeon is straightforward."
+        },
+        "trashTips": "The trash is mostly human guards with no special mechanics. The Durnholde mobs can be stunned and interrupted. Easy pulls throughout.",
+        "bosses": [
+          {
+            "name": "Lieutenant Drake",
+            "npcId": 17848,
+            "difficulty": "Easy",
+            "description": "The first boss, encountered after the barrel-burning event.",
+            "abilities": [
+              {
+                "name": "Whirlwind",
+                "description": "Spins dealing damage to melee.",
+                "handling": "Melee back out during whirlwind."
+              },
+              {
+                "name": "Mortal Strike",
+                "description": "Reduces healing received.",
+                "handling": "Healers compensate."
+              },
+              {
+                "name": "Exploding Shot",
+                "description": "Fire damage to a random target.",
+                "handling": "Healable."
+              }
+            ],
+            "strategy": "Simple tank and spank. Melee avoids whirlwind. No special mechanics.",
+            "loot": ["Necklace of Resplendent Hope", "Ravenclaw Band"]
+          },
+          {
+            "name": "Captain Skarloc",
+            "npcId": 17862,
+            "difficulty": "Easy-Medium",
+            "description": "Encountered during the Thrall escort. Brings mounted reinforcements.",
+            "abilities": [
+              {
+                "name": "Holy Light",
+                "description": "Heals himself.",
+                "handling": "Interrupt his heals."
+              },
+              {
+                "name": "Hammer of Justice",
+                "description": "Stuns a target.",
+                "handling": "Can stun the tank. Healers be ready."
+              },
+              {
+                "name": "Consecration",
+                "description": "AoE holy damage.",
+                "handling": "Move out if possible, otherwise heal through."
+              },
+              {
+                "name": "Mounted Adds",
+                "description": "Riders join the fight.",
+                "handling": "Kill adds or CC them."
+              }
+            ],
+            "strategy": "Interrupt his heals. Kill or CC mounted adds. Thrall helps DPS. Easy fight with interrupts.",
+            "loot": ["Handguards of Assassination", "Pauldrons of Sufferance"]
+          },
+          {
+            "name": "Epoch Hunter",
+            "npcId": 18096,
+            "difficulty": "Medium",
+            "description": "A dragonkin boss at the end of the instance. Has breath and knockback.",
+            "abilities": [
+              {
+                "name": "Sand Breath",
+                "description": "Frontal cone dealing nature damage and silencing.",
+                "handling": "Only tank in front. Silence prevents healing."
+              },
+              {
+                "name": "Wing Buffet",
+                "description": "Knockback on melee range players.",
+                "handling": "Don't stand near ledges."
+              },
+              {
+                "name": "Magic Disruption Aura",
+                "description": "Increases cast time of spells.",
+                "handling": "Healers will struggle with slow casts. Position at max range if possible."
+              }
+            ],
+            "strategy": "Tank facing away from group. Healers stay at max range to minimize cast time increase. Watch for knockback near ledges. Simple with proper positioning.",
+            "loot": ["Wyrmfury Pauldrons", "Belt of the Watchguard", "Reinforced Fel Iron Chest (badge)"]
+          }
+        ],
+        "loot": ["Handguards of Assassination", "Wyrmfury Pauldrons", "Pauldrons of Sufferance"]
       },
       {
         "id": "black-morass",
         "name": "The Black Morass",
-        "bosses": ["Chrono Lord Deja", "Temporus", "Aeonus"],
         "difficulty": "Hard",
-        "tips": "Wave defense. Keep Medivh shield above 0%. Beacons must die fast. Key quest!",
-        "loot": ["Third Key Fragment", "Hourglass of the Unraveller", "Scarab of Infinite Cycle"]
+        "description": "Defend Medivh as he opens the Dark Portal. Wave-defense style with 18 waves and 3 bosses. Required for the final Key Fragment.",
+        "estimatedTime": "35-50 minutes",
+        "composition": {
+          "recommended": "1 tank, 1 healer, 3 DPS",
+          "notes": "Strong DPS is essential - you're racing against Medivh's shield. AoE helps with add waves."
+        },
+        "trashTips": "Rift Lords and Rift Keepers spawn from portals and walk toward Medivh. They MUST be killed before reaching him. Beacons near portals spawn additional adds if not destroyed quickly.",
+        "specialMechanic": {
+          "name": "Medivh's Shield",
+          "description": "Medivh has a shield protecting him while he opens the portal. If enemies reach Medivh, the shield takes damage. If the shield reaches 0%, you fail.",
+          "handling": "Kill portal spawns before they reach Medivh. Destroying beacons quickly reduces add spawns. Keep Medivh's shield above 0%."
+        },
+        "bosses": [
+          {
+            "name": "Chrono Lord Deja",
+            "npcId": 17879,
+            "difficulty": "Medium",
+            "description": "The first boss at wave 6. Arcane-themed with time manipulation.",
+            "abilities": [
+              {
+                "name": "Arcane Blast",
+                "description": "Heavy arcane damage to the current target.",
+                "handling": "Healers watch tank damage."
+              },
+              {
+                "name": "Arcane Discharge",
+                "description": "AoE arcane damage to everyone.",
+                "handling": "Group healing. Arcane resistance helps."
+              },
+              {
+                "name": "Time Lapse",
+                "description": "Stuns all players briefly and reduces their attack and casting speed.",
+                "handling": "Wait it out. The slow fades."
+              },
+              {
+                "name": "Attraction",
+                "description": "Pulls all players to the boss.",
+                "handling": "Spread back out after being pulled."
+              }
+            ],
+            "strategy": "Tank and spank with AoE healing for Arcane Discharge. Time Lapse is annoying but not dangerous. Kill quickly to minimize Medivh shield damage from waves.",
+            "loot": ["Epoch's Whispering Cinch", "Mantle of the Caverns"]
+          },
+          {
+            "name": "Temporus",
+            "npcId": 17880,
+            "difficulty": "Medium-Hard",
+            "description": "The second boss at wave 12. Has a dangerous Mortal Wound that can kill tanks.",
+            "abilities": [
+              {
+                "name": "Mortal Wound",
+                "description": "Stacking debuff that reduces healing received by 10% per stack. Can stack very high.",
+                "handling": "Tank must kite or use cooldowns when stacks get high. Dwarf Stoneform removes it."
+              },
+              {
+                "name": "Hasten",
+                "description": "Increases Temporus's attack speed.",
+                "handling": "More Mortal Wound stacks, faster. Burn phase."
+              },
+              {
+                "name": "Wing Buffet",
+                "description": "Knockback.",
+                "handling": "Position away from portals."
+              },
+              {
+                "name": "Spell Reflection",
+                "description": "Reflects spells.",
+                "handling": "Stop casting when reflection is up."
+              }
+            ],
+            "strategy": "The tank will accumulate Mortal Wound stacks and eventually become unhealable. DPS must kill Temporus before stacks get too high. Dwarf tanks can Stoneform to clear stacks. Taunt swapping between two tanks can work. This is a DPS race.",
+            "loot": ["Hourglass of the Unraveller", "Millennium Blade"]
+          },
+          {
+            "name": "Aeonus",
+            "npcId": 17881,
+            "difficulty": "Hard",
+            "description": "The final boss at wave 18. Heavy damage with sand breath and enrage.",
+            "abilities": [
+              {
+                "name": "Sand Breath",
+                "description": "Frontal cone dealing massive damage and silencing.",
+                "handling": "ONLY TANK IN FRONT. This can one-shot DPS."
+              },
+              {
+                "name": "Time Stop",
+                "description": "Freezes everyone in time briefly.",
+                "handling": "Unavoidable. Healers prepare for damage after."
+              },
+              {
+                "name": "Frenzy",
+                "description": "Enrage at low health.",
+                "handling": "Tank cooldowns and burn."
+              },
+              {
+                "name": "Cleave",
+                "description": "Hits multiple targets in front.",
+                "handling": "Only tank in front."
+              }
+            ],
+            "strategy": "Tank facing away from group - Sand Breath is lethal to non-tanks. DPS hard. When he frenzies at low health, use cooldowns and finish him. Keep watching Medivh's shield - portal adds still spawn during this fight.",
+            "loot": ["Scarab of Infinite Cycle", "Latro's Shifting Sword", "Reinforced Fel Iron Chest (badge)", "Third Key Fragment"]
+          }
+        ],
+        "loot": ["Hourglass of the Unraveller", "Scarab of Infinite Cycle", "Third Key Fragment"]
       }
     ]
   },
@@ -170,13 +1655,156 @@
     "keyItemId": null,
     "faction": "Shattered Sun Offensive",
     "repRequired": "None",
+    "description": "The hardest 5-man dungeon in TBC, added in patch 2.4. Located on the Isle of Quel'Danas. Features mini-raid difficulty bosses and the coveted Phoenix mount.",
     "dungeons": [
       {
         "id": "magisters",
         "name": "Magisters' Terrace",
-        "bosses": ["Selin Fireheart", "Vexallus", "Priestess Delrissa", "Kael'thas Sunstrider"],
         "difficulty": "Very Hard",
-        "tips": "Mini-raid difficulty. Delrissa - PvP fight, CC and focus. Kael drops mount!",
+        "description": "A 5-man dungeon tuned like a raid. Every boss is challenging, and the Priestess Delrissa fight plays like arena PvP. Kael'thas drops the Swift White Hawkstrider mount.",
+        "estimatedTime": "60-90 minutes",
+        "composition": {
+          "recommended": "1 tank, 1 healer, 3 DPS with CC",
+          "notes": "CC is mandatory for Delrissa. Bring a balanced group with multiple CC options. A second healer can help on progression."
+        },
+        "trashTips": "The trash is brutal. The Sunblade groups should be CC'd and pulled carefully. Magisters can sheep players. Warlocks summon imps. The Sunblade Physicians heal - interrupt or kill first. Never pull more than one pack.",
+        "bosses": [
+          {
+            "name": "Selin Fireheart",
+            "npcId": 24723,
+            "difficulty": "Medium",
+            "description": "A fel crystal-draining boss. You must destroy crystals or he becomes too powerful.",
+            "abilities": [
+              {
+                "name": "Drain Life",
+                "description": "Channels a drain on the tank.",
+                "handling": "Can be interrupted. Heal through if not."
+              },
+              {
+                "name": "Fel Explosion",
+                "description": "AoE damage based on how much mana Selin has drained.",
+                "handling": "Spread out. Damage is higher with more mana."
+              },
+              {
+                "name": "Drain Mana Crystal",
+                "description": "Selin runs to a fel crystal and drains it, restoring mana and increasing power.",
+                "handling": "DESTROY THE CRYSTAL while he's draining. If he finishes, he becomes much stronger."
+              }
+            ],
+            "strategy": "DPS Selin until he runs to a crystal. When he starts draining, ALL DPS switch to the crystal and destroy it. If you fail to destroy crystals, his Fel Explosion will one-shot people. The crystals are the priority.",
+            "loot": ["Cloak of Swift Reprieve", "Cord of Reconstruction"]
+          },
+          {
+            "name": "Vexallus",
+            "npcId": 24744,
+            "difficulty": "Medium-Hard",
+            "description": "A pure energy elemental that spawns damaging spark adds.",
+            "abilities": [
+              {
+                "name": "Chain Lightning",
+                "description": "Jumps between nearby players.",
+                "handling": "Spread out at least 10 yards."
+              },
+              {
+                "name": "Arcane Shock",
+                "description": "Arcane damage and mana burn.",
+                "handling": "Mana users will struggle. Bring potions."
+              },
+              {
+                "name": "Overload",
+                "description": "At 20% health, Vexallus goes critical and must be burned quickly.",
+                "handling": "Save cooldowns for the burn."
+              },
+              {
+                "name": "Summon Pure Energy",
+                "description": "Spawns spark adds at health thresholds. When killed, they put a stacking damage debuff on whoever killed them.",
+                "handling": "Designate 2 DPS to each kill sparks. The debuff makes them do more damage but take more damage."
+              }
+            ],
+            "strategy": "Spread out to avoid chained lightning. When sparks spawn, designated DPS kill them and get the stacking debuff (Pure Energy). This debuff increases damage dealt but also taken. At 20%, everyone burns Vexallus before the damage overwhelms you.",
+            "loot": ["Fel-Tinged Mantle", "Bracers of Swirling Light"]
+          },
+          {
+            "name": "Priestess Delrissa",
+            "npcId": 24560,
+            "difficulty": "Very Hard",
+            "description": "A PvP-style fight against Delrissa and 4 random companions. Like fighting an arena team.",
+            "companions": [
+              "Kagani Nightstrike (Rogue) - Stuns and poisons",
+              "Ellrys Duskhallow (Warlock) - Fear, Immolate, Felhunter",
+              "Eramas Brightblaze (Monk) - Kick, Knockdown",
+              "Yazzai (Mage) - Polymorph, Frostbolt, Blizzard",
+              "Warlord Salaris (Warrior) - Mortal Strike, Intimidating Shout",
+              "Garaxxas (Hunter) - Aimed Shot, Freezing Trap, Pet",
+              "Apoko (Shaman) - Healing Wave, Purge, Windfury",
+              "Zelfan (Engineer) - Bombs, Sheep"
+            ],
+            "abilities": [
+              {
+                "name": "Flash Heal",
+                "description": "Delrissa heals her companions.",
+                "handling": "INTERRUPT or she heals all damage."
+              },
+              {
+                "name": "Renew",
+                "description": "HoT on companions.",
+                "handling": "Dispel or out-damage it."
+              },
+              {
+                "name": "Power Word: Shield",
+                "description": "Shields companions.",
+                "handling": "Dispel if possible."
+              },
+              {
+                "name": "Shadow Word: Pain",
+                "description": "DoT on random players.",
+                "handling": "Dispel."
+              }
+            ],
+            "strategy": "This fight is pure PvP. CC as many companions as possible. Kill order depends on the randomized team, but generally: Healer (if present) > Mage > Warlock > others > Delrissa. Use all your CC - sheeps, fears, traps, stuns. Interrupt Delrissa's heals religiously. Treat this like an arena match where coordination wins.",
+            "loot": ["Commendation of Kael'thas", "Cloak of the Betrayed"]
+          },
+          {
+            "name": "Kael'thas Sunstrider",
+            "npcId": 24664,
+            "difficulty": "Very Hard",
+            "description": "The final boss - a weakened Kael'thas. Multiple phases including a Gravity Lapse where you fly. Drops the rare Phoenix mount.",
+            "abilities": [
+              {
+                "name": "Fireball",
+                "description": "Direct fire damage.",
+                "handling": "Interrupt when possible."
+              },
+              {
+                "name": "Phoenix",
+                "description": "Summons a phoenix add that leaves fire on the ground and resurrects from an egg.",
+                "handling": "Kill the phoenix, then destroy the egg before it respawns."
+              },
+              {
+                "name": "Flame Strike",
+                "description": "AoE fire on the ground.",
+                "handling": "Don't stand in fire."
+              },
+              {
+                "name": "Gravity Lapse",
+                "description": "Everyone floats in the air. Arcane orbs spawn and must be avoided.",
+                "handling": "Swim through the air, avoiding orbs. Touch the floor/ceiling = damage."
+              },
+              {
+                "name": "Shock Barrier",
+                "description": "Shield that prevents damage and reflects spells.",
+                "handling": "Wait for it to fade. Don't waste mana on reflected spells."
+              },
+              {
+                "name": "Pyroblast",
+                "description": "Long cast, massive single-target damage.",
+                "handling": "MUST be interrupted or it one-shots."
+              }
+            ],
+            "strategy": "Phase 1: Tank and spank, interrupt Fireball and especially Pyroblast. Kill Phoenix adds and destroy eggs. Phase 2 (50%): Gravity Lapse begins. Swim through the air avoiding arcane orbs until it ends. Return to Phase 1 mechanics. Repeat until dead. The fight is long and demanding - stay focused.",
+            "loot": ["Swift White Hawkstrider (mount)", "Sun-Infused Focus Staff", "Sunrage Treads", "Reinforced Fel Iron Chest (badge)"]
+          }
+        ],
         "loot": ["Swift White Hawkstrider", "Sun-Infused Focus Staff", "Sunrage Treads"]
       }
     ]
