@@ -394,7 +394,7 @@ async function loadAllData() {
         });
         // Initialize the app
         initClassSelector();
-        renderClassContent('warrior');
+        if (!window.location.hash) renderClassContent('warrior');
     } catch (error) {
         console.error('Failed to load data:', error);
         document.getElementById('main-content').innerHTML = `
