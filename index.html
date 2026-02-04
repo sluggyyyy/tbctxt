@@ -320,7 +320,7 @@
             <ul class="class-list list-none">
                 <li class="cursor-pointer text-terminal-text select-none"><a href="#recipes" class="nav-link block w-full text-inherit no-underline py-2 pl-2.5 md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="recipes">[ RECIPES ]</a></li>
                 <li class="cursor-pointer text-terminal-text select-none"><a href="#raids" class="nav-link block w-full text-inherit no-underline py-2 pl-2.5 md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="raids">[ RAIDS ]</a></li>
-                <li class="cursor-pointer text-terminal-text select-none"><a href="#preraid" class="nav-link block w-full text-inherit no-underline py-2 pl-2.5 md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="preraid">[ RAID-READY ]</a></li>
+                <li class="cursor-pointer text-terminal-text select-none"><a href="#raidready" class="nav-link block w-full text-inherit no-underline py-2 pl-2.5 md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="raidready">[ RAID-READY ]</a></li>
             </ul>
         </aside>
         <main id="main-content" class="border border-terminal-text p-5 md:p-4 sm:p-3"></main>
@@ -2449,7 +2449,7 @@ async function updateGearPreview() {
 function renderPreRaidChecker() {
     currentClass = null;
     document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
-    const preRaidLink = document.querySelector('.class-list li[data-view="preraid"]');
+    const preRaidLink = document.querySelector('.class-list li[data-view="raidready"]');
     if (preRaidLink) preRaidLink.classList.add('active');
 
     // Get available classes and specs
@@ -2472,13 +2472,13 @@ function renderPreRaidChecker() {
         <div class="grid grid-cols-3 gap-4 mb-6 md:grid-cols-1">
             <div>
                 <label class="text-terminal-dim text-xs block mb-2">CLASS</label>
-                <select id="preraid-class" class="w-full bg-terminal-bg border border-terminal-text text-terminal-text px-3 py-2 text-xs font-mono cursor-pointer">
+                <select id="raidready-class" class="w-full bg-terminal-bg border border-terminal-text text-terminal-text px-3 py-2 text-xs font-mono cursor-pointer">
                     ${classes.map(c => `<option value="${c}" ${c === preRaidClass ? 'selected' : ''}>${classData[c]?.title || c}</option>`).join('')}
                 </select>
             </div>
             <div>
                 <label class="text-terminal-dim text-xs block mb-2">SPEC</label>
-                <select id="preraid-spec" class="w-full bg-terminal-bg border border-terminal-text text-terminal-text px-3 py-2 text-xs font-mono cursor-pointer">
+                <select id="raidready-spec" class="w-full bg-terminal-bg border border-terminal-text text-terminal-text px-3 py-2 text-xs font-mono cursor-pointer">
                     ${specs.map(s => `<option value="${s}" ${s === preRaidSpecName ? 'selected' : ''}>${classData[preRaidClass]?.specs[s]?.title || s}</option>`).join('')}
                 </select>
             </div>
@@ -2534,14 +2534,14 @@ Wastewalker Shoulderpads
         mainContent.style.opacity = '1';
 
         // Class selector change
-        document.getElementById('preraid-class').addEventListener('change', (e) => {
+        document.getElementById('raidready-class').addEventListener('change', (e) => {
             preRaidClass = e.target.value;
             preRaidSpecName = classData[preRaidClass]?.defaultSpec || Object.keys(classData[preRaidClass]?.specs || {})[0];
             renderPreRaidChecker();
         });
 
         // Spec selector change
-        document.getElementById('preraid-spec').addEventListener('change', (e) => {
+        document.getElementById('raidready-spec').addEventListener('change', (e) => {
             preRaidSpecName = e.target.value;
             bisStatsCache = {}; // Clear cache when spec changes
             updateGearPreview();
@@ -2682,7 +2682,7 @@ function navigateToHash(hash) {
         if (parts[1]) currentRaidPhase = parts[1];
         if (parts[2]) currentRaid = parts[2];
         renderRaidsContent();
-    } else if (page === 'preraid') {
+    } else if (page === 'raidready') {
         renderPreRaidChecker();
     } else if (page === 'api') {
         renderApiDocs();
