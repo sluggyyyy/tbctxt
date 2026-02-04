@@ -334,9 +334,9 @@
         }
         .progress-bar-bg {
             background: #333333;
-            height: 8px;
-            border-radius: 4px;
+            height: 12px;
             overflow: hidden;
+            border: 1px solid #1eff00;
         }
         .progress-bar-fill {
             background: #1eff00;
@@ -968,10 +968,10 @@ function renderRaidsContent() {
                 <p class="text-terminal-dim text-xs mb-4 leading-relaxed md:text-[11px] md:mb-3 sm:text-[10px]">${raidData.description || ''}</p>
                 <div class="grid grid-cols-2 gap-4 text-xs md:grid-cols-1 md:gap-2 md:text-[11px] sm:text-[10px]">
                     <div class="space-y-1.5">
-                        <div><span class="text-terminal-text">Size:</span> <span class="text-terminal-dim">${raidData.size} players</span></div>
-                        <div><span class="text-terminal-text">Location:</span> <span class="text-terminal-dim">${raidData.location}</span></div>
-                        <div><span class="text-terminal-text">Attunement:</span> <span class="text-terminal-dim">${raidData.attunement}</span></div>
-                        ${raidData.tierTokens ? `<div><span class="text-terminal-text">Tier Tokens:</span> <span class="text-terminal-dim">${raidData.tierTokens}</span></div>` : ''}
+                        <div><span class="text-terminal-text">👥 Size:</span> <span class="text-terminal-dim">${raidData.size} players</span></div>
+                        <div><span class="text-terminal-text">📍 Location:</span> <span class="text-terminal-dim">${raidData.location}</span></div>
+                        <div><span class="text-terminal-text">🔑 Attunement:</span> <span class="text-terminal-dim">${raidData.attunement}</span></div>
+                        ${raidData.tierTokens ? `<div><span class="text-terminal-text">🎁 Tier Tokens:</span> <span class="text-terminal-dim">${raidData.tierTokens}</span></div>` : ''}
                     </div>
                 </div>
             </div>
@@ -985,13 +985,13 @@ function renderRaidsContent() {
                     <h4 class="text-terminal-accent text-sm mb-3 uppercase md:text-xs sm:text-[11px]">// Recommended Raid Composition</h4>
                     <div class="flex flex-wrap gap-4 mb-3 text-xs md:gap-3 md:text-[11px] sm:gap-2 sm:text-[10px]">
                         <div class="bg-blue-900 bg-opacity-30 px-3 py-1.5 border border-blue-500 border-opacity-50">
-                            <span class="text-blue-400">TANKS:</span> <span class="text-terminal-text">${comp.tanks}</span>
+                            <span class="text-blue-400">🛡️ TANKS:</span> <span class="text-terminal-text">${comp.tanks}</span>
                         </div>
                         <div class="bg-green-900 bg-opacity-30 px-3 py-1.5 border border-green-500 border-opacity-50">
-                            <span class="text-green-400">HEALERS:</span> <span class="text-terminal-text">${comp.healers}</span>
+                            <span class="text-green-400">💚 HEALERS:</span> <span class="text-terminal-text">${comp.healers}</span>
                         </div>
                         <div class="bg-red-900 bg-opacity-30 px-3 py-1.5 border border-red-500 border-opacity-50">
-                            <span class="text-red-400">DPS:</span> <span class="text-terminal-text">${comp.dps}</span>
+                            <span class="text-red-400">⚔️ DPS:</span> <span class="text-terminal-text">${comp.dps}</span>
                         </div>
                     </div>
                     ${comp.notes ? `<p class="text-terminal-dim text-xs leading-relaxed md:text-[11px] sm:text-[10px]">${comp.notes}</p>` : ''}
@@ -1006,9 +1006,9 @@ function renderRaidsContent() {
                 <div class="border border-yellow-500 border-opacity-30 p-4 mb-6 md:p-3 md:mb-4 sm:p-2.5 sm:mb-3">
                     <h4 class="text-yellow-400 text-sm mb-3 uppercase md:text-xs sm:text-[11px]">// Minimum Gear Requirements</h4>
                     <div class="space-y-2 text-xs md:text-[11px] sm:text-[10px]">
-                        ${gear.tanks ? `<div><span class="text-blue-400">Tanks:</span> <span class="text-terminal-dim">${gear.tanks}</span></div>` : ''}
-                        ${gear.healers ? `<div><span class="text-green-400">Healers:</span> <span class="text-terminal-dim">${gear.healers}</span></div>` : ''}
-                        ${gear.dps ? `<div><span class="text-red-400">DPS:</span> <span class="text-terminal-dim">${gear.dps}</span></div>` : ''}
+                        ${gear.tanks ? `<div><span class="text-blue-400">🛡️ Tanks:</span> <span class="text-terminal-dim">${gear.tanks}</span></div>` : ''}
+                        ${gear.healers ? `<div><span class="text-green-400">💚 Healers:</span> <span class="text-terminal-dim">${gear.healers}</span></div>` : ''}
+                        ${gear.dps ? `<div><span class="text-red-400">⚔️ DPS:</span> <span class="text-terminal-dim">${gear.dps}</span></div>` : ''}
                     </div>
                 </div>
             `;
@@ -1026,7 +1026,7 @@ function renderRaidsContent() {
             `;
         }
         // Boss list header
-        html += `<h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ BOSS ENCOUNTERS ]</h3>`;
+        html += `<h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">💀 [ BOSS ENCOUNTERS ]</h3>`;
 
         // Difficulty badge colors
         const difficultyColors = {
@@ -1240,22 +1240,22 @@ function renderCollectionsContent(category = 'mounts') {
 }
 
 function renderMountsSection(data) {
-    let html = '<h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ FLYING MOUNTS ]</h3>';
+    let html = '<h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">🦅 [ FLYING MOUNTS ]</h3>';
     const flyingCategories = {
-        'allianceVendor': 'Alliance Vendor', 'hordeVendor': 'Horde Vendor', 'netherwing': 'Netherwing (Rep)',
-        'shatariSkyguard': "Sha'tari Skyguard (Rep)", 'cenarionExpedition': 'Cenarion Expedition (Rep)',
-        'engineering': 'Engineering', 'rareDrops': 'Rare Drops', 'gladiator': 'Gladiator (PvP)'
+        'allianceVendor': '🔵 Alliance Vendor', 'hordeVendor': '🔴 Horde Vendor', 'netherwing': '🐉 Netherwing (Rep)',
+        'shatariSkyguard': "🦅 Sha'tari Skyguard (Rep)", 'cenarionExpedition': '🌿 Cenarion Expedition (Rep)',
+        'engineering': '⚙️ Engineering', 'rareDrops': '✨ Rare Drops', 'gladiator': '⚔️ Gladiator (PvP)'
     };
     for (const [key, label] of Object.entries(flyingCategories)) {
         if (data.flyingMounts && data.flyingMounts[key]) {
             html += renderMountGroup(label, data.flyingMounts[key]);
         }
     }
-    html += '<h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ GROUND MOUNTS ]</h3>';
+    html += '<h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">🐴 [ GROUND MOUNTS ]</h3>';
     const groundCategories = {
-        'bloodElfHawkstriders': 'Blood Elf Hawkstriders', 'draeneiElekks': 'Draenei Elekks',
-        'talbuksMaghar': "Mag'har Talbuks (Rep)", 'talbuksKurenai': 'Kurenai Talbuks (Rep)',
-        'halaa': 'Halaa PvP', 'raidDrops': 'Raid Drops', 'worldEvents': 'World Events'
+        'bloodElfHawkstriders': '🔴 Blood Elf Hawkstriders', 'draeneiElekks': '🔵 Draenei Elekks',
+        'talbuksMaghar': "🔴 Mag'har Talbuks (Rep)", 'talbuksKurenai': '🔵 Kurenai Talbuks (Rep)',
+        'halaa': '⚔️ Halaa PvP', 'raidDrops': '🏰 Raid Drops', 'worldEvents': '🎉 World Events'
     };
     for (const [key, label] of Object.entries(groundCategories)) {
         if (data.groundMounts && data.groundMounts[key]) {
@@ -1288,7 +1288,7 @@ function renderMountGroup(label, mounts) {
 
 function renderTabardsSection(data) {
     let html = '';
-    const categories = {reputation: 'Reputation Tabards', pvp: 'PvP Tabards', other: 'Other Tabards'};
+    const categories = {reputation: '⭐ Reputation Tabards', pvp: '⚔️ PvP Tabards', other: '📦 Other Tabards'};
     for (const [key, label] of Object.entries(categories)) {
         if (data[key]) {
             const rows = data[key].map(t => `
@@ -1314,7 +1314,7 @@ function renderTabardsSection(data) {
 
 function renderPetsSection(data) {
     let html = '';
-    const categories = {vendor: 'Vendor Pets', drops: 'Drop/Quest Pets', engineering: 'Engineering Pets', worldEvents: 'World Event Pets'};
+    const categories = {vendor: '🛒 Vendor Pets', drops: '🎁 Drop/Quest Pets', engineering: '⚙️ Engineering Pets', worldEvents: '🎉 World Event Pets'};
     for (const [key, label] of Object.entries(categories)) {
         if (data[key]) {
             const rows = data[key].map(p => `
@@ -1341,7 +1341,7 @@ function renderPetsSection(data) {
 
 function renderRareSpawnsSection(data) {
     let html = '';
-    const zones = {hellfire: 'Hellfire Peninsula', zangarmarsh: 'Zangarmarsh', terokkar: 'Terokkar Forest', nagrand: 'Nagrand', bladesEdge: "Blade's Edge Mountains", netherstorm: 'Netherstorm', shadowmoon: 'Shadowmoon Valley'};
+    const zones = {hellfire: '🔥 Hellfire Peninsula', zangarmarsh: '🍄 Zangarmarsh', terokkar: '🌲 Terokkar Forest', nagrand: '🌾 Nagrand', bladesEdge: "⛰️ Blade's Edge Mountains", netherstorm: '⚡ Netherstorm', shadowmoon: '🌑 Shadowmoon Valley'};
     for (const [key, label] of Object.entries(zones)) {
         if (data[key]) {
             const rows = data[key].map(r => `
@@ -1367,7 +1367,7 @@ function renderRareSpawnsSection(data) {
 
 function renderToysSection(data) {
     let html = '';
-    const categories = {transformation: 'Transformation Items', party: 'Party Items', engineering: 'Engineering Gadgets', misc: 'Miscellaneous'};
+    const categories = {transformation: '🎭 Transformation Items', party: '🎉 Party Items', engineering: '⚙️ Engineering Gadgets', misc: '📦 Miscellaneous'};
     for (const [key, label] of Object.entries(categories)) {
         if (data[key]) {
             const rows = data[key].map(t => `
@@ -1544,30 +1544,29 @@ function renderAttunementSteps(attunementKey, attunement) {
     if (attunementKey === 'heroicKeys') {
         html += renderHeroicKeysSteps(attunement, progress);
     } else {
-        html += '<div class="space-y-1">';
+        html += '<div class="border-t border-terminal-dim border-opacity-30">';
         attunement.steps.forEach((step, index) => {
             const isCompleted = progress[step.id];
             const stepTypeIcon = getStepTypeIcon(step.type);
             const questLink = step.questId ? `<a href="https://tbc.wowhead.com/quest=${step.questId}" data-wowhead="quest=${step.questId}" class="text-yellow-400 hover:text-terminal-text">${step.name}</a>` : `<span class="text-terminal-text">${step.name}</span>`;
 
             html += `
-                <label class="attunement-step ${isCompleted ? 'completed' : ''} flex items-start gap-3 p-3 cursor-pointer border border-transparent hover:border-terminal-dim hover:border-opacity-30 rounded">
+                <label class="attunement-step ${isCompleted ? 'completed' : ''} flex items-start gap-3 py-3 px-2 cursor-pointer border-b border-terminal-dim border-opacity-30 hover:bg-terminal-dim hover:bg-opacity-5">
                     <input type="checkbox" id="${step.id}" class="attunement-checkbox mt-0.5" ${isCompleted ? 'checked' : ''} />
-                    <span class="text-terminal-accent text-xs min-w-[24px]">[${index + 1}]</span>
+                    <span class="text-terminal-accent text-xs min-w-[24px]">${index + 1}.</span>
                     <div class="flex-1 step-text">
                         <div class="flex items-center gap-2 flex-wrap">
-                            <span class="text-xs text-terminal-dim">${stepTypeIcon}</span>
+                            <span class="text-xs">${stepTypeIcon}</span>
                             ${questLink}
-                            ${step.factionSpecific ? '<span class="text-xs text-blue-400">[Faction-specific]</span>' : ''}
+                            ${step.factionSpecific ? '<span class="text-xs text-blue-400">[Faction]</span>' : ''}
                         </div>
                         <div class="text-xs text-terminal-dim mt-1">${step.description}</div>
-                        <div class="text-xs text-terminal-dim mt-0.5">
-                            ${step.location ? `<span class="mr-3">\u{1F4CD} ${step.location}</span>` : ''}
-                            ${step.npc ? `<span class="mr-3">\u{1F464} ${step.npc}</span>` : ''}
-                            ${step.dungeon ? `<span class="mr-3">\u{1F3F0} ${step.dungeon}</span>` : ''}
-                            ${step.boss ? `<span class="mr-3">\u{1F480} ${step.boss}</span>` : ''}
+                        <div class="text-xs text-terminal-dim mt-1">
+                            ${step.location ? `📍 ${step.location}` : ''}
+                            ${step.npc ? ` · 👤 ${step.npc}` : ''}
+                            ${step.boss ? ` · 💀 ${step.boss}` : ''}
                         </div>
-                        ${step.note ? `<div class="text-xs text-yellow-400 mt-1">\u26A0 ${step.note}</div>` : ''}
+                        ${step.note ? `<div class="text-xs text-yellow-400 mt-1">⚠ ${step.note}</div>` : ''}
                     </div>
                 </label>
             `;
@@ -1579,25 +1578,21 @@ function renderAttunementSteps(attunementKey, attunement) {
 }
 
 function renderHeroicKeysSteps(attunement, progress) {
-    let html = '<div class="space-y-3">';
+    let html = '<div class="border-t border-terminal-dim border-opacity-30">';
 
     attunement.steps.forEach(step => {
         const isCompleted = progress[step.id];
 
         html += `
-            <label class="attunement-step ${isCompleted ? 'completed' : ''} flex items-start gap-3 p-3 cursor-pointer border border-terminal-dim border-opacity-30 rounded">
+            <label class="attunement-step ${isCompleted ? 'completed' : ''} flex items-start gap-3 py-3 px-2 cursor-pointer border-b border-terminal-dim border-opacity-30 hover:bg-terminal-dim hover:bg-opacity-5">
                 <input type="checkbox" id="${step.id}" class="attunement-checkbox mt-0.5" ${isCompleted ? 'checked' : ''} />
                 <div class="flex-1 step-text">
                     <div class="flex items-center gap-2 flex-wrap mb-1">
-                        ${step.itemId ? `<a href="https://tbc.wowhead.com/item=${step.itemId}" data-wowhead="item=${step.itemId}" class="text-wow-rare hover:text-terminal-text">${step.name}</a>` : `<span class="text-terminal-text">${step.name}</span>`}
+                        🔑 ${step.itemId ? `<a href="https://tbc.wowhead.com/item=${step.itemId}" data-wowhead="item=${step.itemId}" class="text-wow-rare hover:text-terminal-text">${step.name}</a>` : `<span class="text-terminal-text">${step.name}</span>`}
                     </div>
                     <div class="text-xs text-terminal-dim">${step.description}</div>
-                    <div class="text-xs mt-2">
-                        <span class="text-terminal-accent">Faction:</span> <span class="text-terminal-dim">${step.faction}</span>
-                        <span class="text-terminal-accent ml-3">Required:</span> <span class="text-terminal-dim">${step.repRequired}</span>
-                    </div>
                     <div class="text-xs text-terminal-dim mt-1">
-                        Dungeons: ${step.dungeons.join(', ')}
+                        ⭐ ${step.faction} · ${step.repRequired} · 🏰 ${step.dungeons.join(', ')}
                     </div>
                 </div>
             </label>
@@ -1684,7 +1679,10 @@ function renderRecipesContent() {
         <h2 class="text-terminal-accent text-lg mb-4 uppercase tracking-wide md:text-base md:mb-3 md:tracking-wider sm:text-sm sm:tracking-tight">[ ${profession.title.toUpperCase()} // TBC ]</h2>
         <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">Essential ${profession.title} recipes to prioritize for raiding and gold making</p>
         <div class="flex flex-wrap gap-2 mb-6 md:gap-1.5 md:mb-4 sm:mb-3">
-            ${Object.keys(recipesData).map(prof => `<a href="#recipes/${prof}" class="profession-btn ${prof === currentProfession ? 'bg-terminal-text text-terminal-bg' : 'bg-transparent'} border border-terminal-text text-terminal-text px-4 py-2.5 cursor-pointer font-mono text-xs transition-all select-none hover:bg-terminal-text hover:text-terminal-bg no-underline md:px-3.5 md:py-2.5 md:text-[11px] md:min-h-[48px] md:inline-flex md:items-center md:justify-center sm:px-3 sm:py-2 sm:text-[10px] sm:min-h-[44px]" data-profession="${prof}">${recipesData[prof].title}</a>`).join('')}
+            ${Object.keys(recipesData).map(prof => {
+                const profEmojis = {blacksmithing: '⚒️', leatherworking: '🥾', tailoring: '🧵', jewelcrafting: '💎', engineering: '⚙️', alchemy: '⚗️', enchanting: '✨'};
+                return `<a href="#recipes/${prof}" class="profession-btn ${prof === currentProfession ? 'bg-terminal-text text-terminal-bg' : 'bg-transparent'} border border-terminal-text text-terminal-text px-4 py-2.5 cursor-pointer font-mono text-xs transition-all select-none hover:bg-terminal-text hover:text-terminal-bg no-underline md:px-3.5 md:py-2.5 md:text-[11px] md:min-h-[48px] md:inline-flex md:items-center md:justify-center sm:px-3 sm:py-2 sm:text-[10px] sm:min-h-[44px]" data-profession="${prof}">${profEmojis[prof] || ''} ${recipesData[prof].title}</a>`;
+            }).join('')}
         </div>
     `;
     for (const [catKey, category] of Object.entries(profession.categories)) {
