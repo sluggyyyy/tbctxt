@@ -26,6 +26,68 @@ let currentUser = null; // { battletag, token } or null
 let serverProgress = null; // Progress from server when logged in
 const AUTH_STORAGE_KEY = 'tbctxt_auth';
 
+// ===== CUSTOM MODAL SYSTEM =====
+function showModal(message, options = {}) {
+    return new Promise((resolve) => {
+        const { type = 'confirm', confirmText = 'YES', cancelText = 'NO' } = options;
+
+        // Create modal overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'fixed inset-0 bg-black/80 flex items-center justify-center z-[100]';
+        overlay.id = 'modal-overlay';
+
+        // Create modal box
+        overlay.innerHTML = `
+            <div class="bg-terminal-bg border-2 border-terminal-accent p-6 max-w-md mx-4 font-mono">
+                <div class="text-terminal-text text-sm mb-6">${message}</div>
+                <div class="flex gap-3 justify-end">
+                    ${type === 'confirm' ? `
+                        <button id="modal-cancel" class="px-4 py-2 border border-terminal-dim text-terminal-dim hover:border-terminal-text hover:text-terminal-text transition-colors text-xs">[ ${cancelText} ]</button>
+                        <button id="modal-confirm" class="px-4 py-2 border border-terminal-accent text-terminal-accent hover:bg-terminal-accent hover:text-terminal-bg transition-colors text-xs">[ ${confirmText} ]</button>
+                    ` : `
+                        <button id="modal-confirm" class="px-4 py-2 border border-terminal-accent text-terminal-accent hover:bg-terminal-accent hover:text-terminal-bg transition-colors text-xs">[ OK ]</button>
+                    `}
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(overlay);
+
+        // Focus confirm button
+        document.getElementById('modal-confirm')?.focus();
+
+        // Handle confirm
+        document.getElementById('modal-confirm')?.addEventListener('click', () => {
+            overlay.remove();
+            resolve(true);
+        });
+
+        // Handle cancel
+        document.getElementById('modal-cancel')?.addEventListener('click', () => {
+            overlay.remove();
+            resolve(false);
+        });
+
+        // Handle escape key
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                overlay.remove();
+                document.removeEventListener('keydown', handleEscape);
+                resolve(false);
+            }
+        };
+        document.addEventListener('keydown', handleEscape);
+
+        // Handle click outside
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                overlay.remove();
+                resolve(false);
+            }
+        });
+    });
+}
+
 // Auth functions
 function checkAuthStatus() {
     // Check localStorage for saved auth
@@ -3085,9 +3147,9 @@ Wastewalker Shoulderpads
         // Delete character button
         const deleteBtn = document.getElementById('delete-char-btn');
         if (deleteBtn) {
-            deleteBtn.addEventListener('click', () => {
+            deleteBtn.addEventListener('click', async () => {
                 const charId = document.getElementById('char-select').value;
-                if (charId && confirm('Delete this character?')) {
+                if (charId && await showModal('Delete this character?', { confirmText: 'DELETE', cancelText: 'CANCEL' })) {
                     deleteCharacter(charId);
                     currentCharacterId = null;
                     renderPreRaidChecker();
