@@ -3647,16 +3647,30 @@ function loadAllCharacters() {
 function saveCharacterToList(name, gearText) {
     try {
         const characters = loadAllCharacters();
-        const id = Date.now().toString();
-        const newChar = {
-            id,
-            name: name || 'Unnamed',
-            gearText,
-            savedAt: Date.now()
-        };
-        characters.push(newChar);
-        localStorage.setItem(CHAR_IMPORT_KEY, JSON.stringify(characters));
-        return id;
+        const charName = name || 'Unnamed';
+
+        // Check if character with same name exists
+        const existingIndex = characters.findIndex(c => c.name.toLowerCase() === charName.toLowerCase());
+
+        if (existingIndex !== -1) {
+            // Overwrite existing character
+            characters[existingIndex].gearText = gearText;
+            characters[existingIndex].savedAt = Date.now();
+            localStorage.setItem(CHAR_IMPORT_KEY, JSON.stringify(characters));
+            return characters[existingIndex].id;
+        } else {
+            // Create new character
+            const id = Date.now().toString();
+            const newChar = {
+                id,
+                name: charName,
+                gearText,
+                savedAt: Date.now()
+            };
+            characters.push(newChar);
+            localStorage.setItem(CHAR_IMPORT_KEY, JSON.stringify(characters));
+            return id;
+        }
     } catch (e) {
         console.error('Error saving character:', e);
         return null;
