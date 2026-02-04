@@ -66,7 +66,11 @@
               "Not decursing the tank, causing them to miss attacks and lose threat",
               "Tank getting knocked off the platform by Charge in Phase 3"
             ],
-            "lootHighlights": ["Attumen's Signet", "Stalker's War Bands", "Midnight's Signet"]
+            "lootHighlights": [
+              "Attumen's Signet",
+              "Stalker's War Bands",
+              "Midnight's Signet"
+            ]
           },
           {
             "name": "Moroes",
@@ -114,7 +118,11 @@
               "Wasting Garrote removal abilities early instead of saving them for healers",
               "Killing guests in the wrong order and letting healers prolong the fight"
             ],
-            "lootHighlights": ["Crimson Girdle of the Indomitable", "Royal Cloak of the Sunstriders", "Moroes' Lucky Pocket Watch"]
+            "lootHighlights": [
+              "Crimson Girdle of the Indomitable",
+              "Royal Cloak of the Sunstriders",
+              "Moroes' Lucky Pocket Watch"
+            ]
           },
           {
             "name": "Maiden of Virtue",
@@ -154,7 +162,11 @@
               "No one able to break Repentance, causing deaths during the stun",
               "Healers not pre-applying heal-over-time effects before Repentance"
             ],
-            "lootHighlights": ["Bands of Indwelling", "Iron Stalagmite", "Bracers of Maliciousness"]
+            "lootHighlights": [
+              "Bands of Indwelling",
+              "Iron Stalagmite",
+              "Bracers of Maliciousness"
+            ]
           },
           {
             "name": "Opera Event",
@@ -186,7 +198,11 @@
               "Romulo and Julianne: Killing one too fast and having them resurrect",
               "Wizard of Oz: Killing Tito before Dorothee, causing her to enrage"
             ],
-            "lootHighlights": ["Ribbon of Sacrifice", "Big Bad Wolf's Head", "Romulo's Poison Vial"]
+            "lootHighlights": [
+              "Ribbon of Sacrifice",
+              "Big Bad Wolf's Head",
+              "Romulo's Poison Vial"
+            ]
           },
           {
             "name": "The Curator",
@@ -226,7 +242,11 @@
               "Using Heroism/Bloodlust at the start instead of saving it for Evocation",
               "Tank dying to enrage because healers weren't prepared"
             ],
-            "lootHighlights": ["Tier 4 Gloves token", "Forest Wind Shoulderpads", "Garona's Signet Ring"]
+            "lootHighlights": [
+              "Tier 4 Gloves token",
+              "Forest Wind Shoulderpads",
+              "Garona's Signet Ring"
+            ]
           },
           {
             "name": "Terestian Illhoof",
@@ -266,7 +286,11 @@
               "Forgetting to kill Kil'rek when it respawns, reducing damage on Illhoof",
               "Healers falling behind on the constant raid damage"
             ],
-            "lootHighlights": ["Gilded Thorium Cloak", "Fool's Bane", "Cincture of Will"]
+            "lootHighlights": [
+              "Gilded Thorium Cloak",
+              "Fool's Bane",
+              "Cincture of Will"
+            ]
           },
           {
             "name": "Shade of Aran",
@@ -314,7 +338,11 @@
               "Using mana consumables while Aran is drinking",
               "Not killing Water Elementals quickly at 40%"
             ],
-            "lootHighlights": ["Tirisfal Wand of Ascendancy", "Shermanar Great-Ring", "Aran's Soothing Sapphire"]
+            "lootHighlights": [
+              "Tirisfal Wand of Ascendancy",
+              "Shermanar Great-Ring",
+              "Aran's Soothing Sapphire"
+            ]
           },
           {
             "name": "Netherspite",
@@ -360,7 +388,11 @@
               "Standing in Void Zones",
               "Not spreading during Banish Phase"
             ],
-            "lootHighlights": ["Spiteblade", "Cowl of Defiance", "Mantle of Abrahmis"]
+            "lootHighlights": [
+              "Spiteblade",
+              "Cowl of Defiance",
+              "Mantle of Abrahmis"
+            ]
           },
           {
             "name": "Chess Event",
@@ -388,7 +420,9 @@
               "Ignoring the King's heal ability",
               "Not focusing damage on the enemy King"
             ],
-            "lootHighlights": ["The chess chest contains guaranteed epic loot for the raid"]
+            "lootHighlights": [
+              "The chess chest contains guaranteed epic loot for the raid"
+            ]
           },
           {
             "name": "Prince Malchezaar",
@@ -446,7 +480,12 @@
               "Not saving damage cooldowns for the Phase 3 burn",
               "Raid standing near infernals and taking unnecessary fire damage"
             ],
-            "lootHighlights": ["Tier 4 Helm token", "Gorehowl", "Light's Justice", "Stainless Cloak of the Pure Hearted"]
+            "lootHighlights": [
+              "Tier 4 Helm token",
+              "Gorehowl",
+              "Light's Justice",
+              "Stainless Cloak of the Pure Hearted"
+            ]
           },
           {
             "name": "Nightbane (Optional Boss)",
@@ -500,7 +539,11 @@
               "Tank dying during air phase from Smoking Blast stacks",
               "Not killing skeletons before Nightbane lands"
             ],
-            "lootHighlights": ["Nightstaff of the Everliving", "Shield of Impenetrable Darkness", "Stonebough Jerkin"]
+            "lootHighlights": [
+              "Nightstaff of the Everliving",
+              "Shield of Impenetrable Darkness",
+              "Stonebough Jerkin"
+            ]
           }
         ]
       },
@@ -585,7 +628,11 @@
               "Kiggler killing people because the Hunter stopped kiting",
               "Not having the correct number of tanks assigned"
             ],
-            "lootHighlights": ["Tier 4 Shoulders token", "Malefic Mask of the Shadows", "Hammer of the Naaru"]
+            "lootHighlights": [
+              "Tier 4 Shoulders token",
+              "Malefic Mask of the Shadows",
+              "Hammer of the Naaru"
+            ]
           },
           {
             "name": "Gruul the Dragonkiller",
@@ -639,7 +686,12 @@
               "Standing in Cave In rocks while rooted",
               "Tank dying because Growth stacks got too high"
             ],
-            "lootHighlights": ["Tier 4 Legs token", "Dragonspine Trophy", "Gronn-Stitched Girdle", "Axe of the Gronn Lords"]
+            "lootHighlights": [
+              "Tier 4 Legs token",
+              "Dragonspine Trophy",
+              "Gronn-Stitched Girdle",
+              "Axe of the Gronn Lords"
+            ]
           }
         ]
       },
@@ -725,7 +777,12 @@
               "Abyssal adds overwhelming the raid in Phase 1",
               "Cube clickers dying before Phase 2 - protect them!"
             ],
-            "lootHighlights": ["Tier 4 Chest token", "Pit Lord's Satchel (20-slot bag)", "Crystalheart Pulse-Staff", "Eye of Magtheridon"]
+            "lootHighlights": [
+              "Tier 4 Chest token",
+              "Pit Lord's Satchel (20-slot bag)",
+              "Crystalheart Pulse-Staff",
+              "Eye of Magtheridon"
+            ]
           }
         ]
       }
@@ -743,7 +800,248 @@
         "attunement": "The Cudgel of Kar'desh (requires killing Nightbane in Karazhan and Gruul)",
         "description": "Lady Vashj's underwater stronghold. Features 6 bosses including the challenging Vashj encounter. Heavy nature resistance is needed for some fights.",
         "tierTokens": "Tier 5 Gloves, Helm, and Legs tokens drop here",
-        "bosses": []
+        "bosses": [
+          {
+            "name": "Hydross the Unstable",
+            "npcId": 21216,
+            "difficulty": "Medium",
+            "description": "The first boss of SSC. Hydross alternates between Frost and Nature forms when pulled across the threshold. Requires two tanks with appropriate resistance gear.",
+            "abilities": [
+              {
+                "name": "Mark of Hydross",
+                "spellId": 38215,
+                "description": "Stacking debuff in Frost form, increases Frost damage taken by 10% per stack.",
+                "handling": "Tank swap at 4-6 stacks by pulling boss across threshold."
+              },
+              {
+                "name": "Mark of Corruption",
+                "spellId": 38219,
+                "description": "Stacking debuff in Nature form, increases Nature damage taken by 10% per stack.",
+                "handling": "Tank swap at 4-6 stacks by pulling boss across threshold."
+              },
+              {
+                "name": "Water Tomb",
+                "spellId": 38235,
+                "description": "Encases random players in a water tomb, stunning them and dealing Frost damage.",
+                "handling": "Healers must top off tombed players quickly."
+              },
+              {
+                "name": "Vile Sludge",
+                "spellId": 38246,
+                "description": "Reduces healing received by 50% in Nature form.",
+                "handling": "Dispel immediately, especially on tanks."
+              }
+            ],
+            "strategy": "Position Hydross at the threshold between clean and corrupted water. When marks stack too high, pull him across to reset stacks and change forms. Each transition spawns adds that must be picked up by off-tanks. Frost resist tank for Frost form, Nature resist tank for Nature form.",
+            "lootHighlights": [
+              "Hydross's Ring of Chaos",
+              "Scarab of Displacement"
+            ]
+          },
+          {
+            "name": "The Lurker Below",
+            "npcId": 21217,
+            "difficulty": "Medium",
+            "description": "A giant fish that must be fished up from the pool. Raid stands on platforms around the pool, diving into water to avoid Spout.",
+            "abilities": [
+              {
+                "name": "Spout",
+                "spellId": 37433,
+                "description": "Rotates in a circle, dealing massive damage and knockback to anyone hit.",
+                "handling": "Jump into the water when Spout starts. Submerge until it passes your platform."
+              },
+              {
+                "name": "Whirl",
+                "spellId": 37363,
+                "description": "Knocks back all melee and deals Physical damage.",
+                "handling": "Melee should be prepared to reposition after each Whirl."
+              },
+              {
+                "name": "Geyser",
+                "spellId": 37478,
+                "description": "Water spout under a random player, launching them into the air.",
+                "handling": "Spread out on platforms to minimize splash damage."
+              },
+              {
+                "name": "Submerge",
+                "spellId": 37433,
+                "description": "Lurker submerges and spawns adds on each platform.",
+                "handling": "Kill Ambushers fast, CC Guardians, prepare for Lurker to resurface."
+              }
+            ],
+            "strategy": "Spread raid across platforms. When Spout begins, everyone jumps into water and submerges. During submerge phase, kill adds quickly. Tanks pick up Guardians, DPS burns Ambushers. Ranged should stay at max range to avoid Whirl.",
+            "lootHighlights": [
+              "Earring of Soulful Meditation",
+              "Mallet of the Tides"
+            ]
+          },
+          {
+            "name": "Leotheras the Blind",
+            "npcId": 21215,
+            "difficulty": "Hard",
+            "description": "A Blood Elf demon hunter with two forms. Occasionally possesses raid members who must fight their inner demon.",
+            "abilities": [
+              {
+                "name": "Whirlwind",
+                "spellId": 37640,
+                "description": "Spins rapidly, dealing massive damage to anyone nearby.",
+                "handling": "All melee and tanks run away immediately when Whirlwind starts."
+              },
+              {
+                "name": "Chaos Blast",
+                "spellId": 37674,
+                "description": "In demon form, blasts the highest threat target for Fire damage.",
+                "handling": "Warlock tank must maintain threat in demon form with Shadow resistance gear."
+              },
+              {
+                "name": "Inner Demon",
+                "spellId": 37676,
+                "description": "Spawns an Inner Demon for 5 random players. Only that player can damage their demon.",
+                "handling": "Kill your Inner Demon within 30 seconds or you become Mind Controlled permanently."
+              },
+              {
+                "name": "Demon Form",
+                "spellId": 37673,
+                "description": "Transforms into demon, ignores regular threat table.",
+                "handling": "Warlock tank takes over, all others reduce threat and heal the lock."
+              }
+            ],
+            "strategy": "Phase 1: Tank and spank, run from Whirlwind. Phase 2 (Demon): Warlock tanks with fire/shadow resist. Phase 3: Both forms active simultaneously at 15%. Kill Inner Demons immediately when they spawn or it's a wipe.",
+            "lootHighlights": [
+              "Gloves of the Vanquished Champion",
+              "True-Aim Stalker Bands"
+            ]
+          },
+          {
+            "name": "Fathom-Lord Karathress",
+            "npcId": 21214,
+            "difficulty": "Hard",
+            "description": "Council-style fight with Karathress and three advisors. Kill order is critical as Karathress gains abilities from dead advisors.",
+            "abilities": [
+              {
+                "name": "Cataclysmic Bolt",
+                "spellId": 38441,
+                "description": "Hits target for 50% of their max health as Nature damage.",
+                "handling": "Cannot be avoided, healers must be ready to top off the tank."
+              },
+              {
+                "name": "Sear Nova",
+                "spellId": 38445,
+                "description": "Gained after Caribdis dies. AoE fire damage around Karathress.",
+                "handling": "Melee must be at full health, healers spam AoE heals."
+              },
+              {
+                "name": "Tidal Surge",
+                "spellId": 38358,
+                "description": "Gained after Tidalvess dies. Frost damage and knockback.",
+                "handling": "Tanks position against a wall to prevent knockback."
+              },
+              {
+                "name": "Spitfire Totem",
+                "spellId": 38236,
+                "description": "Sharkkis summons totems that shoot fireballs.",
+                "handling": "Destroy totems immediately."
+              }
+            ],
+            "strategy": "Kill order: Caribdis (healer) > Tidalvess (shaman) > Sharkkis (hunter) > Karathress. Each advisor death empowers Karathress. Tank Karathress away from advisors. Interrupt Caribdis heals. Hunter kite Sharkkis's pet.",
+            "lootHighlights": [
+              "Gloves of the Vanquished Defender",
+              "World Breaker"
+            ]
+          },
+          {
+            "name": "Morogrim Tidewalker",
+            "npcId": 21213,
+            "difficulty": "Medium",
+            "description": "Giant water elemental that summons murlocs and throws players. A gear check fight requiring high raid DPS.",
+            "abilities": [
+              {
+                "name": "Tidal Wave",
+                "spellId": 37730,
+                "description": "Frontal cone dealing massive Frost damage.",
+                "handling": "Only the tank should be in front. All others stay behind."
+              },
+              {
+                "name": "Watery Grave",
+                "spellId": 38023,
+                "description": "Teleports 4 players to graves around the room, stunning and dealing damage.",
+                "handling": "Healers must quickly heal grave targets when they return."
+              },
+              {
+                "name": "Earthquake",
+                "spellId": 37764,
+                "description": "Raid-wide damage and spawns 12 Murlocs.",
+                "handling": "AoE the murlocs down. Mages and Warlocks should be ready."
+              },
+              {
+                "name": "Watery Globules",
+                "spellId": 37862,
+                "description": "Water globes move toward grave targets. Explode on contact.",
+                "handling": "Grave targets must run away from globes when released."
+              }
+            ],
+            "strategy": "Tank and spank with heavy AoE damage phases. During Earthquake, all ranged AoE the murloc spawns while melee stays on boss. Heal through Watery Graves quickly. This is a DPS race - boss must die before healers run out of mana.",
+            "lootHighlights": [
+              "Mantle of the Tireless Tracker",
+              "Luminescent Rod of the Naaru"
+            ]
+          },
+          {
+            "name": "Lady Vashj",
+            "npcId": 21212,
+            "difficulty": "Very Hard",
+            "description": "The final boss of SSC. Complex three-phase encounter with multiple mechanics including a unique 'tainted core' relay mechanic.",
+            "phaseBreakdown": [
+              "Phase 1 (100%-70%): Standard tank and spank with some abilities.",
+              "Phase 2 (70%-50%): Shield goes up. Must collect Tainted Cores from Elementals to deactivate 4 generators.",
+              "Phase 3 (50%-0%): All mechanics active plus increased damage. Burn phase."
+            ],
+            "abilities": [
+              {
+                "name": "Shock Blast",
+                "spellId": 38509,
+                "description": "AoE Nature damage around Vashj.",
+                "handling": "Melee run out when cast begins."
+              },
+              {
+                "name": "Static Charge",
+                "spellId": 38280,
+                "description": "Chains lightning between nearby players.",
+                "handling": "Spread out at least 10 yards apart."
+              },
+              {
+                "name": "Entangle",
+                "spellId": 38316,
+                "description": "Roots a player and spawns Spore Bats.",
+                "handling": "Kill bats quickly, they explode on death."
+              },
+              {
+                "name": "Tainted Core",
+                "spellId": 38132,
+                "description": "Dropped by Tainted Elementals. Must be thrown to deactivate generators.",
+                "handling": "Players must throw cores to each other (can't move while holding). Final player uses core on generator."
+              },
+              {
+                "name": "Toxic Spore",
+                "spellId": 38575,
+                "description": "Spawns Toxic Spore Bats in Phase 3.",
+                "handling": "Ranged kill bats before they reach melee."
+              }
+            ],
+            "strategy": "Phase 1: Tank and spank, spread for Static Charge. Phase 2: Split raid - core team relays Tainted Cores to generators, others control adds. Striders must be kited by frost mages. Naga must be tanked. Phase 3: Bloodlust and burn. Heal through increasing damage. Most guilds wipe here if Phase 2 takes too long.",
+            "commonMistakes": [
+              "Holding Tainted Core too long (it kills you)",
+              "Not spreading for Static Charge",
+              "Letting Striders reach the raid",
+              "Running out of mana in Phase 3"
+            ],
+            "lootHighlights": [
+              "Vashj's Vial Remnant (attunement)",
+              "Helm of the Vanquished Champion",
+              "Fang of Vashj"
+            ]
+          }
+        ]
       },
       "tempest_keep": {
         "name": "Tempest Keep: The Eye",
@@ -753,7 +1051,181 @@
         "attunement": "The Tempest Key (requires killing Lady Vashj in SSC)",
         "description": "Kael'thas Sunstrider's flying fortress. Features 4 bosses culminating in the epic Kael'thas encounter, one of the most complex fights in TBC.",
         "tierTokens": "Tier 5 Chest and Shoulders tokens drop here",
-        "bosses": []
+        "bosses": [
+          {
+            "name": "Al'ar",
+            "npcId": 19514,
+            "difficulty": "Medium",
+            "description": "A majestic phoenix that flies between platforms. Two-phase fight with add management and rebirth mechanic.",
+            "phaseBreakdown": [
+              "Phase 1: Al'ar flies between platforms, spawning adds. Must be tanked on each platform.",
+              "Phase 2 (at 0%): Al'ar dies and rebirths in the center with full health. Tank and burn."
+            ],
+            "abilities": [
+              {
+                "name": "Flame Buffet",
+                "spellId": 34121,
+                "description": "Stacking fire debuff on the tank.",
+                "handling": "Tank swap when stacks get too high."
+              },
+              {
+                "name": "Flame Quills",
+                "spellId": 34229,
+                "description": "Al'ar flies to center and shoots flames at all platforms.",
+                "handling": "Everyone run to the ramp/center area - platforms are death zones."
+              },
+              {
+                "name": "Meteor",
+                "spellId": 35181,
+                "description": "Phase 2 - Dives at a player's location dealing massive fire damage split among nearby players.",
+                "handling": "Stack loosely to split damage, but not too tight."
+              },
+              {
+                "name": "Melt Armor",
+                "spellId": 35410,
+                "description": "Phase 2 - Reduces tank armor significantly.",
+                "handling": "Tank swap, use cooldowns, healers focus tank."
+              }
+            ],
+            "strategy": "Phase 1: Tanks on platforms, taunt Al'ar as it moves. Kill adds, move to ramp during Flame Quills. Phase 2: Stack for Meteors, tank swap on Melt Armor. Save Bloodlust for Phase 2.",
+            "lootHighlights": [
+              "Ashes of Al'ar (mount)",
+              "Talon of Al'ar",
+              "Phoenix-Ring of Rebirth"
+            ]
+          },
+          {
+            "name": "Void Reaver",
+            "npcId": 19516,
+            "difficulty": "Easy",
+            "description": "A giant robot. Known as 'Loot Reaver' for being an easy gear check boss. Avoid orbs, heal through Pounding.",
+            "abilities": [
+              {
+                "name": "Pounding",
+                "spellId": 34162,
+                "description": "Raid-wide AoE damage for 3 seconds.",
+                "handling": "Healers pre-cast AoE heals. Everyone should be topped off."
+              },
+              {
+                "name": "Arcane Orb",
+                "spellId": 34172,
+                "description": "Launches an orb at a random ranged player. Explodes for massive AoE damage.",
+                "handling": "Spread out 15+ yards. If targeted, move away from others immediately."
+              },
+              {
+                "name": "Knock Away",
+                "spellId": 25778,
+                "description": "Knocks the tank back and reduces threat.",
+                "handling": "Tank against a wall. Off-tank ready to taunt if needed."
+              }
+            ],
+            "strategy": "Extremely simple fight. Tank against wall, spread ranged out, heal through Pounding, avoid Arcane Orbs. This is a great entry boss for Tier 5.",
+            "lootHighlights": [
+              "Void Reaver Greaves",
+              "Pauldrons of the Vanquished Champion"
+            ]
+          },
+          {
+            "name": "High Astromancer Solarian",
+            "npcId": 18805,
+            "difficulty": "Medium",
+            "description": "Alternates between Astromancer form and Void form. Players get turned into bombs.",
+            "abilities": [
+              {
+                "name": "Arcane Missiles",
+                "spellId": 33031,
+                "description": "Channels missiles at the tank.",
+                "handling": "Healers keep tank topped off during channel."
+              },
+              {
+                "name": "Wrath of the Astromancer",
+                "spellId": 33045,
+                "description": "Turns a player into a living bomb. Explodes after 6 seconds.",
+                "handling": "Bomb player must run away from raid immediately. 10+ yards minimum."
+              },
+              {
+                "name": "Blinding Light",
+                "spellId": 33009,
+                "description": "AoE knockback and damage.",
+                "handling": "Melee be prepared to run back in."
+              },
+              {
+                "name": "Void Form",
+                "spellId": 39625,
+                "description": "At 20%, transforms into a Voidwalker permanently.",
+                "handling": "Simple tank and spank. Just heal through increased damage."
+              }
+            ],
+            "strategy": "Phase 1: Tank and spank, bomb players run out. During add phase, AoE priests and kill Solarium Agents fast. Phase 2 (Void): Burn with Bloodlust. No more bombs, just increased damage.",
+            "lootHighlights": [
+              "Void Star Talisman",
+              "Leggings of the Vanquished Champion"
+            ]
+          },
+          {
+            "name": "Kael'thas Sunstrider",
+            "npcId": 19622,
+            "difficulty": "Very Hard",
+            "description": "The most complex fight in TBC. Five-phase encounter lasting 15-20 minutes with unique legendary weapon mechanics.",
+            "phaseBreakdown": [
+              "Phase 1: Kill 4 advisors one at a time.",
+              "Phase 2: Legendary weapons come alive - kill them to loot and equip them.",
+              "Phase 3: All 4 advisors resurrect simultaneously. Kill them again.",
+              "Phase 4: Kael'thas becomes active. Manage Phoenix adds and Mind Control.",
+              "Phase 5 (at 50%): Gravity Lapse - everyone flies. Avoid orbs, DPS Kael'thas."
+            ],
+            "abilities": [
+              {
+                "name": "Fireball",
+                "spellId": 36805,
+                "description": "Standard nuke on the tank.",
+                "handling": "Healers keep tank topped."
+              },
+              {
+                "name": "Flamestrike",
+                "spellId": 36735,
+                "description": "Fire zone on the ground.",
+                "handling": "Move out immediately."
+              },
+              {
+                "name": "Phoenix",
+                "spellId": 36723,
+                "description": "Spawns a Phoenix add that leaves fire on the ground.",
+                "handling": "Kite Phoenix, kill it, then kill the egg before it respawns."
+              },
+              {
+                "name": "Mind Control",
+                "spellId": 36797,
+                "description": "Mind Controls a player.",
+                "handling": "CC the MC'd player until it breaks."
+              },
+              {
+                "name": "Gravity Lapse",
+                "spellId": 35941,
+                "description": "Everyone floats in the air. Nether Vapor orbs spawn.",
+                "handling": "Swim through the air, avoid orbs, DPS Kael'thas, stay spread."
+              },
+              {
+                "name": "Shock Barrier",
+                "spellId": 36815,
+                "description": "Kael'thas shields himself and casts Pyroblast.",
+                "handling": "Break the shield FAST or Pyroblast one-shots someone."
+              }
+            ],
+            "strategy": "Phase 1: Kill advisors in order - Thaladred > Sanguinar > Capernian > Telonicus. Phase 2: Loot weapons - Staff goes to Warlock, Bow to Hunter, Dagger to Rogue, etc. Phase 3: CC Capernian, burn others. Phase 4: Tank and spank while handling Phoenixes. Phase 5: Swim, avoid orbs, DPS hard.",
+            "commonMistakes": [
+              "Not equipping legendary weapons in Phase 2",
+              "Letting Phoenix eggs hatch",
+              "Not breaking Shock Barrier in time",
+              "Touching Nether Vapor orbs during Gravity Lapse"
+            ],
+            "lootHighlights": [
+              "Verdant Sphere (attunement)",
+              "Ashes of Al'ar",
+              "Chestguard of the Vanquished Champion"
+            ]
+          }
+        ]
       }
     }
   },
@@ -769,7 +1241,206 @@
         "attunement": "Requires completing SSC and TK attunements",
         "description": "A unique wave-defense raid where you protect bases from Archimonde's forces alongside iconic Warcraft characters.",
         "tierTokens": "Tier 6 Gloves and Helm tokens drop here",
-        "bosses": []
+        "bosses": [
+          {
+            "name": "Rage Winterchill",
+            "npcId": 17767,
+            "difficulty": "Medium",
+            "description": "A Lich boss. First boss of Hyjal after surviving 8 waves of undead. Heavy frost damage.",
+            "abilities": [
+              {
+                "name": "Icebolt",
+                "spellId": 31249,
+                "description": "Hits a random player for heavy Frost damage and stuns them.",
+                "handling": "Heal stunned players immediately."
+              },
+              {
+                "name": "Frost Nova",
+                "spellId": 31250,
+                "description": "AoE root and damage around Winterchill.",
+                "handling": "Melee be ready to trinket or wait it out."
+              },
+              {
+                "name": "Frost Armor",
+                "spellId": 31256,
+                "description": "Attackers have chance to be slowed.",
+                "handling": "Melee just deal with it, not avoidable."
+              },
+              {
+                "name": "Death and Decay",
+                "spellId": 31258,
+                "description": "Green zone on the ground dealing heavy Shadow damage.",
+                "handling": "Move out immediately. Do not stand in it."
+              }
+            ],
+            "strategy": "After clearing 8 trash waves, Winterchill spawns. Tank and spank. Spread out for Icebolt. Move from Death and Decay. Frost resist helps but isn't mandatory.",
+            "lootHighlights": [
+              "Bracers of Martyrdom",
+              "Chronicle of Dark Secrets"
+            ]
+          },
+          {
+            "name": "Anetheron",
+            "npcId": 17808,
+            "difficulty": "Medium",
+            "description": "A Dreadlord boss. Second Hyjal boss with infernal rain and vampire mechanics.",
+            "abilities": [
+              {
+                "name": "Carrion Swarm",
+                "spellId": 31306,
+                "description": "Frontal cone dealing Shadow damage and reducing healing by 75%.",
+                "handling": "Only tank in front. Dispel healing reduction."
+              },
+              {
+                "name": "Sleep",
+                "spellId": 31298,
+                "description": "Puts random players to sleep for 10 seconds.",
+                "handling": "DPS through it or dispel."
+              },
+              {
+                "name": "Inferno",
+                "spellId": 31299,
+                "description": "Calls down an Infernal on a random player location.",
+                "handling": "Move away from impact zone. Off-tank picks up Infernal."
+              },
+              {
+                "name": "Vampiric Aura",
+                "spellId": 31317,
+                "description": "Heals Anetheron for damage dealt.",
+                "handling": "Burn through it with high DPS."
+              }
+            ],
+            "strategy": "Tank away from raid for Carrion Swarm. Off-tanks pick up Infernals - kite them if needed. Dispel Sleep when possible. High DPS burn through Vampiric healing.",
+            "lootHighlights": [
+              "Don Rodrigo's Poncho",
+              "Golden Links of Restoration"
+            ]
+          },
+          {
+            "name": "Kaz'rogal",
+            "npcId": 17888,
+            "difficulty": "Medium",
+            "description": "A Doom Guard boss. Third Hyjal boss. Infamous mana drain mechanic that explodes players.",
+            "abilities": [
+              {
+                "name": "Cleave",
+                "spellId": 31345,
+                "description": "Frontal cleave hitting for heavy damage.",
+                "handling": "Only tank in front."
+              },
+              {
+                "name": "War Stomp",
+                "spellId": 31480,
+                "description": "AoE stun and damage.",
+                "handling": "Healers spread to ensure not all are stunned."
+              },
+              {
+                "name": "Mark of Kaz'rogal",
+                "spellId": 31447,
+                "description": "Drains mana from all players. If you hit 0 mana, you EXPLODE dealing 10k damage to nearby players.",
+                "handling": "Mana users spread out. Use mana pots, Dark Runes, Innervate. If low, run away from raid before exploding."
+              }
+            ],
+            "strategy": "Stack melee, spread healers and casters. When Mark goes out, use all mana consumables. Players about to explode must run out. Shadow Priests are MVP for mana return.",
+            "lootHighlights": [
+              "Hammer of Atonement",
+              "Black Featherlight Boots"
+            ]
+          },
+          {
+            "name": "Azgalor",
+            "npcId": 17842,
+            "difficulty": "Hard",
+            "description": "A Pit Lord boss. Fourth Hyjal boss. Players turn into demons on death.",
+            "abilities": [
+              {
+                "name": "Cleave",
+                "spellId": 31345,
+                "description": "Heavy frontal cleave.",
+                "handling": "Only tank in front."
+              },
+              {
+                "name": "Rain of Fire",
+                "spellId": 31340,
+                "description": "Fire rain on random locations.",
+                "handling": "Move out immediately."
+              },
+              {
+                "name": "Howl of Azgalor",
+                "spellId": 31344,
+                "description": "AoE silence for 5 seconds.",
+                "handling": "Healers pre-HoT before Howl."
+              },
+              {
+                "name": "Doom",
+                "spellId": 31347,
+                "description": "Kills the target after 20 seconds. When they die, a Lesser Doomguard spawns.",
+                "handling": "Doomed player should be healed until death, then off-tank picks up the add. Soulstone/Combat Res as needed."
+              }
+            ],
+            "strategy": "Tank and spank with movement for Rain of Fire. Doomed players will die - have Soulstones ready. Off-tanks grab Lesser Doomguards. Coordinate healing through Howl silences.",
+            "lootHighlights": [
+              "Bow of the Unrelenting",
+              "Gronnstalker's Gloves"
+            ]
+          },
+          {
+            "name": "Archimonde",
+            "npcId": 17968,
+            "difficulty": "Very Hard",
+            "description": "The final boss of Mount Hyjal. Extremely punishing mechanics. Everyone gets Tears of the Goddess to survive Air Burst.",
+            "abilities": [
+              {
+                "name": "Air Burst",
+                "spellId": 32014,
+                "description": "Launches a random player high into the air.",
+                "handling": "USE TEARS OF THE GODDESS to slow fall! Without it, you die from fall damage."
+              },
+              {
+                "name": "Grip of the Legion",
+                "spellId": 31972,
+                "description": "DoT on a random player that jumps to nearby players.",
+                "handling": "Spread out 10+ yards. Dispel quickly."
+              },
+              {
+                "name": "Doomfire",
+                "spellId": 31903,
+                "description": "Fire trail that chases players.",
+                "handling": "Kite it away from raid. Do not let it touch anyone."
+              },
+              {
+                "name": "Fear",
+                "spellId": 31970,
+                "description": "AoE fear.",
+                "handling": "Tremor Totems, Fear Ward, Berserker Rage. Feared into Doomfire = death."
+              },
+              {
+                "name": "Soul Charge",
+                "spellId": 32053,
+                "description": "When a player dies, Archimonde gains a Soul Charge. At 3 charges, he wipes the raid.",
+                "handling": "DO NOT DIE. Every death brings raid closer to wipe."
+              },
+              {
+                "name": "Finger of Death",
+                "spellId": 31984,
+                "description": "One-shots a player if no one is in melee range.",
+                "handling": "Tank must ALWAYS be in melee range."
+              }
+            ],
+            "strategy": "Spread out in a large semicircle. Use Tears immediately on Air Burst. Kite Doomfire away from raid. Do not die - 3 deaths = wipe. Keep tank in melee range at all times. Fear management is critical. This fight requires near-perfect execution.",
+            "commonMistakes": [
+              "Forgetting to use Tears of the Goddess",
+              "Standing too close and spreading Grip of the Legion",
+              "Running into Doomfire while feared",
+              "Tank leaving melee range"
+            ],
+            "lootHighlights": [
+              "Tempest of Chaos",
+              "Helm of the Vanquished Champion",
+              "Antonidas's Aegis of Rapt Concentration"
+            ]
+          }
+        ]
       },
       "black_temple": {
         "name": "Black Temple",
@@ -779,7 +1450,408 @@
         "attunement": "Requires extensive questline through SSC and TK",
         "description": "Illidan's fortress and the iconic TBC raid. Features 9 bosses including Illidan Stormrage himself.",
         "tierTokens": "Tier 6 Chest, Legs, Shoulders, Bracers, Belt, and Boots tokens drop here",
-        "bosses": []
+        "bosses": [
+          {
+            "name": "High Warlord Naj'entus",
+            "npcId": 22887,
+            "difficulty": "Medium",
+            "description": "The first boss of Black Temple. Raid must break shields using Tidal Shield spines.",
+            "abilities": [
+              {
+                "name": "Needle Spine",
+                "spellId": 39992,
+                "description": "Shoots spines at random players dealing damage.",
+                "handling": "Healers keep raid topped."
+              },
+              {
+                "name": "Tidal Shield",
+                "spellId": 39872,
+                "description": "Shields himself and impales a player with a spine. Shield must be broken.",
+                "handling": "Looted spine must be used to break shield before he casts Tidal Burst."
+              },
+              {
+                "name": "Tidal Burst",
+                "spellId": 39878,
+                "description": "Massive raid-wide Frost damage if shield isn't broken in time.",
+                "handling": "Break shield FAST. Even with shield break, deals significant damage."
+              },
+              {
+                "name": "Impaling Spine",
+                "spellId": 39837,
+                "description": "Impales a player, rooting them and dealing damage over time.",
+                "handling": "Heal impaled player. When spine is removed, player can loot it."
+              }
+            ],
+            "strategy": "Tank and spank until Tidal Shield. When someone gets Impaling Spine, heal them until spine is removed, then they loot it. Use spine to break Tidal Shield before Tidal Burst. Raid-wide healing needed after each burst.",
+            "lootHighlights": [
+              "Fists of Mukoa",
+              "Guise of the Tidal Lurker"
+            ]
+          },
+          {
+            "name": "Supremus",
+            "npcId": 22898,
+            "difficulty": "Easy",
+            "description": "Giant Abyssal. Alternates between tank phase and chase phase.",
+            "abilities": [
+              {
+                "name": "Hateful Strike",
+                "spellId": 41926,
+                "description": "Hits highest health target in melee range for massive damage.",
+                "handling": "Multiple tanks stack in melee, highest HP gets hit."
+              },
+              {
+                "name": "Molten Punch",
+                "spellId": 40126,
+                "description": "Punches the ground creating a fire line.",
+                "handling": "Move out of fire lines."
+              },
+              {
+                "name": "Volcanic Geyser",
+                "spellId": 42055,
+                "description": "Blue flames spawn under random players.",
+                "handling": "Keep moving to avoid."
+              },
+              {
+                "name": "Gaze",
+                "spellId": 41951,
+                "description": "Fixates on a random player and chases them.",
+                "handling": "Gazed player must kite. Everyone else DPS while moving."
+              }
+            ],
+            "strategy": "Phase 1: Multiple tanks soak Hateful Strike by being highest HP. Phase 2: Kite when Supremus gazes you. Keep moving to avoid Volcanic Geysers. Simple fight once you learn the dance.",
+            "lootHighlights": [
+              "Naj'entus Breastplate",
+              "Syphon of the Nathrezim"
+            ]
+          },
+          {
+            "name": "Shade of Akama",
+            "npcId": 22841,
+            "difficulty": "Medium",
+            "description": "Help Akama break free from his shade. Defend Akama while he channels.",
+            "abilities": [
+              {
+                "name": "Shade Soul Channel",
+                "spellId": 40401,
+                "description": "Drains Akama's soul, making him vulnerable.",
+                "handling": "Kill adds to allow Akama to channel back."
+              },
+              {
+                "name": "Ashtongue Defender",
+                "spellId": 0,
+                "description": "Adds spawn from sides that attack Akama.",
+                "handling": "Off-tanks grab adds, DPS burns them."
+              },
+              {
+                "name": "Ashtongue Sorcerer",
+                "spellId": 0,
+                "description": "Caster adds that must be interrupted.",
+                "handling": "Interrupt Rain of Fire. Kill sorcerers fast."
+              }
+            ],
+            "strategy": "Akama channels to break free while adds spawn. Tanks grab adds, interrupt sorcerers. Once Akama reaches the Shade, burn the Shade. If Akama dies, wipe.",
+            "lootHighlights": [
+              "Amice of Brilliant Light",
+              "Shadow-walker's Cord"
+            ]
+          },
+          {
+            "name": "Teron Gorefiend",
+            "npcId": 22871,
+            "difficulty": "Hard",
+            "description": "Death Knight boss. Players become ghosts and must manage Shadowy Constructs.",
+            "abilities": [
+              {
+                "name": "Incinerate",
+                "spellId": 40239,
+                "description": "Heavy Fire damage to random player.",
+                "handling": "Healers react quickly."
+              },
+              {
+                "name": "Shadow of Death",
+                "spellId": 40251,
+                "description": "Marks a player. After 55 seconds, they die and become a ghost.",
+                "handling": "Ghost player must use ghost abilities to kill Shadowy Constructs."
+              },
+              {
+                "name": "Crushing Shadows",
+                "spellId": 40243,
+                "description": "Increases Shadow damage taken.",
+                "handling": "Dispel immediately."
+              },
+              {
+                "name": "Doom Blossom",
+                "spellId": 40188,
+                "description": "Spawns flowers that shoot Shadow Bolts.",
+                "handling": "Move away from flowers."
+              }
+            ],
+            "strategy": "Key mechanic: When you become a ghost, you get special abilities. Use them to kill Shadowy Constructs before they reach the raid. Practice on the flash game before attempting. Ghosts failing = wipe.",
+            "lootHighlights": [
+              "Shadowmoon Destroyer's Drape",
+              "Pauldrons of the Wardancer"
+            ]
+          },
+          {
+            "name": "Gurtogg Bloodboil",
+            "npcId": 22948,
+            "difficulty": "Hard",
+            "description": "Fel Orc boss. Requires careful tank rotation and raid stacking for Bloodboil.",
+            "abilities": [
+              {
+                "name": "Bloodboil",
+                "spellId": 42005,
+                "description": "Hits the 5 closest players, dealing damage and applying a stacking DoT.",
+                "handling": "Three groups rotate being closest to spread the stacks."
+              },
+              {
+                "name": "Acidic Wound",
+                "spellId": 40484,
+                "description": "Stacking armor reduction on tank.",
+                "handling": "Tank swap at high stacks."
+              },
+              {
+                "name": "Fel Rage",
+                "spellId": 40604,
+                "description": "Targets a random player, buffing their HP but Bloodboil chases them.",
+                "handling": "Fel Rage target becomes temporary tank. Healers focus them."
+              },
+              {
+                "name": "Arcing Smash",
+                "spellId": 40599,
+                "description": "Frontal cone attack.",
+                "handling": "Only tank in front."
+              }
+            ],
+            "strategy": "Split raid into 3 groups. Groups rotate being closest to soak Bloodboil stacks. Tank swap on Acidic Wound. When Fel Rage goes out, that player becomes the tank temporarily. Complex coordination fight.",
+            "lootHighlights": [
+              "Girdle of Mighty Resolve",
+              "Girdle of the Lightbearer"
+            ]
+          },
+          {
+            "name": "Reliquary of Souls",
+            "npcId": 22856,
+            "difficulty": "Hard",
+            "description": "Three-phase fight against different aspects of souls. Each phase has unique mechanics.",
+            "phaseBreakdown": [
+              "Phase 1 (Essence of Suffering): No healing works. DPS burns while taking damage.",
+              "Phase 2 (Essence of Desire): Damage dealt heals the boss. Manage Spirit Shock.",
+              "Phase 3 (Essence of Anger): Enrage mechanic. Pure burn phase."
+            ],
+            "abilities": [
+              {
+                "name": "Aura of Suffering",
+                "spellId": 41292,
+                "description": "Phase 1 - Reduces healing to 0, drains health.",
+                "handling": "Cannot heal. Just DPS fast. Mana users can lifetap/bandage."
+              },
+              {
+                "name": "Soul Drain",
+                "spellId": 41303,
+                "description": "Phase 1 - Drains health from raid.",
+                "handling": "Burn boss fast before raid dies."
+              },
+              {
+                "name": "Spirit Shock",
+                "spellId": 41426,
+                "description": "Phase 2 - Interruptible nuke on random player.",
+                "handling": "Interrupt rotation mandatory."
+              },
+              {
+                "name": "Aura of Desire",
+                "spellId": 41350,
+                "description": "Phase 2 - 50% of damage dealt heals the boss.",
+                "handling": "Controlled DPS. Don't go too fast."
+              },
+              {
+                "name": "Seethe",
+                "spellId": 41520,
+                "description": "Phase 3 - Increases damage done and taken.",
+                "handling": "Burn phase. Pop cooldowns."
+              },
+              {
+                "name": "Soul Scream",
+                "spellId": 41545,
+                "description": "Phase 3 - Raid-wide damage and mana drain.",
+                "handling": "Heal through it. Use mana pots."
+              }
+            ],
+            "strategy": "Phase 1: No healing, just DPS. Phase 2: Interrupt Spirit Shock, controlled DPS. Phase 3: Bloodlust and burn. Each phase ends when the Essence reaches 0%.",
+            "lootHighlights": [
+              "Naaru-Blessed Life Rod",
+              "Torch of the Damned"
+            ]
+          },
+          {
+            "name": "Mother Shahraz",
+            "npcId": 22947,
+            "difficulty": "Hard",
+            "description": "Shivan Priestess. Heavy Shadow damage - Shadow Resistance gear recommended.",
+            "abilities": [
+              {
+                "name": "Saber Lash",
+                "spellId": 40810,
+                "description": "Cleaves the 3 closest targets, splitting damage.",
+                "handling": "3 tanks stack in front to split."
+              },
+              {
+                "name": "Fatal Attraction",
+                "spellId": 40869,
+                "description": "Teleports 3 players together. They deal damage to each other.",
+                "handling": "Teleported players run away from each other immediately."
+              },
+              {
+                "name": "Prismatic Aura",
+                "spellId": 40880,
+                "description": "Random resistance aura that changes periodically.",
+                "handling": "Can't control it. Shadow resist helps most."
+              },
+              {
+                "name": "Silencing Shriek",
+                "spellId": 40823,
+                "description": "Silences everyone in front of her.",
+                "handling": "Only tanks in front. Healers stay behind."
+              }
+            ],
+            "strategy": "3 tanks split Saber Lash in front. Raid behind. When Fatal Attraction hits, affected players spread. Shadow Resistance gear reduces incoming damage significantly.",
+            "lootHighlights": [
+              "Leggings of Devastation",
+              "Heartshatter Breastplate"
+            ]
+          },
+          {
+            "name": "The Illidari Council",
+            "npcId": 23426,
+            "difficulty": "Very Hard",
+            "description": "Four-boss council fight. All must die within 15 seconds of each other.",
+            "abilities": [
+              {
+                "name": "Veras Darkshadow (Rogue)",
+                "spellId": 0,
+                "description": "Vanishes and uses Deadly Poison.",
+                "handling": "Tank when visible, watch for Deadly Poison stacks."
+              },
+              {
+                "name": "High Nethermancer Zerevor (Mage)",
+                "spellId": 0,
+                "description": "Casts Arcane spells, Dampen Magic.",
+                "handling": "Spell reflect tank or warlock tank with high resistance."
+              },
+              {
+                "name": "Lady Malande (Priest)",
+                "spellId": 0,
+                "description": "Heals other council members, casts Divine Wrath.",
+                "handling": "Interrupt Circle of Healing. Kill first or second."
+              },
+              {
+                "name": "Gathios the Shatterer (Paladin)",
+                "spellId": 0,
+                "description": "Melee boss with Blessing of Protection and Consecration.",
+                "handling": "Tank away from others. Blessing makes him immune to physical."
+              },
+              {
+                "name": "Circle of Healing",
+                "spellId": 41455,
+                "description": "Malande heals all council members.",
+                "handling": "MUST BE INTERRUPTED. Top priority."
+              },
+              {
+                "name": "Reflective Shield",
+                "spellId": 41475,
+                "description": "Zerevor shields himself.",
+                "handling": "Stop casting when shield is up."
+              }
+            ],
+            "strategy": "Split raid. Tank Gathios away. Interrupt Malande constantly. Kill order varies by guild - usually Malande first. Balance DPS so all die within 15 seconds. Complex coordination required.",
+            "lootHighlights": [
+              "Forest Prowler's Helm",
+              "Madness of the Betrayer"
+            ]
+          },
+          {
+            "name": "Illidan Stormrage",
+            "npcId": 22917,
+            "difficulty": "Very Hard",
+            "description": "The final boss of Black Temple. Multi-phase encounter spanning 15+ minutes.",
+            "phaseBreakdown": [
+              "Phase 1: Tank and spank with parasites.",
+              "Phase 2: Illidan flies, Flames of Azzinoth spawn.",
+              "Phase 3: Human form again, plus demon phase.",
+              "Phase 4: Maiev joins at 30%. Burn phase.",
+              "Phase 5 (Demon Form): Every 60 seconds, transforms into demon form."
+            ],
+            "abilities": [
+              {
+                "name": "Shear",
+                "spellId": 41032,
+                "description": "Reduces max HP by 60% for 7 seconds.",
+                "handling": "Tank must be Shear-immune (Shield Block, Shield Wall)."
+              },
+              {
+                "name": "Draw Soul",
+                "spellId": 40904,
+                "description": "Heals Illidan if target dies during this.",
+                "handling": "Do not let the tank die."
+              },
+              {
+                "name": "Parasitic Shadowfiend",
+                "spellId": 41917,
+                "description": "Spawns parasites from random players.",
+                "handling": "Kill parasites quickly or they multiply."
+              },
+              {
+                "name": "Flame Crash",
+                "spellId": 40832,
+                "description": "Fire zone on the ground.",
+                "handling": "Move out immediately."
+              },
+              {
+                "name": "Dark Barrage",
+                "spellId": 40585,
+                "description": "Phase 2 - Channels shadow damage at a player.",
+                "handling": "Heavy healing on target."
+              },
+              {
+                "name": "Eye Beam",
+                "spellId": 39908,
+                "description": "Phase 2 - Blue beam that tracks and kills.",
+                "handling": "Run perpendicular to beam direction."
+              },
+              {
+                "name": "Flame Burst",
+                "spellId": 41131,
+                "description": "Phase 3 - Fire damage to random players.",
+                "handling": "Spread out, healers react."
+              },
+              {
+                "name": "Agonizing Flames",
+                "spellId": 40932,
+                "description": "Demon phase - Massive fire AoE.",
+                "handling": "Run to pre-assigned shadow spots."
+              },
+              {
+                "name": "Shadow Demons",
+                "spellId": 41117,
+                "description": "Demon phase - Demons spawn and paralyze players.",
+                "handling": "Kill demons FAST or paralyzed players die."
+              }
+            ],
+            "strategy": "Phase 1: Tank Illidan, kill parasites. Phase 2: Kill Flames of Azzinoth, avoid Eye Beam. Phase 3: Back to normal, handle occasional demon phases. Phase 4: Maiev traps Illidan. Burn with Bloodlust. Phase 5 transitions happen throughout. Pre-position for Agonizing Flames.",
+            "commonMistakes": [
+              "Tank dying to Shear without block up",
+              "Not killing parasites fast enough",
+              "Getting hit by Eye Beam",
+              "Shadow Demons reaching paralyzed targets"
+            ],
+            "lootHighlights": [
+              "Warglaive of Azzinoth (MH)",
+              "Warglaive of Azzinoth (OH)",
+              "Chestguard of the Vanquished Champion"
+            ]
+          }
+        ]
       }
     }
   },
@@ -795,7 +1867,274 @@
         "attunement": "None required",
         "description": "A challenging 10-player raid with a timed 'bear run' mode. Completing bosses quickly before the timer expires rewards a special Amani War Bear mount.",
         "tierTokens": "No tier tokens - drops unique badge-equivalent gear",
-        "bosses": []
+        "bosses": [
+          {
+            "name": "Akil'zon",
+            "npcId": 23574,
+            "difficulty": "Medium",
+            "description": "Eagle boss. First timed boss for bear mount run. Electrical storm mechanic.",
+            "abilities": [
+              {
+                "name": "Static Disruption",
+                "spellId": 43622,
+                "description": "Debuff increasing Nature damage taken.",
+                "handling": "Spread out to avoid chaining."
+              },
+              {
+                "name": "Gust of Wind",
+                "spellId": 43621,
+                "description": "Knockback on random player.",
+                "handling": "Stay away from edges."
+              },
+              {
+                "name": "Electrical Storm",
+                "spellId": 43648,
+                "description": "Lifts a player into the air. Everyone must collapse under them.",
+                "handling": "ALL players run directly under the floating player or you die to lightning."
+              },
+              {
+                "name": "Call Lightning",
+                "spellId": 43661,
+                "description": "Lightning strikes a random player.",
+                "handling": "Spread out, heal through it."
+              }
+            ],
+            "strategy": "Spread out during normal phase. When Electrical Storm begins, EVERYONE collapses under the floating player. After storm, spread out again. Simple but punishing if people fail storm.",
+            "lootHighlights": [
+              "Signet of Ancient Magics",
+              "Akil'zon's Talonblade"
+            ]
+          },
+          {
+            "name": "Nalorakk",
+            "npcId": 23576,
+            "difficulty": "Easy",
+            "description": "Bear boss. Alternates between Troll and Bear form. Heavy tank damage.",
+            "abilities": [
+              {
+                "name": "Brutal Swipe",
+                "spellId": 42384,
+                "description": "Troll form - Hits 2 targets in front.",
+                "handling": "2 tanks stack in front to split."
+              },
+              {
+                "name": "Mangle",
+                "spellId": 42389,
+                "description": "Bear form - Bleeds the tank.",
+                "handling": "Heal through the bleed."
+              },
+              {
+                "name": "Surge",
+                "spellId": 42402,
+                "description": "Bear form - Charges a random player.",
+                "handling": "Healers ready for charge damage."
+              },
+              {
+                "name": "Deafening Roar",
+                "spellId": 42398,
+                "description": "Bear form - Silences the raid.",
+                "handling": "Pre-HoT before Bear form."
+              }
+            ],
+            "strategy": "Two tanks split Brutal Swipe in Troll form. Heavy healing in Bear form due to Mangle bleed. Straightforward tank and spank with form transitions.",
+            "lootHighlights": [
+              "Jungle Stompers",
+              "Fury of the Ursine"
+            ]
+          },
+          {
+            "name": "Jan'alai",
+            "npcId": 23578,
+            "difficulty": "Medium",
+            "description": "Dragonhawk boss. Egg management is key. Hatchers must be controlled.",
+            "abilities": [
+              {
+                "name": "Flame Breath",
+                "spellId": 43140,
+                "description": "Frontal cone fire damage.",
+                "handling": "Only tank in front."
+              },
+              {
+                "name": "Hatch All Eggs",
+                "spellId": 43144,
+                "description": "At 35%, all remaining eggs hatch.",
+                "handling": "Kill eggs evenly before 35% or get overwhelmed."
+              },
+              {
+                "name": "Fire Bomb",
+                "spellId": 42630,
+                "description": "Fire bombs rain down in patterns.",
+                "handling": "Find safe spots between bomb patterns."
+              },
+              {
+                "name": "Summon Amani Dragonhawk Hatcher",
+                "spellId": 43962,
+                "description": "Hatchers run to eggs and hatch them.",
+                "handling": "Control hatchers - kill one, let the other hatch eggs evenly on both sides."
+              }
+            ],
+            "strategy": "Let one hatcher hatch some eggs at a time from both sides. Keep egg counts even. AoE dragonhawks as they spawn. Below 35%, all eggs hatch - if too many remain, wipe. Navigate Fire Bomb patterns.",
+            "lootHighlights": [
+              "Mantle of Ill Intent",
+              "Jan'alai's Spaulders"
+            ]
+          },
+          {
+            "name": "Halazzi",
+            "npcId": 23577,
+            "difficulty": "Medium",
+            "description": "Lynx boss. Spirit phase spawns a separate lynx that must be tanked.",
+            "abilities": [
+              {
+                "name": "Frenzy",
+                "spellId": 43139,
+                "description": "Enrages at low health.",
+                "handling": "Tranq shot or just heal through it."
+              },
+              {
+                "name": "Saber Lash",
+                "spellId": 43267,
+                "description": "Frontal cleave.",
+                "handling": "Only tank in front."
+              },
+              {
+                "name": "Spirit of the Lynx",
+                "spellId": 43150,
+                "description": "At 75%, 50%, 25% - splits into troll and lynx.",
+                "handling": "Off-tank grabs lynx. Kill lynx to force merge."
+              },
+              {
+                "name": "Flame Shock",
+                "spellId": 43303,
+                "description": "Fire damage and DoT on random player.",
+                "handling": "Dispel and heal."
+              },
+              {
+                "name": "Corrupted Lightning Totem",
+                "spellId": 43302,
+                "description": "Spawns a lightning totem.",
+                "handling": "Kill totem immediately."
+              }
+            ],
+            "strategy": "Phase 1: Tank and spank. At HP thresholds, split phase occurs. Off-tank grabs lynx spirit. Kill lynx to end split phase. Kill totems immediately. Repeat through all split phases.",
+            "lootHighlights": [
+              "Avalanche Leggings",
+              "The Savage's Choker"
+            ]
+          },
+          {
+            "name": "Hex Lord Malacrass",
+            "npcId": 24239,
+            "difficulty": "Hard",
+            "description": "Hex Lord with 4 random adds. Steals abilities from players.",
+            "abilities": [
+              {
+                "name": "Spirit Bolts",
+                "spellId": 43383,
+                "description": "Raid-wide shadow damage.",
+                "handling": "AoE heals during Spirit Bolts."
+              },
+              {
+                "name": "Siphon Soul",
+                "spellId": 43501,
+                "description": "Drains a player and gains their class abilities.",
+                "handling": "Be prepared for stolen abilities - varies by class."
+              },
+              {
+                "name": "Drain Power",
+                "spellId": 44131,
+                "description": "Drains stats from the raid.",
+                "handling": "DPS burn before too many drains."
+              },
+              {
+                "name": "Stolen Ability",
+                "spellId": 0,
+                "description": "Uses abilities based on siphoned class (Lifebloom, Consecration, etc.).",
+                "handling": "Dispel or interrupt stolen abilities when possible."
+              }
+            ],
+            "strategy": "CC adds or kill them. Malacrass gains abilities from siphoned players - can get Lifebloom, Consecration, etc. Interrupt/dispel what you can. Burn boss before drain stacks too high.",
+            "lootHighlights": [
+              "Hex Lord's Voodoo Pauldrons",
+              "Tome of Diabolic Remedy"
+            ]
+          },
+          {
+            "name": "Zul'jin",
+            "npcId": 23863,
+            "difficulty": "Hard",
+            "description": "Final boss. Five phases, each based on an animal aspect. Complex multi-form fight.",
+            "phaseBreakdown": [
+              "Phase 1 (Troll - 100%-80%): Standard melee with Grievous Throw.",
+              "Phase 2 (Bear - 80%-60%): Heavy tank damage, paralysis.",
+              "Phase 3 (Eagle - 60%-40%): Tornados and lightning.",
+              "Phase 4 (Lynx - 40%-20%): Fast cleaving, high raid damage.",
+              "Phase 5 (Dragonhawk - 20%-0%): Fire columns, burn phase."
+            ],
+            "abilities": [
+              {
+                "name": "Grievous Throw",
+                "spellId": 43093,
+                "description": "Phase 1 - Bleeds until healed to full.",
+                "handling": "Heal target to 100% to remove bleed."
+              },
+              {
+                "name": "Creeping Paralysis",
+                "spellId": 43095,
+                "description": "Phase 2 - Stacking slow, becomes stun.",
+                "handling": "Dispel before it stacks too high."
+              },
+              {
+                "name": "Overpower",
+                "spellId": 43456,
+                "description": "Phase 2 - Big hit on tank.",
+                "handling": "Heavy tank healing."
+              },
+              {
+                "name": "Energy Storm",
+                "spellId": 43983,
+                "description": "Phase 3 - Raid-wide nature damage.",
+                "handling": "Heal through it."
+              },
+              {
+                "name": "Feather Vortex",
+                "spellId": 43120,
+                "description": "Phase 3 - Tornados that move around.",
+                "handling": "Avoid tornados."
+              },
+              {
+                "name": "Claw Rage",
+                "spellId": 43149,
+                "description": "Phase 4 - Rapid attacks on tank.",
+                "handling": "Heavy tank cooldowns and healing."
+              },
+              {
+                "name": "Lynx Rush",
+                "spellId": 43153,
+                "description": "Phase 4 - Charges random players.",
+                "handling": "Spread out, heal charge targets."
+              },
+              {
+                "name": "Flame Whirl",
+                "spellId": 43213,
+                "description": "Phase 5 - Spawns fire columns.",
+                "handling": "Move between fire columns."
+              },
+              {
+                "name": "Flame Breath",
+                "spellId": 43215,
+                "description": "Phase 5 - Frontal cone fire.",
+                "handling": "Only tank in front."
+              }
+            ],
+            "strategy": "5-phase fight, each with different mechanics. Heal Grievous Throw to full in P1. Heavy tank healing in P2. Avoid tornados in P3. Survive high damage in P4. Navigate fire in P5. Bloodlust in P5 for the burn.",
+            "lootHighlights": [
+              "Chestguard of the Warlord",
+              "Cleaver of the Unforgiving",
+              "Loop of Cursed Apathy"
+            ]
+          }
+        ]
       }
     }
   },
@@ -811,7 +2150,325 @@
         "attunement": "None required (gated by patch releases)",
         "description": "The ultimate TBC raid challenge. Home to Kil'jaeden, one of the hardest bosses in World of Warcraft history.",
         "tierTokens": "Drops Tier 6.5 equivalent gear and unique weapons",
-        "bosses": []
+        "bosses": [
+          {
+            "name": "Kalecgos",
+            "npcId": 24850,
+            "difficulty": "Hard",
+            "description": "Blue dragon possessed by a demon. Fight occurs in two realms simultaneously.",
+            "abilities": [
+              {
+                "name": "Arcane Buffet",
+                "spellId": 45018,
+                "description": "Normal realm - Stacking arcane debuff on tank.",
+                "handling": "Tank swap at high stacks."
+              },
+              {
+                "name": "Frost Breath",
+                "spellId": 44799,
+                "description": "Normal realm - Frontal cone frost damage.",
+                "handling": "Only tank in front."
+              },
+              {
+                "name": "Spectral Blast",
+                "spellId": 44869,
+                "description": "Teleports players to demon realm.",
+                "handling": "Teleported players fight Sathrovarr in the demon realm."
+              },
+              {
+                "name": "Tail Lash",
+                "spellId": 45122,
+                "description": "Hits players behind Kalecgos.",
+                "handling": "Don't stand behind him."
+              },
+              {
+                "name": "Curse of Boundless Agony",
+                "spellId": 45034,
+                "description": "Demon realm - DoT that increases over time.",
+                "handling": "Must be dispelled, spreads to nearby players."
+              },
+              {
+                "name": "Shadow Bolt Volley",
+                "spellId": 45031,
+                "description": "Demon realm - AoE shadow damage.",
+                "handling": "AoE heals in demon realm."
+              }
+            ],
+            "strategy": "Split raid between realms. Portal rotation moves players between fighting Kalecgos (normal) and Sathrovarr (demon realm). Both bosses must die within 10 seconds of each other. Coordinate DPS between realms.",
+            "lootHighlights": [
+              "Fang of Kalecgos",
+              "Pantaloons of Calming Strife"
+            ]
+          },
+          {
+            "name": "Brutallus",
+            "npcId": 24882,
+            "difficulty": "Very Hard",
+            "description": "Pit Lord. Pure DPS race and gear check. Often called the hardest gear check in TBC.",
+            "abilities": [
+              {
+                "name": "Meteor Slash",
+                "spellId": 45150,
+                "description": "Massive fire damage split among targets in front.",
+                "handling": "Entire raid stacks in front to split damage."
+              },
+              {
+                "name": "Burn",
+                "spellId": 45141,
+                "description": "DoT that deals increasing fire damage. Spreads on expiration.",
+                "handling": "Burn targets must run out before DoT expires to prevent spreading."
+              },
+              {
+                "name": "Stomp",
+                "spellId": 45185,
+                "description": "AoE knockback and damage.",
+                "handling": "Healers be ready for raid damage."
+              }
+            ],
+            "strategy": "Stack entire raid in front for Meteor Slash. Burn targets run out before debuff expires. This is a pure DPS race - you need approximately 22k raid DPS to beat the 6-minute enrage. Full consumables mandatory.",
+            "lootHighlights": [
+              "Heart of the Pit",
+              "Leggings of Calamity"
+            ]
+          },
+          {
+            "name": "Felmyst",
+            "npcId": 25038,
+            "difficulty": "Very Hard",
+            "description": "Undead dragon. Ground and air phases with deadly breath mechanic.",
+            "abilities": [
+              {
+                "name": "Cleave",
+                "spellId": 19983,
+                "description": "Ground phase - Frontal cleave.",
+                "handling": "Only tank in front."
+              },
+              {
+                "name": "Corrosion",
+                "spellId": 45866,
+                "description": "Ground phase - Stacking armor debuff.",
+                "handling": "Tank swap at high stacks."
+              },
+              {
+                "name": "Gas Nova",
+                "spellId": 45855,
+                "description": "Ground phase - AoE damage and knockback.",
+                "handling": "Spread loosely, heal through it."
+              },
+              {
+                "name": "Encapsulate",
+                "spellId": 45665,
+                "description": "Ground phase - Traps a player in a cyclone.",
+                "handling": "Heal the trapped player."
+              },
+              {
+                "name": "Demonic Vapor",
+                "spellId": 45402,
+                "description": "Air phase - Green fog trails on the ground.",
+                "handling": "DO NOT TOUCH. Standing in fog = instant death."
+              },
+              {
+                "name": "Fog of Corruption",
+                "spellId": 45717,
+                "description": "Air phase - Massive breath attack.",
+                "handling": "Run to safe spots. Anyone hit is mind controlled and nearly unkillable."
+              }
+            ],
+            "strategy": "Ground phase: Tank and spank with tank swaps. Air phase: Felmyst flies and breaths - everyone runs to safe sides. Demonic Vapor leaves trails that mind control on contact. Extremely punishing mechanics.",
+            "lootHighlights": [
+              "Bracers of the Forgotten Vanquisher",
+              "Sword Breaker's Bulwark"
+            ]
+          },
+          {
+            "name": "Eredar Twins",
+            "npcId": 25166,
+            "difficulty": "Hard",
+            "description": "Lady Sacrolash and Grand Warlock Alythess. Must be tanked apart and die together.",
+            "abilities": [
+              {
+                "name": "Shadow Nova",
+                "spellId": 45329,
+                "description": "Sacrolash - AoE shadow damage.",
+                "handling": "Spread out to minimize splash."
+              },
+              {
+                "name": "Confounding Blow",
+                "spellId": 45256,
+                "description": "Sacrolash - Confuses the tank briefly.",
+                "handling": "Off-tank ready to taunt."
+              },
+              {
+                "name": "Dark Touched",
+                "spellId": 45347,
+                "description": "Sacrolash - Shadow debuff, removes Fire buff.",
+                "handling": "Track debuffs, this removes Fire Touched."
+              },
+              {
+                "name": "Flame Sear",
+                "spellId": 46771,
+                "description": "Alythess - Fire damage to random player.",
+                "handling": "Heal through it."
+              },
+              {
+                "name": "Blaze",
+                "spellId": 45235,
+                "description": "Alythess - Fire zone under random player.",
+                "handling": "Move out of fire."
+              },
+              {
+                "name": "Fire Touched",
+                "spellId": 45348,
+                "description": "Alythess - Fire debuff, removes Shadow buff.",
+                "handling": "Track debuffs, this removes Dark Touched."
+              },
+              {
+                "name": "Conflagration",
+                "spellId": 45342,
+                "description": "Alythess - Burns a player, spreading fire.",
+                "handling": "Conflag target runs away from raid."
+              }
+            ],
+            "strategy": "Tank twins 40+ yards apart. Having Dark Touched makes you take more Fire damage, and vice versa. Raid splits based on debuffs. Kill within 15 seconds of each other or surviving twin enrages.",
+            "lootHighlights": [
+              "Belt of the Forgotten Vanquisher",
+              "Grip of Mannoroth"
+            ]
+          },
+          {
+            "name": "M'uru",
+            "npcId": 25741,
+            "difficulty": "Very Hard",
+            "description": "Naaru that transforms into Entropius. Considered hardest pre-nerf fight in TBC.",
+            "phaseBreakdown": [
+              "Phase 1: Fight M'uru while controlling massive add waves.",
+              "Phase 2: M'uru transforms into Entropius - pure burn with void zones."
+            ],
+            "abilities": [
+              {
+                "name": "Negative Energy",
+                "spellId": 46285,
+                "description": "Phase 1 - Raid-wide shadow damage.",
+                "handling": "AoE heals constantly."
+              },
+              {
+                "name": "Darkness",
+                "spellId": 45996,
+                "description": "Phase 1 - AoE pulse of shadow damage.",
+                "handling": "Stay spread, heal through it."
+              },
+              {
+                "name": "Summon Dark Fiend",
+                "spellId": 46268,
+                "description": "Phase 1 - Spawns Dark Fiends that chase players.",
+                "handling": "Kite and kill Dark Fiends."
+              },
+              {
+                "name": "Summon Void Sentinel",
+                "spellId": 46087,
+                "description": "Phase 1 - Large add from portals.",
+                "handling": "Off-tank picks up Sentinels, kill them."
+              },
+              {
+                "name": "Void Zone",
+                "spellId": 46262,
+                "description": "Phase 2 - Black holes on the ground.",
+                "handling": "Move out immediately."
+              },
+              {
+                "name": "Singularity",
+                "spellId": 46228,
+                "description": "Phase 2 - Entropius pulls players in.",
+                "handling": "Run against the pull."
+              },
+              {
+                "name": "Negative Energy (P2)",
+                "spellId": 46284,
+                "description": "Phase 2 - Increased raid damage.",
+                "handling": "Spam heals, use cooldowns."
+              }
+            ],
+            "strategy": "Phase 1: Extreme add control. Humanoid adds from left, Void Sentinels from right. AoE and single-target balance. Phase 2: Pure burn race. Avoid void zones, survive increasing damage. This fight broke many guilds.",
+            "lootHighlights": [
+              "Shoulders of the Forgotten Vanquisher",
+              "Sin'dorei Band of Triumph"
+            ]
+          },
+          {
+            "name": "Kil'jaeden",
+            "npcId": 25315,
+            "difficulty": "Very Hard",
+            "description": "The final boss of TBC. Demon lord emerging from the Sunwell. Five-phase epic encounter.",
+            "phaseBreakdown": [
+              "Phase 1 (100%-85%): Introduction phase with basic abilities.",
+              "Phase 2 (85%-55%): Shield Orbs and Flame Darts.",
+              "Phase 3 (55%-25%): Dragon Orbs for Darkness of a Thousand Souls.",
+              "Phase 4 (25%-0%): Armageddon meteors and final burn."
+            ],
+            "abilities": [
+              {
+                "name": "Soul Flay",
+                "spellId": 45442,
+                "description": "Shadow bolt on the tank.",
+                "handling": "Healers keep tank topped."
+              },
+              {
+                "name": "Legion Lightning",
+                "spellId": 45664,
+                "description": "Chain lightning hitting multiple targets.",
+                "handling": "Spread out to limit chains."
+              },
+              {
+                "name": "Fire Bloom",
+                "spellId": 45641,
+                "description": "Fire debuff that jumps to nearby players.",
+                "handling": "Affected players spread out."
+              },
+              {
+                "name": "Shield Orb",
+                "spellId": 45680,
+                "description": "Orbs that shield KJ and shoot Shadow Bolts.",
+                "handling": "Ranged DPS kills orbs quickly."
+              },
+              {
+                "name": "Flame Dart",
+                "spellId": 45737,
+                "description": "Fire damage to random players.",
+                "handling": "Healers top off dart targets."
+              },
+              {
+                "name": "Darkness of a Thousand Souls",
+                "spellId": 46605,
+                "description": "Massive raid-wide damage after 8 second cast.",
+                "handling": "Use Dragon Orbs to shield the raid."
+              },
+              {
+                "name": "Armageddon",
+                "spellId": 45909,
+                "description": "Phase 4 - Meteors fall, must be soaked.",
+                "handling": "Players stand in meteor shadows to soak. Multiple soakers per meteor."
+              },
+              {
+                "name": "Sinister Reflection",
+                "spellId": 45785,
+                "description": "Creates shadow copies of random players.",
+                "handling": "CC and kill reflections quickly."
+              }
+            ],
+            "strategy": "Phase 1-2: Tank and spank with add management. Phase 3: Use Dragon Orbs during Darkness cast - blue dragons shield the raid. Phase 4: Soak Armageddons with multiple players per meteor. Bloodlust in Phase 4. This is the culmination of TBC raiding.",
+            "commonMistakes": [
+              "Not clicking Dragon Orbs during Darkness",
+              "Not enough people soaking Armageddon meteors",
+              "Letting Shield Orbs live too long",
+              "Not spreading for Fire Bloom"
+            ],
+            "lootHighlights": [
+              "Thori'dal, the Stars' Fury (legendary bow)",
+              "Helm of the Forgotten Vanquisher",
+              "Cover of Ursol the Wise"
+            ]
+          }
+        ]
       }
     }
   }
