@@ -1365,7 +1365,7 @@ function renderAttunementsContent(attunementKey = 'karazhan') {
         ${contentHtml}
         <div class="mt-6 pt-4 border-t border-terminal-dim border-opacity-30">
             <button onclick="clearAttunementProgress('${attunementKey}'); renderAttunementsContent('${attunementKey}');" class="text-xs text-terminal-dim hover:text-red-400 mr-4 cursor-pointer bg-transparent border-none font-mono">[Clear This Progress]</button>
-            <button onclick="if(confirm('Clear ALL attunement progress?')) { clearAttunementProgress(); renderAttunementsContent('${attunementKey}'); }" class="text-xs text-terminal-dim hover:text-red-400 cursor-pointer bg-transparent border-none font-mono">[Clear All Progress]</button>
+            <button onclick="clearAttunementProgress(); renderAttunementsContent('${attunementKey}');" class="text-xs text-terminal-dim hover:text-red-400 cursor-pointer bg-transparent border-none font-mono">[Clear All Progress]</button>
         </div>
     `;
 
@@ -2900,14 +2900,20 @@ function renderPreRaidChecker() {
         preRaidSpecName = classData[preRaidClass]?.defaultSpec || specs[0];
     }
 
-    const phaseName = PHASES.find(p => p.key === selectedPhase)?.name || 'Phase 1';
+    // Load saved characters for dropdown
+    const savedCharacters = loadAllCharacters();
+    const charOptions = savedCharacters.length > 0
+        ? `<option value="">-- Select Character --</option>` + savedCharacters.map(c =>
+            `<option value="${c.id}" ${c.id === currentCharacterId ? 'selected' : ''}>${c.name}</option>`
+          ).join('')
+        : `<option value="">No saved characters</option>`;
 
     const html = `
         <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">./gear-checker --class=${preRaidClass} --spec=${preRaidSpecName} --phase=${selectedPhase}</div>
         <h2 class="text-terminal-accent text-lg mb-2 uppercase tracking-wide md:text-base sm:text-sm">⚖️ [ GEAR CHECKER ]</h2>
-        <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">Paste your gear list to compare against BiS for any raid tier</p>
+        <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">Paste your gear list to compare against BiS for any raid tier. Save characters for quick access.</p>
 
-        <div class="grid grid-cols-3 gap-4 mb-6 md:grid-cols-1">
+        <div class="grid grid-cols-4 gap-4 mb-6 md:grid-cols-2 sm:grid-cols-1">
             <div>
                 <label class="text-terminal-dim text-xs block mb-2">🎭 CLASS</label>
                 <select id="raidready-class" class="w-full bg-terminal-bg border border-terminal-text text-terminal-text px-3 py-2 text-xs font-mono cursor-pointer">
@@ -2926,6 +2932,15 @@ function renderPreRaidChecker() {
                     ${PHASES.map(p => `<option value="${p.key}" ${p.key === selectedPhase ? 'selected' : ''}>${p.name}</option>`).join('')}
                 </select>
             </div>
+            <div>
+                <label class="text-terminal-dim text-xs block mb-2">📂 SAVED CHARS</label>
+                <div class="flex gap-2">
+                    <select id="char-select" class="flex-1 bg-terminal-bg border border-terminal-dim text-terminal-text px-3 py-2 text-xs font-mono cursor-pointer">
+                        ${charOptions}
+                    </select>
+                    ${savedCharacters.length > 0 ? `<button id="delete-char-btn" class="text-red-400 hover:text-red-300 px-2 text-xs border border-red-400/50 hover:border-red-400" title="Delete selected character">✕</button>` : ''}
+                </div>
+            </div>
         </div>
 
         <div class="mb-4">
@@ -2943,11 +2958,17 @@ Wastewalker Shoulderpads
             </div>
         </div>
 
-        <div class="mb-6">
+        <div class="mb-6 flex flex-wrap items-center gap-3">
             <button id="fetch-stats-btn" class="bg-terminal-accent text-terminal-bg px-6 py-2 font-mono text-xs font-bold cursor-pointer hover:bg-terminal-text transition-colors">
                 [ CALCULATE STATS ]
             </button>
-            <span id="stats-status" class="ml-3 text-xs"></span>
+            <div class="flex items-center gap-2">
+                <input type="text" id="char-name-input" class="bg-terminal-bg border border-terminal-dim text-terminal-text px-3 py-2 text-xs font-mono w-32" placeholder="Char name...">
+                <button id="save-char-btn" class="border border-terminal-text text-terminal-text px-4 py-2 font-mono text-xs cursor-pointer hover:bg-terminal-text hover:text-terminal-bg transition-colors">
+                    [ SAVE CHAR ]
+                </button>
+            </div>
+            <span id="stats-status" class="text-xs"></span>
         </div>
 
         <div class="grid grid-cols-2 gap-4 mb-6 md:grid-cols-1">
@@ -3030,6 +3051,50 @@ Wastewalker Shoulderpads
             preRaidDebounceTimer = setTimeout(updateGearPreview, 300);
         });
 
+        // Save character button
+        document.getElementById('save-char-btn').addEventListener('click', () => {
+            const charName = document.getElementById('char-name-input').value.trim();
+            const gearText = document.getElementById('gear-input').value.trim();
+            if (!gearText) {
+                document.getElementById('stats-status').innerHTML = '<span class="text-red-400">No gear to save</span>';
+                return;
+            }
+            const id = saveCharacterToList(charName || 'Unnamed', gearText);
+            if (id) {
+                currentCharacterId = id;
+                document.getElementById('stats-status').innerHTML = '<span class="text-green-400">Character saved!</span>';
+                renderPreRaidChecker();
+            }
+        });
+
+        // Character dropdown selection
+        document.getElementById('char-select').addEventListener('change', (e) => {
+            const charId = e.target.value;
+            if (charId) {
+                const char = getCharacterById(charId);
+                if (char) {
+                    currentCharacterId = charId;
+                    preRaidGearText = char.gearText;
+                    document.getElementById('gear-input').value = char.gearText;
+                    document.getElementById('char-name-input').value = char.name;
+                    updateGearPreview();
+                }
+            }
+        });
+
+        // Delete character button
+        const deleteBtn = document.getElementById('delete-char-btn');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', () => {
+                const charId = document.getElementById('char-select').value;
+                if (charId && confirm('Delete this character?')) {
+                    deleteCharacter(charId);
+                    currentCharacterId = null;
+                    renderPreRaidChecker();
+                }
+            });
+        }
+
         // Initial preview if there's existing text
         if (preRaidGearText) {
             updateGearPreview();
@@ -3040,7 +3105,7 @@ Wastewalker Shoulderpads
 // ===== HEROIC DUNGEONS GUIDE =====
 let currentHeroicZone = 'hellfire';
 
-function renderHeroicsContent(zone = 'hellfire') {
+function renderHeroicsContent(zone = 'hellfire', dungeon = null) {
     currentClass = null;
     currentHeroicZone = zone;
     document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
@@ -3052,39 +3117,106 @@ function renderHeroicsContent(zone = 'hellfire') {
     ).join('');
 
     const zoneData = heroicsData[zone];
-    const dungeonsHtml = zoneData.dungeons.map(d => {
-        const difficultyColor = {
-            'Easy': 'text-green-400',
-            'Medium': 'text-yellow-400',
-            'Hard': 'text-orange-400',
-            'Very Hard': 'text-red-400'
-        }[d.difficulty] || 'text-terminal-dim';
 
-        return `
-            <div class="border border-terminal-dim p-4 mb-4 md:p-3 sm:p-2.5">
-                <div class="flex justify-between items-start mb-2 flex-wrap gap-2">
-                    <h4 class="text-terminal-text text-sm font-semibold md:text-xs">${d.name}</h4>
-                    <span class="${difficultyColor} text-xs">[${d.difficulty}]</span>
+    // Dungeon select buttons
+    const dungeonButtons = zoneData.dungeons.map(d =>
+        `<a href="#heroics/${zone}/${d.id}" class="heroic-dungeon-btn ${d.id === dungeon ? 'bg-terminal-text text-terminal-bg' : 'bg-transparent text-terminal-text'} border border-terminal-text px-3 py-2 cursor-pointer font-mono text-xs transition-all select-none hover:bg-terminal-text hover:text-terminal-bg no-underline md:px-2.5 md:py-1.5 md:text-[11px] sm:px-2 sm:py-1 sm:text-[10px]" data-dungeon="${d.id}">${d.name}</a>`
+    ).join('');
+
+    // Generate content based on whether a dungeon is selected
+    let contentHtml = '';
+
+    if (dungeon) {
+        // Show individual dungeon guide
+        const selectedDungeon = zoneData.dungeons.find(d => d.id === dungeon);
+        if (selectedDungeon) {
+            const difficultyColor = {
+                'Easy': 'text-green-400',
+                'Medium': 'text-yellow-400',
+                'Hard': 'text-orange-400',
+                'Very Hard': 'text-red-400'
+            }[selectedDungeon.difficulty] || 'text-terminal-dim';
+
+            const bossesHtml = selectedDungeon.bosses.map((boss, idx) => `
+                <div class="border border-terminal-dim/50 p-3 md:p-2.5 sm:p-2">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-terminal-accent text-xs">[${idx + 1}]</span>
+                        <span class="text-terminal-text text-sm font-semibold md:text-xs">${boss}</span>
+                    </div>
                 </div>
-                <div class="text-terminal-dim text-xs mb-3 md:text-[11px] sm:text-[10px]">
-                    <span class="text-terminal-accent">Bosses:</span> ${d.bosses.join(' → ')}
+            `).join('');
+
+            const lootHtml = selectedDungeon.loot ? selectedDungeon.loot.map(item =>
+                `<span class="text-wow-epic">• ${item}</span>`
+            ).join('<br>') : '<span class="text-terminal-dim">No notable loot listed</span>';
+
+            contentHtml = `
+                <div class="border border-terminal-accent p-5 mb-4 md:p-4 sm:p-3">
+                    <div class="flex justify-between items-start mb-4 flex-wrap gap-2">
+                        <h3 class="text-terminal-accent text-lg font-semibold md:text-base sm:text-sm">${selectedDungeon.name}</h3>
+                        <span class="${difficultyColor} text-sm border border-current px-2 py-1 md:text-xs">[${selectedDungeon.difficulty}]</span>
+                    </div>
+
+                    <div class="mb-6 md:mb-4">
+                        <h4 class="text-terminal-text text-sm mb-3 uppercase md:text-xs md:mb-2">👹 [ BOSS ORDER ]</h4>
+                        <div class="grid gap-2">
+                            ${bossesHtml}
+                        </div>
+                    </div>
+
+                    <div class="mb-6 md:mb-4">
+                        <h4 class="text-terminal-text text-sm mb-3 uppercase md:text-xs md:mb-2">💡 [ STRATEGY TIPS ]</h4>
+                        <div class="bg-terminal-bg/50 border border-yellow-400/30 p-4 text-xs text-terminal-text md:p-3 md:text-[11px] sm:p-2.5 sm:text-[10px]">
+                            ${selectedDungeon.tips}
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-terminal-text text-sm mb-3 uppercase md:text-xs md:mb-2">🎁 [ NOTABLE LOOT ]</h4>
+                        <div class="text-xs space-y-1 md:text-[11px] sm:text-[10px]">
+                            ${lootHtml}
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-terminal-bg/50 border border-terminal-dim/50 p-2 text-xs text-terminal-dim md:text-[11px] sm:text-[10px]">
-                    <span class="text-yellow-400">💡 Tips:</span> ${d.tips}
+            `;
+        }
+    } else {
+        // Show all dungeons overview
+        const dungeonsHtml = zoneData.dungeons.map(d => {
+            const difficultyColor = {
+                'Easy': 'text-green-400',
+                'Medium': 'text-yellow-400',
+                'Hard': 'text-orange-400',
+                'Very Hard': 'text-red-400'
+            }[d.difficulty] || 'text-terminal-dim';
+
+            return `
+                <div class="border border-terminal-dim p-4 mb-4 md:p-3 sm:p-2.5">
+                    <div class="flex justify-between items-start mb-2 flex-wrap gap-2">
+                        <a href="#heroics/${zone}/${d.id}" class="text-terminal-text text-sm font-semibold hover:text-terminal-accent cursor-pointer no-underline md:text-xs">${d.name}</a>
+                        <span class="${difficultyColor} text-xs">[${d.difficulty}]</span>
+                    </div>
+                    <div class="text-terminal-dim text-xs mb-3 md:text-[11px] sm:text-[10px]">
+                        <span class="text-terminal-accent">Bosses:</span> ${d.bosses.join(' → ')}
+                    </div>
+                    <div class="bg-terminal-bg/50 border border-terminal-dim/50 p-2 text-xs text-terminal-dim md:text-[11px] sm:text-[10px]">
+                        <span class="text-yellow-400">💡 Tips:</span> ${d.tips}
+                    </div>
                 </div>
-            </div>
-        `;
-    }).join('');
+            `;
+        }).join('');
+        contentHtml = dungeonsHtml;
+    }
 
     const html = `
-        <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">./heroic-guide --zone=${zone}</div>
+        <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">./heroic-guide --zone=${zone}${dungeon ? ` --dungeon=${dungeon}` : ''}</div>
         <h2 class="text-terminal-accent text-lg mb-2 uppercase tracking-wide md:text-base sm:text-sm">⚔️ [ HEROIC DUNGEONS GUIDE ]</h2>
         <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">TBC Heroic dungeon strategies and key requirements</p>
 
         <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">🗝️ [ ZONE SELECT ]</h3>
-        <div class="flex flex-wrap gap-2 mb-6 md:gap-1.5 md:mb-4">${zoneButtons}</div>
+        <div class="flex flex-wrap gap-2 mb-4 md:gap-1.5 md:mb-3">${zoneButtons}</div>
 
-        <div class="border border-terminal-accent/50 bg-terminal-bg/30 p-4 mb-6 md:p-3 md:mb-4 sm:p-2.5">
+        <div class="border border-terminal-accent/50 bg-terminal-bg/30 p-4 mb-4 md:p-3 md:mb-3 sm:p-2.5">
             <h3 class="text-terminal-accent text-sm mb-2 md:text-xs">${zoneData.name}</h3>
             <div class="grid grid-cols-2 gap-4 text-xs md:grid-cols-1 md:gap-2 md:text-[11px] sm:text-[10px]">
                 <div><span class="text-terminal-dim">Key:</span> <span class="text-terminal-text">${zoneData.key}</span></div>
@@ -3093,8 +3225,11 @@ function renderHeroicsContent(zone = 'hellfire') {
             </div>
         </div>
 
-        <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">🏰 [ DUNGEONS ]</h3>
-        ${dungeonsHtml}
+        <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">🏰 [ DUNGEON SELECT ]</h3>
+        <div class="flex flex-wrap gap-2 mb-6 md:gap-1.5 md:mb-4">${dungeonButtons}</div>
+
+        ${dungeon ? '' : '<h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">📜 [ ALL DUNGEONS ]</h3>'}
+        ${contentHtml}
     `;
 
     const mainContent = document.getElementById('main-content');
@@ -3104,6 +3239,14 @@ function renderHeroicsContent(zone = 'hellfire') {
         mainContent.style.opacity = '1';
         // Zone button listeners
         document.querySelectorAll('.heroic-zone-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                if (e.ctrlKey || e.metaKey || e.button === 1) return;
+                e.preventDefault();
+                window.location.hash = this.getAttribute('href');
+            });
+        });
+        // Dungeon button listeners
+        document.querySelectorAll('.heroic-dungeon-btn').forEach(btn => {
             btn.addEventListener('click', function(e) {
                 if (e.ctrlKey || e.metaKey || e.button === 1) return;
                 e.preventDefault();
@@ -3158,7 +3301,7 @@ function renderReputationTracker() {
                     </select>
                 </div>
                 <div class="progress-bar-bg">
-                    <div class="progress-bar-fill" style="width: ${progressPercent}%; background: ${standingIndex >= 5 ? '#1eff00' : standingIndex >= 3 ? '#facc15' : '#f87171'}"></div>
+                    <div class="progress-bar-fill" style="width: ${progressPercent}%; background: ${standingData.color}"></div>
                 </div>
             </div>
         `;
@@ -3171,7 +3314,7 @@ function renderReputationTracker() {
 
         <div class="flex justify-between items-center mb-4">
             <h3 class="text-terminal-text text-sm uppercase md:text-[13px] sm:text-xs">📊 [ FACTIONS ]</h3>
-            <button onclick="if(confirm('Reset all reputation progress?')) { localStorage.removeItem('${REP_STORAGE_KEY}'); renderReputationTracker(); }" class="text-xs text-terminal-dim hover:text-red-400 cursor-pointer bg-transparent border-none font-mono">[Reset All]</button>
+            <button onclick="localStorage.removeItem('${REP_STORAGE_KEY}'); renderReputationTracker();" class="text-xs text-terminal-dim hover:text-red-400 cursor-pointer bg-transparent border-none font-mono">[Reset All]</button>
         </div>
 
         <div class="grid grid-cols-2 gap-3 md:grid-cols-1 md:gap-2">
@@ -3255,7 +3398,7 @@ function renderLockoutTracker() {
 
         <div class="flex justify-between items-center mb-4">
             <h3 class="text-terminal-text text-sm uppercase md:text-[13px] sm:text-xs">🏰 [ RAID INSTANCES ]</h3>
-            <button onclick="if(confirm('Clear all lockouts?')) { localStorage.removeItem('${LOCKOUT_STORAGE_KEY}'); renderLockoutTracker(); }" class="text-xs text-terminal-dim hover:text-red-400 cursor-pointer bg-transparent border-none font-mono">[Clear All]</button>
+            <button onclick="localStorage.removeItem('${LOCKOUT_STORAGE_KEY}'); renderLockoutTracker();" class="text-xs text-terminal-dim hover:text-red-400 cursor-pointer bg-transparent border-none font-mono">[Clear All]</button>
         </div>
 
         <div class="grid grid-cols-2 gap-3 md:grid-cols-1 md:gap-2">
@@ -3375,7 +3518,7 @@ function renderGuildProgress() {
 
         <div class="flex justify-between items-center mb-4">
             <h3 class="text-terminal-text text-sm uppercase md:text-[13px] sm:text-xs">🏆 [ KILL COUNTERS ]</h3>
-            <button onclick="if(confirm('Reset all guild progress?')) { localStorage.removeItem('${GUILD_PROGRESS_KEY}'); renderGuildProgress(); }" class="text-xs text-terminal-dim hover:text-red-400 cursor-pointer bg-transparent border-none font-mono">[Reset All]</button>
+            <button onclick="localStorage.removeItem('${GUILD_PROGRESS_KEY}'); renderGuildProgress();" class="text-xs text-terminal-dim hover:text-red-400 cursor-pointer bg-transparent border-none font-mono">[Reset All]</button>
         </div>
 
         ${raidsHtml}
@@ -3427,25 +3570,50 @@ function renderGuildProgress() {
 }
 
 // ===== CHARACTER IMPORT =====
-const CHAR_IMPORT_KEY = 'tbctxt_character';
-let importedCharacter = null;
+const CHAR_IMPORT_KEY = 'tbctxt_characters';
+let currentCharacterId = null;
 
-function loadSavedCharacter() {
+function loadAllCharacters() {
     try {
         const saved = localStorage.getItem(CHAR_IMPORT_KEY);
-        return saved ? JSON.parse(saved) : null;
+        return saved ? JSON.parse(saved) : [];
     } catch (e) {
+        return [];
+    }
+}
+
+function saveCharacterToList(name, gearText) {
+    try {
+        const characters = loadAllCharacters();
+        const id = Date.now().toString();
+        const newChar = {
+            id,
+            name: name || 'Unnamed',
+            gearText,
+            savedAt: Date.now()
+        };
+        characters.push(newChar);
+        localStorage.setItem(CHAR_IMPORT_KEY, JSON.stringify(characters));
+        return id;
+    } catch (e) {
+        console.error('Error saving character:', e);
         return null;
     }
 }
 
-function saveCharacter(charData) {
+function deleteCharacter(charId) {
     try {
-        localStorage.setItem(CHAR_IMPORT_KEY, JSON.stringify(charData));
-        importedCharacter = charData;
+        let characters = loadAllCharacters();
+        characters = characters.filter(c => c.id !== charId);
+        localStorage.setItem(CHAR_IMPORT_KEY, JSON.stringify(characters));
     } catch (e) {
-        console.error('Error saving character:', e);
+        console.error('Error deleting character:', e);
     }
+}
+
+function getCharacterById(charId) {
+    const characters = loadAllCharacters();
+    return characters.find(c => c.id === charId) || null;
 }
 
 function parseGearText(text) {
@@ -3481,154 +3649,6 @@ function parseGearText(text) {
     return foundItems;
 }
 
-function renderCharacterImport() {
-    currentClass = null;
-    document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
-    const importLink = document.querySelector('.nav-link[data-view="charimport"]');
-    if (importLink) importLink.parentElement.classList.add('active');
-
-    const savedChar = loadSavedCharacter();
-
-    let savedCharHtml = '';
-    if (savedChar && savedChar.gear && savedChar.gear.length > 0) {
-        const gearHtml = savedChar.gear.map(item => {
-            const qualityClass = `item-quality-${item.quality}`;
-            return `<div class="${qualityClass}"><a href="https://tbc.wowhead.com/item=${item.itemId}" data-wowhead="item=${item.itemId}">${item.name}</a></div>`;
-        }).join('');
-
-        savedCharHtml = `
-            <div class="border border-terminal-accent/50 bg-terminal-bg/30 p-4 mb-6 md:p-3 md:mb-4 sm:p-2.5">
-                <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-terminal-accent text-sm md:text-xs">${savedChar.name || 'Imported Character'} ${savedChar.realm ? `- ${savedChar.realm}` : ''}</h3>
-                    <button onclick="localStorage.removeItem('${CHAR_IMPORT_KEY}'); renderCharacterImport();" class="text-xs text-terminal-dim hover:text-red-400 cursor-pointer bg-transparent border-none font-mono">[Clear]</button>
-                </div>
-                <p class="text-terminal-dim text-xs mb-2 md:text-[11px]">${savedChar.gear.length} items recognized</p>
-                <div class="text-xs space-y-1 max-h-60 overflow-y-auto md:text-[11px] sm:text-[10px]">
-                    ${gearHtml}
-                </div>
-            </div>
-        `;
-    }
-
-    const html = `
-        <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">./char-import --parse</div>
-        <h2 class="text-terminal-accent text-lg mb-2 uppercase tracking-wide md:text-base sm:text-sm">📥 [ CHARACTER IMPORT ]</h2>
-        <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">Import your character's gear by pasting item names. Works with addon exports, wowhead lists, or manual entry.</p>
-
-        ${savedCharHtml}
-
-        <div class="grid grid-cols-2 gap-4 mb-4 md:grid-cols-1">
-            <div>
-                <label class="text-terminal-dim text-xs block mb-2">Character Name</label>
-                <input type="text" id="char-name" class="w-full bg-terminal-bg border border-terminal-dim text-terminal-text px-3 py-2 text-xs font-mono" placeholder="Legolas" value="${savedChar?.name || ''}">
-            </div>
-            <div>
-                <label class="text-terminal-dim text-xs block mb-2">Realm</label>
-                <input type="text" id="char-realm" class="w-full bg-terminal-bg border border-terminal-dim text-terminal-text px-3 py-2 text-xs font-mono" placeholder="Faerlina" value="${savedChar?.realm || ''}">
-            </div>
-        </div>
-
-        <div class="mb-4">
-            <label class="text-terminal-dim text-xs block mb-2">📋 PASTE GEAR LIST <span class="text-terminal-accent">(one item per line)</span></label>
-            <textarea id="char-gear-input" class="w-full bg-terminal-bg border border-terminal-text text-terminal-text px-3 py-2 text-xs font-mono h-48 resize-y" placeholder="Paste your gear list here...
-
-Examples of accepted formats:
-- Helm of the Fallen Hero
-- [Legguards of the Fallen Crusader]
-- 1. Shoulderpads of the Stranger
-- Tier 5 Chest - Robes of Tirisfal
-
-The parser will try to match items from our database."></textarea>
-        </div>
-
-        <div class="flex gap-3 mb-6 flex-wrap">
-            <button id="parse-gear-btn" class="bg-terminal-accent text-terminal-bg px-6 py-2 font-mono text-xs font-bold cursor-pointer hover:bg-terminal-text transition-colors">
-                [ PARSE GEAR ]
-            </button>
-            <button id="clear-input-btn" class="border border-terminal-dim text-terminal-dim px-4 py-2 font-mono text-xs cursor-pointer hover:border-terminal-text hover:text-terminal-text transition-colors bg-transparent">
-                [ CLEAR ]
-            </button>
-        </div>
-
-        <div id="parse-results" class="hidden">
-            <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">✅ [ PARSED ITEMS ]</h3>
-            <div id="parsed-items-list" class="border border-terminal-dim p-4 mb-4 max-h-80 overflow-y-auto md:p-3 sm:p-2.5"></div>
-            <button id="save-char-btn" class="bg-terminal-text text-terminal-bg px-6 py-2 font-mono text-xs font-bold cursor-pointer hover:bg-terminal-accent transition-colors">
-                [ SAVE CHARACTER ]
-            </button>
-        </div>
-
-        <div class="mt-6 p-4 border border-terminal-dim/50 bg-terminal-bg/30 md:mt-4 md:p-3 sm:mt-3 sm:p-2.5">
-            <h4 class="text-terminal-accent text-xs mb-2">💡 Import Tips</h4>
-            <ul class="text-terminal-dim text-xs space-y-1 md:text-[11px] sm:text-[10px]">
-                <li>• Copy gear lists from Wowhead, Seventyupgrades, or addon exports</li>
-                <li>• The parser tries to fuzzy-match item names from our 36,000+ item database</li>
-                <li>• Items not found will be skipped - check spelling for missing items</li>
-                <li>• Saved character data persists in your browser</li>
-            </ul>
-        </div>
-    `;
-
-    const mainContent = document.getElementById('main-content');
-    mainContent.style.opacity = '0.3';
-    setTimeout(() => {
-        mainContent.innerHTML = html;
-        mainContent.style.opacity = '1';
-        processItemLinks();
-
-        // Parse button
-        document.getElementById('parse-gear-btn').addEventListener('click', function() {
-            const gearText = document.getElementById('char-gear-input').value;
-            const parsedItems = parseGearText(gearText);
-
-            const resultsDiv = document.getElementById('parse-results');
-            const itemsListDiv = document.getElementById('parsed-items-list');
-
-            if (parsedItems.length > 0) {
-                const itemsHtml = parsedItems.map(item => {
-                    const qualityClass = `item-quality-${item.quality}`;
-                    return `<div class="${qualityClass} py-1"><a href="https://tbc.wowhead.com/item=${item.itemId}" data-wowhead="item=${item.itemId}">${item.name}</a></div>`;
-                }).join('');
-
-                itemsListDiv.innerHTML = `
-                    <p class="text-terminal-accent text-xs mb-3">${parsedItems.length} items recognized</p>
-                    ${itemsHtml}
-                `;
-                resultsDiv.classList.remove('hidden');
-                processItemLinks();
-
-                // Store parsed items for saving
-                window._parsedCharItems = parsedItems;
-            } else {
-                itemsListDiv.innerHTML = '<p class="text-red-400 text-xs">No items recognized. Check item names and try again.</p>';
-                resultsDiv.classList.remove('hidden');
-            }
-        });
-
-        // Clear button
-        document.getElementById('clear-input-btn').addEventListener('click', function() {
-            document.getElementById('char-gear-input').value = '';
-            document.getElementById('parse-results').classList.add('hidden');
-        });
-
-        // Save button
-        document.getElementById('save-char-btn')?.addEventListener('click', function() {
-            const charName = document.getElementById('char-name').value.trim();
-            const charRealm = document.getElementById('char-realm').value.trim();
-            const gear = window._parsedCharItems || [];
-
-            if (gear.length > 0) {
-                saveCharacter({
-                    name: charName || 'Unknown',
-                    realm: charRealm || '',
-                    gear: gear,
-                    savedAt: Date.now()
-                });
-                renderCharacterImport();
-            }
-        });
-    }, FADE_TRANSITION_MS);
-}
 
 function renderApiDocs() {
     currentClass = null;
@@ -3714,7 +3734,7 @@ function navigateToHash(hash) {
         if (parts[2]) currentRaid = parts[2];
         renderRaidsContent();
     } else if (page === 'heroics') {
-        renderHeroicsContent(parts[1] || 'hellfire');
+        renderHeroicsContent(parts[1] || 'hellfire', parts[2] || null);
     } else if (page === 'collections') {
         renderCollectionsContent(parts[1] || 'mounts');
     } else if (page === 'attunements') {
@@ -3725,8 +3745,6 @@ function navigateToHash(hash) {
         renderLockoutTracker();
     } else if (page === 'guildprogress') {
         renderGuildProgress();
-    } else if (page === 'charimport') {
-        renderCharacterImport();
     } else if (page === 'raidready') {
         renderPreRaidChecker();
     } else if (page === 'api') {
@@ -3755,7 +3773,29 @@ function initClassSelector() {
             if (e.ctrlKey || e.metaKey || e.button === 1) return;
             e.preventDefault();
             window.location.hash = this.getAttribute('href');
+            // Close any open dropdowns after clicking a link
+            document.querySelectorAll('.nav-dropdown.open').forEach(dd => dd.classList.remove('open'));
         });
+    });
+
+    // Dropdown toggle for mobile/touch
+    document.querySelectorAll('.nav-dropdown-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const dropdown = this.closest('.nav-dropdown');
+            const isOpen = dropdown.classList.contains('open');
+            // Close all other dropdowns
+            document.querySelectorAll('.nav-dropdown.open').forEach(dd => dd.classList.remove('open'));
+            // Toggle this dropdown
+            if (!isOpen) dropdown.classList.add('open');
+        });
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.nav-dropdown')) {
+            document.querySelectorAll('.nav-dropdown.open').forEach(dd => dd.classList.remove('open'));
+        }
     });
 
     window.addEventListener('hashchange', () => navigateToHash(window.location.hash));

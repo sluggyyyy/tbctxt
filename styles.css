@@ -310,3 +310,29 @@ html {
     height: 100%;
     transition: width 0.3s ease;
 }
+
+/* ===== HORIZONTAL NAV DROPDOWNS ===== */
+.nav-dropdown {
+    position: relative;
+}
+.nav-dropdown-btn {
+    font-family: 'IBM Plex Mono', monospace;
+}
+.nav-dropdown-menu {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+.nav-dropdown:hover .nav-dropdown-menu,
+.nav-dropdown.open .nav-dropdown-menu {
+    display: block;
+}
+.nav-dropdown-menu li {
+    border-left: 2px solid transparent;
+    transition: all 0.15s ease;
+}
+.nav-dropdown-menu li:hover {
+    border-left-color: #1eff00;
+}
+.nav-dropdown-menu li.active {
+    border-left-color: #ffffff;
+    background: rgba(30, 255, 0, 0.1);
+}
