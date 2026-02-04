@@ -376,6 +376,10 @@
                 <li class="cursor-pointer text-terminal-text select-none"><a href="#attunements" class="nav-link block w-full text-inherit no-underline py-2 pl-2.5 md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="attunements">[ ATTUNEMENTS ]</a></li>
                 <li class="cursor-pointer text-terminal-text select-none"><a href="#raidready" class="nav-link block w-full text-inherit no-underline py-2 pl-2.5 md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="raidready">[ RAID-READY ]</a></li>
             </ul>
+            <div id="auth-section" class="mt-5 pt-4 border-t border-terminal-dim md:mt-4 md:pt-3 sm:mt-3 sm:pt-2.5">
+                <div id="auth-status" class="text-xs text-terminal-dim mb-2 md:text-[11px] sm:text-[10px]">Loading...</div>
+                <div id="auth-buttons"></div>
+            </div>
         </aside>
         <main id="main-content" class="border border-terminal-text p-5 md:p-4 sm:p-3"></main>
     </div>
@@ -402,6 +406,82 @@ let enchantSpellIds = {};
 let talentSpellIds = {};
 let questIds = {};
 let itemStats = {}; // Pre-computed item stats from Wowhead
+
+// Auth state
+let currentUser = null; // { battletag, bnetId } or null
+let serverProgress = null; // Progress from server when logged in
+
+// Auth functions
+async function checkAuthStatus() {
+    try {
+        const res = await fetch(`${API_BASE_URL}/api/auth/user`, { credentials: 'include' });
+        const data = await res.json();
+        if (data.loggedIn) {
+            currentUser = { battletag: data.battletag, bnetId: data.bnetId };
+            await loadServerProgress();
+        } else {
+            currentUser = null;
+        }
+        updateAuthUI();
+    } catch (e) {
+        console.error('Auth check failed:', e);
+        currentUser = null;
+        updateAuthUI();
+    }
+}
+
+function updateAuthUI() {
+    const statusEl = document.getElementById('auth-status');
+    const buttonsEl = document.getElementById('auth-buttons');
+    if (!statusEl || !buttonsEl) return;
+
+    if (currentUser) {
+        statusEl.innerHTML = `🎮 <span class="text-terminal-accent">${currentUser.battletag}</span>`;
+        buttonsEl.innerHTML = `
+            <a href="${API_BASE_URL}/api/auth/logout" class="block text-center text-xs text-terminal-dim hover:text-terminal-text py-1.5 border border-terminal-dim hover:border-terminal-text transition-colors md:text-[11px] sm:text-[10px]">[ LOGOUT ]</a>
+            <div class="text-[10px] text-terminal-dim mt-2 md:text-[9px] sm:text-[8px]">✓ Progress syncs across devices</div>
+        `;
+    } else {
+        statusEl.innerHTML = '💾 Save progress across devices';
+        buttonsEl.innerHTML = `
+            <a href="${API_BASE_URL}/api/auth/login" class="block text-center text-xs py-2 border transition-colors md:text-[11px] sm:text-[10px]" style="color: #00AEFF; border-color: #00AEFF;" onmouseover="this.style.backgroundColor='#00AEFF'; this.style.color='#222222';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#00AEFF';">[ LOGIN WITH BATTLE.NET ]</a>
+            <div class="text-[10px] text-terminal-dim mt-2 md:text-[9px] sm:text-[8px]">Progress saved locally only</div>
+        `;
+    }
+}
+
+async function loadServerProgress() {
+    if (!currentUser) return;
+    try {
+        const res = await fetch(`${API_BASE_URL}/api/progress`, { credentials: 'include' });
+        if (res.ok) {
+            serverProgress = await res.json();
+            // Merge server progress with local storage (server wins on conflict)
+            if (serverProgress.attunements) {
+                localStorage.setItem(ATTUNEMENT_STORAGE_KEY, JSON.stringify(serverProgress.attunements));
+            }
+            console.log('Loaded progress from server:', serverProgress);
+        }
+    } catch (e) {
+        console.error('Failed to load server progress:', e);
+    }
+}
+
+async function saveProgressToServer() {
+    if (!currentUser) return;
+    try {
+        const attunements = loadAttunementProgress();
+        await fetch(`${API_BASE_URL}/api/progress`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ attunements })
+        });
+        console.log('Progress saved to server');
+    } catch (e) {
+        console.error('Failed to save to server:', e);
+    }
+}
 let currentClass = 'warrior';
 let currentSpec = null;
 let currentPhase = 4;
@@ -1411,6 +1491,8 @@ function saveAttunementProgress(stepId, completed) {
             delete progress[stepId];
         }
         localStorage.setItem(ATTUNEMENT_STORAGE_KEY, JSON.stringify(progress));
+        // Also save to server if logged in
+        saveProgressToServer();
     } catch (e) {
         console.error('Error saving attunement progress:', e);
     }
@@ -1430,6 +1512,8 @@ function clearAttunementProgress(attunementKey = null) {
         } else {
             localStorage.removeItem(ATTUNEMENT_STORAGE_KEY);
         }
+        // Also save to server if logged in
+        saveProgressToServer();
     } catch (e) {
         console.error('Error clearing attunement progress:', e);
     }
@@ -3267,8 +3351,19 @@ function initClassSelector() {
     window.addEventListener('hashchange', () => navigateToHash(window.location.hash));
 
     if (window.location.hash) {
-        navigateToHash(window.location.hash);
+        // Handle auth callbacks
+        if (window.location.hash === '#login-success') {
+            history.replaceState(null, '', window.location.pathname);
+            console.log('Login successful!');
+        } else if (window.location.hash === '#login-error') {
+            history.replaceState(null, '', window.location.pathname);
+            console.error('Login failed');
+        } else {
+            navigateToHash(window.location.hash);
+        }
     }
+    // Check auth status
+    checkAuthStatus();
 }
 window.addEventListener('DOMContentLoaded', loadAllData);
     </script>

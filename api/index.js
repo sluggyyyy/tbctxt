@@ -1,15 +1,22 @@
-// TBC API Server - v1.1.0 (item search support)
+// TBC API Server - v1.2.0 (Battle.net user login)
 const http = require('http');
 const https = require('https');
+const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 
 const PORT = process.env.PORT || 8080;
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, '..', 'data');
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+const API_URL = process.env.API_URL || `http://localhost:${PORT}`;
 
-// Blizzard OAuth token cache
+// Blizzard OAuth token cache (for client credentials)
 let bnetAccessToken = '';
 let bnetTokenExpiry = 0;
+
+// User sessions (in-memory - consider Redis/DB for production)
+const userSessions = new Map(); // sessionToken -> { bnetId, battletag, accessToken, expiry }
+const userProgress = new Map(); // bnetId -> { attunements: {}, bis: {} }
 
 let classData = {};
 let itemIds = {};
@@ -235,11 +242,225 @@ async function handleItemSearch(req, res, url) {
     return jsonResponse(res, { query: name, count: 0, items: [] });
 }
 
+// Generate secure session token
+function generateSessionToken() {
+    return crypto.randomBytes(32).toString('hex');
+}
+
+// Parse cookies from request
+function parseCookies(req) {
+    const cookies = {};
+    const cookieHeader = req.headers.cookie;
+    if (cookieHeader) {
+        cookieHeader.split(';').forEach(cookie => {
+            const [name, value] = cookie.trim().split('=');
+            cookies[name] = decodeURIComponent(value || '');
+        });
+    }
+    return cookies;
+}
+
+// Get user from session token
+function getUserFromSession(req) {
+    const cookies = parseCookies(req);
+    const token = cookies.tbctxt_session;
+    if (!token) return null;
+    const session = userSessions.get(token);
+    if (!session || session.expiry < Date.now()) {
+        userSessions.delete(token);
+        return null;
+    }
+    return session;
+}
+
+// Handle OAuth login redirect
+function handleAuthLogin(req, res) {
+    const clientId = process.env.BNET_CLIENT_ID;
+    const redirectUri = encodeURIComponent(`${API_URL}/api/auth/callback`);
+    const scope = encodeURIComponent('openid wow.profile');
+    const state = generateSessionToken().substring(0, 16); // Anti-CSRF token
+
+    const authUrl = `https://us.battle.net/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&state=${state}`;
+
+    console.log('Redirecting to Battle.net OAuth:', authUrl);
+    res.writeHead(302, { 'Location': authUrl });
+    res.end();
+}
+
+// Handle OAuth callback
+async function handleAuthCallback(req, res, url) {
+    const code = url.searchParams.get('code');
+    const error = url.searchParams.get('error');
+
+    if (error) {
+        console.error('OAuth error:', error);
+        res.writeHead(302, { 'Location': `${FRONTEND_URL}#login-error` });
+        return res.end();
+    }
+
+    if (!code) {
+        res.writeHead(302, { 'Location': `${FRONTEND_URL}#login-error` });
+        return res.end();
+    }
+
+    const clientId = process.env.BNET_CLIENT_ID;
+    const clientSecret = process.env.BNET_CLIENT_SECRET;
+    const redirectUri = `${API_URL}/api/auth/callback`;
+
+    // Exchange code for access token
+    const tokenData = await new Promise((resolve, reject) => {
+        const postData = `grant_type=authorization_code&code=${code}&redirect_uri=${encodeURIComponent(redirectUri)}`;
+        const auth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+
+        const tokenReq = https.request({
+            hostname: 'us.battle.net',
+            path: '/oauth/token',
+            method: 'POST',
+            headers: {
+                'Authorization': `Basic ${auth}`,
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': postData.length
+            }
+        }, (tokenRes) => {
+            let data = '';
+            tokenRes.on('data', chunk => data += chunk);
+            tokenRes.on('end', () => {
+                try {
+                    resolve(JSON.parse(data));
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        });
+
+        tokenReq.on('error', reject);
+        tokenReq.write(postData);
+        tokenReq.end();
+    });
+
+    if (!tokenData.access_token) {
+        console.error('No access token:', tokenData);
+        res.writeHead(302, { 'Location': `${FRONTEND_URL}#login-error` });
+        return res.end();
+    }
+
+    // Get user info from Battle.net
+    const userInfo = await new Promise((resolve, reject) => {
+        const userReq = https.request({
+            hostname: 'us.battle.net',
+            path: '/oauth/userinfo',
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${tokenData.access_token}`
+            }
+        }, (userRes) => {
+            let data = '';
+            userRes.on('data', chunk => data += chunk);
+            userRes.on('end', () => {
+                try {
+                    resolve(JSON.parse(data));
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        });
+
+        userReq.on('error', reject);
+        userReq.end();
+    });
+
+    console.log('User logged in:', userInfo.battletag, userInfo.sub);
+
+    // Create session
+    const sessionToken = generateSessionToken();
+    const session = {
+        bnetId: userInfo.sub,
+        battletag: userInfo.battletag,
+        accessToken: tokenData.access_token,
+        expiry: Date.now() + (tokenData.expires_in * 1000)
+    };
+    userSessions.set(sessionToken, session);
+
+    // Initialize user progress if not exists
+    if (!userProgress.has(userInfo.sub)) {
+        userProgress.set(userInfo.sub, { attunements: {}, bis: {} });
+    }
+
+    // Set cookie and redirect (secure in production)
+    const cookieExpiry = new Date(session.expiry).toUTCString();
+    const isProduction = process.env.NODE_ENV === 'production' || !FRONTEND_URL.includes('localhost');
+    const secureFlag = isProduction ? '; Secure' : '';
+    res.writeHead(302, {
+        'Location': `${FRONTEND_URL}#login-success`,
+        'Set-Cookie': `tbctxt_session=${sessionToken}; Path=/; Expires=${cookieExpiry}; SameSite=Lax; HttpOnly${secureFlag}`
+    });
+    res.end();
+}
+
+// Handle get current user
+function handleAuthUser(req, res) {
+    const session = getUserFromSession(req);
+    if (!session) {
+        return jsonResponse(res, { loggedIn: false });
+    }
+    return jsonResponse(res, {
+        loggedIn: true,
+        battletag: session.battletag,
+        bnetId: session.bnetId
+    });
+}
+
+// Handle logout
+function handleAuthLogout(req, res) {
+    const cookies = parseCookies(req);
+    const token = cookies.tbctxt_session;
+    if (token) {
+        userSessions.delete(token);
+    }
+    res.writeHead(302, {
+        'Location': `${FRONTEND_URL}`,
+        'Set-Cookie': 'tbctxt_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT'
+    });
+    res.end();
+}
+
+// Handle get/save user progress
+function handleProgress(req, res, method) {
+    const session = getUserFromSession(req);
+    if (!session) {
+        return errorResponse(res, 'Not logged in', 401);
+    }
+
+    const progress = userProgress.get(session.bnetId) || { attunements: {}, bis: {} };
+
+    if (method === 'GET') {
+        return jsonResponse(res, progress);
+    }
+
+    // POST - save progress
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', () => {
+        try {
+            const data = JSON.parse(body);
+            if (data.attunements) progress.attunements = data.attunements;
+            if (data.bis) progress.bis = data.bis;
+            userProgress.set(session.bnetId, progress);
+            console.log(`Progress saved for ${session.battletag}`);
+            return jsonResponse(res, { success: true, progress });
+        } catch (e) {
+            return errorResponse(res, 'Invalid JSON', 400);
+        }
+    });
+}
+
 const server = http.createServer((req, res) => {
-    // Set CORS headers for all responses
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    // Set CORS headers for all responses (allow credentials for auth)
+    const origin = req.headers.origin || FRONTEND_URL;
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
 
     if (req.method === 'OPTIONS') {
         res.writeHead(200);
@@ -252,6 +473,31 @@ const server = http.createServer((req, res) => {
     if (parts[0] !== 'api') return errorResponse(res, 'Not found');
 
     const route = parts.slice(1);
+
+    // /api/auth/login - Redirect to Battle.net
+    if (route[0] === 'auth' && route[1] === 'login') {
+        return handleAuthLogin(req, res);
+    }
+
+    // /api/auth/callback - OAuth callback from Battle.net
+    if (route[0] === 'auth' && route[1] === 'callback') {
+        return handleAuthCallback(req, res, url);
+    }
+
+    // /api/auth/user - Get current user info
+    if (route[0] === 'auth' && route[1] === 'user') {
+        return handleAuthUser(req, res);
+    }
+
+    // /api/auth/logout - Logout
+    if (route[0] === 'auth' && route[1] === 'logout') {
+        return handleAuthLogout(req, res);
+    }
+
+    // /api/progress - Get/save user progress
+    if (route[0] === 'progress') {
+        return handleProgress(req, res, req.method);
+    }
 
     // /api/health
     if (route[0] === 'health') {
