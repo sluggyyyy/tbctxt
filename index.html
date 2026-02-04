@@ -320,6 +320,7 @@
             <ul class="class-list list-none">
                 <li class="cursor-pointer text-terminal-text select-none"><a href="#recipes" class="nav-link block w-full text-inherit no-underline py-2 pl-2.5 md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="recipes">[ RECIPES ]</a></li>
                 <li class="cursor-pointer text-terminal-text select-none"><a href="#raids" class="nav-link block w-full text-inherit no-underline py-2 pl-2.5 md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="raids">[ RAIDS ]</a></li>
+                <li class="cursor-pointer text-terminal-text select-none"><a href="#collections" class="nav-link block w-full text-inherit no-underline py-2 pl-2.5 md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="collections">[ COLLECTIONS ]</a></li>
                 <li class="cursor-pointer text-terminal-text select-none"><a href="#raidready" class="nav-link block w-full text-inherit no-underline py-2 pl-2.5 md:py-2.5 md:pl-3 md:pr-2 md:text-[13px] md:min-h-[48px] md:flex md:items-center sm:py-2 sm:pl-2.5 sm:text-xs sm:min-h-[44px]" data-view="raidready">[ RAID-READY ]</a></li>
             </ul>
         </aside>
@@ -342,6 +343,7 @@ let itemIds = {};
 let classData = {};
 let recipesData = {};
 let raidsData = {};
+let collectionsData = {};
 let enchantSpellIds = {};
 let talentSpellIds = {};
 let questIds = {};
@@ -369,18 +371,20 @@ async function loadAllData() {
         return res.json();
     }
     try {
-        const [items, classes, recipes, raids, reference, stats] = await Promise.all([
+        const [items, classes, recipes, raids, reference, stats, collections] = await Promise.all([
             fetchJSON('data/itemIds.json'),
             fetchJSON('data/classData.json'),
             fetchJSON('data/recipesData.json'),
             fetchJSON('data/raidsData.json'),
             fetchJSON('data/referenceData.json'),
-            fetchJSON('data/itemStats.json')
+            fetchJSON('data/itemStats.json'),
+            fetchJSON('data/collectionsData.json')
         ]);
         itemIds = items;
         classData = classes;
         recipesData = recipes;
         raidsData = raids;
+        collectionsData = collections;
         enchantSpellIds = reference.enchantSpellIds;
         talentSpellIds = reference.talentSpellIds;
         questIds = reference.questIds;
@@ -1119,8 +1123,218 @@ function renderRaidsContent() {
         }
     }, 200);
 }
+let currentCollection = 'mounts';
+function renderCollectionsContent(category = 'mounts') {
+    currentClass = null;
+    currentCollection = category;
+    document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
+    const collectionsLink = document.querySelector('.nav-link[data-view="collections"]');
+    if (collectionsLink) collectionsLink.parentElement.classList.add('active');
+
+    const categories = ['mounts', 'tabards', 'vanityPets', 'rareSpawns', 'toys'];
+    const categoryLabels = {mounts: 'Mounts', tabards: 'Tabards', vanityPets: 'Vanity Pets', rareSpawns: 'Rare Spawns', toys: 'Toys'};
+
+    const categoryButtons = categories.map(cat =>
+        `<a href="#collections/${cat}" class="collection-btn ${cat === currentCollection ? 'bg-terminal-text text-terminal-bg' : 'bg-transparent'} border border-terminal-text text-terminal-text px-4 py-2.5 cursor-pointer font-mono text-xs transition-all select-none hover:bg-terminal-text hover:text-terminal-bg no-underline md:px-3.5 md:py-2.5 md:text-[11px] sm:px-3 sm:py-2 sm:text-[10px]" data-category="${cat}">${categoryLabels[cat]}</a>`
+    ).join('');
+
+    let contentHtml = '';
+    const data = collectionsData[category];
+
+    if (category === 'mounts' && data) {
+        contentHtml = renderMountsSection(data);
+    } else if (category === 'tabards' && data) {
+        contentHtml = renderTabardsSection(data);
+    } else if (category === 'vanityPets' && data) {
+        contentHtml = renderPetsSection(data);
+    } else if (category === 'rareSpawns' && data) {
+        contentHtml = renderRareSpawnsSection(data);
+    } else if (category === 'toys' && data) {
+        contentHtml = renderToysSection(data);
+    }
+
+    const html = `
+        <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">query: tbc_collections --category=${category}</div>
+        <h2 class="text-terminal-accent text-lg mb-4 uppercase tracking-wide md:text-base md:mb-3 sm:text-sm">[ TBC COLLECTIONS ]</h2>
+        <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">Collectible items available in The Burning Crusade</p>
+        <h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ CATEGORY ]</h3>
+        <div class="flex flex-wrap gap-2 mb-6 md:gap-1.5 md:mb-4 sm:mb-3">${categoryButtons}</div>
+        ${contentHtml}
+    `;
+
+    const mainContent = document.getElementById('main-content');
+    mainContent.style.opacity = '0.3';
+    setTimeout(() => {
+        mainContent.innerHTML = html;
+        mainContent.style.opacity = '1';
+        // Add event listeners to category buttons
+        document.querySelectorAll('.collection-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                if (e.ctrlKey || e.metaKey || e.button === 1) return;
+                e.preventDefault();
+                window.location.hash = `#collections/${btn.dataset.category}`;
+            });
+        });
+        if (typeof $WowheadPower !== 'undefined' && $WowheadPower.refreshLinks) {
+            $WowheadPower.refreshLinks();
+        }
+    }, 200);
+}
+
+function renderMountsSection(data) {
+    let html = '<h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ FLYING MOUNTS ]</h3>';
+    const flyingCategories = {
+        'allianceVendor': 'Alliance Vendor', 'hordeVendor': 'Horde Vendor', 'netherwing': 'Netherwing (Rep)',
+        'shatariSkyguard': "Sha'tari Skyguard (Rep)", 'cenarionExpedition': 'Cenarion Expedition (Rep)',
+        'engineering': 'Engineering', 'rareDrops': 'Rare Drops', 'gladiator': 'Gladiator (PvP)'
+    };
+    for (const [key, label] of Object.entries(flyingCategories)) {
+        if (data.flyingMounts && data.flyingMounts[key]) {
+            html += renderMountGroup(label, data.flyingMounts[key]);
+        }
+    }
+    html += '<h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">[ GROUND MOUNTS ]</h3>';
+    const groundCategories = {
+        'bloodElfHawkstriders': 'Blood Elf Hawkstriders', 'draeneiElekks': 'Draenei Elekks',
+        'talbuksMaghar': "Mag'har Talbuks (Rep)", 'talbuksKurenai': 'Kurenai Talbuks (Rep)',
+        'halaa': 'Halaa PvP', 'raidDrops': 'Raid Drops', 'worldEvents': 'World Events'
+    };
+    for (const [key, label] of Object.entries(groundCategories)) {
+        if (data.groundMounts && data.groundMounts[key]) {
+            html += renderMountGroup(label, data.groundMounts[key]);
+        }
+    }
+    return html;
+}
+
+function renderMountGroup(label, mounts) {
+    const rows = mounts.map(m => `
+        <tr class="border-b border-terminal-dim border-opacity-30">
+            <td class="p-2 md:p-1.5 sm:p-1"><a href="https://tbc.wowhead.com/item=${m.itemId}" data-wowhead="item=${m.itemId}" class="text-wow-epic hover:text-terminal-text">${m.name}</a></td>
+            <td class="p-2 text-terminal-dim md:p-1.5 sm:p-1 text-xs">${m.faction || 'Both'}</td>
+            <td class="p-2 text-terminal-dim md:p-1.5 sm:p-1 text-xs">${m.requirements || '-'}</td>
+        </tr>
+    `).join('');
+    return `
+        <div class="mb-4">
+            <h4 class="text-terminal-accent text-xs mb-2">${label}</h4>
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse text-xs">
+                    <thead><tr><th class="bg-terminal-dim text-terminal-bg p-2 text-left text-[10px] uppercase">Mount</th><th class="bg-terminal-dim text-terminal-bg p-2 text-left text-[10px] uppercase">Faction</th><th class="bg-terminal-dim text-terminal-bg p-2 text-left text-[10px] uppercase">Requirements</th></tr></thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            </div>
+        </div>
+    `;
+}
+
+function renderTabardsSection(data) {
+    let html = '';
+    const categories = {reputation: 'Reputation Tabards', pvp: 'PvP Tabards', other: 'Other Tabards'};
+    for (const [key, label] of Object.entries(categories)) {
+        if (data[key]) {
+            const rows = data[key].map(t => `
+                <tr class="border-b border-terminal-dim border-opacity-30">
+                    <td class="p-2 md:p-1.5 sm:p-1"><a href="https://tbc.wowhead.com/item=${t.itemId}" data-wowhead="item=${t.itemId}" class="text-wow-rare hover:text-terminal-text">${t.name}</a></td>
+                    <td class="p-2 text-terminal-dim md:p-1.5 sm:p-1 text-xs">${t.source || '-'}</td>
+                    <td class="p-2 text-terminal-dim md:p-1.5 sm:p-1 text-xs">${t.requirements || '-'}</td>
+                </tr>
+            `).join('');
+            html += `
+                <h4 class="text-terminal-accent text-xs mb-2 mt-4">${label}</h4>
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse text-xs">
+                        <thead><tr><th class="bg-terminal-dim text-terminal-bg p-2 text-left text-[10px] uppercase">Tabard</th><th class="bg-terminal-dim text-terminal-bg p-2 text-left text-[10px] uppercase">Source</th><th class="bg-terminal-dim text-terminal-bg p-2 text-left text-[10px] uppercase">Requirements</th></tr></thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                </div>
+            `;
+        }
+    }
+    return html;
+}
+
+function renderPetsSection(data) {
+    let html = '';
+    const categories = {vendor: 'Vendor Pets', drops: 'Drop/Quest Pets', engineering: 'Engineering Pets', worldEvents: 'World Event Pets'};
+    for (const [key, label] of Object.entries(categories)) {
+        if (data[key]) {
+            const rows = data[key].map(p => `
+                <tr class="border-b border-terminal-dim border-opacity-30">
+                    <td class="p-2 md:p-1.5 sm:p-1"><a href="https://tbc.wowhead.com/item=${p.itemId}" data-wowhead="item=${p.itemId}" class="text-wow-uncommon hover:text-terminal-text">${p.name}</a></td>
+                    <td class="p-2 text-terminal-dim md:p-1.5 sm:p-1 text-xs">${p.source || '-'}</td>
+                    <td class="p-2 text-terminal-dim md:p-1.5 sm:p-1 text-xs">${p.zone || '-'}</td>
+                    <td class="p-2 text-terminal-dim md:p-1.5 sm:p-1 text-xs">${p.requirements || '-'}</td>
+                </tr>
+            `).join('');
+            html += `
+                <h4 class="text-terminal-accent text-xs mb-2 mt-4">${label}</h4>
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse text-xs">
+                        <thead><tr><th class="bg-terminal-dim text-terminal-bg p-2 text-left text-[10px] uppercase">Pet</th><th class="bg-terminal-dim text-terminal-bg p-2 text-left text-[10px] uppercase">Source</th><th class="bg-terminal-dim text-terminal-bg p-2 text-left text-[10px] uppercase">Zone</th><th class="bg-terminal-dim text-terminal-bg p-2 text-left text-[10px] uppercase">Requirements</th></tr></thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                </div>
+            `;
+        }
+    }
+    return html;
+}
+
+function renderRareSpawnsSection(data) {
+    let html = '';
+    const zones = {hellfire: 'Hellfire Peninsula', zangarmarsh: 'Zangarmarsh', terokkar: 'Terokkar Forest', nagrand: 'Nagrand', bladesEdge: "Blade's Edge Mountains", netherstorm: 'Netherstorm', shadowmoon: 'Shadowmoon Valley'};
+    for (const [key, label] of Object.entries(zones)) {
+        if (data[key]) {
+            const rows = data[key].map(r => `
+                <tr class="border-b border-terminal-dim border-opacity-30">
+                    <td class="p-2 md:p-1.5 sm:p-1"><a href="https://tbc.wowhead.com/npc=${r.npcId}" data-wowhead="npc=${r.npcId}" class="text-yellow-400 hover:text-terminal-text">${r.name}</a></td>
+                    <td class="p-2 text-terminal-dim md:p-1.5 sm:p-1 text-xs">${r.drops || '-'}</td>
+                    <td class="p-2 text-terminal-dim md:p-1.5 sm:p-1 text-xs">${r.coords || '-'}</td>
+                </tr>
+            `).join('');
+            html += `
+                <h4 class="text-terminal-accent text-xs mb-2 mt-4">${label}</h4>
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse text-xs">
+                        <thead><tr><th class="bg-terminal-dim text-terminal-bg p-2 text-left text-[10px] uppercase">NPC</th><th class="bg-terminal-dim text-terminal-bg p-2 text-left text-[10px] uppercase">Notable Drops</th><th class="bg-terminal-dim text-terminal-bg p-2 text-left text-[10px] uppercase">Location</th></tr></thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                </div>
+            `;
+        }
+    }
+    return html;
+}
+
+function renderToysSection(data) {
+    let html = '';
+    const categories = {transformation: 'Transformation Items', party: 'Party Items', engineering: 'Engineering Gadgets', misc: 'Miscellaneous'};
+    for (const [key, label] of Object.entries(categories)) {
+        if (data[key]) {
+            const rows = data[key].map(t => `
+                <tr class="border-b border-terminal-dim border-opacity-30">
+                    <td class="p-2 md:p-1.5 sm:p-1"><a href="https://tbc.wowhead.com/item=${t.itemId}" data-wowhead="item=${t.itemId}" class="text-wow-uncommon hover:text-terminal-text">${t.name}</a></td>
+                    <td class="p-2 text-terminal-dim md:p-1.5 sm:p-1 text-xs">${t.effect || '-'}</td>
+                    <td class="p-2 text-terminal-dim md:p-1.5 sm:p-1 text-xs">${t.source || '-'}</td>
+                </tr>
+            `).join('');
+            html += `
+                <h4 class="text-terminal-accent text-xs mb-2 mt-4">${label}</h4>
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse text-xs">
+                        <thead><tr><th class="bg-terminal-dim text-terminal-bg p-2 text-left text-[10px] uppercase">Item</th><th class="bg-terminal-dim text-terminal-bg p-2 text-left text-[10px] uppercase">Effect</th><th class="bg-terminal-dim text-terminal-bg p-2 text-left text-[10px] uppercase">Source</th></tr></thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                </div>
+            `;
+        }
+    }
+    return html;
+}
+
 function renderRecipesContent() {
-    currentClass = null; 
+    currentClass = null;
     document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
     const recipesLink = document.querySelector('.class-list li[data-view="recipes"]');
     if (recipesLink) recipesLink.classList.add('active');
@@ -2682,6 +2896,8 @@ function navigateToHash(hash) {
         if (parts[1]) currentRaidPhase = parts[1];
         if (parts[2]) currentRaid = parts[2];
         renderRaidsContent();
+    } else if (page === 'collections') {
+        renderCollectionsContent(parts[1] || 'mounts');
     } else if (page === 'raidready') {
         renderPreRaidChecker();
     } else if (page === 'api') {
