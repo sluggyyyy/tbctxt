@@ -3325,6 +3325,7 @@ function renderGuildProgress() {
     });
 
     const raidsHtml = Object.entries(bossesByRaid).map(([raidName, raidData]) => {
+        const bossIds = raidData.bosses.map(b => b.id);
         const bossesHtml = raidData.bosses.map(boss => {
             const killCount = guildProgress[boss.id] || 0;
             return `
@@ -3332,7 +3333,7 @@ function renderGuildProgress() {
                     <span class="text-terminal-text text-xs md:text-[11px]">${boss.name}</span>
                     <div class="flex items-center gap-2">
                         <button class="kill-decrement text-terminal-dim hover:text-red-400 px-2 py-0.5 text-xs border border-terminal-dim/50 hover:border-red-400" data-boss="${boss.id}">-</button>
-                        <input type="number" class="kill-count-input bg-terminal-bg border border-terminal-dim text-terminal-accent text-center w-12 px-1 py-0.5 text-xs font-mono" data-boss="${boss.id}" value="${killCount}" min="0">
+                        <input type="text" class="kill-count-input bg-terminal-bg border border-terminal-dim text-terminal-accent text-center w-12 px-1 py-0.5 text-xs font-mono" data-boss="${boss.id}" value="${killCount}">
                         <button class="kill-increment text-terminal-dim hover:text-green-400 px-2 py-0.5 text-xs border border-terminal-dim/50 hover:border-green-400" data-boss="${boss.id}">+</button>
                     </div>
                 </div>
@@ -3344,14 +3345,17 @@ function renderGuildProgress() {
 
         return `
             <div class="border border-terminal-dim mb-4 md:mb-3">
-                <div class="bg-terminal-dim/20 p-3 flex justify-between items-center md:p-2.5 sm:p-2">
+                <div class="bg-terminal-dim/20 p-3 flex justify-between items-center flex-wrap gap-2 md:p-2.5 sm:p-2">
                     <div>
                         <span class="text-terminal-accent text-sm font-semibold md:text-xs">${raidName}</span>
                         <span class="text-terminal-dim text-xs ml-2 md:text-[11px]">${raidData.phase}</span>
                     </div>
-                    <div class="text-xs text-terminal-dim md:text-[11px]">
-                        <span class="${clearedCount === raidData.bosses.length ? 'text-green-400' : ''}">${clearedCount}/${raidData.bosses.length}</span> bosses |
-                        <span class="text-terminal-accent">${totalKills}</span> total kills
+                    <div class="flex items-center gap-3 md:gap-2">
+                        <button class="full-clear-btn text-xs text-terminal-bg bg-terminal-accent hover:bg-terminal-text px-2 py-1 font-mono cursor-pointer transition-colors" data-bosses='${JSON.stringify(bossIds)}'>[+1 CLEAR]</button>
+                        <span class="text-xs text-terminal-dim md:text-[11px]">
+                            <span class="${clearedCount === raidData.bosses.length ? 'text-green-400' : ''}">${clearedCount}/${raidData.bosses.length}</span> |
+                            <span class="text-terminal-accent">${totalKills}</span> kills
+                        </span>
                     </div>
                 </div>
                 <div class="p-3 md:p-2.5 sm:p-2">
@@ -3405,6 +3409,17 @@ function renderGuildProgress() {
                 const bossId = this.getAttribute('data-boss');
                 const current = guildProgress[bossId] || 0;
                 saveGuildProgress(bossId, Math.max(0, current - 1));
+                renderGuildProgress();
+            });
+        });
+        // Full clear buttons - add +1 kill to all bosses in raid
+        document.querySelectorAll('.full-clear-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const bossIds = JSON.parse(this.getAttribute('data-bosses'));
+                bossIds.forEach(bossId => {
+                    const current = guildProgress[bossId] || 0;
+                    saveGuildProgress(bossId, current + 1);
+                });
                 renderGuildProgress();
             });
         });
