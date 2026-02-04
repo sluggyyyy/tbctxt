@@ -883,11 +883,11 @@ function renderRaidsContent() {
     const raidData = phaseData.raids[currentRaid];
     // Build phase buttons
     const phaseButtons = Object.entries(raidsData).map(([key, phase]) =>
-        `<button class="raid-phase-btn ${key === currentRaidPhase ? 'bg-terminal-text text-terminal-bg' : 'bg-transparent'} border border-terminal-text text-terminal-text px-4 py-2.5 cursor-pointer font-mono text-xs transition-all select-none hover:bg-terminal-text hover:text-terminal-bg md:px-3.5 md:py-2.5 md:text-[11px] md:min-h-[48px] md:inline-flex md:items-center md:justify-center sm:px-3 sm:py-2 sm:text-[10px] sm:min-h-[44px]" data-phase="${key}">${phase.name}</button>`
+        `<a href="#raids/${key}" class="raid-phase-btn ${key === currentRaidPhase ? 'bg-terminal-text text-terminal-bg' : 'bg-transparent'} border border-terminal-text text-terminal-text px-4 py-2.5 cursor-pointer font-mono text-xs transition-all select-none hover:bg-terminal-text hover:text-terminal-bg no-underline md:px-3.5 md:py-2.5 md:text-[11px] md:min-h-[48px] md:inline-flex md:items-center md:justify-center sm:px-3 sm:py-2 sm:text-[10px] sm:min-h-[44px]" data-phase="${key}">${phase.name}</a>`
     ).join('');
     // Build raid buttons for current phase
     const raidButtons = Object.entries(phaseData.raids).map(([key, raid]) =>
-        `<button class="raid-btn ${key === currentRaid ? 'bg-terminal-accent text-terminal-bg' : 'bg-transparent'} border border-terminal-accent text-terminal-accent px-3 py-2 cursor-pointer font-mono text-xs transition-all select-none hover:bg-terminal-accent hover:text-terminal-bg md:px-3 md:py-2 md:text-[11px] sm:px-2.5 sm:py-1.5 sm:text-[10px]" data-raid="${key}">${raid.name} (${raid.size})</button>`
+        `<a href="#raids/${currentRaidPhase}/${key}" class="raid-btn ${key === currentRaid ? 'bg-terminal-accent text-terminal-bg' : 'bg-transparent'} border border-terminal-accent text-terminal-accent px-3 py-2 cursor-pointer font-mono text-xs transition-all select-none hover:bg-terminal-accent hover:text-terminal-bg no-underline md:px-3 md:py-2 md:text-[11px] sm:px-2.5 sm:py-1.5 sm:text-[10px]" data-raid="${key}">${raid.name} (${raid.size})</a>`
     ).join('');
     let html = `
         <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">query: tbc_raids --phase=${currentRaidPhase} --raid=${currentRaid}</div>
@@ -1095,19 +1095,22 @@ function renderRaidsContent() {
         mainContent.style.opacity = '1';
         // Add event listeners to phase buttons
         document.querySelectorAll('.raid-phase-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
+            btn.addEventListener('click', (e) => {
+                if (e.ctrlKey || e.metaKey || e.button === 1) return;
+                e.preventDefault();
                 currentRaidPhase = btn.dataset.phase;
-                // Set first raid of new phase as current
                 const firstRaid = Object.keys(raidsData[currentRaidPhase].raids)[0];
                 currentRaid = firstRaid;
-                renderRaidsContent();
+                window.location.hash = `#raids/${currentRaidPhase}`;
             });
         });
         // Add event listeners to raid buttons
         document.querySelectorAll('.raid-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
+            btn.addEventListener('click', (e) => {
+                if (e.ctrlKey || e.metaKey || e.button === 1) return;
+                e.preventDefault();
                 currentRaid = btn.dataset.raid;
-                renderRaidsContent();
+                window.location.hash = `#raids/${currentRaidPhase}/${currentRaid}`;
             });
         });
         // Reinitialize wowhead tooltips
@@ -1133,7 +1136,7 @@ function renderRecipesContent() {
         <h2 class="text-terminal-accent text-lg mb-4 uppercase tracking-wide md:text-base md:mb-3 md:tracking-wider sm:text-sm sm:tracking-tight">[ ${profession.title.toUpperCase()} // TBC ]</h2>
         <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">Essential ${profession.title} recipes to prioritize for raiding and gold making</p>
         <div class="flex flex-wrap gap-2 mb-6 md:gap-1.5 md:mb-4 sm:mb-3">
-            ${Object.keys(recipesData).map(prof => `<button class="profession-btn ${prof === currentProfession ? 'bg-terminal-text text-terminal-bg' : 'bg-transparent'} border border-terminal-text text-terminal-text px-4 py-2.5 cursor-pointer font-mono text-xs transition-all select-none hover:bg-terminal-text hover:text-terminal-bg md:px-3.5 md:py-2.5 md:text-[11px] md:min-h-[48px] md:inline-flex md:items-center md:justify-center sm:px-3 sm:py-2 sm:text-[10px] sm:min-h-[44px]" data-profession="${prof}">${recipesData[prof].title}</button>`).join('')}
+            ${Object.keys(recipesData).map(prof => `<a href="#recipes/${prof}" class="profession-btn ${prof === currentProfession ? 'bg-terminal-text text-terminal-bg' : 'bg-transparent'} border border-terminal-text text-terminal-text px-4 py-2.5 cursor-pointer font-mono text-xs transition-all select-none hover:bg-terminal-text hover:text-terminal-bg no-underline md:px-3.5 md:py-2.5 md:text-[11px] md:min-h-[48px] md:inline-flex md:items-center md:justify-center sm:px-3 sm:py-2 sm:text-[10px] sm:min-h-[44px]" data-profession="${prof}">${recipesData[prof].title}</a>`).join('')}
         </div>
     `;
     for (const [catKey, category] of Object.entries(profession.categories)) {
@@ -1189,9 +1192,11 @@ function renderRecipesContent() {
         mainContent.style.opacity = '1';
         // Add event listeners to profession buttons
         document.querySelectorAll('.profession-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
+            btn.addEventListener('click', (e) => {
+                if (e.ctrlKey || e.metaKey || e.button === 1) return;
+                e.preventDefault();
                 currentProfession = btn.dataset.profession;
-                renderRecipesContent();
+                window.location.hash = `#recipes/${currentProfession}`;
             });
         });
         // Reinitialize wowhead tooltips
@@ -1217,7 +1222,7 @@ function renderClassContent(className) {
     const phaseData = specData.phases[currentPhase];
     // Generate UI components
     const phaseButtons = Object.keys(specData.phases)
-        .map(p => `<button class="phase-btn ${p == currentPhase ? 'bg-terminal-text text-terminal-bg' : 'bg-transparent'} border border-terminal-text text-terminal-text px-4 py-2.5 cursor-pointer font-mono text-xs transition-all select-none hover:bg-terminal-text hover:text-terminal-bg md:px-3.5 md:py-2.5 md:text-[11px] md:min-h-[48px] md:inline-flex md:items-center md:justify-center sm:px-3 sm:py-2 sm:text-[10px] sm:min-h-[44px]" data-phase="${p}">${specData.phases[p].name}</button>`)
+        .map(p => `<a href="#${className}/${currentSpec}/${p}" class="phase-btn ${p == currentPhase ? 'bg-terminal-text text-terminal-bg' : 'bg-transparent'} border border-terminal-text text-terminal-text px-4 py-2.5 cursor-pointer font-mono text-xs transition-all select-none hover:bg-terminal-text hover:text-terminal-bg no-underline md:px-3.5 md:py-2.5 md:text-[11px] md:min-h-[48px] md:inline-flex md:items-center md:justify-center sm:px-3 sm:py-2 sm:text-[10px] sm:min-h-[44px]" data-phase="${p}">${specData.phases[p].name}</a>`)
         .join('');
     const bisTable = generateBisTable(phaseData.bis, specData);
     // Generate talents tree
@@ -1348,7 +1353,7 @@ function renderClassContent(className) {
         `;
     }
     const specs = Object.entries(data.specs)
-        .map(([key, spec]) => `<span class="spec-tab ${key === currentSpec ? 'border-terminal-accent text-terminal-accent' : 'border-terminal-dim'} inline-block py-2 px-3 mr-2.5 border cursor-pointer transition-all text-xs select-none hover:border-terminal-accent hover:text-terminal-accent md:py-2.5 md:px-3 md:text-[11px] md:min-h-[48px] md:inline-flex md:items-center md:mr-2 sm:py-2 sm:px-2.5 sm:text-[10px] sm:mr-1.5 sm:min-h-[44px]" data-spec="${key}">${spec.name}</span>`)
+        .map(([key, spec]) => `<a href="#${className}/${key}" class="spec-tab ${key === currentSpec ? 'border-terminal-accent text-terminal-accent' : 'border-terminal-dim'} inline-block py-2 px-3 mr-2.5 border cursor-pointer transition-all text-xs select-none hover:border-terminal-accent hover:text-terminal-accent no-underline md:py-2.5 md:px-3 md:text-[11px] md:min-h-[48px] md:inline-flex md:items-center md:mr-2 sm:py-2 sm:px-2.5 sm:text-[10px] sm:mr-1.5 sm:min-h-[44px]" data-spec="${key}">${spec.name}</a>`)
         .join('');
     const html = `
         <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">query: ${className}_pve_bis --spec=${currentSpec} --phase=${currentPhase}</div>
@@ -1388,7 +1393,9 @@ function renderClassContent(className) {
 function attachEventListeners(specData) {
     // Phase button listeners
     document.querySelectorAll('.phase-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function(e) {
+            if (e.ctrlKey || e.metaKey || e.button === 1) return;
+            e.preventDefault();
             // Remove active state from all buttons
             document.querySelectorAll('.phase-btn').forEach(b => {
                 b.classList.remove('bg-terminal-text', 'text-terminal-bg');
@@ -1399,6 +1406,7 @@ function attachEventListeners(specData) {
             this.classList.add('bg-terminal-text', 'text-terminal-bg');
             const phase = parseInt(this.getAttribute('data-phase'));
             currentPhase = phase;
+            history.replaceState(null, '', `#${currentClass}/${currentSpec}/${phase}`);
             const phaseData = specData.phases[phase];
             document.getElementById('bis-header').textContent = `[ BEST IN SLOT - ${phaseData.name} ]`;
             document.getElementById('bis-table').innerHTML = generateBisTable(phaseData.bis, specData);
@@ -1407,11 +1415,14 @@ function attachEventListeners(specData) {
     });
     // Spec tab listeners
     document.querySelectorAll('.spec-tab').forEach(tab => {
-        tab.addEventListener('click', function() {
+        tab.addEventListener('click', function(e) {
+            if (e.ctrlKey || e.metaKey || e.button === 1) return;
+            e.preventDefault();
             const newSpec = this.getAttribute('data-spec');
             if (newSpec !== currentSpec) {
                 currentSpec = newSpec;
-                renderClassContent(currentClass);
+                currentPhase = 1;
+                window.location.hash = `#${currentClass}/${newSpec}`;
             }
         });
     });
@@ -2661,19 +2672,29 @@ function navigateToHash(hash) {
         return;
     }
 
-    if (target === 'recipes') {
+    const parts = target.split('/');
+    const page = parts[0];
+
+    if (page === 'recipes') {
+        if (parts[1]) currentProfession = parts[1];
         renderRecipesContent();
-    } else if (target === 'raids') {
+    } else if (page === 'raids') {
+        if (parts[1]) currentRaidPhase = parts[1];
+        if (parts[2]) currentRaid = parts[2];
         renderRaidsContent();
-    } else if (target === 'preraid') {
+    } else if (page === 'preraid') {
         renderPreRaidChecker();
-    } else if (target === 'api') {
+    } else if (page === 'api') {
         renderApiDocs();
     } else {
-        renderClassContent(target);
+        // Class page: #warrior or #warrior/arms or #warrior/arms/3
+        currentClass = page;
+        if (parts[1]) currentSpec = parts[1];
+        if (parts[2]) currentPhase = parseInt(parts[2]);
+        renderClassContent(page);
     }
 
-    updateActiveNav(target);
+    updateActiveNav(page);
 }
 
 function updateActiveNav(target) {
