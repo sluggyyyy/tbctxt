@@ -2677,18 +2677,19 @@ function navigateToHash(hash) {
 }
 
 function updateActiveNav(target) {
-    const items = document.querySelectorAll('.class-list li');
+    const current = document.querySelector('.class-list li.active');
+    if (current) current.classList.remove('active');
     const activeLink = document.querySelector(`.nav-link[data-class="${target}"], .nav-link[data-view="${target}"]`);
-    items.forEach(li => li.classList.toggle('active', li.contains(activeLink)));
+    if (activeLink) activeLink.parentElement.classList.add('active');
 }
 
 function initClassSelector() {
-    const navLinks = document.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            if (e.ctrlKey || e.metaKey || e.button === 1) return;
+    document.querySelectorAll('.class-list li').forEach(li => {
+        li.addEventListener('click', function(e) {
+            if (e.ctrlKey || e.metaKey) return;
             e.preventDefault();
-            window.location.hash = this.getAttribute('href');
+            const link = this.querySelector('.nav-link');
+            if (link) window.location.hash = link.getAttribute('href');
         });
     });
 
