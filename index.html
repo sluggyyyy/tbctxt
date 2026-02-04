@@ -437,8 +437,7 @@ function updateAuthUI() {
 
     if (currentUser) {
         headerAuth.innerHTML = `
-            <span class="text-xs md:text-[11px] sm:text-[10px]" style="color: #00AEFF;">${currentUser.battletag}</span>
-            <a href="${API_BASE_URL}/api/auth/logout" class="ml-3 text-xs text-terminal-dim hover:text-terminal-text transition-colors md:text-[11px] sm:text-[10px]">[ LOGOUT ]</a>
+            <span class="text-xs px-3 py-1.5 border md:text-[11px] sm:text-[10px]" style="color: #00AEFF; border-color: #00AEFF;">${currentUser.battletag}</span>
         `;
     } else {
         headerAuth.innerHTML = `
