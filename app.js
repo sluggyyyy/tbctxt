@@ -88,6 +88,96 @@ function showModal(message, options = {}) {
     });
 }
 
+// ===== TIP JAR SYSTEM =====
+function showTipJar() {
+    const overlay = document.createElement('div');
+    overlay.className = 'fixed inset-0 bg-black/80 flex items-center justify-center z-[100]';
+    overlay.id = 'tipjar-overlay';
+
+    overlay.innerHTML = `
+        <div class="bg-terminal-bg border-2 border-terminal-accent p-6 max-w-md mx-4 font-mono">
+            <div class="text-terminal-accent text-sm mb-4">// TIP JAR</div>
+            <div class="text-terminal-dim text-xs mb-4">Support TBC.TXT development. You'll choose the amount on the next page.</div>
+
+            <div class="mb-4">
+                <label class="text-terminal-text text-xs block mb-2">Your name (for supporters list):</label>
+                <input type="text" id="tipjar-name" placeholder="Anonymous"
+                    class="w-full bg-terminal-bg border border-terminal-dim text-terminal-text px-3 py-2 text-xs font-mono focus:border-terminal-accent outline-none">
+            </div>
+
+            <div class="flex gap-3 justify-end">
+                <button id="tipjar-cancel" class="px-4 py-2 border border-terminal-dim text-terminal-dim hover:border-terminal-text hover:text-terminal-text transition-colors text-xs">[ CANCEL ]</button>
+                <button id="tipjar-submit" class="px-4 py-2 border border-terminal-accent text-terminal-accent hover:bg-terminal-accent hover:text-terminal-bg transition-colors text-xs">[ CONTINUE ]</button>
+            </div>
+
+            <div id="tipjar-error" class="hidden mt-3 text-red-500 text-xs"></div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    // Cancel handler
+    document.getElementById('tipjar-cancel').addEventListener('click', () => overlay.remove());
+
+    // Submit handler - no amount, Stripe will handle it
+    document.getElementById('tipjar-submit').addEventListener('click', async () => {
+        const name = document.getElementById('tipjar-name').value.trim() || 'Anonymous';
+        const errorEl = document.getElementById('tipjar-error');
+        const submitBtn = document.getElementById('tipjar-submit');
+
+        submitBtn.textContent = '[ LOADING... ]';
+        submitBtn.disabled = true;
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/donate/create-session`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name })
+            });
+
+            const data = await response.json();
+
+            if (data.url) {
+                window.location.href = data.url;
+            } else {
+                throw new Error(data.error || 'Failed to create checkout session');
+            }
+        } catch (e) {
+            errorEl.textContent = e.message;
+            errorEl.classList.remove('hidden');
+            submitBtn.textContent = '[ CONTINUE ]';
+            submitBtn.disabled = false;
+        }
+    });
+
+    // Close on overlay click
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) overlay.remove();
+    });
+
+    // Close on escape
+    const handleEscape = (e) => {
+        if (e.key === 'Escape') {
+            overlay.remove();
+            document.removeEventListener('keydown', handleEscape);
+        }
+    };
+    document.addEventListener('keydown', handleEscape);
+}
+
+// Check for donation success/cancel in URL
+function checkDonationStatus() {
+    const params = new URLSearchParams(window.location.search);
+    const donateStatus = params.get('donate');
+
+    if (donateStatus === 'success') {
+        showModal('Thank you for your support! You\'re awesome.', { type: 'alert' });
+        history.replaceState(null, '', window.location.pathname + window.location.hash);
+    } else if (donateStatus === 'cancelled') {
+        history.replaceState(null, '', window.location.pathname + window.location.hash);
+    }
+}
+
 // Auth functions
 function checkAuthStatus() {
     // Check localStorage for saved auth
@@ -3940,6 +4030,9 @@ function initClassSelector() {
 
     // Handle auth callback (token in URL from OAuth)
     handleAuthCallback();
+
+    // Check for donation success/cancel
+    checkDonationStatus();
 
     if (window.location.hash) {
         // Handle auth hash states

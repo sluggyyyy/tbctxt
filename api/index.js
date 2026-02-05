@@ -1,9 +1,13 @@
-// TBC API Server - v1.2.0 (Battle.net user login)
+// TBC API Server - v1.3.0 (Battle.net user login + Stripe donations)
 const http = require('http');
 const https = require('https');
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
+
+// Stripe setup
+const Stripe = require('stripe');
+const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SECRET_KEY) : null;
 
 const PORT = process.env.PORT || 8080;
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, '..', 'data');
@@ -245,6 +249,114 @@ async function handleItemSearch(req, res, url) {
 // Generate secure session token
 function generateSessionToken() {
     return crypto.randomBytes(32).toString('hex');
+}
+
+// Read raw request body (needed for Stripe webhook signature verification)
+function getRawBody(req) {
+    return new Promise((resolve, reject) => {
+        const chunks = [];
+        req.on('data', chunk => chunks.push(chunk));
+        req.on('end', () => resolve(Buffer.concat(chunks)));
+        req.on('error', reject);
+    });
+}
+
+// Supporters list (in-memory - consider DB for production)
+const supporters = [];
+
+// Create Stripe checkout session
+async function handleCreateCheckoutSession(req, res) {
+    if (!stripe) {
+        return errorResponse(res, 'Stripe not configured', 503);
+    }
+
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', async () => {
+        try {
+            const data = JSON.parse(body);
+
+            const session = await stripe.checkout.sessions.create({
+                payment_method_types: ['card'],
+                line_items: [{
+                    price_data: {
+                        currency: 'usd',
+                        product_data: {
+                            name: 'TBC.TXT Tip Jar',
+                            description: 'Support the TBC PvE Database',
+                        },
+                        custom_unit_amount: {
+                            enabled: true,
+                            minimum: 100,        // $1 minimum
+                            preset: 500,         // $5 default
+                        },
+                    },
+                    quantity: 1,
+                }],
+                mode: 'payment',
+                submit_type: 'donate',
+                success_url: `${FRONTEND_URL}?donate=success#supporters`,
+                cancel_url: `${FRONTEND_URL}?donate=cancelled`,
+                metadata: {
+                    supporter_name: data.name || 'Anonymous'
+                }
+            });
+
+            return jsonResponse(res, { sessionId: session.id, url: session.url });
+        } catch (e) {
+            console.error('Stripe session error:', e.message);
+            return errorResponse(res, 'Failed to create checkout session', 500);
+        }
+    });
+}
+
+// Handle Stripe webhook
+async function handleStripeWebhook(req, res) {
+    if (!stripe) {
+        return errorResponse(res, 'Stripe not configured', 503);
+    }
+
+    const sig = req.headers['stripe-signature'];
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+    if (!webhookSecret) {
+        console.error('STRIPE_WEBHOOK_SECRET not set');
+        return errorResponse(res, 'Webhook not configured', 503);
+    }
+
+    try {
+        const rawBody = await getRawBody(req);
+        const event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
+
+        if (event.type === 'checkout.session.completed') {
+            const session = event.data.object;
+            const supporterName = session.metadata?.supporter_name || 'Anonymous';
+            const amount = session.amount_total;
+
+            console.log(`Donation received: ${supporterName} - $${(amount / 100).toFixed(2)}`);
+
+            // Add to supporters list (avoid duplicates by name)
+            if (!supporters.find(s => s.name === supporterName && supporterName !== 'Anonymous')) {
+                supporters.push({
+                    name: supporterName,
+                    amount: amount,
+                    date: new Date().toISOString()
+                });
+            }
+        }
+
+        return jsonResponse(res, { received: true });
+    } catch (e) {
+        console.error('Webhook error:', e.message);
+        return errorResponse(res, 'Webhook error', 400);
+    }
+}
+
+// Get supporters list
+function handleGetSupporters(req, res) {
+    // Return names only (not amounts) for privacy
+    const publicList = supporters.map(s => ({ name: s.name }));
+    return jsonResponse(res, { supporters: publicList });
 }
 
 // Parse cookies from request
@@ -595,6 +707,21 @@ const server = http.createServer((req, res) => {
     // /api/item-search?name= (Blizzard item search by name)
     if (route[0] === 'item-search') {
         return handleItemSearch(req, res, url);
+    }
+
+    // /api/donate/create-session - Create Stripe checkout session
+    if (route[0] === 'donate' && route[1] === 'create-session' && req.method === 'POST') {
+        return handleCreateCheckoutSession(req, res);
+    }
+
+    // /api/donate/webhook - Stripe webhook handler
+    if (route[0] === 'donate' && route[1] === 'webhook' && req.method === 'POST') {
+        return handleStripeWebhook(req, res);
+    }
+
+    // /api/donate/supporters - Get supporters list
+    if (route[0] === 'donate' && route[1] === 'supporters') {
+        return handleGetSupporters(req, res);
     }
 
     return errorResponse(res, 'Not found');
