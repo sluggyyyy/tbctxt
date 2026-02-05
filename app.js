@@ -678,50 +678,24 @@ function generateSourceCell(source) {
     const professionSources = ['Blacksmithing', 'Leatherworking', 'Tailoring', 'Jewelcrafting', 'Engineering', 'Alchemy'];
     const pvpSources = ['Honor', 'Honor Points', 'Arena', 'Arena Points'];
     const otherSources = ['BoE World Drop', 'BoE', 'World Drop', 'Crafted', 'N/A', 'Various', 'Vendor', 'PvP'];
-    // Extract display text - strip zone/instance info from "Boss - Zone" format
+    // Keep full source for display, extract boss name only for NPC linking
     let displayText = source;
     let bossName = null;
     let questName = null;
-    // Pattern: "Boss - Zone" or "Boss— Zone" or "Boss - (H) Zone" -> extract just the boss name
-    // Handles both hyphens (-) and em-dashes (—)
-    const bossZoneMatch = source.match(/^(.+?)\s*[-—]\s*\(?H?\)?\s*(Karazhan|Gruul's Lair|Magtheridon's Lair|Serpentshrine Cavern|Tempest Keep|Hyjal Summit|Black Temple|Zul'Aman|Sunwell Plateau|The Blood Furnace|Blood Furnace|The Slave Pens|Slave Pens|The Underbog|Underbog|The Steamvault|Steamvault|The Botanica|Botanica|The Mechanar|Mechanar|The Arcatraz|Arcatraz|Shadow Labyrinth|Sethekk Halls|Auchenai Crypts|Auchindoun|Mana.?Tombs|Old Hillsbrad Foothills|The Black Morass|Black Morass|The Shattered Halls|Shattered Halls|Hellfire Ramparts|Ramparts|Magister's Terrace|Magisters' Terrace|Terokkar Forest|Netherstorm|Nagrand|Naxxramas|Caverns of Time|Blades? Edge Mountains|Shadowmoon Valley|Hellfire Peninsula|Tanaris|AQ40|Blackwing Lair|Stratholme|Blackrock Depths|World Boss)$/i);
+    // Pattern: "Boss - Zone" -> keep full text, extract boss for linking
+    const bossZoneMatch = source.match(/^(.+?)\s+-\s+(.+)$/);
     if (bossZoneMatch) {
-        displayText = bossZoneMatch[1].trim();
-        bossName = displayText;
+        bossName = bossZoneMatch[1].trim();
+        // displayText stays as full source
     }
-    // Pattern: "(H)Boss-Zone" or "(H) Boss - Zone" or "Boss— HeroicZone" or "Bossin HeroicZone" for heroic dungeons
-    const heroicMatch = source.match(/^\(H\)\s*(.+?)[-–—]\s*(.+)$/) ||
-                        source.match(/^(.+?)[-—]\s*[Hh]eroic\s*(.+)$/) ||
-                        source.match(/^(.+?)in\s*[Hh]eroic(.+)$/);
+    // Pattern: "(H) Boss - Zone" for heroic dungeons
+    const heroicMatch = source.match(/^\(H\)\s*(.+?)\s+-\s+(.+)$/);
     if (heroicMatch) {
-        displayText = heroicMatch[1].trim();
-        bossName = displayText;
+        bossName = heroicMatch[1].trim();
     }
-    // Pattern: "Boss—Zone" or "Boss-Zone" (no space) for dungeons -> extract boss name
-    const bossZoneNoSpaceMatch = source.match(/^([A-Z][^-—]+)[-—]([A-Z].+)$/);
-    if (!bossName && bossZoneNoSpaceMatch && !source.includes(' - ') && !source.includes(' — ')) {
-        const potentialBoss = bossZoneNoSpaceMatch[1].trim();
-        if (npcMap[potentialBoss] || npcMap[potentialBoss.replace(/'/g, "\\'")] ) {
-            displayText = potentialBoss;
-            bossName = potentialBoss;
-        }
-    }
-    // Pattern: "Boss1,Boss2, orBoss3—Zone" -> extract first boss name
-    // Also handles case where bossZoneMatch succeeded but gave us multiple bosses
+    // Pattern: "Boss1, Boss2 - Zone" -> extract first boss for linking
     if (bossName && bossName.includes(',')) {
-        const firstBoss = bossName.split(',')[0].trim();
-        if (npcMap[firstBoss]) {
-            displayText = firstBoss;
-            bossName = firstBoss;
-        }
-    }
-    const multiBossMatch = source.match(/^([A-Z][^,]+),.*[-—](.+)$/);
-    if (!bossName && multiBossMatch) {
-        const firstBoss = multiBossMatch[1].trim();
-        if (npcMap[firstBoss]) {
-            displayText = firstBoss;
-            bossName = firstBoss;
-        }
+        bossName = bossName.split(',')[0].trim();
     }
     // Pattern: Any source containing "Badge of Justice" with a number -> show badge count
     const badgeMatch = source.match(/(\d+)\s*x?\s*-?\s*Badge[s]?\s*(of\s*Justice)?/i);
@@ -811,19 +785,19 @@ function generateSourceCell(source) {
             return `<a href="https://tbc.wowhead.com/quest=${qId}" data-wowhead="quest=${qId}" class="underline hover:text-terminal-text">${displayQuestName}</a>`;
         }
     }
-    // If we identified a boss name, try to link it
+    // If we identified a boss name, try to link it (but display full source)
     if (bossName) {
         const npcId = npcMap[bossName] || npcMap[bossName.replace(/'/g, "\\'")] || 0;
         if (npcId > 0) {
-            return `<a href="https://tbc.wowhead.com/npc=${npcId}" class="underline hover:text-terminal-text">${bossName}</a>`;
+            return `<a href="https://tbc.wowhead.com/npc=${npcId}" class="underline hover:text-terminal-text">${displayText}</a>`;
         }
         // Check if boss name is in npcMap with different quote escaping
         for (const [npcName, id] of Object.entries(npcMap)) {
             if (npcName.toLowerCase() === bossName.toLowerCase() && id > 0) {
-                return `<a href="https://tbc.wowhead.com/npc=${id}" class="underline hover:text-terminal-text">${bossName}</a>`;
+                return `<a href="https://tbc.wowhead.com/npc=${id}" class="underline hover:text-terminal-text">${displayText}</a>`;
             }
         }
-        return bossName;
+        return displayText;
     }
     // Check if the source contains any known NPC name directly
     // Sort by name length descending to match longer names first (e.g., "Kael'thas Sunstrider" before "Kael")
@@ -834,7 +808,7 @@ function generateSourceCell(source) {
             const sourceNormalized = source.replace(/\\'/g, "'");
             const npcNameNormalized = npcName.replace(/\\'/g, "'");
             if (sourceNormalized.includes(npcNameNormalized)) {
-                return `<a href="https://tbc.wowhead.com/npc=${npcId}" class="underline hover:text-terminal-text">${npcNameNormalized}</a>`;
+                return `<a href="https://tbc.wowhead.com/npc=${npcId}" class="underline hover:text-terminal-text">${displayText}</a>`;
             }
         }
     }
