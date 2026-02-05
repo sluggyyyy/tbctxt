@@ -678,25 +678,50 @@ function generateSourceCell(source) {
     const professionSources = ['Blacksmithing', 'Leatherworking', 'Tailoring', 'Jewelcrafting', 'Engineering', 'Alchemy'];
     const pvpSources = ['Honor', 'Honor Points', 'Arena', 'Arena Points'];
     const otherSources = ['BoE World Drop', 'BoE', 'World Drop', 'Crafted', 'N/A', 'Various', 'Vendor', 'PvP'];
+    // Dungeon and Raid lists for coloring
+    const dungeons = [
+        'Hellfire Ramparts', 'The Blood Furnace', 'The Shattered Halls', 'Shattered Halls',
+        'The Slave Pens', 'Slave Pens', 'The Underbog', 'Underbog', 'The Steamvault', 'Steamvault',
+        'Mana-Tombs', 'Mana Tombs', 'Auchenai Crypts', 'Sethekk Halls', 'Shadow Labyrinth',
+        'Old Hillsbrad Foothills', 'The Black Morass', 'Black Morass',
+        'The Mechanar', 'Mechanar', 'The Botanica', 'Botanica', 'The Arcatraz', 'Arcatraz',
+        "Magisters' Terrace", "Magister's Terrace"
+    ];
+    const raids = [
+        'Karazhan', "Gruul's Lair", "Magtheridon's Lair",
+        'Serpentshrine Cavern', 'Tempest Keep', 'Tempest Keep: The Eye', 'The Eye',
+        'Mount Hyjal', 'Hyjal Summit', 'Black Temple', "Zul'Aman",
+        'Sunwell Plateau'
+    ];
     // Keep full source for display, extract boss name only for NPC linking
     let displayText = source;
     let bossName = null;
+    let zoneName = null;
     let questName = null;
     // Pattern: "Boss - Zone" -> keep full text, extract boss for linking
     const bossZoneMatch = source.match(/^(.+?)\s+-\s+(.+)$/);
     if (bossZoneMatch) {
         bossName = bossZoneMatch[1].trim();
-        // displayText stays as full source
+        zoneName = bossZoneMatch[2].trim();
     }
     // Pattern: "(H) Boss - Zone" for heroic dungeons
     const heroicMatch = source.match(/^\(H\)\s*(.+?)\s+-\s+(.+)$/);
     if (heroicMatch) {
         bossName = heroicMatch[1].trim();
+        zoneName = heroicMatch[2].trim();
     }
     // Pattern: "Boss1, Boss2 - Zone" -> extract first boss for linking
     if (bossName && bossName.includes(',')) {
         bossName = bossName.split(',')[0].trim();
     }
+    // Helper to get boss color class based on zone
+    const getBossColorClass = (zone) => {
+        if (!zone) return '';
+        const zoneLower = zone.toLowerCase();
+        if (dungeons.some(d => zoneLower.includes(d.toLowerCase()))) return 'text-wow-rare'; // blue
+        if (raids.some(r => zoneLower.includes(r.toLowerCase()))) return 'text-wow-epic'; // purple
+        return '';
+    };
     // Pattern: Any source containing "Badge of Justice" with a number -> show badge count
     const badgeMatch = source.match(/(\d+)\s*x?\s*-?\s*Badge[s]?\s*(of\s*Justice)?/i);
     if (badgeMatch || source.toLowerCase().includes('badge of justice')) {
@@ -785,17 +810,29 @@ function generateSourceCell(source) {
             return `<a href="https://tbc.wowhead.com/quest=${qId}" data-wowhead="quest=${qId}" class="underline hover:text-terminal-text">${displayQuestName}</a>`;
         }
     }
-    // If we identified a boss name, try to link it (but display full source)
-    if (bossName) {
+    // If we identified a boss name, try to link it with color coding
+    if (bossName && zoneName) {
+        const colorClass = getBossColorClass(zoneName);
+        const isRaid = raids.some(r => zoneName.toLowerCase().includes(r.toLowerCase()));
+        const isDungeon = dungeons.some(d => zoneName.toLowerCase().includes(d.toLowerCase()));
+        const skullPrefix = (isRaid || isDungeon) ? '💀 ' : '';
         const npcId = npcMap[bossName] || npcMap[bossName.replace(/'/g, "\\'")] || 0;
+        const bossDisplay = bossZoneMatch ? bossZoneMatch[1].trim() : bossName;
         if (npcId > 0) {
-            return `<a href="https://tbc.wowhead.com/npc=${npcId}" class="underline hover:text-terminal-text">${displayText}</a>`;
+            return `${skullPrefix}<a href="https://tbc.wowhead.com/npc=${npcId}" class="underline ${colorClass}">${bossDisplay}</a><span class="text-terminal-dim"> - ${zoneName}</span>`;
         }
         // Check if boss name is in npcMap with different quote escaping
         for (const [npcName, id] of Object.entries(npcMap)) {
             if (npcName.toLowerCase() === bossName.toLowerCase() && id > 0) {
-                return `<a href="https://tbc.wowhead.com/npc=${id}" class="underline hover:text-terminal-text">${displayText}</a>`;
+                return `${skullPrefix}<a href="https://tbc.wowhead.com/npc=${id}" class="underline ${colorClass}">${bossDisplay}</a><span class="text-terminal-dim"> - ${zoneName}</span>`;
             }
+        }
+        return `${skullPrefix}<span class="${colorClass}">${bossDisplay}</span><span class="text-terminal-dim"> - ${zoneName}</span>`;
+    }
+    if (bossName) {
+        const npcId = npcMap[bossName] || npcMap[bossName.replace(/'/g, "\\'")] || 0;
+        if (npcId > 0) {
+            return `<a href="https://tbc.wowhead.com/npc=${npcId}" class="underline hover:text-terminal-text">${displayText}</a>`;
         }
         return displayText;
     }
