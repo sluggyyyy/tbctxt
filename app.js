@@ -1960,8 +1960,8 @@ function attachEventListeners(specData) {
             const newSpec = this.getAttribute('data-spec');
             if (newSpec !== currentSpec) {
                 currentSpec = newSpec;
-                currentPhase = 1;
-                window.location.hash = `#${currentClass}/${newSpec}`;
+                // Keep the current phase when switching specs
+                window.location.hash = `#${currentClass}/${newSpec}/${currentPhase}`;
             }
         });
     });
