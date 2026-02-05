@@ -413,7 +413,121 @@ function getItemQuality(itemName) {
 function processItemLinks() {
     if (typeof $WowheadPower !== 'undefined') {
         $WowheadPower.refreshLinks();
+        // Update item qualities from Wowhead tooltips after they load
+        setTimeout(updateItemQualitiesFromWowhead, 50);
     }
+}
+
+// Quality mapping from Wowhead's q-classes
+const WOWHEAD_QUALITY_MAP = {
+    'q0': 'poor',      // Gray
+    'q1': 'common',    // White
+    'q2': 'uncommon',  // Green
+    'q3': 'rare',      // Blue
+    'q4': 'epic',      // Purple
+    'q5': 'legendary', // Orange
+    'q6': 'artifact',  // Light gold
+    'q7': 'heirloom'   // Light gold
+};
+
+// Extract quality from Wowhead tooltip HTML
+function extractQualityFromTooltip(tooltipHtml) {
+    if (!tooltipHtml) return null;
+    // Wowhead tooltips have the item name in a <b class="qX"> tag
+    const match = tooltipHtml.match(/<b class="(q[0-7])"/);
+    if (match && WOWHEAD_QUALITY_MAP[match[1]]) {
+        return WOWHEAD_QUALITY_MAP[match[1]];
+    }
+    return null;
+}
+
+// Cache for fetched item qualities
+const itemQualityCache = {};
+let qualityFetchInProgress = false;
+
+// Update item quality colors from Wowhead tooltip data
+async function updateItemQualitiesFromWowhead() {
+    if (qualityFetchInProgress) return;
+    qualityFetchInProgress = true;
+    const itemSpans = document.querySelectorAll('span[data-item-id]');
+
+    // Collect unique item IDs that need fetching
+    const itemsToFetch = [];
+    itemSpans.forEach(span => {
+        const itemId = span.getAttribute('data-item-id');
+        if (itemId && !span.getAttribute('data-quality-updated') && !itemQualityCache[itemId]) {
+            itemsToFetch.push({ itemId, span });
+        }
+    });
+
+    if (itemsToFetch.length === 0) {
+        qualityFetchInProgress = false;
+        return;
+    }
+
+    // Fetch tooltips and update qualities (batch of 10 at a time to avoid overwhelming)
+    const batchSize = 10;
+    for (let i = 0; i < itemsToFetch.length; i += batchSize) {
+        const batch = itemsToFetch.slice(i, i + batchSize);
+        await Promise.all(batch.map(async ({ itemId, span }) => {
+            try {
+                // Check cache first
+                if (itemQualityCache[itemId]) {
+                    updateSpanQuality(span, itemQualityCache[itemId]);
+                    span.setAttribute('data-quality-updated', 'true');
+                    return;
+                }
+
+                // Check if tooltip is already cached from raid-ready page
+                if (typeof capturedTooltips !== 'undefined' && capturedTooltips[itemId]) {
+                    const quality = extractQualityFromTooltip(capturedTooltips[itemId]);
+                    if (quality) {
+                        itemQualityCache[itemId] = quality;
+                        updateSpanQuality(span, quality);
+                        span.setAttribute('data-quality-updated', 'true');
+                    }
+                    return;
+                }
+
+                // Fetch from Wowhead API
+                const tooltip = await fetchTooltipDirect(itemId);
+                if (tooltip) {
+                    const quality = extractQualityFromTooltip(tooltip);
+                    if (quality) {
+                        itemQualityCache[itemId] = quality;
+                        updateSpanQuality(span, quality);
+                        span.setAttribute('data-quality-updated', 'true');
+                    }
+                }
+            } catch (e) {
+                console.log('[QUALITY] Error fetching quality for', itemId, e);
+            }
+        }));
+    }
+    qualityFetchInProgress = false;
+}
+
+// Get quality from RGB color value
+function getQualityFromColor(color) {
+    // Wowhead quality colors (approximate RGB)
+    const colorMap = {
+        'rgb(163, 53, 238)': 'epic',      // Purple
+        'rgb(0, 112, 221)': 'rare',        // Blue
+        'rgb(30, 255, 0)': 'uncommon',     // Green
+        'rgb(255, 128, 0)': 'legendary',   // Orange
+        'rgb(157, 157, 157)': 'poor',      // Gray
+        'rgb(255, 255, 255)': 'common'     // White
+    };
+    return colorMap[color] || null;
+}
+
+// Update span's quality class
+function updateSpanQuality(span, newQuality) {
+    // Remove existing quality class
+    const classes = span.className.split(' ');
+    const filteredClasses = classes.filter(c => !c.startsWith('item-quality-'));
+    filteredClasses.push(`item-quality-${newQuality}`);
+    span.className = filteredClasses.join(' ');
 }
 // Helper function to generate item cell HTML (reduces duplication)
 // Spell IDs for enchants (TBC wowhead uses spells, not items for enchants)
@@ -461,7 +575,9 @@ function generateItemCell(itemName) {
             } else {
                 link = displayName;
             }
-            return `<span class="item-quality-${quality}">${link}${priorityBadge}</span>`;
+            // Add data-item-id for Wowhead quality updates (only for items, not enchants)
+            const dataAttr = itemId ? ` data-item-id="${itemId}"` : '';
+            return `<span class="item-quality-${quality}"${dataAttr}>${link}${priorityBadge}</span>`;
         }).join(' / ');
     }
     const quality = getItemQuality(itemName);
@@ -479,7 +595,9 @@ function generateItemCell(itemName) {
     } else {
         link = displayName;
     }
-    return `<span class="item-quality-${quality}">${link}${priorityBadge}</span>`;
+    // Add data-item-id for Wowhead quality updates (only for items, not enchants)
+    const dataAttr = itemId ? ` data-item-id="${itemId}"` : '';
+    return `<span class="item-quality-${quality}"${dataAttr}>${link}${priorityBadge}</span>`;
 }
 // Helper function to process source text and create wowhead NPC/quest links
 function generateSourceCell(source) {
@@ -1039,6 +1157,7 @@ function renderRaidsContent() {
         // Reinitialize wowhead tooltips
         if (typeof $WowheadPower !== 'undefined' && $WowheadPower.refreshLinks) {
             $WowheadPower.refreshLinks();
+            setTimeout(updateItemQualitiesFromWowhead, 50);
         }
     }, 200);
 }
@@ -1096,6 +1215,7 @@ function renderCollectionsContent(category = 'mounts') {
         });
         if (typeof $WowheadPower !== 'undefined' && $WowheadPower.refreshLinks) {
             $WowheadPower.refreshLinks();
+            setTimeout(updateItemQualitiesFromWowhead, 50);
         }
     }, 200);
 }
@@ -1499,6 +1619,7 @@ function renderAttunementsContent(attunementKey = 'karazhan') {
         attachAttunementListeners();
         if (typeof $WowheadPower !== 'undefined' && $WowheadPower.refreshLinks) {
             $WowheadPower.refreshLinks();
+            setTimeout(updateItemQualitiesFromWowhead, 50);
         }
     }, FADE_TRANSITION_MS);
 }
@@ -1740,6 +1861,7 @@ function renderRecipesContent() {
         // Reinitialize wowhead tooltips
         if (typeof $WowheadPower !== 'undefined' && $WowheadPower.refreshLinks) {
             $WowheadPower.refreshLinks();
+            setTimeout(updateItemQualitiesFromWowhead, 50);
         }
     }, FADE_TRANSITION_MS);
 }
@@ -3003,6 +3125,7 @@ async function updateGearPreview() {
     // Refresh Wowhead tooltips
     if (typeof $WowheadPower !== 'undefined' && $WowheadPower.refreshLinks) {
         $WowheadPower.refreshLinks();
+        setTimeout(updateItemQualitiesFromWowhead, 50);
     }
 }
 
