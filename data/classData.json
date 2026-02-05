@@ -5320,6 +5320,11 @@
                                 "Kil'jaeden"
                             ],
                             [
+                                "MELEE WEAPON",
+                                "Crux of the Apocalypse",
+                                "Kil'jaeden"
+                            ],
+                            [
                                 "RANGED WEAPON",
                                 "Thori'dal, the Stars' Fury",
                                 "Kil'jaeden"
@@ -23357,47 +23362,47 @@
                     "Spirit"
                 ],
                 "rotation": {
-                    "description": "Arcane Mages have the highest burst DPS in TBC but are mana-intensive. Requires good mana management.",
+                    "description": "Arcane Mages have the highest burst DPS in TBC but are extremely mana-intensive. Success depends on ending fights at exactly 0 mana.",
                     "priority": [
                         {
                             "name": "Arcane Blast",
                             "spellId": 30451,
-                            "description": "Spam during burn phase (3 stacks then frostbolt)"
+                            "description": "Primary nuke - stacks debuff up to 3x increasing damage and mana cost"
                         },
                         {
                             "name": "Frostbolt",
                             "spellId": 27072,
-                            "description": "Filler during mana conservation phase"
-                        },
-                        {
-                            "name": "Arcane Missiles",
-                            "spellId": 27075,
-                            "description": "Use Missile Barrage procs if talented"
+                            "description": "Filler spell - 3 casts resets Arcane Blast debuff stacks"
                         }
                     ],
                     "cooldowns": [
                         {
                             "name": "Arcane Power",
                             "spellId": 12042,
-                            "description": "30% damage boost - use with Icy Veins"
+                            "description": "30% damage, 30% mana cost for 15s - stack with Icy Veins"
                         },
                         {
                             "name": "Presence of Mind",
                             "spellId": 12043,
-                            "description": "Instant cast next spell - pair with Arcane Blast"
+                            "description": "Instant cast next spell - use with Arcane Blast at 3 stacks"
                         },
                         {
                             "name": "Icy Veins",
                             "spellId": 12472,
-                            "description": "20% haste - stack with Arcane Power"
+                            "description": "20% spell haste for 20s - use with Arcane Power"
                         },
                         {
                             "name": "Cold Snap",
                             "spellId": 11958,
-                            "description": "Resets Icy Veins - double IV window"
+                            "description": "Resets Icy Veins CD - enables double burn window"
+                        },
+                        {
+                            "name": "Evocation",
+                            "spellId": 12051,
+                            "description": "Channel to regen 60% mana over 8s - use between burn phases"
                         }
                     ],
-                    "notes": "BURN PHASE: Pop all CDs, spam Arcane Blast until OOM. CONSERVE PHASE: 3x Arcane Blast → 3x Frostbolt rotation. Use Mage Armor for mana regen. Evocate when safe. Super Mana Potion on CD."
+                    "notes": "BURN PHASE: Icy Veins + Arcane Power + PoM, spam Arcane Blast until low mana. Cold Snap for second Icy Veins. CONSERVE PHASE: 3x Arcane Blast then 3x Frostbolt to reset debuff stacks. Use Mana Gems, Super Mana Potions, request Innervate/Mana Tide. Pre-stack AB debuff before pull. Use Mage Armor for mana regen."
                 },
                 "talents": [
                     {

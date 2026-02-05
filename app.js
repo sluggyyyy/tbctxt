@@ -876,6 +876,7 @@ function generateBisTable(bisData, specData) {
         '2-HANDER': ['Two-Handed Weapon', 'Weapon'],
         'DUAL WIELD - MH': ['Main Hand Weapon', 'One-Handed Weapons', 'Melee Weapon', 'Weapon'],
         'DUAL WIELD - OH': ['Off Hand Weapon', 'Off-Hand'],
+        'MELEE WEAPON': ['Melee Weapon', 'Main Hand Weapon', 'Weapon'],
         'MELEE WEAPON 1': ['Melee Weapon', 'Main Hand Weapon', 'Weapon'],
         'MELEE WEAPON 2': ['Melee Weapon', 'Off Hand Weapon', 'Weapon'],
         'OFF-HAND': ['Off Hand Weapon', 'Off-Hand', 'Shield'],
