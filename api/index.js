@@ -277,7 +277,6 @@ async function handleCreateCheckoutSession(req, res) {
             const data = JSON.parse(body);
 
             const session = await stripe.checkout.sessions.create({
-                payment_method_types: ['card'],
                 line_items: [{
                     price_data: {
                         currency: 'usd',
@@ -285,21 +284,15 @@ async function handleCreateCheckoutSession(req, res) {
                             name: 'TBC.TXT Tip Jar',
                             description: 'Support the TBC PvE Database',
                         },
-                        custom_unit_amount: {
-                            enabled: true,
-                            minimum: 100,        // $1 minimum
-                            preset: 500,         // $5 default
-                        },
+                        unit_amount: 500, // $5
                     },
                     quantity: 1,
+                    adjustable_quantity: { enabled: true, minimum: 1, maximum: 100 },
                 }],
                 mode: 'payment',
                 submit_type: 'donate',
-                success_url: `${FRONTEND_URL}?donate=success#supporters`,
+                success_url: `${FRONTEND_URL}?donate=success`,
                 cancel_url: `${FRONTEND_URL}?donate=cancelled`,
-                metadata: {
-                    supporter_name: data.name || 'Anonymous'
-                }
             });
 
             return jsonResponse(res, { sessionId: session.id, url: session.url });
