@@ -47,11 +47,6 @@
               "name": "Sweeping Strikes",
               "spellId": 12328,
               "description": "Use before Whirlwind for AoE - hits additional target"
-            },
-            {
-              "name": "Bladestorm",
-              "spellId": 46924,
-              "description": "Major AoE cooldown if specced"
             }
           ],
           "notes": "Blood Frenzy debuff increases all physical damage to target by 4%. Keep Battle Shout up. Slam requires swing timer to use effectively without clipping auto-attacks."
@@ -404,7 +399,7 @@
                 "The Hound-Master"
               ],
               [
-                "NECK",
+                "TRINKET",
                 "Bloodlust Brooch (BEST)",
                 "41 Badges"
               ],
@@ -574,7 +569,7 @@
                 "Keli'dan the Breaker"
               ],
               [
-                "WEAPON",
+                "TRINKET",
                 "Bladefist's Breadth (EASY)",
                 "Cruel's Intentions"
               ],
@@ -1293,7 +1288,7 @@
                 "The Hound-Master"
               ],
               [
-                "NECK",
+                "TRINKET",
                 "Bloodlust Brooch (BEST)",
                 "41 Badges"
               ],
@@ -1463,7 +1458,7 @@
                 "Keli'dan the Breaker"
               ],
               [
-                "WEAPON",
+                "TRINKET",
                 "Bladefist's Breadth (EASY)",
                 "Cruel's Intentions"
               ],
@@ -2014,139 +2009,81 @@
         },
         "talents": [
           {
-            "name": "Build 1 (0/0/30)",
-            "dist": "0/0/30",
+            "name": "Standard Prot (12/5/44)",
+            "dist": "12/5/44",
             "trees": [
               {
                 "name": "Arms",
-                "talents": []
+                "talents": [
+                  {"name": "Improved Heroic Strike", "points": 3, "max": 3},
+                  {"name": "Deflection", "points": 5, "max": 5},
+                  {"name": "Improved Thunder Clap", "points": 3, "max": 3},
+                  {"name": "Impale", "points": 1, "max": 2}
+                ]
               },
               {
                 "name": "Fury",
-                "talents": []
+                "talents": [
+                  {"name": "Cruelty", "points": 5, "max": 5}
+                ]
               },
               {
                 "name": "Protection",
                 "talents": [
-                  {
-                    "name": "Anticipation",
-                    "points": 5,
-                    "max": 5
-                  },
-                  {
-                    "name": "Toughness",
-                    "points": 5,
-                    "max": 5
-                  },
-                  {
-                    "name": "Last Stand",
-                    "points": 1,
-                    "max": 1
-                  },
-                  {
-                    "name": "Defiance",
-                    "points": 3,
-                    "max": 3
-                  },
-                  {
-                    "name": "Shield Specialization",
-                    "points": 5,
-                    "max": 5
-                  },
-                  {
-                    "name": "Improved Sunder Armor",
-                    "points": 3,
-                    "max": 3
-                  },
-                  {
-                    "name": "Concussion Blow",
-                    "points": 1,
-                    "max": 1
-                  },
-                  {
-                    "name": "Improved Shield Block",
-                    "points": 1,
-                    "max": 1
-                  },
-                  {
-                    "name": "Improved Taunt",
-                    "points": 1,
-                    "max": 2
-                  },
-                  {
-                    "name": "One-Handed Weapon Specialization",
-                    "points": 5,
-                    "max": 5
-                  }
+                  {"name": "Anticipation", "points": 5, "max": 5},
+                  {"name": "Shield Specialization", "points": 5, "max": 5},
+                  {"name": "Toughness", "points": 5, "max": 5},
+                  {"name": "Last Stand", "points": 1, "max": 1},
+                  {"name": "Improved Shield Block", "points": 1, "max": 1},
+                  {"name": "Defiance", "points": 3, "max": 3},
+                  {"name": "Improved Sunder Armor", "points": 3, "max": 3},
+                  {"name": "Improved Taunt", "points": 2, "max": 2},
+                  {"name": "Concussion Blow", "points": 1, "max": 1},
+                  {"name": "Shield Slam", "points": 1, "max": 1},
+                  {"name": "One-Handed Weapon Specialization", "points": 5, "max": 5},
+                  {"name": "Focused Rage", "points": 3, "max": 3},
+                  {"name": "Vitality", "points": 5, "max": 5},
+                  {"name": "Devastate", "points": 1, "max": 1},
+                  {"name": "Improved Defensive Stance", "points": 3, "max": 3}
                 ]
               }
             ]
           },
           {
-            "name": "Build 2 (0/0/30)",
-            "dist": "0/0/30",
+            "name": "Impale Prot (5/15/41)",
+            "dist": "5/15/41",
             "trees": [
               {
                 "name": "Arms",
-                "talents": []
+                "talents": [
+                  {"name": "Deflection", "points": 5, "max": 5}
+                ]
               },
               {
                 "name": "Fury",
-                "talents": []
+                "talents": [
+                  {"name": "Cruelty", "points": 5, "max": 5},
+                  {"name": "Unbridled Wrath", "points": 5, "max": 5},
+                  {"name": "Commanding Presence", "points": 5, "max": 5}
+                ]
               },
               {
                 "name": "Protection",
                 "talents": [
-                  {
-                    "name": "Anticipation",
-                    "points": 5,
-                    "max": 5
-                  },
-                  {
-                    "name": "Toughness",
-                    "points": 5,
-                    "max": 5
-                  },
-                  {
-                    "name": "Defiance",
-                    "points": 3,
-                    "max": 3
-                  },
-                  {
-                    "name": "Last Stand",
-                    "points": 1,
-                    "max": 1
-                  },
-                  {
-                    "name": "Shield Specialization",
-                    "points": 5,
-                    "max": 5
-                  },
-                  {
-                    "name": "Improved Sunder Armor",
-                    "points": 3,
-                    "max": 3
-                  },
-                  {
-                    "name": "Concussion Blow",
-                    "points": 1,
-                    "max": 1
-                  },
-                  {
-                    "name": "Improved Shield Block",
-                    "points": 1,
-                    "max": 1
-                  },
-                  {
-                    "name": "Improved Taunt",
-                    "points": 1,
-                    "max": 2
-                  },
-                  {
-                    "name": "One-Handed Weapon Specialization",
-                    "points": 5,
-                    "max": 5
-                  }
+                  {"name": "Anticipation", "points": 5, "max": 5},
+                  {"name": "Shield Specialization", "points": 5, "max": 5},
+                  {"name": "Toughness", "points": 5, "max": 5},
+                  {"name": "Last Stand", "points": 1, "max": 1},
+                  {"name": "Improved Shield Block", "points": 1, "max": 1},
+                  {"name": "Defiance", "points": 3, "max": 3},
+                  {"name": "Improved Sunder Armor", "points": 3, "max": 3},
+                  {"name": "Concussion Blow", "points": 1, "max": 1},
+                  {"name": "Shield Slam", "points": 1, "max": 1},
+                  {"name": "One-Handed Weapon Specialization", "points": 5, "max": 5},
+                  {"name": "Focused Rage", "points": 3, "max": 3},
+                  {"name": "Vitality", "points": 5, "max": 5},
+                  {"name": "Devastate", "points": 1, "max": 1},
+                  {"name": "Improved Defensive Stance", "points": 2, "max": 3}
                 ]
               }
             ]
@@ -2371,7 +2308,7 @@
               ],
               [
                 "RING",
-                "Warbringer (OPTION)",
+                "Protector's Mark of the Redemption (OPTION)",
                 "Thrallmar"
               ],
               [
@@ -2921,10 +2858,6 @@
               "name": "Adrenaline Rush",
               "spellId": 13750,
               "description": "100% energy regen for 15s - use with Heroism"
-            },
-            {
-              "name": "Thistle Tea",
-              "description": "Instant 100 energy - use during Adrenaline Rush"
             }
           ],
           "notes": "Energy ticker addon is essential - never cap energy above 80. 1 CP S&D opener, then 5 CP finishers. Combat Swords or Combat Fists depending on weapon availability. Keep poisons up: Instant on MH, Deadly on OH."
@@ -3745,12 +3678,12 @@
               [
                 "HELM",
                 "Wastewalker Helm (BEST)",
-                "Epoch Hunterin HeroicOld Hillsbrad Foothills"
+                "Epoch Hunter"
               ],
               [
                 "HELM",
                 "Wastewalker Helm (BEST)",
-                "Epoch Hunterin HeroicOld Hillsbrad Foothills"
+                "Epoch Hunter"
               ],
               [
                 "HELM",
@@ -3763,7 +3696,7 @@
                 "Badges"
               ],
               [
-                "NECK",
+                "TRINKET",
                 "Bloodlust Brooch (BEST)",
                 "Badges"
               ],
@@ -3773,29 +3706,29 @@
                 "Badges"
               ],
               [
-                "NECK",
+                "TRINKET",
                 "Bloodlust Brooch (BEST)",
                 "Badges"
               ],
               [
                 "NECK",
                 "Bone Chain Necklace (BEST)",
-                "The Black StalkerinThe UnderbogGurok the Usurper"
+                "The Black Stalker"
               ],
               [
                 "SHOULDER",
                 "Wastewalker Shoulderpads (BEST)",
-                "Avatar of the Martyredin HeroicAuchenai Crypts"
+                "Avatar of the Martyred"
               ],
               [
                 "SHOULDER",
                 "Wastewalker Shoulderpads (BEST)",
-                "Avatar of the Martyredin HeroicAuchenai Crypts"
+                "Avatar of the Martyred"
               ],
               [
                 "SHOULDER",
                 "Expedition Scout's Epaulets (BEST)",
-                "Fel EmbersinThe Shattered HallsKurenai(Alliance) orThe Mag'har(Horde)"
+                "Fel Embers Quest"
               ],
               [
                 "CLOAK",
@@ -3820,12 +3753,12 @@
               [
                 "CHEST",
                 "Wastewalker Tunic (BEST)",
-                "Keli'dan the BreakerinThe Blood Furnace"
+                "Keli'dan the Breaker"
               ],
               [
                 "CHEST",
                 "Vest of Vengeance (BEST)",
-                "Keli'dan the Breakerin HeroicThe Blood Furnace"
+                "Keli'dan the Breaker (Heroic)"
               ],
               [
                 "BRACER",
@@ -3835,7 +3768,7 @@
               [
                 "BRACER",
                 "Nightfall Wristguards (BEST)",
-                "Epoch Hunterin HeroicOld Hillsbrad Foothills"
+                "Epoch Hunter"
               ],
               [
                 "BRACER",
@@ -3845,7 +3778,7 @@
               [
                 "GLOVES",
                 "Wastewalker Gloves (BEST)",
-                "Warchief Kargath BladefistinThe Shattered Halls"
+                "Warchief Kargath Bladefist"
               ],
               [
                 "GLOVES",
@@ -3855,7 +3788,7 @@
               [
                 "GLOVES",
                 "Handgrips of Assassination (BEST)",
-                "AeonusinThe Black Morass"
+                "Aeonus"
               ],
               [
                 "BELT",
@@ -3865,7 +3798,7 @@
               [
                 "BELT",
                 "Girdle of the Deathdealer (BEST)",
-                "Aeonusin HeroicThe Black Morass"
+                "Aeonus (Heroic)"
               ],
               [
                 "BELT",
@@ -3875,12 +3808,12 @@
               [
                 "LEGS",
                 "Wastewalker Leggings (BEST)",
-                "Nexus"
+                "Nexus-Prince Shaffar"
               ],
               [
                 "LEGS",
                 "Wastewalker Leggings (BEST)",
-                "Nexus"
+                "Nexus-Prince Shaffar"
               ],
               [
                 "LEGS",
@@ -3920,27 +3853,27 @@
               [
                 "TRINKET",
                 "Hourglass of the Unraveller (BEST)",
-                "TemporusinThe Black MorassKeli'dan the Breakerin HeroicThe Blood FurnaceAr'kelos the Guardian"
+                "Temporus"
               ],
               [
                 "WEAPON",
                 "The Bladefist (BEST)",
-                "Warchief Kargath Bladefistin HeroicThe Shattered HallsPathaleon the CalculatorinThe MechanarDalliah the DoomsayerinThe Arcatraz"
+                "Warchief Kargath Bladefist (Heroic)"
               ],
               [
                 "OFF-HAND",
                 "Latro's Shifting Sword (BEST)",
-                "AeonusinThe Black Morass"
+                "Aeonus"
               ],
               [
                 "OFF-HAND",
                 "Latro's Shifting Sword (BEST)",
-                "AeonusinThe Black Morass"
+                "Aeonus"
               ],
               [
                 "OFF-HAND",
                 "Revenger (BEST)",
-                "Commander SarannisinThe Botanica"
+                "Commander Sarannis"
               ],
               [
                 "RANGED",
@@ -4661,12 +4594,12 @@
               [
                 "HELM",
                 "Beast Lord Helm (BEST)",
-                "Pathaleon the CalculatorinThe Mechanar"
+                "Pathaleon the Calculator"
               ],
               [
                 "HELM",
                 "Helm of the Claw (BEST)",
-                "Blacksmithing"
+                "Darkweaver Syth"
               ],
               [
                 "NECK",
@@ -4674,7 +4607,7 @@
                 "25 Badges"
               ],
               [
-                "NECK",
+                "TRINKET",
                 "Bloodlust Brooch (BEST)",
                 "41 Badges"
               ],
@@ -4686,7 +4619,7 @@
               [
                 "SHOULDER",
                 "Beast Lord Mantle (BEST)",
-                "Warlord KalithreshinThe Steamvault"
+                "Warlord Kalithresh"
               ],
               [
                 "SHOULDER",
@@ -4711,7 +4644,7 @@
               [
                 "CHEST",
                 "Beast Lord Cuirass (BEST)",
-                "Leatherworking"
+                "Warp Splinter"
               ],
               [
                 "BRACER",
@@ -4720,18 +4653,18 @@
               ],
               [
                 "BRACER",
-                "Nightfall Wristguards (BEST)",
+                "Felstalker Bracers (BEST)",
                 "Leatherworking"
               ],
               [
                 "GLOVES",
                 "Beast Lord Handguards (BEST)",
-                "Warchief Kargath BladefistinThe Shattered Halls"
+                "Warchief Kargath Bladefist"
               ],
               [
                 "GLOVES",
                 "Netherdrake Gloves (BEST)",
-                "Leatherworking"
+                "Harbinger Skyriss"
               ],
               [
                 "BELT",
@@ -4746,12 +4679,12 @@
               [
                 "LEGS",
                 "Beast Lord Leggings (BEST)",
-                "Warlord KalithreshinThe Steamvault"
+                "Warlord Kalithresh"
               ],
               [
                 "LEGS",
                 "Midnight Legguards (BEST)",
-                "Leatherworking"
+                "Quagmirran"
               ],
               [
                 "BOOTS",
@@ -4776,7 +4709,7 @@
               [
                 "RANGED",
                 "Wrathtide Longbow (BEST)",
-                "Warlord Kalithreshin HeroicThe Steamvault"
+                "Warlord Kalithresh (Heroic)"
               ],
               [
                 "RANGED",
@@ -4971,7 +4904,7 @@
               [
                 "NECK",
                 "Choker of Serrated Blades",
-                "Random drop"
+                "BoE World Drop"
               ],
               [
                 "SHOULDERS",
@@ -5061,7 +4994,7 @@
               [
                 "NECK",
                 "Choker of Serrated Blades",
-                "Random drop"
+                "BoE World Drop"
               ],
               [
                 "SHOULDERS",
@@ -5427,12 +5360,12 @@
               [
                 "HELM",
                 "Beast Lord Helm (BEST)",
-                "Pathaleon the CalculatorinThe Mechanar"
+                "Pathaleon the Calculator"
               ],
               [
                 "HELM",
                 "Helm of the Claw (BEST)",
-                "Blacksmithing"
+                "Darkweaver Syth"
               ],
               [
                 "NECK",
@@ -5440,7 +5373,7 @@
                 "25 Badges"
               ],
               [
-                "NECK",
+                "TRINKET",
                 "Bloodlust Brooch (BEST)",
                 "41 Badges"
               ],
@@ -5452,7 +5385,7 @@
               [
                 "SHOULDER",
                 "Beast Lord Mantle (BEST)",
-                "Warlord KalithreshinThe Steamvault"
+                "Warlord Kalithresh"
               ],
               [
                 "SHOULDER",
@@ -5477,7 +5410,7 @@
               [
                 "CHEST",
                 "Beast Lord Cuirass (BEST)",
-                "Leatherworking"
+                "Warp Splinter"
               ],
               [
                 "BRACER",
@@ -5486,18 +5419,18 @@
               ],
               [
                 "BRACER",
-                "Nightfall Wristguards (BEST)",
+                "Felstalker Bracers (BEST)",
                 "Leatherworking"
               ],
               [
                 "GLOVES",
                 "Beast Lord Handguards (BEST)",
-                "Warchief Kargath BladefistinThe Shattered Halls"
+                "Warchief Kargath Bladefist"
               ],
               [
                 "GLOVES",
                 "Netherdrake Gloves (BEST)",
-                "Leatherworking"
+                "Harbinger Skyriss"
               ],
               [
                 "BELT",
@@ -5512,12 +5445,12 @@
               [
                 "LEGS",
                 "Beast Lord Leggings (BEST)",
-                "Warlord KalithreshinThe Steamvault"
+                "Warlord Kalithresh"
               ],
               [
                 "LEGS",
                 "Midnight Legguards (BEST)",
-                "Leatherworking"
+                "Quagmirran"
               ],
               [
                 "BOOTS",
@@ -5542,7 +5475,7 @@
               [
                 "RANGED",
                 "Wrathtide Longbow (BEST)",
-                "Warlord Kalithreshin HeroicThe Steamvault"
+                "Warlord Kalithresh (Heroic)"
               ],
               [
                 "RANGED",
@@ -5737,7 +5670,7 @@
               [
                 "NECK",
                 "Choker of Serrated Blades",
-                "Random drop"
+                "BoE World Drop"
               ],
               [
                 "SHOULDERS",
@@ -5827,7 +5760,7 @@
               [
                 "NECK",
                 "Choker of Serrated Blades",
-                "Random drop"
+                "BoE World Drop"
               ],
               [
                 "SHOULDERS",
@@ -6041,8 +5974,8 @@
         },
         "talents": [
           {
-            "name": "Build 1 (0/0/35)",
-            "dist": "0/0/35",
+            "name": "Expose Weakness (0/20/41)",
+            "dist": "0/20/41",
             "trees": [
               {
                 "name": "Beast Mastery",
@@ -6050,71 +5983,31 @@
               },
               {
                 "name": "Marksmanship",
-                "talents": []
+                "talents": [
+                  {"name": "Lethal Shots", "points": 5, "max": 5},
+                  {"name": "Go for the Throat", "points": 2, "max": 2},
+                  {"name": "Aimed Shot", "points": 1, "max": 1},
+                  {"name": "Rapid Killing", "points": 2, "max": 2},
+                  {"name": "Mortal Shots", "points": 5, "max": 5},
+                  {"name": "Improved Hunter's Mark", "points": 5, "max": 5}
+                ]
               },
               {
                 "name": "Survival",
                 "talents": [
-                  {
-                    "name": "Hawk Eye",
-                    "points": 3,
-                    "max": 3
-                  },
-                  {
-                    "name": "Humanoid Slaying",
-                    "points": 3,
-                    "max": 3
-                  },
-                  {
-                    "name": "Monster Slaying",
-                    "points": 3,
-                    "max": 3
-                  },
-                  {
-                    "name": "Survivalist",
-                    "points": 5,
-                    "max": 5
-                  },
-                  {
-                    "name": "Surefooted",
-                    "points": 3,
-                    "max": 3
-                  },
-                  {
-                    "name": "Savage Strikes",
-                    "points": 2,
-                    "max": 2
-                  },
-                  {
-                    "name": "Deterrence",
-                    "points": 1,
-                    "max": 1
-                  },
-                  {
-                    "name": "Killer Instinct",
-                    "points": 3,
-                    "max": 3
-                  },
-                  {
-                    "name": "Survival Instincts",
-                    "points": 2,
-                    "max": 2
-                  },
-                  {
-                    "name": "Lightning Reflexes",
-                    "points": 5,
-                    "max": 5
-                  },
-                  {
-                    "name": "Expose Weakness",
-                    "points": 3,
-                    "max": 3
-                  },
-                  {
-                    "name": "Thrill of the Hunt",
-                    "points": 2,
-                    "max": 3
-                  }
+                  {"name": "Hawk Eye", "points": 3, "max": 3},
+                  {"name": "Savage Strikes", "points": 2, "max": 2},
+                  {"name": "Monster Slaying", "points": 3, "max": 3},
+                  {"name": "Humanoid Slaying", "points": 3, "max": 3},
+                  {"name": "Deflection", "points": 3, "max": 5},
+                  {"name": "Surefooted", "points": 3, "max": 3},
+                  {"name": "Survivalist", "points": 5, "max": 5},
+                  {"name": "Killer Instinct", "points": 3, "max": 3},
+                  {"name": "Lightning Reflexes", "points": 5, "max": 5},
+                  {"name": "Thrill of the Hunt", "points": 3, "max": 3},
+                  {"name": "Expose Weakness", "points": 3, "max": 3},
+                  {"name": "Master Tactician", "points": 5, "max": 5},
+                  {"name": "Readiness", "points": 1, "max": 1}
                 ]
               }
             ]
@@ -6146,20 +6039,20 @@
               [
                 "HELM",
                 "Beast Lord Helm (BEST)",
-                "Pathaleon the CalculatorinThe Mechanar"
+                "Pathaleon the Calculator"
               ],
               [
                 "HELM",
                 "Helm of the Claw (BEST)",
-                "Blacksmithing"
+                "Darkweaver Syth"
               ],
               [
                 "NECK",
                 "Jagged Bark Pendant (BEST)",
-                "Warp SplinterinThe Botanica"
+                "Warp Splinter"
               ],
               [
-                "NECK",
+                "TRINKET",
                 "Bloodlust Brooch (BEST)",
                 "41 Badges"
               ],
@@ -6171,7 +6064,7 @@
               [
                 "SHOULDER",
                 "Beast Lord Mantle (BEST)",
-                "Warlord KalithreshinThe Steamvault"
+                "Warlord Kalithresh"
               ],
               [
                 "SHOULDER",
@@ -6191,7 +6084,7 @@
               [
                 "CHEST",
                 "Beast Lord Cuirass (BEST)",
-                "Warp SplinterinThe Botanica"
+                "Warp Splinter"
               ],
               [
                 "CHEST",
@@ -6205,23 +6098,23 @@
               ],
               [
                 "BRACER",
-                "Nightfall Wristguards (BEST)",
+                "Felstalker Bracers (BEST)",
                 "Leatherworking"
               ],
               [
                 "GLOVES",
                 "Beast Lord Handguards (BEST)",
-                "Warchief Kargath BladefistinThe Shattered Halls"
+                "Warchief Kargath Bladefist"
               ],
               [
                 "GLOVES",
                 "Netherdrake Gloves (BEST)",
-                "Leatherworking"
+                "Harbinger Skyriss"
               ],
               [
                 "BELT",
                 "Dunewind Sash (BEST)",
-                "Ghaz'anin HeroicThe Underbog"
+                "Ghaz'an (Heroic)"
               ],
               [
                 "BELT",
@@ -6231,17 +6124,17 @@
               [
                 "LEGS",
                 "Wastewalker Leggings (BEST)",
-                "Nexus"
+                "Nexus-Prince Shaffar"
               ],
               [
                 "LEGS",
                 "Beast Lord Leggings (BEST)",
-                "Leatherworking"
+                "Warlord Kalithresh"
               ],
               [
                 "BOOTS",
                 "Shadowstep Striders (BEST)",
-                "Harbinger Skyrissin HeroicArcatraz"
+                "Harbinger Skyriss (Heroic)"
               ],
               [
                 "BOOTS",
@@ -6261,7 +6154,7 @@
               [
                 "RANGED",
                 "Wrathtide Longbow (BEST)",
-                "Warlord Kalithreshin HeroicThe Steamvault"
+                "Warlord Kalithresh (Heroic)"
               ],
               [
                 "RANGED",
@@ -7996,7 +7889,7 @@
               ],
               [
                 "RING",
-                "Warbringer (BEST)",
+                "Protector's Mark of the Redemption (BEST)",
                 "Honor Hold"
               ],
               [
@@ -8516,90 +8409,42 @@
         },
         "talents": [
           {
-            "name": "Build 1 (0/0/39)",
-            "dist": "0/0/39",
+            "name": "Standard Ret (5/11/45)",
+            "dist": "5/11/45",
             "trees": [
               {
                 "name": "Holy",
-                "talents": []
+                "talents": [
+                  {"name": "Divine Strength", "points": 5, "max": 5}
+                ]
               },
               {
                 "name": "Protection",
-                "talents": []
+                "talents": [
+                  {"name": "Improved Devotion Aura", "points": 5, "max": 5},
+                  {"name": "Precision", "points": 3, "max": 3},
+                  {"name": "Guardian's Favor", "points": 2, "max": 2},
+                  {"name": "Blessing of Kings", "points": 1, "max": 1}
+                ]
               },
               {
                 "name": "Retribution",
                 "talents": [
-                  {
-                    "name": "Benediction",
-                    "points": 5,
-                    "max": 5
-                  },
-                  {
-                    "name": "Improved Seal of the Crusader",
-                    "points": 3,
-                    "max": 3
-                  },
-                  {
-                    "name": "Improved Judgement",
-                    "points": 2,
-                    "max": 2
-                  },
-                  {
-                    "name": "Conviction",
-                    "points": 5,
-                    "max": 5
-                  },
-                  {
-                    "name": "Seal of Command",
-                    "points": 1,
-                    "max": 1
-                  },
-                  {
-                    "name": "Pursuit of Justice",
-                    "points": 2,
-                    "max": 3
-                  },
-                  {
-                    "name": "Crusade",
-                    "points": 3,
-                    "max": 3
-                  },
-                  {
-                    "name": "Sanctity Aura",
-                    "points": 1,
-                    "max": 1
-                  },
-                  {
-                    "name": "Two-Handed Weapon Specialization",
-                    "points": 3,
-                    "max": 3
-                  },
-                  {
-                    "name": "Improved Sanctity Aura",
-                    "points": 2,
-                    "max": 2
-                  },
-                  {
-                    "name": "Vengeance",
-                    "points": 5,
-                    "max": 5
-                  },
-                  {
-                    "name": "Sanctified Judgement",
-                    "points": 3,
-                    "max": 3
-                  },
-                  {
-                    "name": "Repentance",
-                    "points": 1,
-                    "max": 1
-                  },
-                  {
-                    "name": "Sanctified Seals",
-                    "points": 3,
-                    "max": 3
-                  }
+                  {"name": "Benediction", "points": 5, "max": 5},
+                  {"name": "Improved Judgement", "points": 2, "max": 2},
+                  {"name": "Improved Seal of the Crusader", "points": 3, "max": 3},
+                  {"name": "Conviction", "points": 5, "max": 5},
+                  {"name": "Seal of Command", "points": 1, "max": 1},
+                  {"name": "Pursuit of Justice", "points": 2, "max": 2},
+                  {"name": "Crusade", "points": 3, "max": 3},
+                  {"name": "Two-Handed Weapon Specialization", "points": 3, "max": 3},
+                  {"name": "Sanctity Aura", "points": 1, "max": 1},
+                  {"name": "Improved Sanctity Aura", "points": 2, "max": 2},
+                  {"name": "Vengeance", "points": 5, "max": 5},
+                  {"name": "Sanctified Judgement", "points": 3, "max": 3},
+                  {"name": "Sanctified Seals", "points": 3, "max": 3},
+                  {"name": "Fanaticism", "points": 5, "max": 5},
+                  {"name": "Crusader Strike", "points": 1, "max": 1}
                 ]
               }
             ]
@@ -8673,7 +8518,7 @@
                 "Consortium"
               ],
               [
-                "NECK",
+                "TRINKET",
                 "Bloodlust Brooch (BEST)",
                 "41 Badges"
               ],
@@ -9862,7 +9707,7 @@
                 "Cenarion Expedition"
               ],
               [
-                "HELM",
+                "BOOTS",
                 "Shattrath Jumpers (EASY)",
                 "Into the Heart of the Labyrinth"
               ],
@@ -10523,12 +10368,18 @@
         },
         "talents": [
           {
-            "name": "Build 1 (0/0/35)",
-            "dist": "0/0/35",
+            "name": "Standard Shadow (14/0/47)",
+            "dist": "14/0/47",
             "trees": [
               {
                 "name": "Discipline",
-                "talents": []
+                "talents": [
+                  {"name": "Unbreakable Will", "points": 5, "max": 5},
+                  {"name": "Improved Power Word: Fortitude", "points": 2, "max": 2},
+                  {"name": "Improved Power Word: Shield", "points": 3, "max": 3},
+                  {"name": "Meditation", "points": 3, "max": 3},
+                  {"name": "Inner Focus", "points": 1, "max": 1}
+                ]
               },
               {
                 "name": "Holy",
@@ -10537,66 +10388,22 @@
               {
                 "name": "Shadow",
                 "talents": [
-                  {
-                    "name": "Spirit Tap",
-                    "points": 5,
-                    "max": 5
-                  },
-                  {
-                    "name": "Improved Shadow Word: Pain",
-                    "points": 2,
-                    "max": 2
-                  },
-                  {
-                    "name": "Shadow Affinity",
-                    "points": 3,
-                    "max": 3
-                  },
-                  {
-                    "name": "Mind Flay",
-                    "points": 1,
-                    "max": 1
-                  },
-                  {
-                    "name": "Shadow Focus",
-                    "points": 4,
-                    "max": 5
-                  },
-                  {
-                    "name": "Shadow Reach",
-                    "points": 2,
-                    "max": 2
-                  },
-                  {
-                    "name": "Shadow Weaving",
-                    "points": 4,
-                    "max": 5
-                  },
-                  {
-                    "name": "Vampiric Embrace",
-                    "points": 1,
-                    "max": 1
-                  },
-                  {
-                    "name": "Focused Mind",
-                    "points": 3,
-                    "max": 3
-                  },
-                  {
-                    "name": "Darkness",
-                    "points": 5,
-                    "max": 5
-                  },
-                  {
-                    "name": "Shadowform",
-                    "points": 1,
-                    "max": 1
-                  },
-                  {
-                    "name": "Shadow Power",
-                    "points": 4,
-                    "max": 5
-                  }
+                  {"name": "Spirit Tap", "points": 3, "max": 5},
+                  {"name": "Blackout", "points": 2, "max": 5},
+                  {"name": "Shadow Affinity", "points": 3, "max": 3},
+                  {"name": "Improved Shadow Word: Pain", "points": 2, "max": 2},
+                  {"name": "Shadow Focus", "points": 5, "max": 5},
+                  {"name": "Mind Flay", "points": 1, "max": 1},
+                  {"name": "Shadow Reach", "points": 2, "max": 2},
+                  {"name": "Shadow Weaving", "points": 5, "max": 5},
+                  {"name": "Vampiric Embrace", "points": 1, "max": 1},
+                  {"name": "Improved Vampiric Embrace", "points": 2, "max": 2},
+                  {"name": "Focused Mind", "points": 3, "max": 3},
+                  {"name": "Darkness", "points": 5, "max": 5},
+                  {"name": "Shadowform", "points": 1, "max": 1},
+                  {"name": "Shadow Power", "points": 5, "max": 5},
+                  {"name": "Misery", "points": 5, "max": 5},
+                  {"name": "Vampiric Touch", "points": 1, "max": 1}
                 ]
               }
             ]
@@ -10630,10 +10437,6 @@
           {
             "name": "Cancel Shadowform (Heal)",
             "code": "#showtooltip Flash Heal\n/cancelaura Shadowform\n/cast [@mouseover,exists,help][@player] Flash Heal"
-          },
-          {
-            "name": "Dispersion",
-            "code": "#showtooltip Dispersion\n/cast Dispersion"
           }
         ],
         "enchants": {
@@ -10685,7 +10488,7 @@
                 "Teron Gorefiend, I am..."
               ],
               [
-                "HELM",
+                "BOOTS",
                 "Shattrath Jumpers (EASY)",
                 "Into the Heart of the Labyrinth"
               ],
@@ -10831,8 +10634,8 @@
               ],
               [
                 "RING",
-                "Cobalt Band of Tyrigosa (OPTION)",
-                "Nexus"
+                "Ashyen's Gift (OPTION)",
+                "Cenarion Expedition"
               ],
               [
                 "RING",
@@ -11764,8 +11567,8 @@
               ],
               [
                 "RINGS",
-                "Cobalt Band of Tyrigosa (OPTION)",
-                "Nexus"
+                "Ashyen's Gift (OPTION)",
+                "Cenarion Expedition"
               ],
               [
                 "RINGS",
@@ -13562,11 +13365,6 @@
               "name": "Earth Shield",
               "spellId": 32594,
               "description": "Keep on tank - heals when hit"
-            },
-            {
-              "name": "Riptide",
-              "spellId": 61301,
-              "description": "Instant HoT + boosts next Chain Heal (if talented)"
             }
           ],
           "cooldowns": [
@@ -18133,7 +17931,7 @@
               [
                 "LEGS",
                 "Forestwalker Kilt (OPTION)",
-                "Nexus"
+                "Nexus-Prince Shaffar"
               ],
               [
                 "FEET",
@@ -20738,7 +20536,7 @@
                 "Teron Gorefiend, I am..."
               ],
               [
-                "HELM",
+                "BOOTS",
                 "Shattrath Jumpers (EASY)",
                 "Into the Heart of the Labyrinth"
               ],
@@ -21607,7 +21405,7 @@
                 "Teron Gorefiend, I am..."
               ],
               [
-                "HELM",
+                "BOOTS",
                 "Shattrath Jumpers (EASY)",
                 "Into the Heart of the Labyrinth"
               ],
@@ -22298,8 +22096,8 @@
         },
         "talents": [
           {
-            "name": "Build 1 (0/19/35)",
-            "dist": "0/19/35",
+            "name": "Shadow Bolt Spam (0/21/40)",
+            "dist": "0/21/40",
             "trees": [
               {
                 "name": "Affliction",
@@ -22308,175 +22106,34 @@
               {
                 "name": "Demonology",
                 "talents": [
-                  {
-                    "name": "Demonic Embrace",
-                    "points": 5,
-                    "max": 5
-                  },
-                  {
-                    "name": "Improved Healthstone",
-                    "points": 2,
-                    "max": 2
-                  },
-                  {
-                    "name": "Fel Intellect",
-                    "points": 3,
-                    "max": 3
-                  },
-                  {
-                    "name": "Demonic Aegis",
-                    "points": 3,
-                    "max": 3
-                  },
-                  {
-                    "name": "Fel Stamina",
-                    "points": 3,
-                    "max": 3
-                  },
-                  {
-                    "name": "Fel Domination",
-                    "points": 1,
-                    "max": 1
-                  },
-                  {
-                    "name": "Master Summoner",
-                    "points": 2,
-                    "max": 2
-                  }
+                  {"name": "Demonic Embrace", "points": 5, "max": 5},
+                  {"name": "Improved Healthstone", "points": 2, "max": 2},
+                  {"name": "Fel Intellect", "points": 3, "max": 3},
+                  {"name": "Fel Stamina", "points": 3, "max": 3},
+                  {"name": "Demonic Aegis", "points": 3, "max": 3},
+                  {"name": "Fel Domination", "points": 1, "max": 1},
+                  {"name": "Master Summoner", "points": 2, "max": 2},
+                  {"name": "Demonic Sacrifice", "points": 1, "max": 1},
+                  {"name": "Master Demonologist", "points": 1, "max": 5}
                 ]
               },
               {
                 "name": "Destruction",
                 "talents": [
-                  {
-                    "name": "Improved Shadow Bolt",
-                    "points": 5,
-                    "max": 5
-                  },
-                  {
-                    "name": "Bane",
-                    "points": 5,
-                    "max": 5
-                  },
-                  {
-                    "name": "Devastation",
-                    "points": 5,
-                    "max": 5
-                  },
-                  {
-                    "name": "Shadowburn",
-                    "points": 1,
-                    "max": 1
-                  },
-                  {
-                    "name": "Destructive Reach",
-                    "points": 2,
-                    "max": 2
-                  },
-                  {
-                    "name": "Intensity",
-                    "points": 2,
-                    "max": 2
-                  },
-                  {
-                    "name": "Improved Immolate",
-                    "points": 5,
-                    "max": 5
-                  },
-                  {
-                    "name": "Emberstorm",
-                    "points": 5,
-                    "max": 5
-                  },
-                  {
-                    "name": "Backlash",
-                    "points": 3,
-                    "max": 3
-                  },
-                  {
-                    "name": "Conflagrate",
-                    "points": 1,
-                    "max": 1
-                  },
-                  {
-                    "name": "Ruin",
-                    "points": 1,
-                    "max": 1
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "name": "Build 2 (0/0/35)",
-            "dist": "0/0/35",
-            "trees": [
-              {
-                "name": "Affliction",
-                "talents": []
-              },
-              {
-                "name": "Demonology",
-                "talents": []
-              },
-              {
-                "name": "Destruction",
-                "talents": [
-                  {
-                    "name": "Improved Shadow Bolt",
-                    "points": 5,
-                    "max": 5
-                  },
-                  {
-                    "name": "Bane",
-                    "points": 5,
-                    "max": 5
-                  },
-                  {
-                    "name": "Devastation",
-                    "points": 5,
-                    "max": 5
-                  },
-                  {
-                    "name": "Shadowburn",
-                    "points": 1,
-                    "max": 1
-                  },
-                  {
-                    "name": "Intensity",
-                    "points": 2,
-                    "max": 2
-                  },
-                  {
-                    "name": "Destructive Reach",
-                    "points": 2,
-                    "max": 2
-                  },
-                  {
-                    "name": "Ruin",
-                    "points": 1,
-                    "max": 1
-                  },
-                  {
-                    "name": "Cataclysm",
-                    "points": 5,
-                    "max": 5
-                  },
-                  {
-                    "name": "Nether Protection",
-                    "points": 3,
-                    "max": 3
-                  },
-                  {
-                    "name": "Emberstorm",
-                    "points": 3,
-                    "max": 5
-                  },
-                  {
-                    "name": "Backlash",
-                    "points": 3,
-                    "max": 3
-                  }
+                  {"name": "Improved Shadow Bolt", "points": 5, "max": 5},
+                  {"name": "Bane", "points": 5, "max": 5},
+                  {"name": "Devastation", "points": 5, "max": 5},
+                  {"name": "Shadowburn", "points": 1, "max": 1},
+                  {"name": "Intensity", "points": 2, "max": 2},
+                  {"name": "Destructive Reach", "points": 2, "max": 2},
+                  {"name": "Ruin", "points": 1, "max": 1},
+                  {"name": "Nether Protection", "points": 3, "max": 3},
+                  {"name": "Emberstorm", "points": 5, "max": 5},
+                  {"name": "Backlash", "points": 3, "max": 3},
+                  {"name": "Conflagrate", "points": 1, "max": 1},
+                  {"name": "Shadow and Flame", "points": 5, "max": 5},
+                  {"name": "Shadowfury", "points": 1, "max": 1},
+                  {"name": "Soul Leech", "points": 1, "max": 3}
                 ]
               }
             ]
@@ -23512,7 +23169,7 @@
               [
                 "SHOULDERS",
                 "Fel-tinged Mantle (RECOMMENDED)",
-                "Vexallus in Heroic Magister's Terrace"
+                "Vexallus (Heroic)"
               ],
               [
                 "SHOULDERS",
@@ -23557,7 +23214,7 @@
               [
                 "CHEST",
                 "Scarlet Sin'dorei Robes (RECOMMENDED)",
-                "Kael'thas Sunstrider in Heroic Magister's Terrace"
+                "Kael'thas Sunstrider (Heroic MgT)"
               ],
               [
                 "CHEST",
@@ -23697,7 +23354,7 @@
               [
                 "TRINKETS",
                 "Quagmirran's Eye (RECOMMENDED)",
-                "Quagmirran in Heroic The Slave Pens"
+                "Quagmirran (Heroic)"
               ],
               [
                 "TRINKETS",
@@ -23732,7 +23389,7 @@
               [
                 "ONE-HANDED WEAPONS",
                 "Jaded Crystal Dagger (RECOMMENDED)",
-                "Selin Fireheart in Heroic Magister's Terrace"
+                "Selin Fireheart (Heroic)"
               ],
               [
                 "OFF-HAND",
@@ -23877,7 +23534,7 @@
               [
                 "TRINKETS",
                 "Quagmirran's Eye",
-                "Quagmirran in Heroic The Slave Pens"
+                "Quagmirran (Heroic)"
               ],
               [
                 "WEAPONS",
@@ -24916,7 +24573,7 @@
               [
                 "SHOULDERS",
                 "Fel-tinged Mantle (BEST)",
-                "Vexallus in Heroic Magister's Terrace"
+                "Vexallus (Heroic)"
               ],
               [
                 "BACK",
@@ -25011,12 +24668,12 @@
               [
                 "RINGS",
                 "Sparking Arcanite Ring (OPTION)",
-                "Epoch Hunter in Heroic Old Hillsbrad Foothills"
+                "Epoch Hunter (Heroic)"
               ],
               [
                 "TRINKETS",
                 "Quagmirran's Eye (BEST)",
-                "Quagmirran in Heroic The Slave Pens"
+                "Quagmirran (Heroic)"
               ],
               [
                 "TRINKETS",
@@ -25351,7 +25008,7 @@
               [
                 "TRINKETS",
                 "Hex Shrunken Head",
-                "Quagmirran in Heroic The Slave Pens"
+                "Quagmirran (Heroic)"
               ],
               [
                 "TRINKETS",
@@ -25506,7 +25163,7 @@
               [
                 "TRINKETS",
                 "Quagmirran's Eye",
-                "Quagmirran in Heroic The Slave Pens"
+                "Quagmirran (Heroic)"
               ],
               [
                 "TRINKETS",
@@ -25685,32 +25342,17 @@
         },
         "talents": [
           {
-            "name": "Build 1 (13/0/25)",
-            "dist": "13/0/25",
+            "name": "Deep Frost (18/0/43)",
+            "dist": "18/0/43",
             "trees": [
               {
                 "name": "Arcane",
                 "talents": [
-                  {
-                    "name": "Arcane Subtlety",
-                    "points": 2,
-                    "max": 2
-                  },
-                  {
-                    "name": "Arcane Focus",
-                    "points": 3,
-                    "max": 5
-                  },
-                  {
-                    "name": "Arcane Concentration",
-                    "points": 5,
-                    "max": 5
-                  },
-                  {
-                    "name": "Arcane Impact",
-                    "points": 3,
-                    "max": 3
-                  }
+                  {"name": "Arcane Subtlety", "points": 2, "max": 2},
+                  {"name": "Arcane Focus", "points": 5, "max": 5},
+                  {"name": "Arcane Concentration", "points": 5, "max": 5},
+                  {"name": "Arcane Meditation", "points": 3, "max": 3},
+                  {"name": "Arcane Impact", "points": 3, "max": 3}
                 ]
               },
               {
@@ -25720,51 +25362,20 @@
               {
                 "name": "Frost",
                 "talents": [
-                  {
-                    "name": "Elemental Precision",
-                    "points": 3,
-                    "max": 3
-                  },
-                  {
-                    "name": "Improved Frostbolt",
-                    "points": 5,
-                    "max": 5
-                  },
-                  {
-                    "name": "Ice Shards",
-                    "points": 5,
-                    "max": 5
-                  },
-                  {
-                    "name": "Piercing Ice",
-                    "points": 3,
-                    "max": 3
-                  },
-                  {
-                    "name": "Icy Veins",
-                    "points": 1,
-                    "max": 1
-                  },
-                  {
-                    "name": "Frost Channeling",
-                    "points": 3,
-                    "max": 3
-                  },
-                  {
-                    "name": "Arctic Reach",
-                    "points": 2,
-                    "max": 2
-                  },
-                  {
-                    "name": "Cold Snap",
-                    "points": 1,
-                    "max": 1
-                  },
-                  {
-                    "name": "Permafrost",
-                    "points": 2,
-                    "max": 3
-                  }
+                  {"name": "Elemental Precision", "points": 3, "max": 3},
+                  {"name": "Improved Frostbolt", "points": 5, "max": 5},
+                  {"name": "Ice Shards", "points": 5, "max": 5},
+                  {"name": "Piercing Ice", "points": 3, "max": 3},
+                  {"name": "Icy Veins", "points": 1, "max": 1},
+                  {"name": "Frost Channeling", "points": 3, "max": 3},
+                  {"name": "Arctic Reach", "points": 2, "max": 2},
+                  {"name": "Shatter", "points": 3, "max": 5},
+                  {"name": "Cold Snap", "points": 1, "max": 1},
+                  {"name": "Ice Floes", "points": 2, "max": 2},
+                  {"name": "Winter's Chill", "points": 5, "max": 5},
+                  {"name": "Arctic Winds", "points": 5, "max": 5},
+                  {"name": "Empowered Frostbolt", "points": 5, "max": 5},
+                  {"name": "Summon Water Elemental", "points": 1, "max": 1}
                 ]
               }
             ]
@@ -25864,7 +25475,7 @@
               [
                 "SHOULDERS",
                 "Fel-tinged Mantle (BEST)",
-                "Vexallus in Heroic Magister's Terrace"
+                "Vexallus (Heroic)"
               ],
               [
                 "BACK",
@@ -25959,12 +25570,12 @@
               [
                 "RINGS",
                 "Sparking Arcanite Ring (OPTION)",
-                "Epoch Hunter in Heroic Old Hillsbrad Foothills"
+                "Epoch Hunter (Heroic)"
               ],
               [
                 "TRINKETS",
                 "Quagmirran's Eye (BEST)",
-                "Quagmirran in Heroic The Slave Pens"
+                "Quagmirran (Heroic)"
               ],
               [
                 "TRINKETS",
@@ -26284,7 +25895,7 @@
               [
                 "TRINKETS",
                 "Hex Shrunken Head",
-                "Quagmirran in Heroic The Slave Pens"
+                "Quagmirran (Heroic)"
               ],
               [
                 "TRINKETS",
@@ -26429,7 +26040,7 @@
               [
                 "TRINKETS",
                 "Quagmirran's Eye",
-                "Quagmirran in Heroic The Slave Pens"
+                "Quagmirran (Heroic)"
               ],
               [
                 "TRINKETS",
