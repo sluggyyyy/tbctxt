@@ -3830,56 +3830,31 @@
                             [
                                 "HELM",
                                 "Wastewalker Helm (BEST)",
-                                "Epoch Hunter"
+                                "Epoch Hunter - Old Hillsbrad Foothills"
                             ],
                             [
                                 "HELM",
-                                "Wastewalker Helm (BEST)",
-                                "Epoch Hunter"
-                            ],
-                            [
-                                "HELM",
-                                "Helm of the Claw (BEST)",
-                                "The Warlord's Hideout"
+                                "Helm of the Claw",
+                                "The Warlord's Hideout Quest"
                             ],
                             [
                                 "NECK",
                                 "Choker of Vile Intent (BEST)",
-                                "Badges"
-                            ],
-                            [
-                                "TRINKET",
-                                "Bloodlust Brooch (BEST)",
-                                "Badges"
+                                "25 Badges of Justice"
                             ],
                             [
                                 "NECK",
-                                "Choker of Vile Intent (BEST)",
-                                "Badges"
-                            ],
-                            [
-                                "TRINKET",
-                                "Bloodlust Brooch (BEST)",
-                                "Badges"
-                            ],
-                            [
-                                "NECK",
-                                "Bone Chain Necklace (BEST)",
-                                "The Black Stalker"
+                                "Bone Chain Necklace",
+                                "The Black Stalker - The Underbog"
                             ],
                             [
                                 "SHOULDER",
                                 "Wastewalker Shoulderpads (BEST)",
-                                "Avatar of the Martyred"
+                                "Avatar of the Martyred - Auchenai Crypts"
                             ],
                             [
                                 "SHOULDER",
-                                "Wastewalker Shoulderpads (BEST)",
-                                "Avatar of the Martyred"
-                            ],
-                            [
-                                "SHOULDER",
-                                "Expedition Scout's Epaulets (BEST)",
+                                "Expedition Scout's Epaulets",
                                 "Fel Embers Quest"
                             ],
                             [
@@ -3889,13 +3864,8 @@
                             ],
                             [
                                 "CLOAK",
-                                "Vengeance Wrap (BEST)",
-                                "Tailoring"
-                            ],
-                            [
-                                "CLOAK",
-                                "Auchenai Death Shroud (BEST)",
-                                "BoE"
+                                "Auchenai Death Shroud",
+                                "BoE World Drop"
                             ],
                             [
                                 "CHEST",
@@ -3904,13 +3874,13 @@
                             ],
                             [
                                 "CHEST",
-                                "Wastewalker Tunic (BEST)",
-                                "Keli'dan the Breaker"
+                                "Wastewalker Tunic",
+                                "Keli'dan the Breaker - The Blood Furnace"
                             ],
                             [
                                 "CHEST",
-                                "Vest of Vengeance (BEST)",
-                                "Keli'dan the Breaker (Heroic)"
+                                "Vest of Vengeance",
+                                "Keli'dan the Breaker - Heroic Blood Furnace"
                             ],
                             [
                                 "BRACER",
@@ -3919,28 +3889,23 @@
                             ],
                             [
                                 "BRACER",
-                                "Nightfall Wristguards (BEST)",
-                                "Epoch Hunter"
-                            ],
-                            [
-                                "BRACER",
-                                "Spymistress's Wristguards (BEST)",
-                                "The Soul DevicesinShadow Labyrinth"
+                                "Spymistress's Wristguards",
+                                "The Soul Devices Quest - Shadow Labyrinth"
                             ],
                             [
                                 "GLOVES",
                                 "Wastewalker Gloves (BEST)",
-                                "Warchief Kargath Bladefist"
+                                "Warchief Kargath Bladefist - The Shattered Halls"
                             ],
                             [
                                 "GLOVES",
-                                "Fel Leather Gloves (BEST)",
+                                "Fel Leather Gloves",
                                 "Leatherworking"
                             ],
                             [
                                 "GLOVES",
-                                "Handgrips of Assassination (BEST)",
-                                "Aeonus"
+                                "Handgrips of Assassination",
+                                "Aeonus - The Black Morass"
                             ],
                             [
                                 "BELT",
@@ -3949,27 +3914,22 @@
                             ],
                             [
                                 "BELT",
-                                "Girdle of the Deathdealer (BEST)",
-                                "Aeonus (Heroic)"
+                                "Girdle of the Deathdealer",
+                                "Aeonus - Heroic Black Morass"
                             ],
                             [
                                 "BELT",
-                                "Socrethar's Girdle (BEST)",
-                                "Turning Point(The Scryers"
+                                "Socrethar's Girdle",
+                                "Turning Point Quest - The Scryers"
                             ],
                             [
                                 "LEGS",
                                 "Wastewalker Leggings (BEST)",
-                                "Nexus-Prince Shaffar"
+                                "Nexus-Prince Shaffar - Mana-Tombs"
                             ],
                             [
                                 "LEGS",
-                                "Wastewalker Leggings (BEST)",
-                                "Nexus-Prince Shaffar"
-                            ],
-                            [
-                                "LEGS",
-                                "Fel Leather Leggings (BEST)",
+                                "Fel Leather Leggings",
                                 "Leatherworking"
                             ],
                             [
@@ -3979,68 +3939,53 @@
                             ],
                             [
                                 "BOOTS",
-                                "Fel Leather Boots (BEST)",
-                                "Leatherworking"
+                                "The Master's Treads",
+                                "BoE World Drop"
                             ],
                             [
-                                "BOOTS",
-                                "The Master's Treads (BEST)",
-                                "BoE"
-                            ],
-                            [
-                                "RING",
+                                "RING 1",
                                 "Kaylaan's Signet (BEST)",
-                                "Lower City"
+                                "Lower City - Revered"
                             ],
                             [
-                                "RING",
-                                "Kaylaan's Signet (BEST)",
-                                "Lower City"
+                                "RING 2",
+                                "Band of Anguish",
+                                "Talon King Ikiss - Sethekk Halls"
                             ],
                             [
-                                "RING",
-                                "Band of Anguish (BEST)",
-                                "News of Victory(A) orNews of Victory(H)Talon King IkissinSethekk Halls"
+                                "TRINKET 1",
+                                "Bloodlust Brooch (BEST)",
+                                "41 Badges of Justice"
                             ],
                             [
-                                "TRINKET",
-                                "Hourglass of the Unraveller (BEST)",
-                                "Temporus"
+                                "TRINKET 2",
+                                "Hourglass of the Unraveller",
+                                "Temporus - The Black Morass"
                             ],
                             [
                                 "WEAPON",
                                 "The Bladefist (BEST)",
-                                "Warchief Kargath Bladefist (Heroic)"
+                                "Warchief Kargath Bladefist - Heroic Shattered Halls"
                             ],
                             [
                                 "OFF-HAND",
                                 "Latro's Shifting Sword (BEST)",
-                                "Aeonus"
+                                "Aeonus - The Black Morass"
                             ],
                             [
                                 "OFF-HAND",
-                                "Latro's Shifting Sword (BEST)",
-                                "Aeonus"
-                            ],
-                            [
-                                "OFF-HAND",
-                                "Revenger (BEST)",
-                                "Commander Sarannis"
+                                "Revenger",
+                                "Commander Sarannis - The Botanica"
                             ],
                             [
                                 "RANGED",
                                 "Veteran's Musket (BEST)",
-                                "Thrallmar"
+                                "Thrallmar/Honor Hold - Revered"
                             ],
                             [
                                 "RANGED",
-                                "Veteran's Musket (BEST)",
-                                "Thrallmar"
-                            ],
-                            [
-                                "RANGED",
-                                "Mama's Insurance (BEST)",
-                                "Declawing Doomclaw"
+                                "Mama's Insurance",
+                                "Declawing Doomclaw Quest"
                             ]
                         ]
                     },
@@ -4746,7 +4691,6 @@
                     "Legs": "Nethercobra Leg Armor",
                     "Feet": "Enchant Boots - Dexterity",
                     "One-Handed Weapons": "Enchant Weapon - Greater Agility",
-                    "Two-Handed Weapon": "Enchant 2H Weapon - Major Agility",
                     "Ranged Weapon": "Stabilized Eternium Scope"
                 },
                 "gems": [
@@ -22883,6 +22827,11 @@
                             [
                                 "OFF-HAND",
                                 "Flametongue Seal (BEST)",
+                                "25 Badges"
+                            ],
+                            [
+                                "OFF-HAND",
+                                "Orb of the Soul-Eater (BEST)",
                                 "25 Badges"
                             ],
                             [
