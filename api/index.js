@@ -276,18 +276,15 @@ async function handleCreateCheckoutSession(req, res) {
         try {
             const data = JSON.parse(body);
 
+            const priceId = process.env.STRIPE_PRICE_ID;
+            if (!priceId) {
+                return errorResponse(res, 'Stripe price not configured', 503);
+            }
+
             const session = await stripe.checkout.sessions.create({
                 line_items: [{
-                    price_data: {
-                        currency: 'usd',
-                        product_data: {
-                            name: 'TBC.TXT Tip Jar',
-                            description: 'Support the TBC PvE Database',
-                        },
-                        unit_amount: 500, // $5
-                    },
+                    price: priceId,
                     quantity: 1,
-                    adjustable_quantity: { enabled: true, minimum: 1, maximum: 100 },
                 }],
                 mode: 'payment',
                 submit_type: 'donate',
