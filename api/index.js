@@ -287,7 +287,6 @@ async function handleCreateCheckoutSession(req, res) {
                     quantity: 1,
                 }],
                 mode: 'payment',
-                submit_type: 'donate',
                 success_url: `${FRONTEND_URL}?donate=success`,
                 cancel_url: `${FRONTEND_URL}?donate=cancelled`,
             });
