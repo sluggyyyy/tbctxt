@@ -326,45 +326,29 @@ function getItemQuality(itemName) {
     // Legendary items
     const legendaryItems = ['warglaive of azzinoth', 'thori\'al', 'sulfuras'];
     if (legendaryItems.some(leg => name.includes(leg))) return 'legendary';
-    // Rare (blue) items - mostly pre-raid dungeon drops, badges, some crafted
-    const rareKeywords = [
-        'badge of justice',
-        'badge of tenacity',
-        'vindicator\'s',
-        'stalker\'s',
-        'savage',
-        'general\'s',
-        'marshal\'s',
-        'lieutenant commander\'s',
-        'champion\'s',
-        'centurion\'s',
-        'wastewalker',
-        'overlord\'s',
-        'doomplate',
-        'adamantine',
-        'natasha\'s',
+    // Uncommon (green) items
+    const uncommonKeywords = [
+        'flesh handler\'s'
+    ];
+    if (uncommonKeywords.some(keyword => name.includes(keyword))) return 'uncommon';
+    // Epic items that might be mistaken for rare (badge vendor epics, rep epics, etc.)
+    const epicKeywords = [
         'bloodlust brooch',
         'choker of vile intent',
-        'continuum blade',
-        'starlight gauntlets',
-        'idol of the wild',
+        'ring of arathi warlords',
         'midnight legguards',
-        'clefthoof',
-        'flesh handler\'s',
-        'deathforge',
         'girdle of the deathdealer',
-        'scaled greaves',
-        'terokk\'s',
-        'boots of righteous fortitude',
+        'scaled greaves of the marksman',
         'ring of cryptic dreams',
-        'ashyen\'s',
-        'andormu\'s',
-        'shatter-bound',
-        'time-shifted',
-        'phoenix-wing'
-    ];
-    // Check if it's a known epic crafted item
-    const epicCraftedKeywords = [
+        'ashyen\'s gift',
+        'phoenix-wing cloak',
+        'adamantine chain of the unbroken',
+        'dragonspine trophy',
+        'tsunami talisman',
+        'madness of the betrayer',
+        'hourglass of the unraveller',
+        'terokk\'s shadowstaff',
+        'continuum blade',
         'primalstrike',
         'earthwarden',
         'lionheart',
@@ -378,9 +362,50 @@ function getItemQuality(itemName) {
         'battlecast',
         'spellstrike',
         'whitemend',
-        'primal mooncloth'
+        'primal mooncloth',
+        'vengeance wrap',
+        'boots of the long road',
+        'spellfire',
+        'frozen shadoweave',
+        'belt of blasting',
+        'boots of blasting',
+        'belt of the long road',
+        'ebon netherscale',
+        'netherstrike',
+        'netherdrake'
     ];
-    if (epicCraftedKeywords.some(keyword => name.includes(keyword))) return 'epic';
+    if (epicKeywords.some(keyword => name.includes(keyword))) return 'epic';
+    // Rare (blue) items - dungeon drops, quest rewards, some rep items
+    const rareKeywords = [
+        'badge of tenacity',
+        'vindicator\'s brand',
+        'stalker\'s chain',
+        'savage plate',
+        'general\'s',
+        'marshal\'s',
+        'lieutenant commander\'s',
+        'champion\'s',
+        'centurion\'s',
+        'wastewalker',
+        'overlord\'s helmet of second sight',
+        'doomplate',
+        'natasha\'s choker',
+        'starlight gauntlets',
+        'idol of the wild',
+        'clefthoof',
+        'deathforge girdle',
+        'terokk\'s quill',
+        'boots of righteous fortitude',
+        'andormu\'s tear',
+        'shatter-bound',
+        'time-shifted',
+        'beast lord',
+        'righteous',
+        'icon of unyielding courage',
+        'bladefist\'s breadth',
+        'abacus of violent odds',
+        'marksman\'s bow'
+    ];
     if (rareKeywords.some(keyword => name.includes(keyword))) return 'rare';
     // Default to epic for raid items
     return 'epic';
@@ -388,7 +413,121 @@ function getItemQuality(itemName) {
 function processItemLinks() {
     if (typeof $WowheadPower !== 'undefined') {
         $WowheadPower.refreshLinks();
+        // Update item qualities from Wowhead tooltips after they load
+        setTimeout(updateItemQualitiesFromWowhead, 50);
     }
+}
+
+// Quality mapping from Wowhead's q-classes
+const WOWHEAD_QUALITY_MAP = {
+    'q0': 'poor',      // Gray
+    'q1': 'common',    // White
+    'q2': 'uncommon',  // Green
+    'q3': 'rare',      // Blue
+    'q4': 'epic',      // Purple
+    'q5': 'legendary', // Orange
+    'q6': 'artifact',  // Light gold
+    'q7': 'heirloom'   // Light gold
+};
+
+// Extract quality from Wowhead tooltip HTML
+function extractQualityFromTooltip(tooltipHtml) {
+    if (!tooltipHtml) return null;
+    // Wowhead tooltips have the item name in a <b class="qX"> tag
+    const match = tooltipHtml.match(/<b class="(q[0-7])"/);
+    if (match && WOWHEAD_QUALITY_MAP[match[1]]) {
+        return WOWHEAD_QUALITY_MAP[match[1]];
+    }
+    return null;
+}
+
+// Cache for fetched item qualities
+const itemQualityCache = {};
+let qualityFetchInProgress = false;
+
+// Update item quality colors from Wowhead tooltip data
+async function updateItemQualitiesFromWowhead() {
+    if (qualityFetchInProgress) return;
+    qualityFetchInProgress = true;
+    const itemSpans = document.querySelectorAll('span[data-item-id]');
+
+    // Collect unique item IDs that need fetching
+    const itemsToFetch = [];
+    itemSpans.forEach(span => {
+        const itemId = span.getAttribute('data-item-id');
+        if (itemId && !span.getAttribute('data-quality-updated') && !itemQualityCache[itemId]) {
+            itemsToFetch.push({ itemId, span });
+        }
+    });
+
+    if (itemsToFetch.length === 0) {
+        qualityFetchInProgress = false;
+        return;
+    }
+
+    // Fetch tooltips and update qualities (batch of 10 at a time to avoid overwhelming)
+    const batchSize = 10;
+    for (let i = 0; i < itemsToFetch.length; i += batchSize) {
+        const batch = itemsToFetch.slice(i, i + batchSize);
+        await Promise.all(batch.map(async ({ itemId, span }) => {
+            try {
+                // Check cache first
+                if (itemQualityCache[itemId]) {
+                    updateSpanQuality(span, itemQualityCache[itemId]);
+                    span.setAttribute('data-quality-updated', 'true');
+                    return;
+                }
+
+                // Check if tooltip is already cached from raid-ready page
+                if (typeof capturedTooltips !== 'undefined' && capturedTooltips[itemId]) {
+                    const quality = extractQualityFromTooltip(capturedTooltips[itemId]);
+                    if (quality) {
+                        itemQualityCache[itemId] = quality;
+                        updateSpanQuality(span, quality);
+                        span.setAttribute('data-quality-updated', 'true');
+                    }
+                    return;
+                }
+
+                // Fetch from Wowhead API
+                const tooltip = await fetchTooltipDirect(itemId);
+                if (tooltip) {
+                    const quality = extractQualityFromTooltip(tooltip);
+                    if (quality) {
+                        itemQualityCache[itemId] = quality;
+                        updateSpanQuality(span, quality);
+                        span.setAttribute('data-quality-updated', 'true');
+                    }
+                }
+            } catch (e) {
+                console.log('[QUALITY] Error fetching quality for', itemId, e);
+            }
+        }));
+    }
+    qualityFetchInProgress = false;
+}
+
+// Get quality from RGB color value
+function getQualityFromColor(color) {
+    // Wowhead quality colors (approximate RGB)
+    const colorMap = {
+        'rgb(163, 53, 238)': 'epic',      // Purple
+        'rgb(0, 112, 221)': 'rare',        // Blue
+        'rgb(30, 255, 0)': 'uncommon',     // Green
+        'rgb(255, 128, 0)': 'legendary',   // Orange
+        'rgb(157, 157, 157)': 'poor',      // Gray
+        'rgb(255, 255, 255)': 'common'     // White
+    };
+    return colorMap[color] || null;
+}
+
+// Update span's quality class
+function updateSpanQuality(span, newQuality) {
+    // Remove existing quality class
+    const classes = span.className.split(' ');
+    const filteredClasses = classes.filter(c => !c.startsWith('item-quality-'));
+    filteredClasses.push(`item-quality-${newQuality}`);
+    span.className = filteredClasses.join(' ');
 }
 // Helper function to generate item cell HTML (reduces duplication)
 // Spell IDs for enchants (TBC wowhead uses spells, not items for enchants)
@@ -436,7 +575,9 @@ function generateItemCell(itemName) {
             } else {
                 link = displayName;
             }
-            return `<span class="item-quality-${quality}">${link}${priorityBadge}</span>`;
+            // Add data-item-id for Wowhead quality updates (only for items, not enchants)
+            const dataAttr = itemId ? ` data-item-id="${itemId}"` : '';
+            return `<span class="item-quality-${quality}"${dataAttr}>${link}${priorityBadge}</span>`;
         }).join(' / ');
     }
     const quality = getItemQuality(itemName);
@@ -454,7 +595,9 @@ function generateItemCell(itemName) {
     } else {
         link = displayName;
     }
-    return `<span class="item-quality-${quality}">${link}${priorityBadge}</span>`;
+    // Add data-item-id for Wowhead quality updates (only for items, not enchants)
+    const dataAttr = itemId ? ` data-item-id="${itemId}"` : '';
+    return `<span class="item-quality-${quality}"${dataAttr}>${link}${priorityBadge}</span>`;
 }
 // Helper function to process source text and create wowhead NPC/quest links
 function generateSourceCell(source) {
@@ -535,51 +678,50 @@ function generateSourceCell(source) {
     const professionSources = ['Blacksmithing', 'Leatherworking', 'Tailoring', 'Jewelcrafting', 'Engineering', 'Alchemy'];
     const pvpSources = ['Honor', 'Honor Points', 'Arena', 'Arena Points'];
     const otherSources = ['BoE World Drop', 'BoE', 'World Drop', 'Crafted', 'N/A', 'Various', 'Vendor', 'PvP'];
-    // Extract display text - strip zone/instance info from "Boss - Zone" format
+    // Dungeon and Raid lists for coloring
+    const dungeons = [
+        'Hellfire Ramparts', 'The Blood Furnace', 'The Shattered Halls', 'Shattered Halls',
+        'The Slave Pens', 'Slave Pens', 'The Underbog', 'Underbog', 'The Steamvault', 'Steamvault',
+        'Mana-Tombs', 'Mana Tombs', 'Auchenai Crypts', 'Sethekk Halls', 'Shadow Labyrinth',
+        'Old Hillsbrad Foothills', 'The Black Morass', 'Black Morass',
+        'The Mechanar', 'Mechanar', 'The Botanica', 'Botanica', 'The Arcatraz', 'Arcatraz',
+        "Magisters' Terrace", "Magister's Terrace"
+    ];
+    const raids = [
+        'Karazhan', "Gruul's Lair", "Magtheridon's Lair",
+        'Serpentshrine Cavern', 'Tempest Keep', 'Tempest Keep: The Eye', 'The Eye',
+        'Mount Hyjal', 'Hyjal Summit', 'Black Temple', "Zul'Aman",
+        'Sunwell Plateau'
+    ];
+    // Keep full source for display, extract boss name only for NPC linking
     let displayText = source;
     let bossName = null;
+    let zoneName = null;
     let questName = null;
-    // Pattern: "Boss - Zone" or "Boss— Zone" or "Boss - (H) Zone" -> extract just the boss name
-    // Handles both hyphens (-) and em-dashes (—)
-    const bossZoneMatch = source.match(/^(.+?)\s*[-—]\s*\(?H?\)?\s*(Karazhan|Gruul's Lair|Magtheridon's Lair|Serpentshrine Cavern|Tempest Keep|Hyjal Summit|Black Temple|Zul'Aman|Sunwell Plateau|The Blood Furnace|Blood Furnace|The Slave Pens|Slave Pens|The Underbog|Underbog|The Steamvault|Steamvault|The Botanica|Botanica|The Mechanar|Mechanar|The Arcatraz|Arcatraz|Shadow Labyrinth|Sethekk Halls|Auchenai Crypts|Auchindoun|Mana.?Tombs|Old Hillsbrad Foothills|The Black Morass|Black Morass|The Shattered Halls|Shattered Halls|Hellfire Ramparts|Ramparts|Magister's Terrace|Magisters' Terrace|Terokkar Forest|Netherstorm|Nagrand|Naxxramas|Caverns of Time|Blades? Edge Mountains|Shadowmoon Valley|Hellfire Peninsula|Tanaris|AQ40|Blackwing Lair|Stratholme|Blackrock Depths|World Boss)$/i);
+    // Pattern: "Boss - Zone" -> keep full text, extract boss for linking
+    const bossZoneMatch = source.match(/^(.+?)\s+-\s+(.+)$/);
     if (bossZoneMatch) {
-        displayText = bossZoneMatch[1].trim();
-        bossName = displayText;
+        bossName = bossZoneMatch[1].trim();
+        zoneName = bossZoneMatch[2].trim();
     }
-    // Pattern: "(H)Boss-Zone" or "(H) Boss - Zone" or "Boss— HeroicZone" or "Bossin HeroicZone" for heroic dungeons
-    const heroicMatch = source.match(/^\(H\)\s*(.+?)[-–—]\s*(.+)$/) ||
-                        source.match(/^(.+?)[-—]\s*[Hh]eroic\s*(.+)$/) ||
-                        source.match(/^(.+?)in\s*[Hh]eroic(.+)$/);
+    // Pattern: "(H) Boss - Zone" for heroic dungeons
+    const heroicMatch = source.match(/^\(H\)\s*(.+?)\s+-\s+(.+)$/);
     if (heroicMatch) {
-        displayText = heroicMatch[1].trim();
-        bossName = displayText;
+        bossName = heroicMatch[1].trim();
+        zoneName = heroicMatch[2].trim();
     }
-    // Pattern: "Boss—Zone" or "Boss-Zone" (no space) for dungeons -> extract boss name
-    const bossZoneNoSpaceMatch = source.match(/^([A-Z][^-—]+)[-—]([A-Z].+)$/);
-    if (!bossName && bossZoneNoSpaceMatch && !source.includes(' - ') && !source.includes(' — ')) {
-        const potentialBoss = bossZoneNoSpaceMatch[1].trim();
-        if (npcMap[potentialBoss] || npcMap[potentialBoss.replace(/'/g, "\\'")] ) {
-            displayText = potentialBoss;
-            bossName = potentialBoss;
-        }
-    }
-    // Pattern: "Boss1,Boss2, orBoss3—Zone" -> extract first boss name
-    // Also handles case where bossZoneMatch succeeded but gave us multiple bosses
+    // Pattern: "Boss1, Boss2 - Zone" -> extract first boss for linking
     if (bossName && bossName.includes(',')) {
-        const firstBoss = bossName.split(',')[0].trim();
-        if (npcMap[firstBoss]) {
-            displayText = firstBoss;
-            bossName = firstBoss;
-        }
+        bossName = bossName.split(',')[0].trim();
     }
-    const multiBossMatch = source.match(/^([A-Z][^,]+),.*[-—](.+)$/);
-    if (!bossName && multiBossMatch) {
-        const firstBoss = multiBossMatch[1].trim();
-        if (npcMap[firstBoss]) {
-            displayText = firstBoss;
-            bossName = firstBoss;
-        }
-    }
+    // Helper to get boss color class based on zone
+    const getBossColorClass = (zone) => {
+        if (!zone) return '';
+        const zoneLower = zone.toLowerCase();
+        if (dungeons.some(d => zoneLower.includes(d.toLowerCase()))) return 'text-wow-rare'; // blue
+        if (raids.some(r => zoneLower.includes(r.toLowerCase()))) return 'text-wow-epic'; // purple
+        return '';
+    };
     // Pattern: Any source containing "Badge of Justice" with a number -> show badge count
     const badgeMatch = source.match(/(\d+)\s*x?\s*-?\s*Badge[s]?\s*(of\s*Justice)?/i);
     if (badgeMatch || source.toLowerCase().includes('badge of justice')) {
@@ -668,19 +810,31 @@ function generateSourceCell(source) {
             return `<a href="https://tbc.wowhead.com/quest=${qId}" data-wowhead="quest=${qId}" class="underline hover:text-terminal-text">${displayQuestName}</a>`;
         }
     }
-    // If we identified a boss name, try to link it
-    if (bossName) {
+    // If we identified a boss name, try to link it with color coding
+    if (bossName && zoneName) {
+        const colorClass = getBossColorClass(zoneName);
+        const isRaid = raids.some(r => zoneName.toLowerCase().includes(r.toLowerCase()));
+        const isDungeon = dungeons.some(d => zoneName.toLowerCase().includes(d.toLowerCase()));
+        const skullPrefix = (isRaid || isDungeon) ? '💀 ' : '';
         const npcId = npcMap[bossName] || npcMap[bossName.replace(/'/g, "\\'")] || 0;
+        const bossDisplay = bossZoneMatch ? bossZoneMatch[1].trim() : bossName;
         if (npcId > 0) {
-            return `<a href="https://tbc.wowhead.com/npc=${npcId}" class="underline hover:text-terminal-text">${bossName}</a>`;
+            return `${skullPrefix}<a href="https://tbc.wowhead.com/npc=${npcId}" class="underline ${colorClass}">${bossDisplay}</a><span class="text-terminal-dim"> - ${zoneName}</span>`;
         }
         // Check if boss name is in npcMap with different quote escaping
         for (const [npcName, id] of Object.entries(npcMap)) {
             if (npcName.toLowerCase() === bossName.toLowerCase() && id > 0) {
-                return `<a href="https://tbc.wowhead.com/npc=${id}" class="underline hover:text-terminal-text">${bossName}</a>`;
+                return `${skullPrefix}<a href="https://tbc.wowhead.com/npc=${id}" class="underline ${colorClass}">${bossDisplay}</a><span class="text-terminal-dim"> - ${zoneName}</span>`;
             }
         }
-        return bossName;
+        return `${skullPrefix}<span class="${colorClass}">${bossDisplay}</span><span class="text-terminal-dim"> - ${zoneName}</span>`;
+    }
+    if (bossName) {
+        const npcId = npcMap[bossName] || npcMap[bossName.replace(/'/g, "\\'")] || 0;
+        if (npcId > 0) {
+            return `<a href="https://tbc.wowhead.com/npc=${npcId}" class="underline hover:text-terminal-text">${displayText}</a>`;
+        }
+        return displayText;
     }
     // Check if the source contains any known NPC name directly
     // Sort by name length descending to match longer names first (e.g., "Kael'thas Sunstrider" before "Kael")
@@ -691,7 +845,7 @@ function generateSourceCell(source) {
             const sourceNormalized = source.replace(/\\'/g, "'");
             const npcNameNormalized = npcName.replace(/\\'/g, "'");
             if (sourceNormalized.includes(npcNameNormalized)) {
-                return `<a href="https://tbc.wowhead.com/npc=${npcId}" class="underline hover:text-terminal-text">${npcNameNormalized}</a>`;
+                return `<a href="https://tbc.wowhead.com/npc=${npcId}" class="underline hover:text-terminal-text">${displayText}</a>`;
             }
         }
     }
@@ -733,6 +887,7 @@ function generateBisTable(bisData, specData) {
         '2-HANDER': ['Two-Handed Weapon', 'Weapon'],
         'DUAL WIELD - MH': ['Main Hand Weapon', 'One-Handed Weapons', 'Melee Weapon', 'Weapon'],
         'DUAL WIELD - OH': ['Off Hand Weapon', 'Off-Hand'],
+        'MELEE WEAPON': ['Melee Weapon', 'Main Hand Weapon', 'Weapon'],
         'MELEE WEAPON 1': ['Melee Weapon', 'Main Hand Weapon', 'Weapon'],
         'MELEE WEAPON 2': ['Melee Weapon', 'Off Hand Weapon', 'Weapon'],
         'OFF-HAND': ['Off Hand Weapon', 'Off-Hand', 'Shield'],
@@ -1014,6 +1169,7 @@ function renderRaidsContent() {
         // Reinitialize wowhead tooltips
         if (typeof $WowheadPower !== 'undefined' && $WowheadPower.refreshLinks) {
             $WowheadPower.refreshLinks();
+            setTimeout(updateItemQualitiesFromWowhead, 50);
         }
     }, 200);
 }
@@ -1071,6 +1227,7 @@ function renderCollectionsContent(category = 'mounts') {
         });
         if (typeof $WowheadPower !== 'undefined' && $WowheadPower.refreshLinks) {
             $WowheadPower.refreshLinks();
+            setTimeout(updateItemQualitiesFromWowhead, 50);
         }
     }, 200);
 }
@@ -1474,6 +1631,7 @@ function renderAttunementsContent(attunementKey = 'karazhan') {
         attachAttunementListeners();
         if (typeof $WowheadPower !== 'undefined' && $WowheadPower.refreshLinks) {
             $WowheadPower.refreshLinks();
+            setTimeout(updateItemQualitiesFromWowhead, 50);
         }
     }, FADE_TRANSITION_MS);
 }
@@ -1715,6 +1873,7 @@ function renderRecipesContent() {
         // Reinitialize wowhead tooltips
         if (typeof $WowheadPower !== 'undefined' && $WowheadPower.refreshLinks) {
             $WowheadPower.refreshLinks();
+            setTimeout(updateItemQualitiesFromWowhead, 50);
         }
     }, FADE_TRANSITION_MS);
 }
@@ -1935,8 +2094,8 @@ function attachEventListeners(specData) {
             const newSpec = this.getAttribute('data-spec');
             if (newSpec !== currentSpec) {
                 currentSpec = newSpec;
-                currentPhase = 1;
-                window.location.hash = `#${currentClass}/${newSpec}`;
+                // Keep the current phase when switching specs
+                window.location.hash = `#${currentClass}/${newSpec}/${currentPhase}`;
             }
         });
     });
@@ -2978,6 +3137,7 @@ async function updateGearPreview() {
     // Refresh Wowhead tooltips
     if (typeof $WowheadPower !== 'undefined' && $WowheadPower.refreshLinks) {
         $WowheadPower.refreshLinks();
+        setTimeout(updateItemQualitiesFromWowhead, 50);
     }
 }
 
@@ -3822,6 +3982,172 @@ function parseGearText(text) {
     return foundItems;
 }
 
+// Bug Report Form Configuration
+const BUG_REPORT_CONFIG = {
+    // Replace this URL with your Google Apps Script Web App URL
+    googleScriptUrl: 'https://script.google.com/macros/s/AKfycbx0OOy3YFpNVeaLspP4NlFdE2Hv60_YRj5tXmV3Cs7ggFJhDFIHjZMGTaCeO6QTR_PlUA/exec'
+};
+
+function renderBugReportForm() {
+    currentClass = null;
+    document.querySelectorAll('.class-list li').forEach(li => li.classList.remove('active'));
+
+    const html = `
+        <div class="command-line text-terminal-dim my-5 md:text-[11px] md:my-3 sm:text-[10px]">submit --bug-report</div>
+        <h2 class="text-terminal-accent text-lg mb-4 uppercase tracking-wide md:text-base md:mb-3 sm:text-sm">🐛 [ BUG REPORT ]</h2>
+        <p class="text-terminal-dim text-xs mb-6 md:mb-4 sm:mb-3">Found an issue? Help us improve TBC.TXT by reporting bugs, incorrect data, or missing information.</p>
+
+        <form id="bug-report-form" class="max-w-2xl">
+            <div class="mb-4">
+                <label class="block text-terminal-text text-xs mb-2 uppercase">Page / Section *</label>
+                <select id="bug-page" required class="w-full bg-terminal-bg border border-terminal-dim text-terminal-text p-3 font-mono text-xs focus:border-terminal-accent focus:outline-none">
+                    <option value="">-- Select Page --</option>
+                    <optgroup label="Classes">
+                        <option value="Warrior">Warrior</option>
+                        <option value="Paladin">Paladin</option>
+                        <option value="Hunter">Hunter</option>
+                        <option value="Rogue">Rogue</option>
+                        <option value="Priest">Priest</option>
+                        <option value="Shaman">Shaman</option>
+                        <option value="Mage">Mage</option>
+                        <option value="Warlock">Warlock</option>
+                        <option value="Druid">Druid</option>
+                    </optgroup>
+                    <optgroup label="Guides">
+                        <option value="Raids">Raids</option>
+                        <option value="Heroics">Heroics</option>
+                        <option value="Attunements">Attunements</option>
+                        <option value="Raid-Ready Checker">Raid-Ready Checker</option>
+                    </optgroup>
+                    <optgroup label="Database">
+                        <option value="Recipes">Recipes</option>
+                        <option value="Collections">Collections</option>
+                    </optgroup>
+                    <optgroup label="Trackers">
+                        <option value="Reputation">Reputation</option>
+                        <option value="Lockouts">Lockouts</option>
+                        <option value="Guild Progress">Guild Progress</option>
+                    </optgroup>
+                    <optgroup label="Other">
+                        <option value="General/Site-wide">General / Site-wide</option>
+                        <option value="Other">Other</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-terminal-text text-xs mb-2 uppercase">Issue Type *</label>
+                <select id="bug-type" required class="w-full bg-terminal-bg border border-terminal-dim text-terminal-text p-3 font-mono text-xs focus:border-terminal-accent focus:outline-none">
+                    <option value="">-- Select Issue Type --</option>
+                    <option value="Wrong Item Data">Wrong Item Data (wrong stats, source, slot)</option>
+                    <option value="Wrong BIS List">Wrong BIS List Item</option>
+                    <option value="Wrong Talent Build">Wrong Talent Build</option>
+                    <option value="Missing Information">Missing Information</option>
+                    <option value="Broken Link/Tooltip">Broken Link or Tooltip</option>
+                    <option value="Display/UI Issue">Display or UI Issue</option>
+                    <option value="Feature Request">Feature Request</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-terminal-text text-xs mb-2 uppercase">Spec / Phase (if applicable)</label>
+                <input type="text" id="bug-spec" placeholder="e.g., Arms Warrior Phase 2, Holy Paladin PreRaid" class="w-full bg-terminal-bg border border-terminal-dim text-terminal-text p-3 font-mono text-xs focus:border-terminal-accent focus:outline-none placeholder:text-terminal-dim/50">
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-terminal-text text-xs mb-2 uppercase">Description *</label>
+                <textarea id="bug-description" required rows="6" placeholder="Please describe the issue in detail. Include:&#10;- What is wrong&#10;- What it should be&#10;- Source/reference if possible (e.g., Wowhead link)" class="w-full bg-terminal-bg border border-terminal-dim text-terminal-text p-3 font-mono text-xs focus:border-terminal-accent focus:outline-none resize-y placeholder:text-terminal-dim/50"></textarea>
+            </div>
+
+            <div class="flex gap-4">
+                <button type="submit" id="bug-submit-btn" class="bg-terminal-accent text-terminal-bg px-6 py-3 font-mono text-xs uppercase cursor-pointer border-none hover:bg-terminal-text transition-colors">
+                    [ SUBMIT REPORT ]
+                </button>
+                <button type="button" onclick="document.getElementById('bug-report-form').reset();" class="bg-transparent text-terminal-dim px-6 py-3 font-mono text-xs uppercase cursor-pointer border border-terminal-dim hover:border-terminal-text hover:text-terminal-text transition-colors">
+                    [ CLEAR ]
+                </button>
+            </div>
+        </form>
+
+        <div id="bug-report-status" class="mt-6 hidden"></div>
+
+        <div class="mt-8 pt-6 border-t border-terminal-dim">
+            <h3 class="text-terminal-text text-sm mb-3 uppercase">// Quick Tips</h3>
+            <ul class="text-terminal-dim text-xs space-y-2">
+                <li>• For BIS issues, mention the exact item name and what it should be replaced with</li>
+                <li>• Include Wowhead links when possible to help verify the correct data</li>
+                <li>• Check if the issue is for TBC Classic (2.5.x) not WotLK or Retail</li>
+            </ul>
+        </div>
+    `;
+
+    const mainContent = document.getElementById('main-content');
+    mainContent.style.opacity = '0.3';
+    setTimeout(() => {
+        mainContent.innerHTML = html;
+        mainContent.style.opacity = '1';
+        attachBugReportListeners();
+    }, FADE_TRANSITION_MS);
+}
+
+function attachBugReportListeners() {
+    const form = document.getElementById('bug-report-form');
+    const statusDiv = document.getElementById('bug-report-status');
+    const submitBtn = document.getElementById('bug-submit-btn');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Check if Google Script URL is configured
+        if (BUG_REPORT_CONFIG.googleScriptUrl === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
+            statusDiv.className = 'mt-6 p-4 border border-yellow-500 text-yellow-500';
+            statusDiv.innerHTML = '⚠️ Bug report form not configured. Please set up Google Sheets integration.';
+            statusDiv.classList.remove('hidden');
+            return;
+        }
+
+        const data = {
+            page: document.getElementById('bug-page').value,
+            issueType: document.getElementById('bug-type').value,
+            spec: document.getElementById('bug-spec').value || 'N/A',
+            description: document.getElementById('bug-description').value
+        };
+
+        // Disable submit button
+        submitBtn.disabled = true;
+        submitBtn.textContent = '[ SUBMITTING... ]';
+        submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+        try {
+            const response = await fetch(BUG_REPORT_CONFIG.googleScriptUrl, {
+                method: 'POST',
+                mode: 'no-cors', // Required for Google Apps Script
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+
+            // With no-cors mode, we can't read the response, but if no error thrown, assume success
+            statusDiv.className = 'mt-6 p-4 border border-terminal-accent text-terminal-accent';
+            statusDiv.innerHTML = '✓ Bug report submitted successfully! Thank you for helping improve TBC.TXT.';
+            statusDiv.classList.remove('hidden');
+            form.reset();
+
+        } catch (error) {
+            console.error('Bug report submission error:', error);
+            statusDiv.className = 'mt-6 p-4 border border-red-500 text-red-500';
+            statusDiv.innerHTML = '✗ Failed to submit report. Please try again or report via GitHub.';
+            statusDiv.classList.remove('hidden');
+        }
+
+        // Re-enable submit button
+        submitBtn.disabled = false;
+        submitBtn.textContent = '[ SUBMIT REPORT ]';
+        submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+    });
+}
 
 function renderApiDocs() {
     currentClass = null;
@@ -3922,6 +4248,8 @@ function navigateToHash(hash) {
         renderPreRaidChecker();
     } else if (page === 'api') {
         renderApiDocs();
+    } else if (page === 'bug-report') {
+        renderBugReportForm();
     } else {
         // Class page: #warrior or #warrior/arms or #warrior/arms/3
         currentClass = page;
