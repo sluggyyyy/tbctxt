@@ -6,6 +6,15 @@
 !illidan.ico
 !amplify.yml
 !Dockerfile
+!styles.css
+!blank.txt
+!app.js
+!strip-comments.js
+
+# Build config
+!tsconfig.json
+!package.json
+!package-lock.json
 
 # Data files
 !data/
@@ -14,18 +23,9 @@
 # API
 !api/
 !api/**
-# Ignore API build artifacts and dependencies
 api/node_modules/
 api/index.js
 
 # Frontend TypeScript source
 !src/
 !src/**
-
-# Build config
-!tsconfig.json
-!package.json
-!package-lock.json
-
-!styles.css
-!blank.txt
