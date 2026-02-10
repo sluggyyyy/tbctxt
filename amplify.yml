@@ -4,18 +4,20 @@ frontend:
     preBuild:
       commands:
         - echo "Installing dependencies..."
-        - echo "No dependencies required for static HTML site"
+        - npm ci
     build:
       commands:
-        - echo "Building TBC.TXT site..."
-        - echo "Static site ready for deployment"
-        - ls -la
+        - echo "Building TypeScript frontend with Vite..."
+        - npm run build
+        - echo "Build complete"
+        - ls -la dist/
   artifacts:
-    baseDirectory: /
+    baseDirectory: dist
     files:
       - '**/*'
   cache:
-    paths: []
+    paths:
+      - node_modules/**/*
 customHeaders:
   - pattern: '**/*'
     headers:

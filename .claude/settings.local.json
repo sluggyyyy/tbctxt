@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(du:*)",
+      "Bash(git checkout:*)",
+      "Bash(test:*)",
+      "Bash(.gitignore << 'EOF'\nnode_modules/\ndist/\n.env\n*.log\n.DS_Store\nEOF)",
+      "Bash(npm install:*)",
+      "Bash(where:*)"
+    ]
+  }
+}

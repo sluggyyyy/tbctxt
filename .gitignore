@@ -1,19 +1,5 @@
-*
-
-!.gitignore
-!index.html
-!index.backup.html
-!illidan.ico
-!amplify.yml
-!Dockerfile
-
-# Data files
-!data/
-!data/*.json
-
-# API
-!api/
-!api/**
-
-!app.js
-!styles.css
+node_modules/
+dist/
+.env
+*.log
+.DS_Store
