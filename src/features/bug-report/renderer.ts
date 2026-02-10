@@ -12,6 +12,10 @@ export function renderBugReportForm(): void {
     <div class="border border-terminal-dim p-4">
       <div class="grid gap-4">
         <div>
+          <label class="text-terminal-text text-sm mb-2 block">Email</label>
+          <input type="email" id="bug-email" placeholder="your@email.com (optional)" class="w-full bg-terminal-bg border border-terminal-dim px-3 py-2 text-terminal-text" />
+        </div>
+        <div>
           <label class="text-terminal-text text-sm mb-2 block">Title</label>
           <input type="text" id="bug-title" class="w-full bg-terminal-bg border border-terminal-dim px-3 py-2 text-terminal-text" />
         </div>
