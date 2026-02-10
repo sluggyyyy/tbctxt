@@ -3,19 +3,21 @@ frontend:
   phases:
     preBuild:
       commands:
-        - echo "Installing dependencies..."
-        - echo "No dependencies required for static HTML site"
+        - npm install
+        - cd api && npm install
     build:
       commands:
-        - echo "Building TBC.TXT site..."
-        - echo "Static site ready for deployment"
+        - npx tsc
+        - cd api && npx tsc
         - ls -la
   artifacts:
     baseDirectory: /
     files:
       - '**/*'
+    discard-paths: no
   cache:
-    paths: []
+    paths:
+      - node_modules/**/*
 customHeaders:
   - pattern: '*.html'
     headers:

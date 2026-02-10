@@ -1,0 +1,12 @@
+{
+  "name": "tbc-txt",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "build:api": "cd api && tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0"
+  }
+}

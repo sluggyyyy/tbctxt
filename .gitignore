@@ -14,7 +14,18 @@
 # API
 !api/
 !api/**
+# Ignore API build artifacts and dependencies
+api/node_modules/
+api/index.js
 
-!app.js
+# Frontend TypeScript source
+!src/
+!src/**
+
+# Build config
+!tsconfig.json
+!package.json
+!package-lock.json
+
 !styles.css
 !blank.txt
