@@ -10155,6 +10155,16 @@
                                 "BoE"
                             ],
                             [
+                                "OFF-HAND",
+                                "Windcaller's Orb (BEST)",
+                                "Cenarion Expedition - Exalted"
+                            ],
+                            [
+                                "OFF-HAND",
+                                "Tears of Heaven (OPTION)",
+                                "25 Badges"
+                            ],
+                            [
                                 "RANGED",
                                 "Soul-Wand of the Aldor (BEST)",
                                 "Ambassador Hellmaw - Shadow Labyrinth"
@@ -11055,6 +11065,11 @@
                                 "WEAPON",
                                 "Starlight Dagger (OPTION)",
                                 "Quagmirran - The Slave Pens"
+                            ],
+                            [
+                                "OFF-HAND",
+                                "Orb of the Soul-Eater (BEST)",
+                                "25 Badges"
                             ],
                             [
                                 "RANGED",
@@ -21035,6 +21050,11 @@
                                 "Keepers of Time"
                             ],
                             [
+                                "OFF-HAND",
+                                "Khadgar's Knapsack (BEST)",
+                                "25 Badges"
+                            ],
+                            [
                                 "RANGED",
                                 "Wand of Fates (OPTION)",
                                 "Patchwerk"
@@ -21904,6 +21924,11 @@
                                 "WEAPON",
                                 "Continuum Blade (EASY)",
                                 "Keepers of Time"
+                            ],
+                            [
+                                "OFF-HAND",
+                                "Khadgar's Knapsack (BEST)",
+                                "25 Badges"
                             ],
                             [
                                 "RANGED",
@@ -22821,7 +22846,7 @@
                             ],
                             [
                                 "OFF-HAND",
-                                "Orb of the Soul-Eater (BEST)",
+                                "Khadgar's Knapsack (BEST)",
                                 "25 Badges"
                             ],
                             [
