@@ -538,9 +538,13 @@ function getQuestId(questName: string): any {
     const cleanName = questName.toLowerCase().trim().replace(/\\'/g, "'");
     return questIds[cleanName] || null;
 }
-function getTalentSpellId(talentName: string): any {
+function getTalentSpellId(talentName: string, className?: string): any {
 
     const cleanName = talentName.toLowerCase().trim().replace(/\\'/g, "'");
+    if (className) {
+        const classKey = className.toLowerCase() + ":" + cleanName;
+        if (talentSpellIds[classKey]) return talentSpellIds[classKey];
+    }
     return talentSpellIds[cleanName] || null;
 }
 function getEnchantSpellId(itemName: string): any {
@@ -1896,7 +1900,7 @@ function renderClassContent(className: string): void {
                 tree.talents.forEach((talent: any, talentIdx: number) => {
                     const talentIndent = treeIdx === build.trees.length - 1 ? '    ' : '│   ';
                     const talentPrefix = talentIdx === tree.talents.length - 1 ? '    └──' : '    ├──';
-                    const talentSpellId = getTalentSpellId(talent.name);
+                    const talentSpellId = getTalentSpellId(talent.name, className);
                     const talentLink = talentSpellId
                         ? `<a href="https://tbc.wowhead.com/spell=${talentSpellId}" data-wowhead="spell=${talentSpellId}">${talent.name}</a>`
                         : talent.name;

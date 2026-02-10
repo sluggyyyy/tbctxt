@@ -5065,8 +5065,8 @@
                             ],
                             [
                                 "RING 2",
-                                "Signet of Primal Wrath",
-                                "Zul'Aman"
+                                "Band of the Eternal Champion",
+                                "Scale of the Sands"
                             ],
                             [
                                 "TRINKET 1",
@@ -5075,18 +5075,18 @@
                             ],
                             [
                                 "TRINKET 2",
-                                "Berserker's Call",
-                                "Zul'jin - Zul'Aman"
+                                "Madness of the Betrayer",
+                                "The Illidari Council"
                             ],
                             [
                                 "MELEE WEAPON 1",
-                                "Dagger of Bad Mojo",
-                                "Hex Lord Malacrass - Zul'Aman"
+                                "Shard of Azzinoth",
+                                "Illidan Stormrage - Black Temple"
                             ],
                             [
                                 "MELEE WEAPON 2",
-                                "Dagger of Bad Mojo",
-                                "Hex Lord Malacrass - Zul'Aman"
+                                "Shard of Azzinoth",
+                                "Illidan Stormrage - Black Temple"
                             ],
                             [
                                 "RANGED WEAPON",
@@ -5843,8 +5843,8 @@
                             ],
                             [
                                 "RING 2",
-                                "Signet of Primal Wrath",
-                                "Zul'Aman"
+                                "Band of the Eternal Champion",
+                                "Scale of the Sands"
                             ],
                             [
                                 "TRINKET 1",
@@ -5853,18 +5853,18 @@
                             ],
                             [
                                 "TRINKET 2",
-                                "Berserker's Call",
-                                "Zul'jin - Zul'Aman"
+                                "Madness of the Betrayer",
+                                "The Illidari Council"
                             ],
                             [
                                 "MELEE WEAPON 1",
-                                "Dagger of Bad Mojo",
-                                "Hex Lord Malacrass - Zul'Aman"
+                                "Shard of Azzinoth",
+                                "Illidan Stormrage - Black Temple"
                             ],
                             [
                                 "MELEE WEAPON 2",
-                                "Dagger of Bad Mojo",
-                                "Hex Lord Malacrass - Zul'Aman"
+                                "Shard of Azzinoth",
+                                "Illidan Stormrage - Black Temple"
                             ],
                             [
                                 "RANGED WEAPON",
@@ -6600,8 +6600,8 @@
                             ],
                             [
                                 "RING 1",
-                                "Signet of Primal Wrath",
-                                "Zul'Aman"
+                                "Stormrage Signet Ring",
+                                "Illidan Stormrage - Black Temple"
                             ],
                             [
                                 "RING 2",
@@ -22425,6 +22425,11 @@
                                         "max": 3
                                     },
                                     {
+                                        "name": "Improved Health Funnel",
+                                        "points": 1,
+                                        "max": 2
+                                    },
+                                    {
                                         "name": "Fel Stamina",
                                         "points": 3,
                                         "max": 3
@@ -22448,11 +22453,6 @@
                                         "name": "Demonic Sacrifice",
                                         "points": 1,
                                         "max": 1
-                                    },
-                                    {
-                                        "name": "Master Demonologist",
-                                        "points": 1,
-                                        "max": 5
                                     }
                                 ]
                             },
@@ -22461,6 +22461,11 @@
                                 "talents": [
                                     {
                                         "name": "Improved Shadow Bolt",
+                                        "points": 5,
+                                        "max": 5
+                                    },
+                                    {
+                                        "name": "Cataclysm",
                                         "points": 5,
                                         "max": 5
                                     },
@@ -22496,7 +22501,7 @@
                                     },
                                     {
                                         "name": "Nether Protection",
-                                        "points": 3,
+                                        "points": 1,
                                         "max": 3
                                     },
                                     {
@@ -22510,24 +22515,9 @@
                                         "max": 3
                                     },
                                     {
-                                        "name": "Conflagrate",
-                                        "points": 1,
-                                        "max": 1
-                                    },
-                                    {
                                         "name": "Shadow and Flame",
                                         "points": 5,
                                         "max": 5
-                                    },
-                                    {
-                                        "name": "Shadowfury",
-                                        "points": 1,
-                                        "max": 1
-                                    },
-                                    {
-                                        "name": "Soul Leech",
-                                        "points": 1,
-                                        "max": 3
                                     }
                                 ]
                             }
