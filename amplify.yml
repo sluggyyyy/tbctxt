@@ -4,11 +4,11 @@ frontend:
     preBuild:
       commands:
         - npm install
-        - cd api && npm install
+        - (cd api && npm install)
     build:
       commands:
         - npx tsc
-        - cd api && npx tsc
+        - (cd api && npx tsc)
         - ls -la
   artifacts:
     baseDirectory: /
