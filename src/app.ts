@@ -1,60 +1,16 @@
-// =============================================================================
-// TBC.TXT - Main Application (TypeScript)
-// =============================================================================
-//
-// TYPESCRIPT STUDY GUIDE
-// ----------------------
-// This file demonstrates key TypeScript concepts used in a real project:
-//
-// 1. TYPE ANNOTATIONS (: type)
-//    Variables and parameters can have types after a colon.
-//    Example: let name: string = "hello";
-//    Example: function greet(name: string): void { ... }
-//
-// 2. THE "any" TYPE
-//    "any" disables type checking for that variable — it can be anything.
-//    Useful when migrating JS to TS or when the shape is dynamic/unknown.
-//    Example: let data: any = {};
-//
-// 3. "declare" KEYWORD
-//    Tells TypeScript "this variable exists at runtime, trust me."
-//    Used for globals defined elsewhere (e.g., loaded via <script> tags).
-//    It does NOT create a variable — just informs the type checker.
-//
-// 4. TYPE ASSERTIONS (value as Type)
-//    Tells TypeScript to treat a value as a specific type.
-//    Example: (document.querySelector('.btn') as HTMLElement).click();
-//    Does NOT convert the value — just overrides the type checker.
-//
-// 5. PROMISE<T> RETURN TYPES
-//    Async functions return Promise<T> where T is the resolved value type.
-//    Example: async function fetchData(): Promise<string> { ... }
-//
-// 6. UNION TYPES (type1 | type2)
-//    A value can be one of several types.
-//    Example: let id: string | number = "abc";
-//
-// =============================================================================
-
-// "declare var" tells TypeScript these globals exist at runtime.
-// $WowheadPower is loaded from Wowhead's external <script> tag in index.html.
-// "any" means we don't define their exact shape — TS won't type-check usage.
 declare var $WowheadPower: any;
 declare var WH: any;
 declare var tailwind: any;
 
 console.log('[TBC.TXT] Script loaded - v3');
-// ===== GLOBAL DATA (loaded from JSON) =====
-// API base URL - use local server in dev, production API otherwise
 
-// ": string" is a TYPE ANNOTATION — it tells TypeScript this variable is always a string.
+
+
 const API_BASE_URL: string = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:8080'
     : 'https://api.tbctxt.io';
 
-// ": any" means these can hold any type of data. Since these are populated
-// dynamically from JSON files, we use "any" to avoid defining complex interfaces
-// for every data structure. In a stricter TS project, you'd define interfaces.
+
 let itemIds: any = {};
 let classData: any = {};
 let recipesData: any = {};
@@ -67,30 +23,24 @@ let lockoutsData: any = {};
 let enchantSpellIds: any = {};
 let talentSpellIds: any = {};
 let questIds: any = {};
-let itemStats: any = {}; // Pre-computed item stats from Wowhead
+let itemStats: any = {};
 
-// Auth state
-// "any | null" means currentUser can be an object OR null.
-// In stricter TS you'd define: interface User { battletag: string; token: string; }
-let currentUser: any = null; // { battletag, token } or null
-let serverProgress: any = null; // Progress from server when logged in
+
+let currentUser: any = null;
+let serverProgress: any = null;
 const AUTH_STORAGE_KEY: string = 'tbctxt_auth';
 
-// ===== CUSTOM MODAL SYSTEM =====
-// FUNCTION TYPE ANNOTATIONS:
-//   - "message: string"       → parameter must be a string
-//   - "options: any = {}"     → parameter can be anything, defaults to {}
-//   - ": Promise<boolean>"    → this async function resolves to a boolean (true/false)
+
 function showModal(message: string, options: any = {}): Promise<boolean> {
     return new Promise((resolve) => {
         const { type = 'confirm', confirmText = 'YES', cancelText = 'NO' } = options;
 
-        // Create modal overlay
+
         const overlay = document.createElement('div');
         overlay.className = 'fixed inset-0 bg-black/80 flex items-center justify-center z-[100]';
         overlay.id = 'modal-overlay';
 
-        // Create modal box
+
         overlay.innerHTML = `
             <div class="bg-terminal-bg border-2 border-terminal-accent p-6 max-w-md mx-4 font-mono">
                 <div class="text-terminal-text text-sm mb-6">${message}</div>
@@ -107,22 +57,22 @@ function showModal(message: string, options: any = {}): Promise<boolean> {
 
         document.body.appendChild(overlay);
 
-        // Focus confirm button
+
         document.getElementById('modal-confirm')?.focus();
 
-        // Handle confirm
+
         document.getElementById('modal-confirm')?.addEventListener('click', () => {
             overlay.remove();
             resolve(true);
         });
 
-        // Handle cancel
+
         document.getElementById('modal-cancel')?.addEventListener('click', () => {
             overlay.remove();
             resolve(false);
         });
 
-        // Handle escape key
+
         const handleEscape = (e: KeyboardEvent) => {
             if (e.key === 'Escape') {
                 overlay.remove();
@@ -132,7 +82,7 @@ function showModal(message: string, options: any = {}): Promise<boolean> {
         };
         document.addEventListener('keydown', handleEscape);
 
-        // Handle click outside
+
         overlay.addEventListener('click', (e: Event) => {
             if (e.target === overlay) {
                 overlay.remove();
@@ -142,11 +92,9 @@ function showModal(message: string, options: any = {}): Promise<boolean> {
     });
 }
 
-// ===== TIP JAR SYSTEM =====
-// ": Promise<void>" → async function that doesn't return a meaningful value.
-// "void" is like saying "returns nothing" (similar to void in C/Java).
+
 async function showTipJar(): Promise<void> {
-    // Go directly to Stripe checkout
+
     try {
         const response = await fetch(`${API_BASE_URL}/api/donate/create-session`, {
             method: 'POST',
@@ -166,7 +114,7 @@ async function showTipJar(): Promise<void> {
     }
 }
 
-// Check for donation success/cancel in URL
+
 function checkDonationStatus(): void {
     const params = new URLSearchParams(window.location.search);
     const donateStatus = params.get('donate');
@@ -179,9 +127,9 @@ function checkDonationStatus(): void {
     }
 }
 
-// Auth functions
+
 function checkAuthStatus(): void {
-    // Check localStorage for saved auth
+
     const saved = localStorage.getItem(AUTH_STORAGE_KEY);
     if (saved) {
         try {
@@ -198,14 +146,14 @@ function checkAuthStatus(): void {
 }
 
 function handleAuthCallback(): void {
-    // Check for auth token in URL (from OAuth callback)
+
     const params = new URLSearchParams(window.location.search);
     const token = params.get('auth_token');
     const battletag = params.get('battletag');
     if (token && battletag) {
         currentUser = { battletag: decodeURIComponent(battletag), token };
         localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(currentUser));
-        // Clean URL
+
         history.replaceState(null, '', window.location.pathname + window.location.hash);
         updateAuthUI();
         loadServerProgress();
@@ -244,7 +192,7 @@ async function loadServerProgress(): Promise<void> {
         });
         if (res.ok) {
             serverProgress = await res.json();
-            // Merge server progress with local storage (server wins on conflict)
+
             if (serverProgress.attunements) {
                 localStorage.setItem(ATTUNEMENT_STORAGE_KEY, JSON.stringify(serverProgress.attunements));
             }
@@ -336,7 +284,7 @@ async function loadAllData(): Promise<void> {
             heroicZones: Object.keys(heroicsData).length,
             factions: factionsData.factions?.length || 0
         });
-        // Initialize the app
+
         initClassSelector();
         if (!window.location.hash) renderClassContent('warrior');
     } catch (error: any) {
@@ -379,15 +327,15 @@ function getItemId(itemName: string): any {
 function getItemQuality(itemName: string): string {
     const cleanName = stripPriorityLabel(itemName);
     const name = cleanName.toLowerCase();
-    // Legendary items
+
     const legendaryItems = ['warglaive of azzinoth', 'thori\'al', 'sulfuras'];
     if (legendaryItems.some(leg => name.includes(leg))) return 'legendary';
-    // Uncommon (green) items
+
     const uncommonKeywords = [
         'flesh handler\'s'
     ];
     if (uncommonKeywords.some(keyword => name.includes(keyword))) return 'uncommon';
-    // Epic items that might be mistaken for rare (badge vendor epics, rep epics, etc.)
+
     const epicKeywords = [
         'bloodlust brooch',
         'choker of vile intent',
@@ -431,7 +379,7 @@ function getItemQuality(itemName: string): string {
         'netherdrake'
     ];
     if (epicKeywords.some(keyword => name.includes(keyword))) return 'epic';
-    // Rare (blue) items - dungeon drops, quest rewards, some rep items
+
     const rareKeywords = [
         'badge of tenacity',
         'vindicator\'s brand',
@@ -463,33 +411,33 @@ function getItemQuality(itemName: string): string {
         'marksman\'s bow'
     ];
     if (rareKeywords.some(keyword => name.includes(keyword))) return 'rare';
-    // Default to epic for raid items
+
     return 'epic';
 }
 function processItemLinks(): void {
     if (typeof $WowheadPower !== 'undefined') {
         $WowheadPower.refreshLinks();
-        // Update item qualities from Wowhead tooltips after they load
+
         setTimeout(updateItemQualitiesFromWowhead, 50);
     }
 }
 
-// Quality mapping from Wowhead's q-classes
+
 const WOWHEAD_QUALITY_MAP: any = {
-    'q0': 'poor',      // Gray
-    'q1': 'common',    // White
-    'q2': 'uncommon',  // Green
-    'q3': 'rare',      // Blue
-    'q4': 'epic',      // Purple
-    'q5': 'legendary', // Orange
-    'q6': 'artifact',  // Light gold
-    'q7': 'heirloom'   // Light gold
+    'q0': 'poor',
+    'q1': 'common',
+    'q2': 'uncommon',
+    'q3': 'rare',
+    'q4': 'epic',
+    'q5': 'legendary',
+    'q6': 'artifact',
+    'q7': 'heirloom'
 };
 
-// Extract quality from Wowhead tooltip HTML
+
 function extractQualityFromTooltip(tooltipHtml: string): string | null {
     if (!tooltipHtml) return null;
-    // Wowhead tooltips have the item name in a <b class="qX"> tag
+
     const match = tooltipHtml.match(/<b class="(q[0-7])"/);
     if (match && WOWHEAD_QUALITY_MAP[match[1]]) {
         return WOWHEAD_QUALITY_MAP[match[1]];
@@ -497,17 +445,17 @@ function extractQualityFromTooltip(tooltipHtml: string): string | null {
     return null;
 }
 
-// Cache for fetched item qualities
+
 const itemQualityCache: any = {};
 let qualityFetchInProgress: boolean = false;
 
-// Update item quality colors from Wowhead tooltip data
+
 async function updateItemQualitiesFromWowhead(): Promise<void> {
     if (qualityFetchInProgress) return;
     qualityFetchInProgress = true;
     const itemSpans = document.querySelectorAll('span[data-item-id]');
 
-    // Collect unique item IDs that need fetching
+
     const itemsToFetch: any[] = [];
     itemSpans.forEach((span: any) => {
         const itemId = span.getAttribute('data-item-id');
@@ -521,20 +469,20 @@ async function updateItemQualitiesFromWowhead(): Promise<void> {
         return;
     }
 
-    // Fetch tooltips and update qualities (batch of 10 at a time to avoid overwhelming)
+
     const batchSize = 10;
     for (let i = 0; i < itemsToFetch.length; i += batchSize) {
         const batch = itemsToFetch.slice(i, i + batchSize);
         await Promise.all(batch.map(async ({ itemId, span }: any) => {
             try {
-                // Check cache first
+
                 if (itemQualityCache[itemId]) {
                     updateSpanQuality(span, itemQualityCache[itemId]);
                     span.setAttribute('data-quality-updated', 'true');
                     return;
                 }
 
-                // Check if tooltip is already cached from raid-ready page
+
                 if (typeof capturedTooltips !== 'undefined' && capturedTooltips[itemId]) {
                     const quality = extractQualityFromTooltip(capturedTooltips[itemId]);
                     if (quality) {
@@ -545,7 +493,7 @@ async function updateItemQualitiesFromWowhead(): Promise<void> {
                     return;
                 }
 
-                // Fetch from Wowhead API
+
                 const tooltip = await fetchTooltipDirect(itemId);
                 if (tooltip) {
                     const quality = extractQualityFromTooltip(tooltip);
@@ -563,37 +511,35 @@ async function updateItemQualitiesFromWowhead(): Promise<void> {
     qualityFetchInProgress = false;
 }
 
-// Get quality from RGB color value
+
 function getQualityFromColor(color: string): string | null {
-    // Wowhead quality colors (approximate RGB)
+
     const colorMap: any = {
-        'rgb(163, 53, 238)': 'epic',      // Purple
-        'rgb(0, 112, 221)': 'rare',        // Blue
-        'rgb(30, 255, 0)': 'uncommon',     // Green
-        'rgb(255, 128, 0)': 'legendary',   // Orange
-        'rgb(157, 157, 157)': 'poor',      // Gray
-        'rgb(255, 255, 255)': 'common'     // White
+        'rgb(163, 53, 238)': 'epic',
+        'rgb(0, 112, 221)': 'rare',
+        'rgb(30, 255, 0)': 'uncommon',
+        'rgb(255, 128, 0)': 'legendary',
+        'rgb(157, 157, 157)': 'poor',
+        'rgb(255, 255, 255)': 'common'
     };
     return colorMap[color] || null;
 }
 
-// Update span's quality class
+
 function updateSpanQuality(span: any, newQuality: string): void {
-    // Remove existing quality class
+
     const classes = span.className.split(' ');
     const filteredClasses = classes.filter((c: string) => !c.startsWith('item-quality-'));
     filteredClasses.push(`item-quality-${newQuality}`);
     span.className = filteredClasses.join(' ');
 }
-// Helper function to generate item cell HTML (reduces duplication)
-// Spell IDs for enchants (TBC wowhead uses spells, not items for enchants)
-// NOTE: Duplicate definitions removed; keeping the later definitions below.
+
 function getQuestId(questName: string): any {
     const cleanName = questName.toLowerCase().trim().replace(/\\'/g, "'");
     return questIds[cleanName] || null;
 }
 function getTalentSpellId(talentName: string): any {
-    // Handle escaped apostrophes from the data (e.g., "Nature\'s Grace" -> "nature's grace")
+
     const cleanName = talentName.toLowerCase().trim().replace(/\\'/g, "'");
     return talentSpellIds[cleanName] || null;
 }
@@ -611,7 +557,7 @@ function generateItemCell(itemName: string): string {
             const priorityBadge = (currentPhase === 0) ? getPriorityBadge(priorityLabel) : '';
             const itemId = getItemId(trimmedItem);
             const spellId = getEnchantSpellId(trimmedItem);
-            // Use spell ID for enchants, item ID for items, otherwise plain text
+
             let link: string;
             if (spellId) {
                 link = `<a href="https://tbc.wowhead.com/spell=${spellId}" data-wowhead="spell=${spellId}">${displayName}</a>`;
@@ -620,7 +566,7 @@ function generateItemCell(itemName: string): string {
             } else {
                 link = displayName;
             }
-            // Add data-item-id for Wowhead quality updates (only for items, not enchants)
+
             const dataAttr = itemId ? ` data-item-id="${itemId}"` : '';
             return `<span class="item-quality-${quality}"${dataAttr}>${link}${priorityBadge}</span>`;
         }).join(' / ');
@@ -631,7 +577,7 @@ function generateItemCell(itemName: string): string {
     const priorityBadge = (currentPhase === 0) ? getPriorityBadge(priorityLabel) : '';
     const itemId = getItemId(itemName);
     const spellId = getEnchantSpellId(itemName);
-    // Use spell ID for enchants, item ID for items, otherwise plain text
+
     let link: string;
     if (spellId) {
         link = `<a href="https://tbc.wowhead.com/spell=${spellId}" data-wowhead="spell=${spellId}">${displayName}</a>`;
@@ -640,48 +586,48 @@ function generateItemCell(itemName: string): string {
     } else {
         link = displayName;
     }
-    // Add data-item-id for Wowhead quality updates (only for items, not enchants)
+
     const dataAttr = itemId ? ` data-item-id="${itemId}"` : '';
     return `<span class="item-quality-${quality}"${dataAttr}>${link}${priorityBadge}</span>`;
 }
-// Helper function to process source text and create wowhead NPC/quest links
+
 function generateSourceCell(source: string): string {
-    // NPC map for boss linking
+
     const npcMap: any = {
-        // Karazhan
+
         'Attumen the Huntsman': 16151, 'Moroes': 15687, 'Maiden of Virtue': 16457,
         'Opera Event': 0, 'The Curator': 15691, 'Shade of Aran': 16524,
         'Terestian Illhoof': 15688, 'Netherspite': 15689, 'Chess Event': 0,
         'Prince Malchezaar': 15690, 'Nightbane': 17225,
-        // Gruul's Lair
+
         'High King Maulgar': 18831, 'Gruul the Dragonkiller': 19044,
-        // Magtheridon's Lair
+
         'Magtheridon': 17257,
-        // Serpentshrine Cavern
+
         'Hydross the Unstable': 21216, 'The Lurker Below': 21217,
         'Leotheras the Blind': 21215, 'Fathom-Lord Karathress': 21214,
         'Morogrim Tidewalker': 21213, 'Lady Vashj': 21212,
-        // Tempest Keep
+
         'Al\'ar': 19514, 'Void Reaver': 19516, 'High Astromancer Solarian': 18805,
         'Kael\'thas Sunstrider': 19622,
-        // Hyjal Summit
+
         'Rage Winterchill': 17767, 'Anetheron': 17808, 'Kaz\'rogal': 17888,
         'Azgalor': 17842, 'Archimonde': 17968,
-        // Black Temple
+
         'High Warlord Naj\'entus': 22887, 'Supremus': 22898,
         'Shade of Akama': 22841, 'Teron Gorefiend': 22871,
         'Gurtogg Bloodboil': 22948, 'Reliquary of Souls': 22856,
         'Mother Shahraz': 22947, 'Illidari Council': 23426, 'The Illidari Council': 23426,
         'Illidan Stormrage': 22917,
-        // Zul'Aman
+
         'Akil\'zon': 23574, 'Nalorakk': 23576, 'Jan\'alai': 23578,
         'Halazzi': 23577, 'Hex Lord Malacrass': 24239, 'Zul\'jin': 23863,
-        // World Bosses
+
         'Doom-Lord Kazzak': 18728, 'Doomwalker': 17711,
-        // Sunwell Plateau
+
         'Kalecgos': 24850, 'Brutallus': 24882, 'Felmyst': 25038,
         'Eredar Twins': 25166, 'M\'uru': 25741, 'Kil\'jaeden': 25315,
-        // Dungeon Bosses
+
         'Epoch Hunter': 18096, 'Quagmirran': 17942, 'The Black Stalker': 17882,
         'Avatar of the Martyred': 18478, 'Exarch Maladaar': 18373,
         'Talon King Ikiss': 18473, 'Harbinger Skyriss': 20912,
@@ -698,7 +644,7 @@ function generateSourceCell(source: string): string {
         'Dalliah the Doomsayer': 20885, 'Laj': 17980,
         'Nethermancer Sepethrea': 19221, 'High Botanist Freywinn': 17975,
         'Gezzarak the Huntress': 23163,
-        // More dungeon bosses
+
         'Hungerfen': 17770, 'Ghaz\'an': 18105, 'Anzu': 23035,
         'Lieutenant Drake': 17848, 'Mechano-Lord Capacitus': 19219,
         'Mekgineer Steamrigger': 17796, 'Mennu the Betrayer': 17941,
@@ -706,24 +652,24 @@ function generateSourceCell(source: string): string {
         'Darkweaver Syth': 18472, 'Zereketh the Unbound': 20870,
         'Selin Fireheart': 24723, 'The Maker': 17381,
         'Wrath-Scryer Soccothrates': 20886,
-        // World bosses / rare spawns
+
         'Gurok the Usurper': 18062, 'Ar\'kelos the Guardian': 20798,
         'Gava\'xi': 18298, 'Coren Direbrew': 23872,
-        // Classic raids (for references)
+
         'C\'Thun': 15727, 'Emperor Vek\'nilash': 15275, 'Nefarian': 11583,
         'Sapphiron': 15989, 'Kel\'Thuzad': 15990,
-        // Naxxramas
+
         'Patchwerk': 16028, 'Grobbulus': 15931, 'Gluth': 15932,
-        // Karazhan extras
+
         'Echo of Medivh': 16816, 'Curator': 15691,
-        // Vendors
+
         'G\'eras': 19321
     };
-    // Patterns for non-boss sources (don't need NPC linking)
+
     const professionSources = ['Blacksmithing', 'Leatherworking', 'Tailoring', 'Jewelcrafting', 'Engineering', 'Alchemy'];
     const pvpSources = ['Honor', 'Honor Points', 'Arena', 'Arena Points'];
     const otherSources = ['BoE World Drop', 'BoE', 'World Drop', 'Crafted', 'N/A', 'Various', 'Vendor', 'PvP'];
-    // Dungeon and Raid lists for coloring
+
     const dungeons = [
         'Hellfire Ramparts', 'The Blood Furnace', 'The Shattered Halls', 'Shattered Halls',
         'The Slave Pens', 'Slave Pens', 'The Underbog', 'Underbog', 'The Steamvault', 'Steamvault',
@@ -738,108 +684,105 @@ function generateSourceCell(source: string): string {
         'Mount Hyjal', 'Hyjal Summit', 'Black Temple', "Zul'Aman",
         'Sunwell Plateau'
     ];
-    // Keep full source for display, extract boss name only for NPC linking
+
     let displayText: string = source;
     let bossName: string | null = null;
     let zoneName: string | null = null;
     let questName: string | null = null;
-    // Pattern: "Boss - Zone" -> keep full text, extract boss for linking
+
     const bossZoneMatch = source.match(/^(.+?)\s+-\s+(.+)$/);
     if (bossZoneMatch) {
         bossName = bossZoneMatch[1].trim();
         zoneName = bossZoneMatch[2].trim();
     }
-    // Pattern: "(H) Boss - Zone" for heroic dungeons
+
     const heroicMatch = source.match(/^\(H\)\s*(.+?)\s+-\s+(.+)$/);
     if (heroicMatch) {
         bossName = heroicMatch[1].trim();
         zoneName = heroicMatch[2].trim();
     }
-    // Pattern: "Boss1, Boss2 - Zone" -> extract first boss for linking
+
     if (bossName && bossName.includes(',')) {
         bossName = bossName.split(',')[0].trim();
     }
-    // Helper to get boss color class based on zone
+
     const getBossColorClass = (zone: string | null): string => {
         if (!zone) return '';
         const zoneLower = zone.toLowerCase();
-        if (dungeons.some(d => zoneLower.includes(d.toLowerCase()))) return 'text-wow-rare'; // blue
-        if (raids.some(r => zoneLower.includes(r.toLowerCase()))) return 'text-wow-epic'; // purple
+        if (dungeons.some(d => zoneLower.includes(d.toLowerCase()))) return 'text-wow-rare';
+        if (raids.some(r => zoneLower.includes(r.toLowerCase()))) return 'text-wow-epic';
         return '';
     };
-    // Pattern: Any source containing "Badge of Justice" with a number -> show badge count
+
     const badgeMatch = source.match(/(\d+)\s*x?\s*-?\s*Badge[s]?\s*(of\s*Justice)?/i);
     if (badgeMatch || source.toLowerCase().includes('badge of justice')) {
         const count = badgeMatch ? badgeMatch[1] : '';
         const displayText = count ? `${count} Badges` : 'Badge Vendor';
         return `<a href="https://tbc.wowhead.com/item=29434" data-wowhead="item=29434" class="underline hover:text-terminal-text">${displayText}</a>`;
     }
-    // Pattern: "Justice Vendor" -> badge vendor
+
     if (source.toLowerCase().includes('justice vendor')) {
         const countMatch = source.match(/(\d+)/);
         const count = countMatch ? countMatch[1] : '';
         const displayText = count ? `${count} Badges` : 'Badge Vendor';
         return `<a href="https://tbc.wowhead.com/item=29434" data-wowhead="item=29434" class="underline hover:text-terminal-text">${displayText}</a>`;
     }
-    // Pattern: "G'eras- X xBadge" -> show badge count
+
     const gerasBadgeMatch = source.match(/G'eras\s*-?\s*(\d+)\s*x?\s*Badge/i);
     if (gerasBadgeMatch) {
         return `<a href="https://tbc.wowhead.com/item=29434" data-wowhead="item=29434" class="underline hover:text-terminal-text">${gerasBadgeMatch[1]} Badges</a>`;
     }
-    // Pattern: "Exalted - Faction" or "Faction - Exalted/Revered/Honored" (handles both - and —)
+
     const repMatch = source.match(/^(Exalted|Revered|Honored|Friendly)\s*[-—]\s*(.+)$/i) || source.match(/^(.+?)\s*[-—]\s*(Exalted|Revered|Honored|Friendly)$/i);
     if (repMatch) {
         const faction = repMatch[1].match(/Exalted|Revered|Honored|Friendly/i) ? repMatch[2] : repMatch[1];
         const standing = repMatch[1].match(/Exalted|Revered|Honored|Friendly/i) ? repMatch[1] : repMatch[2];
         return `${faction} (${standing})`;
     }
-    // Pattern: "The Aldor- Revered" etc (handles both - and —)
+
     const factionRepMatch = source.match(/^(The Aldor|The Scryers|Lower City|Keepers of Time|The Sha'tar|Cenarion Expedition|Honor Hold|Thrallmar|The Violet Eye|The Scale of the Sands|Ashtongue Deathsworn|The Consortium|Kurenai|The Mag'har)\s*[-—]?\s*(Exalted|Revered|Honored|Friendly)$/i);
     if (factionRepMatch) {
         return `${factionRepMatch[1]} (${factionRepMatch[2]})`;
     }
-    // Profession sources - just return the profession name (no link)
-    // Handles: "Blacksmithing", "Spellfire Tailoring", "Mooncloth Tailoring", etc.
+
     const professionMatch = professionSources.find(p => source.toLowerCase().includes(p.toLowerCase()));
     if (professionMatch) {
-        // Handle profession specializations: "Spellfire Tailoring", "Mooncloth Tailoring", etc.
-        // Also handle "Item—Tailoring" format
+
         const cleanSource = source.split('—')[0].trim();
         return cleanSource;
     }
-    // PvP sources
+
     if (pvpSources.some(p => source.toLowerCase() === p.toLowerCase() || source.toLowerCase().includes(p.toLowerCase()))) {
         return source;
     }
-    // Other simple sources
+
     if (otherSources.some(o => source.toLowerCase().includes(o.toLowerCase()))) {
         return source;
     }
-    // Pattern: "Trash Mobs in - Zone" or "Trash mobs in - Zone"
+
     const trashMatch = source.match(/Trash\s*[Mm]obs?\s*in\s*-?\s*(.+)/i);
     if (trashMatch) {
         return `Trash (${trashMatch[1]})`;
     }
-    // Pattern: "Xrd Timed Chest - Zul'Aman"
+
     const timedChestMatch = source.match(/(\d+\w*)\s*Timed\s*Chest/i);
     if (timedChestMatch) {
         return `${timedChestMatch[1]} Timed Chest`;
     }
-    // Pattern: "Darkmoon Furies Deck" etc
+
     if (source.includes('Darkmoon') && source.includes('Deck')) {
         return source;
     }
-    // Pattern: "Zul'Aman" - timed chest rewards
+
     if (source === 'Zul\'Aman' || source === 'Zul\\\'Aman') {
         return `<a href="https://tbc.wowhead.com/zone=3805" data-wowhead="zone=3805" class="underline hover:text-terminal-text">Zul\'Aman</a>`;
     }
-    // Quest handling - check questIds FIRST before boss name matching
-    // This prevents "Teron Gorefiend, I am..." from matching the boss "Teron Gorefiend"
+
     const questId = getQuestId(source);
     if (questId) {
         return `<a href="https://tbc.wowhead.com/quest=${questId}" data-wowhead="quest=${questId}" class="underline hover:text-terminal-text">${source}</a>`;
     }
-    // Handle quest sources with "/" separator (multiple quest names)
+
     if (source.includes('/')) {
         const firstQuest = source.split('/')[0].trim();
         const questIdFirst = getQuestId(firstQuest);
@@ -847,7 +790,7 @@ function generateSourceCell(source: string): string {
             return `<a href="https://tbc.wowhead.com/quest=${questIdFirst}" data-wowhead="quest=${questIdFirst}" class="underline hover:text-terminal-text">${firstQuest}</a>`;
         }
     }
-    // Check if source contains any known quest name (for contaminated strings)
+
     const sourceLower = source.toLowerCase().replace(/\\'/g, "'");
     for (const [questName, qId] of Object.entries(questIds)) {
         if (sourceLower.includes(questName)) {
@@ -855,7 +798,7 @@ function generateSourceCell(source: string): string {
             return `<a href="https://tbc.wowhead.com/quest=${qId}" data-wowhead="quest=${qId}" class="underline hover:text-terminal-text">${displayQuestName}</a>`;
         }
     }
-    // If we identified a boss name, try to link it with color coding
+
     if (bossName && zoneName) {
         const colorClass = getBossColorClass(zoneName);
         const isRaid = raids.some(r => zoneName!.toLowerCase().includes(r.toLowerCase()));
@@ -866,7 +809,7 @@ function generateSourceCell(source: string): string {
         if (npcId > 0) {
             return `${skullPrefix}<a href="https://tbc.wowhead.com/npc=${npcId}" class="underline ${colorClass}">${bossDisplay}</a><span class="text-terminal-dim"> - ${zoneName}</span>`;
         }
-        // Check if boss name is in npcMap with different quote escaping
+
         for (const [npcName, id] of Object.entries(npcMap)) {
             if (npcName.toLowerCase() === bossName!.toLowerCase() && (id as number) > 0) {
                 return `${skullPrefix}<a href="https://tbc.wowhead.com/npc=${id}" class="underline ${colorClass}">${bossDisplay}</a><span class="text-terminal-dim"> - ${zoneName}</span>`;
@@ -881,12 +824,11 @@ function generateSourceCell(source: string): string {
         }
         return displayText;
     }
-    // Check if the source contains any known NPC name directly
-    // Sort by name length descending to match longer names first (e.g., "Kael'thas Sunstrider" before "Kael")
+
     const sortedNpcs = Object.entries(npcMap).sort((a: any, b: any) => b[0].length - a[0].length);
     for (const [npcName, npcId] of sortedNpcs) {
         if ((npcId as number) > 0) {
-            // Check both with and without escaped apostrophes
+
             const sourceNormalized = source.replace(/\\'/g, "'");
             const npcNameNormalized = npcName.replace(/\\'/g, "'");
             if (sourceNormalized.includes(npcNameNormalized)) {
@@ -896,9 +838,9 @@ function generateSourceCell(source: string): string {
     }
     return displayText;
 }
-// Helper function to generate BIS table rows
+
 function generateBisTable(bisData: any, specData: any): string {
-    // Group items by slot
+
     const groupedBySlot: any = {};
     bisData.forEach((row: any) => {
         const slot = row[0];
@@ -907,9 +849,9 @@ function generateBisTable(bisData: any, specData: any): string {
         }
         groupedBySlot[slot].push({item: row[1], source: row[2]});
     });
-    // Get enchants from specData
+
     const enchants = specData.enchants || {};
-    // Mapping between bis slot names and enchant slot names
+
     const slotMapping: any = {
         'HELM': ['Head', 'Helm'],
         'NECK': ['Neck'],
@@ -939,9 +881,9 @@ function generateBisTable(bisData: any, specData: any): string {
         'RANGED': ['Ranged Weapon'],
         'RANGED WEAPON': ['Ranged Weapon']
     };
-    // Load BiS progress
+
     const bisProgress = loadBisProgress();
-    // Generate table rows with grouped items and checkboxes
+
     return Object.entries(groupedBySlot).map(([slot, items]: [string, any]) => {
         const itemsHtml = items.map((i: any) => {
             const itemKey = getBisItemKey(currentClass as string, currentSpec, currentPhase, slot, i.item);
@@ -953,7 +895,7 @@ function generateBisTable(bisData: any, specData: any): string {
             </div>`;
         }).join('');
         const sourcesHtml = items.map((i: any) => generateSourceCell(i.source)).join('<br>');
-        // Find matching enchant for this slot
+
         let enchantHtml = '';
         const possibleEnchantKeys = slotMapping[slot] || [slot];
         for (const possibleKey of possibleEnchantKeys) {
@@ -979,11 +921,11 @@ function renderRaidsContent(): void {
     const phaseData = raidsData[currentRaidPhase];
     if (!phaseData) return;
     const raidData = phaseData.raids[currentRaid];
-    // Build phase buttons
+
     const phaseButtons = Object.entries(raidsData).map(([key, phase]: [string, any]) =>
         `<a href="#raids/${key}" class="raid-phase-btn ${key === currentRaidPhase ? 'bg-terminal-text text-terminal-bg' : 'bg-transparent'} border border-terminal-text text-terminal-text px-4 py-2.5 cursor-pointer font-mono text-xs transition-all select-none hover:bg-terminal-text hover:text-terminal-bg no-underline md:px-3.5 md:py-2.5 md:text-[11px] md:min-h-[48px] md:inline-flex md:items-center md:justify-center sm:px-3 sm:py-2 sm:text-[10px] sm:min-h-[44px]" data-phase="${key}">${phase.name}</a>`
     ).join('');
-    // Build raid buttons for current phase
+
     const raidButtons = Object.entries(phaseData.raids).map(([key, raid]: [string, any]) =>
         `<a href="#raids/${currentRaidPhase}/${key}" class="raid-btn ${key === currentRaid ? 'bg-terminal-accent text-terminal-bg' : 'bg-transparent'} border border-terminal-accent text-terminal-accent px-3 py-2 cursor-pointer font-mono text-xs transition-all select-none hover:bg-terminal-accent hover:text-terminal-bg no-underline md:px-3 md:py-2 md:text-[11px] sm:px-2.5 sm:py-1.5 sm:text-[10px]" data-raid="${key}">${raid.name} (${raid.size})</a>`
     ).join('');
@@ -997,7 +939,7 @@ function renderRaidsContent(): void {
         <div class="flex flex-wrap gap-2 mb-6 md:gap-1.5 md:mb-4 sm:mb-3">${raidButtons}</div>
     `;
     if (raidData) {
-        // Raid overview section
+
         html += `
             <div class="border border-terminal-dim p-4 mb-6 md:p-3 md:mb-4 sm:p-2.5 sm:mb-3">
                 <h3 class="text-terminal-accent text-base mb-3 md:text-sm sm:text-xs">${raidData.name}${raidData.shortName ? ` (${raidData.shortName})` : ''}</h3>
@@ -1013,7 +955,7 @@ function renderRaidsContent(): void {
             </div>
         `;
 
-        // Recommended composition section
+
         if (raidData.recommendedComposition) {
             const comp = raidData.recommendedComposition;
             html += `
@@ -1035,7 +977,7 @@ function renderRaidsContent(): void {
             `;
         }
 
-        // Minimum gear requirements section
+
         if (raidData.minimumGear) {
             const gear = raidData.minimumGear;
             html += `
@@ -1050,7 +992,7 @@ function renderRaidsContent(): void {
             `;
         }
 
-        // Attunement steps section
+
         if (raidData.attunementSteps && raidData.attunementSteps.length > 0) {
             html += `
                 <div class="border border-purple-500 border-opacity-30 p-4 mb-6 md:p-3 md:mb-4 sm:p-2.5 sm:mb-3">
@@ -1061,10 +1003,10 @@ function renderRaidsContent(): void {
                 </div>
             `;
         }
-        // Boss list header
+
         html += `<h3 class="text-terminal-text text-sm my-4 uppercase md:text-[13px] md:my-3 sm:text-xs">💀 [ BOSS ENCOUNTERS ]</h3>`;
 
-        // Difficulty badge colors
+
         const difficultyColors: any = {
             'Easy': 'bg-green-900 border-green-500 text-green-400',
             'Medium': 'bg-yellow-900 border-yellow-500 text-yellow-400',
@@ -1087,7 +1029,7 @@ function renderRaidsContent(): void {
                     <p class="text-terminal-dim text-xs mb-3 leading-relaxed md:text-[11px] md:mb-2 sm:text-[10px]">${boss.description}</p>
             `;
 
-            // Phase breakdown section
+
             if (boss.phaseBreakdown && boss.phaseBreakdown.length > 0) {
                 html += `
                     <div class="border border-cyan-500 border-opacity-30 p-3 mb-3 md:p-2.5 md:mb-2 sm:p-2">
@@ -1099,7 +1041,7 @@ function renderRaidsContent(): void {
                 `;
             }
 
-            // Guest list section (for Moroes)
+
             if (boss.guestList && boss.guestList.length > 0) {
                 html += `
                     <div class="border border-orange-500 border-opacity-30 p-3 mb-3 md:p-2.5 md:mb-2 sm:p-2">
@@ -1111,7 +1053,7 @@ function renderRaidsContent(): void {
                 `;
             }
 
-            // Abilities table with handling column
+
             if (boss.abilities && boss.abilities.length > 0) {
                 html += `
                     <div class="mb-3 md:mb-2">
@@ -1147,7 +1089,7 @@ function renderRaidsContent(): void {
                 `;
             }
 
-            // Strategy section
+
             if (boss.strategy) {
                 html += `
                     <div class="bg-terminal-bg/50 border border-terminal-accent border-opacity-30 p-3 mb-3 md:p-2.5 md:mb-2 sm:p-2">
@@ -1157,7 +1099,7 @@ function renderRaidsContent(): void {
                 `;
             }
 
-            // Common mistakes section
+
             if (boss.commonMistakes && boss.commonMistakes.length > 0) {
                 html += `
                     <div class="border border-red-500 border-opacity-30 p-3 mb-3 md:p-2.5 md:mb-2 sm:p-2">
@@ -1169,7 +1111,7 @@ function renderRaidsContent(): void {
                 `;
             }
 
-            // Loot highlights section
+
             if (boss.lootHighlights && boss.lootHighlights.length > 0) {
                 html += `
                     <div class="border border-wow-epic border-opacity-30 p-3 md:p-2.5 sm:p-2">
@@ -1191,7 +1133,7 @@ function renderRaidsContent(): void {
     setTimeout(() => {
         mainContent.innerHTML = html;
         mainContent.style.opacity = '1';
-        // Add event listeners to phase buttons
+
         document.querySelectorAll('.raid-phase-btn').forEach((btn: any) => {
             btn.addEventListener('click', (e: any) => {
                 if (e.ctrlKey || e.metaKey || e.button === 1) return;
@@ -1202,7 +1144,7 @@ function renderRaidsContent(): void {
                 window.location.hash = `#raids/${currentRaidPhase}`;
             });
         });
-        // Add event listeners to raid buttons
+
         document.querySelectorAll('.raid-btn').forEach((btn: any) => {
             btn.addEventListener('click', (e: any) => {
                 if (e.ctrlKey || e.metaKey || e.button === 1) return;
@@ -1211,7 +1153,7 @@ function renderRaidsContent(): void {
                 window.location.hash = `#raids/${currentRaidPhase}/${currentRaid}`;
             });
         });
-        // Reinitialize wowhead tooltips
+
         if (typeof $WowheadPower !== 'undefined' && $WowheadPower.refreshLinks) {
             $WowheadPower.refreshLinks();
             setTimeout(updateItemQualitiesFromWowhead, 50);
@@ -1262,7 +1204,7 @@ function renderCollectionsContent(category: string = 'mounts'): void {
     setTimeout(() => {
         mainContent.innerHTML = html;
         mainContent.style.opacity = '1';
-        // Add event listeners to category buttons
+
         document.querySelectorAll('.collection-btn').forEach((btn: any) => {
             btn.addEventListener('click', (e: any) => {
                 if (e.ctrlKey || e.metaKey || e.button === 1) return;
@@ -1429,7 +1371,7 @@ function renderToysSection(data: any): string {
     return html;
 }
 
-// ===== ATTUNEMENT TRACKER FUNCTIONS =====
+
 function loadAttunementProgress(): any {
     try {
         const saved = localStorage.getItem(ATTUNEMENT_STORAGE_KEY);
@@ -1449,7 +1391,7 @@ function saveAttunementProgress(stepId: string, completed: boolean): void {
             delete progress[stepId];
         }
         localStorage.setItem(ATTUNEMENT_STORAGE_KEY, JSON.stringify(progress));
-        // Also save to server if logged in
+
         saveProgressToServer();
     } catch (e) {
         console.error('Error saving attunement progress:', e);
@@ -1470,7 +1412,7 @@ function clearAttunementProgress(attunementKey: string | null = null): void {
         } else {
             localStorage.removeItem(ATTUNEMENT_STORAGE_KEY);
         }
-        // Also save to server if logged in
+
         saveProgressToServer();
     } catch (e) {
         console.error('Error clearing attunement progress:', e);
@@ -1498,7 +1440,7 @@ function renderProgressBar(completed: number, total: number): string {
     return `<span class="text-terminal-accent">[${bar}]</span> <span class="text-terminal-dim">${percent}% (${completed}/${total})</span>`;
 }
 
-// ===== BIS CHECKBOX FUNCTIONS =====
+
 function loadBisProgress(): any {
     try {
         const saved = localStorage.getItem(BIS_STORAGE_KEY);
@@ -1527,8 +1469,7 @@ function getBisItemKey(className: string, specName: string, phase: any, slot: st
     return `${className}-${specName}-${phase}-${slot}-${stripPriorityLabel(itemName).toLowerCase().replace(/[^a-z0-9]/g, '')}`;
 }
 
-// ===== REPUTATION TRACKER FUNCTIONS =====
-// factionsData.factions and factionsData.standings are loaded from factionsData.json
+
 
 function loadRepProgress(): any {
     try {
@@ -1550,8 +1491,7 @@ function saveRepProgress(factionId: string, standing: string): void {
     }
 }
 
-// ===== RAID LOCKOUT TRACKER FUNCTIONS =====
-// lockoutsData.raids is loaded from lockoutsData.json
+
 
 function loadLockoutProgress(): any {
     try {
@@ -1599,7 +1539,7 @@ function checkLockoutExpiry(): any {
     return progress;
 }
 
-// ===== GUILD PROGRESS TRACKER FUNCTIONS =====
+
 function loadGuildProgress(): any {
     try {
         const saved = localStorage.getItem(GUILD_PROGRESS_KEY);
@@ -1795,7 +1735,7 @@ function attachAttunementListeners(): void {
                 label.classList.toggle('completed', completed);
             }
 
-            // Update progress bar
+
             const stats = getAttunementCompletionStats(currentAttunement);
             const progressFill = document.querySelector('.progress-bar-fill') as any;
             const progressText = (document.querySelector('.progress-bar-bg') as any)?.nextElementSibling;
@@ -1806,7 +1746,7 @@ function attachAttunementListeners(): void {
                 progressText.textContent = `${stats.percent}% (${stats.completed}/${stats.total})`;
             }
 
-            // Update button checkmark
+
             const btn = document.querySelector(`.attunement-btn[data-attunement="${currentAttunement}"]`) as any;
             if (btn && stats.percent === 100) {
                 if (!btn.textContent.includes('\u2713')) {
@@ -1873,16 +1813,16 @@ function renderRecipesContent(): void {
         `;
         for (const recipe of category.recipes) {
             const priority = priorityLabels[recipe.priority] || priorityLabels.medium;
-            // Handle recipe name with tooltip - some items like head/shoulder enchants don't have craftable spell IDs
+
             let recipeName: string;
             if (recipe.itemId) {
-                // Use item tooltip
+
                 recipeName = `<a href="https://tbc.wowhead.com/item=${recipe.itemId}" data-wowhead="item=${recipe.itemId}" class="text-terminal-accent hover:text-terminal-text">${recipe.name}</a>`;
             } else if (recipe.spellId && recipe.spellId > 0) {
-                // Use spell tooltip
+
                 recipeName = `<a href="https://tbc.wowhead.com/spell=${recipe.spellId}" data-wowhead="spell=${recipe.spellId}" class="text-terminal-accent hover:text-terminal-text">${recipe.name}</a>`;
             } else {
-                // No tooltip, just plain text
+
                 recipeName = `<span class="text-terminal-accent">${recipe.name}</span>`;
             }
             html += `
@@ -1906,7 +1846,7 @@ function renderRecipesContent(): void {
     setTimeout(() => {
         mainContent.innerHTML = html;
         mainContent.style.opacity = '1';
-        // Add event listeners to profession buttons
+
         document.querySelectorAll('.profession-btn').forEach((btn: any) => {
             btn.addEventListener('click', (e: any) => {
                 if (e.ctrlKey || e.metaKey || e.button === 1) return;
@@ -1915,7 +1855,7 @@ function renderRecipesContent(): void {
                 window.location.hash = `#recipes/${currentProfession}`;
             });
         });
-        // Reinitialize wowhead tooltips
+
         if (typeof $WowheadPower !== 'undefined' && $WowheadPower.refreshLinks) {
             $WowheadPower.refreshLinks();
             setTimeout(updateItemQualitiesFromWowhead, 50);
@@ -1926,23 +1866,23 @@ function renderClassContent(className: string): void {
     const data = classData[className];
     if (!data) return;
     currentClass = className;
-    // Set default spec if needed
+
     if (!currentSpec || !data.specs[currentSpec]) {
         currentSpec = data.defaultSpec;
     }
     const specData = data.specs[currentSpec];
     if (!specData) return;
-    // Validate current phase
+
     if (!specData.phases[currentPhase]) {
         currentPhase = Object.keys(specData.phases)[0];
     }
     const phaseData = specData.phases[currentPhase];
-    // Generate UI components
+
     const phaseButtons = Object.keys(specData.phases)
         .map((p: string) => `<a href="#${className}/${currentSpec}/${p}" class="phase-btn ${p == currentPhase ? 'bg-terminal-text text-terminal-bg' : 'bg-transparent'} border border-terminal-text text-terminal-text px-4 py-2.5 cursor-pointer font-mono text-xs transition-all select-none hover:bg-terminal-text hover:text-terminal-bg no-underline md:px-3.5 md:py-2.5 md:text-[11px] md:min-h-[48px] md:inline-flex md:items-center md:justify-center sm:px-3 sm:py-2 sm:text-[10px] sm:min-h-[44px]" data-phase="${p}">${specData.phases[p].name}</a>`)
         .join('');
     const bisTable = generateBisTable(phaseData.bis, specData);
-    // Generate talents tree
+
     let talentsHtml = '';
     if (specData.talents && specData.talents.length > 0) {
         const buildsList = specData.talents.map((build: any, buildIdx: number) => {
@@ -1970,7 +1910,7 @@ function renderClassContent(className: string): void {
             <div class="talent-tree bg-terminal-bg/30 border border-terminal-dim p-4 my-4 font-mono text-xs leading-relaxed md:text-[11px] md:p-3 sm:text-[10px] sm:p-2.5" style="white-space: pre-wrap;">${buildsList}</div>
         `;
     }
-    // Generate gems section
+
     let gemsHtml = '';
     if (specData.gems && specData.gems.length > 0) {
         const gemsList = specData.gems.map((gem: string) => generateItemCell(gem)).join(' ');
@@ -1979,7 +1919,7 @@ function renderClassContent(className: string): void {
             <div class="bg-terminal-bg/30 border border-terminal-dim p-4 my-4 font-mono text-xs leading-relaxed md:text-[11px] md:p-3 sm:text-[10px] sm:p-2.5">${gemsList}</div>
         `;
     }
-    // Generate macros section
+
     let macrosHtml = '';
     if (specData.macros && specData.macros.length > 0) {
         const macrosList = specData.macros.map((macro: any) => {
@@ -1995,11 +1935,11 @@ function renderClassContent(className: string): void {
             <div class="border border-terminal-dim p-4 my-4 md:p-3 sm:p-2.5">${macrosList}</div>
         `;
     }
-    // Generate rotation section
+
     let rotationHtml = '';
     if (specData.rotation) {
         const rot = specData.rotation;
-        // Priority list
+
         let priorityHtml = '';
         if (rot.priority && rot.priority.length > 0) {
             const priorityList = rot.priority.map((ability: any, idx: number) => {
@@ -2025,7 +1965,7 @@ function renderClassContent(className: string): void {
                     </table>
                 </div>`;
         }
-        // Opener section
+
         let openerHtml = '';
         if (rot.opener && rot.opener.length > 0) {
             const openerList = rot.opener.map((ability: any) => {
@@ -2038,7 +1978,7 @@ function renderClassContent(className: string): void {
                 <h4 class="text-terminal-accent text-xs uppercase mb-2 mt-4 md:text-[11px] md:mb-1.5 sm:text-[10px]">// Opener</h4>
                 <div class="bg-terminal-bg/50 border border-terminal-dim p-3 text-xs md:text-[11px] sm:text-[10px]">${openerList}</div>`;
         }
-        // Cooldowns section
+
         let cooldownsHtml = '';
         if (rot.cooldowns && rot.cooldowns.length > 0) {
             const cdList = rot.cooldowns.map((cd: any) => {
@@ -2051,7 +1991,7 @@ function renderClassContent(className: string): void {
                 <h4 class="text-terminal-accent text-xs uppercase mb-2 mt-4 md:text-[11px] md:mb-1.5 sm:text-[10px]">// Cooldowns</h4>
                 <div class="bg-terminal-bg/50 border border-terminal-dim p-3 text-xs md:text-[11px] sm:text-[10px]">${cdList}</div>`;
         }
-        // Notes section
+
         let notesHtml = '';
         if (rot.notes) {
             notesHtml = `
@@ -2108,17 +2048,17 @@ function renderClassContent(className: string): void {
     }, FADE_TRANSITION_MS);
 }
 function attachEventListeners(specData: any): void {
-    // Phase button listeners
+
     document.querySelectorAll('.phase-btn').forEach((btn: any) => {
         btn.addEventListener('click', function(this: any, e: any) {
             if (e.ctrlKey || e.metaKey || e.button === 1) return;
             e.preventDefault();
-            // Remove active state from all buttons
+
             document.querySelectorAll('.phase-btn').forEach((b: any) => {
                 b.classList.remove('bg-terminal-text', 'text-terminal-bg');
                 b.classList.add('bg-transparent', 'text-terminal-text');
             });
-            // Add active state to clicked button
+
             this.classList.remove('bg-transparent', 'text-terminal-text');
             this.classList.add('bg-terminal-text', 'text-terminal-bg');
             const phase = parseInt(this.getAttribute('data-phase'));
@@ -2131,7 +2071,7 @@ function attachEventListeners(specData: any): void {
             attachBisCheckboxListeners();
         });
     });
-    // Spec tab listeners
+
     document.querySelectorAll('.spec-tab').forEach((tab: any) => {
         tab.addEventListener('click', function(this: any, e: any) {
             if (e.ctrlKey || e.metaKey || e.button === 1) return;
@@ -2139,12 +2079,12 @@ function attachEventListeners(specData: any): void {
             const newSpec = this.getAttribute('data-spec');
             if (newSpec !== currentSpec) {
                 currentSpec = newSpec;
-                // Keep the current phase when switching specs
+
                 window.location.hash = `#${currentClass}/${newSpec}/${currentPhase}`;
             }
         });
     });
-    // BiS checkbox listeners
+
     attachBisCheckboxListeners();
 }
 
@@ -2154,7 +2094,7 @@ function attachBisCheckboxListeners(): void {
             const itemKey = this.getAttribute('data-item-key');
             const isChecked = this.checked;
             saveBisProgress(itemKey, isChecked);
-            // Update label styling
+
             const label = this.nextElementSibling;
             if (label) {
                 if (isChecked) {
@@ -2166,14 +2106,14 @@ function attachBisCheckboxListeners(): void {
         });
     });
 }
-// Pre-raid checker state
+
 let preRaidClass: string = 'warrior';
 let preRaidSpecName: string | null = null;
 let preRaidGearText: string = '';
 let preRaidDebounceTimer: any = null;
-let selectedPhase: string = '1'; // Default to Phase 1 (Karazhan)
+let selectedPhase: string = '1';
 
-// Phase definitions - "Am I ready for X?"
+
 const PHASES: any[] = [
     { key: '1', name: 'Phase 1 (Karazhan/Gruul/Mag)', shortName: 'Karazhan' },
     { key: '2', name: 'Phase 2 (SSC/TK)', shortName: 'SSC/TK' },
@@ -2182,8 +2122,7 @@ const PHASES: any[] = [
     { key: '5', name: 'Phase 5 (Sunwell)', shortName: 'Sunwell' }
 ];
 
-// Minimum raid thresholds by role and phase
-// These are realistic minimums to be "ready", not BiS targets
+
 const RAID_THRESHOLDS: any = {
     caster_dps: {
         '1': { spellhit: 50, spelldamage: 500, stamina: 120, label: 'Karazhan' },
@@ -2215,75 +2154,75 @@ const RAID_THRESHOLDS: any = {
     }
 };
 
-// Map specs to roles
+
 const SPEC_ROLES: any = {
-    // Priest
+
     'shadow': 'caster_dps',
     'holy': 'healer',
     'discipline': 'healer',
-    // Mage
+
     'fire': 'caster_dps',
     'frost': 'caster_dps',
     'arcane': 'caster_dps',
-    // Warlock
+
     'affliction': 'caster_dps',
     'demonology': 'caster_dps',
     'destruction': 'caster_dps',
-    // Druid
+
     'balance': 'caster_dps',
     'feral': 'melee_dps',
     'feral tank': 'tank',
     'restoration': 'healer',
-    // Paladin
+
     'protection': 'tank',
     'retribution': 'melee_dps',
-    // Shaman
+
     'elemental': 'caster_dps',
     'enhancement': 'melee_dps',
-    // Warrior
+
     'arms': 'melee_dps',
     'fury': 'melee_dps',
-    // Rogue
+
     'combat': 'melee_dps',
     'assassination': 'melee_dps',
     'subtlety': 'melee_dps',
-    // Hunter
+
     'beast mastery': 'melee_dps',
     'marksmanship': 'melee_dps',
     'survival': 'melee_dps'
 };
 
-// Gear slots for scoring
+
 const GEAR_SLOTS: string[] = ['HELM', 'NECK', 'SHOULDER', 'CLOAK', 'CHEST', 'BRACER', 'GLOVES', 'BELT', 'LEGS', 'BOOTS', 'RING', 'TRINKET', 'WEAPON', 'OFF-HAND', 'RANGED'];
 
-// Cache for calculated BiS stats per phase/spec
+
 let bisStatsCache: any = {};
 
-// Find item ID from name (case-insensitive, partial match)
+
 function findItemId(itemName: string): any {
     if (!itemIds || typeof itemIds !== 'object') return null;
     const lower = itemName.toLowerCase().trim();
     if (!lower) return null;
-    // Exact match first
+
     for (const name in itemIds) {
         if (name.toLowerCase() === lower) return itemIds[name];
     }
-    // Partial match - item name contains search term
+
     for (const name in itemIds) {
         if (name.toLowerCase().includes(lower)) return itemIds[name];
     }
     return null;
 }
 
-// Cache for item searches
+
 const itemSearchCache: any = {};
 
-// Search for item ID by name using Blizzard API via backend
+
 async function searchItemByName(itemName: string): Promise<any> {
     const lower = itemName.toLowerCase().trim();
     if (!lower) return null;
 
-    // Check cache first
+
     if (itemSearchCache[lower] !== undefined) {
         return itemSearchCache[lower];
     }
@@ -2297,11 +2236,11 @@ async function searchItemByName(itemName: string): Promise<any> {
 
         const data = await response.json();
         if (data.items && data.items.length > 0) {
-            // Find best match - require the names to actually relate
+
             const exactMatch = data.items.find((item: any) =>
                 item.name.toLowerCase() === lower
             );
-            // Partial match: item name contains search OR search contains item name
+
             const partialMatch = data.items.find((item: any) => {
                 const itemLower = item.name.toLowerCase();
                 return itemLower.includes(lower) || lower.includes(itemLower);
@@ -2309,12 +2248,12 @@ async function searchItemByName(itemName: string): Promise<any> {
 
             const result = exactMatch || partialMatch;
             if (!result) {
-                // No good match found
+
                 itemSearchCache[lower] = null;
                 return null;
             }
 
-            // Cache the result and add to local itemIds for future lookups
+
             itemSearchCache[lower] = result;
             if (result && result.id) {
                 itemIds[lower] = result.id;
@@ -2330,13 +2269,13 @@ async function searchItemByName(itemName: string): Promise<any> {
     }
 }
 
-// Extract item name without rating suffix
+
 function cleanItemName(bisEntry: string): string {
-    // bisEntry is like "Overlord's Helmet of Second Sight (BEST)"
+
     return bisEntry.replace(/\s*\((BEST|RECOMMENDED|OPTION|EASY)\)\s*$/i, '').trim();
 }
 
-// Get rating weight for scoring
+
 function getRatingWeight(bisEntry: string): number {
     if (bisEntry.includes('(BEST)')) return 1.0;
     if (bisEntry.includes('(RECOMMENDED)')) return 0.85;
@@ -2345,23 +2284,23 @@ function getRatingWeight(bisEntry: string): number {
     return 0.5;
 }
 
-// Get BiS list for a class/spec/phase
+
 function getPhaseBisList(className: string, specName: string, phaseKey: string): any[] {
     const cls = classData[className];
     if (!cls || !cls.specs || !cls.specs[specName]) return [];
     const spec = cls.specs[specName];
     if (!spec.phases) return [];
-    // phases is an object with keys "0", "1", etc.
+
     const phase = spec.phases[phaseKey];
     return phase?.bis || [];
 }
 
-// Legacy function for compatibility
+
 function getPreRaidBisList(className: string, specName: string): any[] {
     return getPhaseBisList(className, specName, '0');
 }
 
-// Calculate total BiS stats for a phase by fetching all BiS items
+
 async function calculatePhaseBisStats(className: string, specName: string, phaseKey: string): Promise<any> {
     const cacheKey = `${className}-${specName}-${phaseKey}`;
     if (bisStatsCache[cacheKey]) return bisStatsCache[cacheKey];
@@ -2369,7 +2308,7 @@ async function calculatePhaseBisStats(className: string, specName: string, phase
     const bisList = getPhaseBisList(className, specName, phaseKey);
     if (bisList.length === 0) return null;
 
-    // Get only BEST items for each slot (or first item if no BEST marker)
+
     const bestBySlot: any = {};
     for (const [slot, itemName, source] of bisList) {
         if (itemName.includes('(BEST)') || !bestBySlot[slot]) {
@@ -2381,14 +2320,14 @@ async function calculatePhaseBisStats(className: string, specName: string, phase
         }
     }
 
-    // Get item IDs that need fetching
+
     const bisItemIds = Object.values(bestBySlot).map((item: any) => item.itemId);
     await fetchAllItemStats(bisItemIds);
 
-    // Debug: log what items are counted for BiS
+
     console.log(`[BiS ${phaseKey}] Slots:`, Object.keys(bestBySlot).length, Object.entries(bestBySlot).map(([slot, item]: [string, any]) => `${slot}: ${item.name}`));
 
-    // Get stats from fetched cache
+
     const statsArray = Object.values(bestBySlot)
         .map((item: any) => fetchedItemStats[item.itemId])
         .filter((stats: any) => stats && Object.values(stats).some((v: any) => typeof v === 'number' && v > 0));
@@ -2399,7 +2338,7 @@ async function calculatePhaseBisStats(className: string, specName: string, phase
     return totalStats;
 }
 
-// Get status based on stat comparison to BiS
+
 function getStatStatus(userValue: number, bisValue: number, prevBisValue: number): any {
     if (bisValue === 0) return { status: '-', class: 'text-terminal-dim' };
 
@@ -2416,9 +2355,9 @@ function getStatStatus(userValue: number, bisValue: number, prevBisValue: number
     }
 }
 
-// Get overall readiness status
+
 function getOverallStatus(userStats: any, bisStats: any, prevBisStats: any): any {
-    // Include both melee and caster stats - only count ones where BiS > 0
+
     const keyStats = ['stamina', 'hit', 'crit', 'attackpower', 'spelldamage', 'spellhit', 'spellcrit', 'healing', 'defense', 'mp5'];
     let bisCount = 0, goodCount = 0, preparedCount = 0, totalRelevant = 0;
 
@@ -2439,13 +2378,13 @@ function getOverallStatus(userStats: any, bisStats: any, prevBisStats: any): any
     return { status: 'UNDERGEARED', class: 'text-red-400' };
 }
 
-// Get role for a spec
+
 function getSpecRole(specName: string | null): string {
     const lower = specName?.toLowerCase() || '';
-    return SPEC_ROLES[lower] || 'caster_dps'; // Default to caster
+    return SPEC_ROLES[lower] || 'caster_dps';
 }
 
-// Check user stats against raid thresholds
+
 function checkRaidThresholds(userStats: any, role: string, phaseKey: string): any {
     const thresholds = RAID_THRESHOLDS[role]?.[phaseKey];
     if (!thresholds) return { passed: [], failed: [], label: 'Unknown' };
@@ -2480,12 +2419,12 @@ function checkRaidThresholds(userStats: any, role: string, phaseKey: string): an
     return results;
 }
 
-// Compare user items to BiS list by slot
+
 function compareItemsToBis(userItemNames: string[], bisList: any[]): any {
     const results: any = {};
-    const usedUserItems = new Set<string>(); // Track which user items have been matched
+    const usedUserItems = new Set<string>();
 
-    // Build BiS lookup by slot (keep RING 1, RING 2, etc. separate)
+
     const bisBySlot: any = {};
     for (const [slot, itemName, source] of bisList) {
         if (!bisBySlot[slot]) bisBySlot[slot] = [];
@@ -2496,20 +2435,20 @@ function compareItemsToBis(userItemNames: string[], bisList: any[]): any {
         });
     }
 
-    // Check each BiS slot
+
     for (const [slot, bisItems] of Object.entries(bisBySlot) as [string, any][]) {
         const bestBis = bisItems.find((i: any) => i.rating >= 1) || bisItems[0];
 
-        // Find if user has any item for this slot (that hasn't been used yet)
+
         let userMatch: string | null = null;
         let matchType = 'MISSING';
 
         for (const userName of userItemNames) {
-            if (usedUserItems.has(userName.toLowerCase())) continue; // Skip already matched items
+            if (usedUserItems.has(userName.toLowerCase())) continue;
 
             const cleanUser = userName.toLowerCase().trim();
 
-            // Check if user item matches any BiS item for this slot
+
             for (const bisItem of bisItems) {
                 const cleanBis = bisItem.name.toLowerCase();
                 if (cleanUser === cleanBis || cleanUser.includes(cleanBis) || cleanBis.includes(cleanUser)) {
@@ -2528,7 +2467,7 @@ function compareItemsToBis(userItemNames: string[], bisList: any[]): any {
             if (userMatch) break;
         }
 
-        // Display slot name without number for cleaner UI
+
         const displaySlot = slot.replace(/\s*\d+$/, '');
         results[slot] = {
             displaySlot,
@@ -2542,7 +2481,7 @@ function compareItemsToBis(userItemNames: string[], bisList: any[]): any {
     return results;
 }
 
-// Parse gear list and match against BiS
+
 function parseAndMatchGear(gearText: string, bisList: any[]): any[] {
     const lines = gearText.split('\n').map((l: string) => l.trim()).filter((l: string) => l);
     const results: any[] = [];
@@ -2553,7 +2492,7 @@ function parseAndMatchGear(gearText: string, bisList: any[]): any[] {
         let slot: string | null = null;
         let rating: number | null = null;
 
-        // Check if this item is in the BiS list
+
         for (const bisEntry of bisList) {
             const [bisSlot, bisItemName, bisSource] = bisEntry;
             const cleanBisName = cleanItemName(bisItemName);
@@ -2573,14 +2512,14 @@ function parseAndMatchGear(gearText: string, bisList: any[]): any[] {
             found: !!itemId,
             bisMatch,
             slot,
-            rating: rating || (itemId ? 0.3 : 0) // Recognized items get some credit
+            rating: rating || (itemId ? 0.3 : 0)
         });
     }
 
     return results;
 }
 
-// Stat requirements for raids (unbuffed minimums)
+
 const RAID_REQUIREMENTS: any = {
     karazhan: {
         tank: { stamina: 400, defense: 490, armor: 12000 },
@@ -2602,33 +2541,33 @@ const RAID_REQUIREMENTS: any = {
     }
 };
 
-// Calculate readiness score based on BiS matches
+
 function calculateGearReadiness(matchResults: any[]): number {
     if (matchResults.length === 0) return 0;
 
-    // Count BiS matches by slot
+
     const slotsFilled: any = {};
 
     for (const result of matchResults) {
         if (result.slot && result.rating) {
-            // Take the best rating for each slot
+
             if (!slotsFilled[result.slot] || slotsFilled[result.slot] < result.rating) {
                 slotsFilled[result.slot] = result.rating;
             }
         }
     }
 
-    // Calculate score based on slots filled
+
     const filledSlots = Object.keys(slotsFilled).length;
-    const totalSlots = 15; // Approximate total gear slots
+    const totalSlots = 15;
     const avgRating = filledSlots > 0 ? (Object.values(slotsFilled) as number[]).reduce((a, b) => a + b, 0) / filledSlots : 0;
 
-    // Score = coverage * quality
+
     const coverage = Math.min(filledSlots / totalSlots, 1);
     return Math.round(coverage * (avgRating as number) * 100);
 }
 
-// Parse stats from Wowhead tooltip HTML - OPTIMIZED single-pass DFA-style
+
 function parseTooltipStats(tooltipHtml: string): any {
     const stats: any = {
         stamina: 0, intellect: 0, strength: 0, agility: 0, spirit: 0,
@@ -2638,19 +2577,19 @@ function parseTooltipStats(tooltipHtml: string): any {
     };
     if (!tooltipHtml) return stats;
 
-    // Strip HTML tags and decode entities to get plain text
+
     const text = tooltipHtml
-        .replace(/<[^>]+>/g, ' ')  // Remove HTML tags
+        .replace(/<[^>]+>/g, ' ')
         .replace(/&nbsp;/g, ' ')
         .replace(/&lt;/g, '<')
         .replace(/&gt;/g, '>')
         .replace(/&amp;/g, '&')
-        .replace(/Socket Bonus:.*?(?=Durability|Requires|Equip:|$)/gi, '')  // Remove socket bonus
-        .replace(/\s+/g, ' ');     // Normalize whitespace
+        .replace(/Socket Bonus:.*?(?=Durability|Requires|Equip:|$)/gi, '')
+        .replace(/\s+/g, ' ');
 
     console.log('[TEXT]', text.substring(0, 300));
 
-    // Simple patterns for plain text
+
     const patterns: [RegExp, string][] = [
         [/\+(\d+)\s+Stamina/gi, 'stamina'],
         [/\+(\d+)\s+Intellect/gi, 'intellect'],
@@ -2668,7 +2607,7 @@ function parseTooltipStats(tooltipHtml: string): any {
         [/\+(\d+)\s+Parry Rating/gi, 'parry'],
         [/\+(\d+)\s+Block Rating/gi, 'block'],
         [/(\d+)\s+Armor/gi, 'armor'],
-        // Equip effects
+
         [/spell hit rating by (\d+)/gi, 'spellhit'],
         [/spell critical strike rating by (\d+)/gi, 'spellcrit'],
         [/spell haste rating by (\d+)/gi, 'spellhaste'],
@@ -2683,7 +2622,7 @@ function parseTooltipStats(tooltipHtml: string): any {
         [/(\d+) mana per 5/gi, 'mp5'],
     ];
 
-    // Apply all patterns and SUM the values (not replace)
+
     for (const [pattern, statKey] of patterns) {
         let match;
         while ((match = pattern.exec(text)) !== null) {
@@ -2694,14 +2633,14 @@ function parseTooltipStats(tooltipHtml: string): any {
         }
     }
 
-    // Debug output
+
     const nonZero = Object.entries(stats).filter(([k,v]: [string, any]) => v > 0);
     console.log('[PARSED]', nonZero.length > 0 ? Object.fromEntries(nonZero) : 'NONE');
 
     return stats;
 }
 
-// Sum stats from multiple items
+
 function sumStats(statsArray: any[]): any {
     const total: any = {
         stamina: 0, intellect: 0, strength: 0, agility: 0, spirit: 0,
@@ -2717,20 +2656,20 @@ function sumStats(statsArray: any[]): any {
     return total;
 }
 
-// Global cache for fetched item stats
+
 let fetchedItemStats: any = {};
 let tooltipFetchInProgress: boolean = false;
 let preloadContainer: any = null;
 
-// OUR OWN tooltip cache - populated by XHR/JSONP intercept
+
 let capturedTooltips: any = {};
 
-// Helper to extract tooltip from response text
+
 function extractTooltipFromResponse(text: string, itemIdHint: string | null): boolean {
-    // Try to find tooltip_enus in the response
+
     const tooltipMatch = text.match(/"tooltip_enus"\s*:\s*"((?:[^"\\]|\\.)*)"/);
     if (tooltipMatch) {
-        // Try to find item ID near the tooltip
+
         const idMatch = text.match(/["\[](\d{4,6})["\]]/);
         const itemId = idMatch ? idMatch[1] : itemIdHint;
         if (itemId) {
@@ -2749,23 +2688,7 @@ function extractTooltipFromResponse(text: string, itemIdHint: string | null): bo
     return false;
 }
 
-// Intercept XMLHttpRequest to capture Wowhead tooltip responses
-//
-// TYPE ASSERTIONS ("as any") EXPLAINED:
-// This code monkey-patches XMLHttpRequest to intercept Wowhead API responses.
-// TypeScript's built-in types for XMLHttpRequest don't include custom properties
-// like "_whUrl", so we use "as any" to tell TypeScript: "I know what I'm doing,
-// skip the type check here." This is common when doing advanced DOM/prototype hacking.
-//
-//   (XMLHttpRequest.prototype as any).open = ...
-//     → "as any" lets us reassign .open even though TS thinks it's readonly
-//
-//   (this as any)._whUrl = url;
-//     → "as any" lets us add a custom property that doesn't exist in the XHR type
-//
-//   arguments as any
-//     → "arguments" is an old JS feature; TS doesn't type it well, so we cast it
-//
+
 (function() {
     const origOpen = XMLHttpRequest.prototype.open;
     const origSend = XMLHttpRequest.prototype.send;
@@ -2779,7 +2702,7 @@ function extractTooltipFromResponse(text: string, itemIdHint: string | null): bo
         const xhr = this;
         const url = (xhr as any)._whUrl || '';
 
-        // Check if this is a Wowhead request
+
         if (url.includes('wowhead.com')) {
             console.log('[XHR]', url);
             xhr.addEventListener('load', function() {
@@ -2787,7 +2710,7 @@ function extractTooltipFromResponse(text: string, itemIdHint: string | null): bo
                     const text = xhr.responseText;
                     console.log('[XHR RESPONSE]', url, text.substring(0, 200));
 
-                    // Extract item ID from URL if present
+
                     const idMatch = url.match(/item[=\/](\d+)/);
                     extractTooltipFromResponse(text, idMatch ? idMatch[1] : null);
                 } catch(e) {
@@ -2799,7 +2722,7 @@ function extractTooltipFromResponse(text: string, itemIdHint: string | null): bo
     };
 })();
 
-// Also intercept fetch API
+
 (function() {
     const origFetch = window.fetch;
     (window as any).fetch = function(url: any, options: any) {
@@ -2821,9 +2744,9 @@ function extractTooltipFromResponse(text: string, itemIdHint: string | null): bo
     };
 })();
 
-// Watch for JSONP script insertions and intercept Wowhead callbacks
+
 (function() {
-    // Monitor script insertions
+
     const observer = new MutationObserver((mutations: MutationRecord[]) => {
         for (const mutation of mutations) {
             for (const node of Array.from(mutation.addedNodes)) {
@@ -2835,7 +2758,7 @@ function extractTooltipFromResponse(text: string, itemIdHint: string | null): bo
     });
     observer.observe(document.documentElement, { childList: true, subtree: true });
 
-    // Intercept $WowheadPower methods when it becomes available
+
     function hookWowhead(): void {
         if (typeof $WowheadPower === 'undefined') {
             setTimeout(hookWowhead, 100);
@@ -2844,7 +2767,7 @@ function extractTooltipFromResponse(text: string, itemIdHint: string | null): bo
 
         console.log('[WOWHEAD] Hooking $WowheadPower, methods:', Object.keys($WowheadPower));
 
-        // Try to find and hook the item registration function
+
         const checkObj = (obj: any) => {
             if (!obj || typeof obj !== 'object') return;
             for (const key of Object.keys(obj)) {
@@ -2865,18 +2788,18 @@ function extractTooltipFromResponse(text: string, itemIdHint: string | null): bo
     hookWowhead();
 })();
 
-// Get tooltip from our captured cache
+
 function getTooltipFromCache(itemId: any): any {
     return capturedTooltips[String(itemId)] || null;
 }
 
-// Direct fetch from Wowhead tooltip API
+
 async function fetchTooltipDirect(itemId: any): Promise<any> {
     if (capturedTooltips[itemId]) {
         return capturedTooltips[itemId];
     }
 
-    // Try multiple Wowhead API endpoints - TBC Classic uses dataEnv=5
+
     const endpoints = [
         `https://nether.wowhead.com/tooltip/item/${itemId}?dataEnv=5&locale=0`,
         `https://nether.wowhead.com/tooltip/item/${itemId}?dataEnv=4&locale=0`,
@@ -2908,7 +2831,7 @@ async function fetchTooltipDirect(itemId: any): Promise<any> {
     return null;
 }
 
-// OPTIMIZED: Fetch ALL items directly from Wowhead API
+
 async function fetchAllItemStats(itemIds: any[]): Promise<void> {
     console.log('[FETCH] fetchAllItemStats called with:', itemIds);
     if (tooltipFetchInProgress) {
@@ -2930,7 +2853,7 @@ async function fetchAllItemStats(itemIds: any[]): Promise<void> {
 
     if (statusDiv) statusDiv.innerHTML = `<span class="text-yellow-400">Loading ${toFetch.length} items...</span>`;
 
-    // Fetch all items in parallel using direct API
+
     let loaded = 0;
     const fetchPromises = toFetch.map(async (id: any) => {
         const tooltip = await fetchTooltipDirect(id);
@@ -2949,20 +2872,20 @@ async function fetchAllItemStats(itemIds: any[]): Promise<void> {
     tooltipFetchInProgress = false;
 }
 
-// Update the stats display with phase-based BiS comparison
+
 async function updateStatsDisplay(itemIdsList?: any[]): Promise<void> {
     const statsDiv = document.getElementById('total-stats');
     const readinessDiv = document.getElementById('stat-readiness');
     if (!statsDiv) return;
 
-    // If no itemIdsList provided, try to get from gear input
+
     if (!itemIdsList) {
         const gearText = (document.getElementById('gear-input') as any)?.value || '';
         const lines = gearText.split('\n').map((l: string) => l.trim()).filter((l: string) => l);
         itemIdsList = lines.map((l: string) => findItemId(l)).filter(Boolean);
     }
 
-    // Get stats from fetched cache
+
     const userItemStats = itemIdsList!
         .map((id: any) => fetchedItemStats[id])
         .filter((stats: any) => stats && Object.values(stats).some((v: any) => typeof v === 'number' && v > 0));
@@ -2975,12 +2898,12 @@ async function updateStatsDisplay(itemIdsList?: any[]): Promise<void> {
 
     const userTotal = sumStats(userItemStats);
 
-    // Get BiS stats for selected phase and previous phase
+
     const bisStats = await calculatePhaseBisStats(preRaidClass, preRaidSpecName as string, selectedPhase);
     const prevPhaseKey = String(Math.max(0, parseInt(selectedPhase) - 1));
     const prevBisStats = prevPhaseKey !== selectedPhase ? await calculatePhaseBisStats(preRaidClass, preRaidSpecName as string, prevPhaseKey) : null;
 
-    // Key stats to display with comparison
+
     const statDefs = [
         { key: 'stamina', label: 'Stamina' },
         { key: 'intellect', label: 'Intellect' },
@@ -3003,12 +2926,12 @@ async function updateStatsDisplay(itemIdsList?: any[]): Promise<void> {
         { key: 'armor', label: 'Armor' }
     ];
 
-    // Filter to only show stats that are relevant (user has or BiS has)
+
     const relevantStats = statDefs.filter((s: any) =>
         userTotal[s.key] > 0 || (bisStats && bisStats[s.key] > 0)
     );
 
-    // Build stats comparison table
+
     let statsHtml = `<div class="space-y-1 text-xs">`;
     for (const s of relevantStats) {
         const userVal = userTotal[s.key] || 0;
@@ -3030,19 +2953,19 @@ async function updateStatsDisplay(itemIdsList?: any[]): Promise<void> {
     statsHtml += `</div>`;
     statsDiv.innerHTML = statsHtml;
 
-    // Calculate readiness using thresholds and slot comparison
+
     if (readinessDiv) {
         const phaseName = PHASES.find((p: any) => p.key === selectedPhase)?.shortName || `Phase ${selectedPhase}`;
         const role = getSpecRole(preRaidSpecName);
         const thresholds = checkRaidThresholds(userTotal, role, selectedPhase);
 
-        // Get user item names for slot comparison
+
         const gearText = (document.getElementById('gear-input') as any)?.value || '';
         const userItemNames = gearText.split('\n').map((l: string) => l.trim()).filter((l: string) => l);
         const bisList = getPhaseBisList(preRaidClass, preRaidSpecName as string, selectedPhase);
         const slotComparison = compareItemsToBis(userItemNames, bisList);
 
-        // Determine overall status based on thresholds
+
         const allPassed = thresholds.failed.length === 0;
         const mostPassed = thresholds.failed.length <= 1;
         const overallStatus = allPassed ? { text: 'READY', class: 'text-terminal-accent' } :
@@ -3059,7 +2982,7 @@ async function updateStatsDisplay(itemIdsList?: any[]): Promise<void> {
                 <div class="space-y-1 text-xs mb-4">
         `;
 
-        // Show passed thresholds
+
         for (const t of thresholds.passed) {
             readinessHtml += `
                 <div class="flex items-center justify-between">
@@ -3069,7 +2992,7 @@ async function updateStatsDisplay(itemIdsList?: any[]): Promise<void> {
             `;
         }
 
-        // Show failed thresholds
+
         for (const t of thresholds.failed) {
             const needed = t.required - t.current;
             readinessHtml += `
@@ -3085,7 +3008,7 @@ async function updateStatsDisplay(itemIdsList?: any[]): Promise<void> {
             </div>
         `;
 
-        // Slot-by-slot comparison
+
         const slotEntries = Object.entries(slotComparison);
         if (slotEntries.length > 0) {
             readinessHtml += `
@@ -3132,7 +3055,7 @@ async function updateStatsDisplay(itemIdsList?: any[]): Promise<void> {
         readinessDiv.innerHTML = readinessHtml;
     }
 }
-// Detect role based on stats
+
 function detectRole(stats: any): string {
     if (stats.defense > 100 || stats.parry > 50 || stats.dodge > 50) return 'tank';
     if (stats.healing > stats.spelldamage && stats.healing > 0) return 'healer';
@@ -3140,7 +3063,7 @@ function detectRole(stats: any): string {
     return 'melee';
 }
 
-// Update gear preview with Wowhead tooltips
+
 async function updateGearPreview(): Promise<void> {
     const previewDiv = document.getElementById('gear-preview');
     if (!previewDiv) return;
@@ -3156,10 +3079,10 @@ async function updateGearPreview(): Promise<void> {
     const bisList = getPreRaidBisList(preRaidClass, preRaidSpecName as string);
     const matchResults = parseAndMatchGear(gearText, bisList);
 
-    // Find items not in local database and search Blizzard API
+
     const unknownItems = matchResults.filter((r: any) => !r.itemId);
     if (unknownItems.length > 0) {
-        // Show searching indicator
+
         const searchingHtml = matchResults.map((r: any) => {
             if (r.itemId) {
                 const bisTag = r.bisMatch ? `<span class="text-terminal-accent ml-2">[BiS${r.slot ? ' - ' + r.slot : ''}]</span>` : '';
@@ -3169,7 +3092,7 @@ async function updateGearPreview(): Promise<void> {
         }).join('');
         previewDiv.innerHTML = searchingHtml;
 
-        // Search for unknown items via Blizzard API
+
         await Promise.all(unknownItems.map(async (r: any) => {
             const result = await searchItemByName(r.input);
             if (result && result.id) {
@@ -3180,7 +3103,7 @@ async function updateGearPreview(): Promise<void> {
         }));
     }
 
-    // Build final preview HTML
+
     const previewHtml = matchResults.map((r: any) => {
         if (r.itemId) {
             const bisTag = r.bisMatch ? `<span class="text-terminal-accent ml-2">[BiS${r.slot ? ' - ' + r.slot : ''}]</span>` : '';
@@ -3192,7 +3115,7 @@ async function updateGearPreview(): Promise<void> {
 
     previewDiv.innerHTML = previewHtml || '<span class="text-terminal-dim">No items entered</span>';
 
-    // Refresh Wowhead tooltips
+
     if (typeof $WowheadPower !== 'undefined' && $WowheadPower.refreshLinks) {
         $WowheadPower.refreshLinks();
         setTimeout(updateItemQualitiesFromWowhead, 50);
@@ -3205,7 +3128,7 @@ function renderPreRaidChecker(): void {
     const preRaidLink = document.querySelector('.class-list li[data-view="raidready"]');
     if (preRaidLink) preRaidLink.classList.add('active');
 
-    // Get available classes and specs
+
     const classes = Object.keys(classData);
     if (!preRaidClass || !classData[preRaidClass]) {
         preRaidClass = classes[0] || 'warrior';
@@ -3215,7 +3138,7 @@ function renderPreRaidChecker(): void {
         preRaidSpecName = classData[preRaidClass]?.defaultSpec || specs[0];
     }
 
-    // Load saved characters for dropdown
+
     const savedCharacters = loadAllCharacters();
     const charOptions = savedCharacters.length > 0
         ? `<option value="">-- Select Character --</option>` + savedCharacters.map((c: any) =>
@@ -3307,31 +3230,31 @@ Wastewalker Shoulderpads
         mainContent.innerHTML = html;
         mainContent.style.opacity = '1';
 
-        // Class selector change
+
         document.getElementById('raidready-class')!.addEventListener('change', (e: any) => {
             preRaidClass = e.target.value;
             preRaidSpecName = classData[preRaidClass]?.defaultSpec || Object.keys(classData[preRaidClass]?.specs || {})[0];
             renderPreRaidChecker();
         });
 
-        // Spec selector change
+
         document.getElementById('raidready-spec')!.addEventListener('change', (e: any) => {
             preRaidSpecName = e.target.value;
-            bisStatsCache = {}; // Clear cache when spec changes
+            bisStatsCache = {};
             updateGearPreview();
-            // Update stats display if we have fetched data
+
             updateStatsDisplay();
         });
 
-        // Phase selector change
+
         document.getElementById('phase-select')!.addEventListener('change', (e: any) => {
             selectedPhase = e.target.value;
-            bisStatsCache = {}; // Clear cache when phase changes
-            // Recalculate stats display
+            bisStatsCache = {};
+
             updateStatsDisplay();
         });
 
-        // Calculate stats button - fetches from Wowhead dynamically
+
         document.getElementById('fetch-stats-btn')!.addEventListener('click', async () => {
             console.log('[BUTTON] Calculate Stats clicked!');
             const gearText = (document.getElementById('gear-input') as any)?.value || '';
@@ -3348,11 +3271,11 @@ Wastewalker Shoulderpads
             console.log('[BUTTON] Item IDs to fetch:', itemIdsList);
 
             if (itemIdsList.length > 0) {
-                // Clear BiS cache to force recalculation
+
                 bisStatsCache = {};
-                // Fetch item stats from Wowhead
+
                 await fetchAllItemStats(itemIdsList);
-                // Now display
+
                 updateStatsDisplay(itemIdsList);
             } else {
                 const statusDiv = document.getElementById('stats-status');
@@ -3360,13 +3283,13 @@ Wastewalker Shoulderpads
             }
         });
 
-        // Gear input with debounce
+
         document.getElementById('gear-input')!.addEventListener('input', () => {
             clearTimeout(preRaidDebounceTimer);
             preRaidDebounceTimer = setTimeout(updateGearPreview, 300);
         });
 
-        // Save character button
+
         document.getElementById('save-char-btn')!.addEventListener('click', () => {
             const charName = (document.getElementById('char-name-input') as any).value.trim();
             const gearText = (document.getElementById('gear-input') as any).value.trim();
@@ -3382,7 +3305,7 @@ Wastewalker Shoulderpads
             }
         });
 
-        // Character dropdown selection
+
         document.getElementById('char-select')!.addEventListener('change', (e: any) => {
             const charId = e.target.value;
             if (charId) {
@@ -3397,7 +3320,7 @@ Wastewalker Shoulderpads
             }
         });
 
-        // Delete character button
+
         const deleteBtn = document.getElementById('delete-char-btn');
         if (deleteBtn) {
             deleteBtn.addEventListener('click', async () => {
@@ -3410,14 +3333,14 @@ Wastewalker Shoulderpads
             });
         }
 
-        // Initial preview if there's existing text
+
         if (preRaidGearText) {
             updateGearPreview();
         }
     }, FADE_TRANSITION_MS);
 }
 
-// ===== HEROIC DUNGEONS GUIDE =====
+
 let currentHeroicZone: string = 'hellfire';
 
 function renderHeroicsContent(zone: string = 'hellfire', dungeon: string | null = null): void {
@@ -3433,12 +3356,12 @@ function renderHeroicsContent(zone: string = 'hellfire', dungeon: string | null 
 
     const zoneData = heroicsData[zone];
 
-    // Dungeon select buttons
+
     const dungeonButtons = zoneData.dungeons.map((d: any) =>
         `<a href="#heroics/${zone}/${d.id}" class="heroic-dungeon-btn ${d.id === dungeon ? 'bg-terminal-text text-terminal-bg' : 'bg-transparent text-terminal-text'} border border-terminal-text px-3 py-2 cursor-pointer font-mono text-xs transition-all select-none hover:bg-terminal-text hover:text-terminal-bg no-underline md:px-2.5 md:py-1.5 md:text-[11px] sm:px-2 sm:py-1 sm:text-[10px]" data-dungeon="${d.id}">${d.name}</a>`
     ).join('');
 
-    // Generate content based on whether a dungeon is selected
+
     let contentHtml = '';
 
     const getDifficultyColor = (diff: string): string => ({
@@ -3451,17 +3374,17 @@ function renderHeroicsContent(zone: string = 'hellfire', dungeon: string | null 
     } as any)[diff] || 'text-terminal-dim';
 
     if (dungeon) {
-        // Show individual dungeon guide
+
         const selectedDungeon = zoneData.dungeons.find((d: any) => d.id === dungeon);
         if (selectedDungeon) {
             const difficultyColor = getDifficultyColor(selectedDungeon.difficulty);
 
-            // Build detailed boss guides
+
             const bossesHtml = selectedDungeon.bosses.map((boss: any, idx: number) => {
                 const bossName = typeof boss === 'string' ? boss : boss.name;
                 const bossDiff = boss.difficulty ? getDifficultyColor(boss.difficulty) : '';
 
-                // If boss is just a string (old format), show simple version
+
                 if (typeof boss === 'string') {
                     return `
                         <div class="border border-terminal-dim/50 p-3 md:p-2.5 sm:p-2">
@@ -3473,7 +3396,7 @@ function renderHeroicsContent(zone: string = 'hellfire', dungeon: string | null 
                     `;
                 }
 
-                // Detailed boss format
+
                 const abilitiesHtml = boss.abilities ? boss.abilities.map((ability: any) => `
                     <div class="border-l-2 border-terminal-accent/50 pl-3 mb-3 md:pl-2 md:mb-2">
                         <div class="text-terminal-text text-xs font-semibold mb-1 md:text-[11px]">${ability.name}</div>
@@ -3524,7 +3447,7 @@ function renderHeroicsContent(zone: string = 'hellfire', dungeon: string | null 
                 `;
             }).join('');
 
-            // Dungeon overview info
+
             const overviewHtml = `
                 <div class="border border-terminal-accent/50 bg-terminal-bg/30 p-4 mb-6 md:p-3 md:mb-4 sm:p-2.5">
                     <div class="flex justify-between items-start mb-3 flex-wrap gap-2">
@@ -3547,7 +3470,7 @@ function renderHeroicsContent(zone: string = 'hellfire', dungeon: string | null 
                 </div>
             `;
 
-            // Trash tips section
+
             const trashHtml = selectedDungeon.trashTips ? `
                 <div class="border border-terminal-dim/50 p-4 mb-6 md:p-3 md:mb-4 sm:p-2.5">
                     <h4 class="text-terminal-text text-sm mb-2 uppercase md:text-xs">🗑️ [ TRASH TIPS ]</h4>
@@ -3563,7 +3486,7 @@ function renderHeroicsContent(zone: string = 'hellfire', dungeon: string | null 
             `;
         }
     } else {
-        // Show all dungeons overview
+
         const dungeonsHtml = zoneData.dungeons.map((d: any) => {
             const difficultyColor = getDifficultyColor(d.difficulty);
             const bossNames = d.bosses.map((b: any) => typeof b === 'string' ? b : b.name).join(' → ');
@@ -3614,7 +3537,7 @@ function renderHeroicsContent(zone: string = 'hellfire', dungeon: string | null 
     setTimeout(() => {
         mainContent.innerHTML = html;
         mainContent.style.opacity = '1';
-        // Zone button listeners
+
         document.querySelectorAll('.heroic-zone-btn').forEach((btn: any) => {
             btn.addEventListener('click', function(this: any, e: any) {
                 if (e.ctrlKey || e.metaKey || e.button === 1) return;
@@ -3622,7 +3545,7 @@ function renderHeroicsContent(zone: string = 'hellfire', dungeon: string | null 
                 window.location.hash = this.getAttribute('href');
             });
         });
-        // Dungeon button listeners
+
         document.querySelectorAll('.heroic-dungeon-btn').forEach((btn: any) => {
             btn.addEventListener('click', function(this: any, e: any) {
                 if (e.ctrlKey || e.metaKey || e.button === 1) return;
@@ -3633,7 +3556,7 @@ function renderHeroicsContent(zone: string = 'hellfire', dungeon: string | null 
     }, FADE_TRANSITION_MS);
 }
 
-// ===== REPUTATION TRACKER =====
+
 function renderReputationTracker(): void {
     currentClass = null;
     document.querySelectorAll('.class-list li').forEach((li: any) => li.classList.remove('active'));
@@ -3645,7 +3568,7 @@ function renderReputationTracker(): void {
     const factionsHtml = factionsData.factions.map((faction: any) => {
         const currentStanding = repProgress[faction.id] || 'neutral';
         const standingIndex = factionsData.standings.findIndex((s: any) => s.id === currentStanding);
-        const standingData = factionsData.standings[standingIndex] || factionsData.standings[3]; // Default neutral
+        const standingData = factionsData.standings[standingIndex] || factionsData.standings[3];
 
         const standingColors: any = {
             'hated': 'text-red-600',
@@ -3714,7 +3637,7 @@ function renderReputationTracker(): void {
     setTimeout(() => {
         mainContent.innerHTML = html;
         mainContent.style.opacity = '1';
-        // Rep select listeners
+
         document.querySelectorAll('.rep-select').forEach((select: any) => {
             select.addEventListener('change', function(this: any) {
                 const factionId = this.getAttribute('data-faction');
@@ -3726,14 +3649,14 @@ function renderReputationTracker(): void {
     }, FADE_TRANSITION_MS);
 }
 
-// ===== RAID LOCKOUT TRACKER =====
+
 function renderLockoutTracker(): void {
     currentClass = null;
     document.querySelectorAll('.class-list li').forEach((li: any) => li.classList.remove('active'));
     const lockoutLink = document.querySelector('.nav-link[data-view="lockouts"]');
     if (lockoutLink) lockoutLink.parentElement!.classList.add('active');
 
-    // Check for expired lockouts
+
     const lockoutProgress = checkLockoutExpiry();
 
     const raidsHtml = lockoutsData.raids.map((raid: any) => {
@@ -3797,7 +3720,7 @@ function renderLockoutTracker(): void {
     setTimeout(() => {
         mainContent.innerHTML = html;
         mainContent.style.opacity = '1';
-        // Lockout checkbox listeners
+
         document.querySelectorAll('.lockout-checkbox').forEach((cb: any) => {
             cb.addEventListener('change', function(this: any) {
                 const raidId = this.getAttribute('data-raid');
@@ -3808,7 +3731,7 @@ function renderLockoutTracker(): void {
     }, FADE_TRANSITION_MS);
 }
 
-// ===== GUILD PROGRESS TRACKER =====
+
 function renderGuildProgress(): void {
     currentClass = null;
     document.querySelectorAll('.class-list li').forEach((li: any) => li.classList.remove('active'));
@@ -3817,7 +3740,7 @@ function renderGuildProgress(): void {
 
     const guildProgress = loadGuildProgress();
 
-    // Get all bosses from raidsData
+
     let allBosses: any[] = [];
     for (const [phaseKey, phaseData] of Object.entries(raidsData) as [string, any][]) {
         for (const [raidKey, raid] of Object.entries(phaseData.raids) as [string, any][]) {
@@ -3835,7 +3758,7 @@ function renderGuildProgress(): void {
         }
     }
 
-    // Group bosses by raid
+
     const bossesByRaid: any = {};
     allBosses.forEach((boss: any) => {
         if (!bossesByRaid[boss.raid]) {
@@ -3906,7 +3829,7 @@ function renderGuildProgress(): void {
     setTimeout(() => {
         mainContent.innerHTML = html;
         mainContent.style.opacity = '1';
-        // Kill count input listeners
+
         document.querySelectorAll('.kill-count-input').forEach((input: any) => {
             input.addEventListener('change', function(this: any) {
                 const bossId = this.getAttribute('data-boss');
@@ -3915,7 +3838,7 @@ function renderGuildProgress(): void {
                 renderGuildProgress();
             });
         });
-        // Increment/decrement buttons
+
         document.querySelectorAll('.kill-increment').forEach((btn: any) => {
             btn.addEventListener('click', function(this: any) {
                 const bossId = this.getAttribute('data-boss');
@@ -3932,7 +3855,7 @@ function renderGuildProgress(): void {
                 renderGuildProgress();
             });
         });
-        // Full clear buttons - add +1 kill to all bosses in raid
+
         document.querySelectorAll('.full-clear-btn').forEach((btn: any) => {
             btn.addEventListener('click', function(this: any) {
                 const bossIds = JSON.parse(this.getAttribute('data-bosses'));
@@ -3946,7 +3869,7 @@ function renderGuildProgress(): void {
     }, FADE_TRANSITION_MS);
 }
 
-// ===== CHARACTER IMPORT =====
+
 const CHAR_IMPORT_KEY: string = 'tbctxt_characters';
 let currentCharacterId: string | null = null;
 
@@ -3964,17 +3887,17 @@ function saveCharacterToList(name: string, gearText: string): string | null {
         const characters = loadAllCharacters();
         const charName = name || 'Unnamed';
 
-        // Check if character with same name exists
+
         const existingIndex = characters.findIndex((c: any) => c.name.toLowerCase() === charName.toLowerCase());
 
         if (existingIndex !== -1) {
-            // Overwrite existing character
+
             characters[existingIndex].gearText = gearText;
             characters[existingIndex].savedAt = Date.now();
             localStorage.setItem(CHAR_IMPORT_KEY, JSON.stringify(characters));
             return characters[existingIndex].id;
         } else {
-            // Create new character
+
             const id = Date.now().toString();
             const newChar = {
                 id,
@@ -4012,7 +3935,7 @@ function parseGearText(text: string): any[] {
     const foundItems: any[] = [];
 
     for (const line of lines) {
-        // Try to match item names from our database
+
         const cleanLine = line.replace(/^\d+\.\s*/, '').replace(/\[|\]/g, '').trim();
         const itemId = findItemId(cleanLine);
         if (itemId) {
@@ -4022,7 +3945,7 @@ function parseGearText(text: string): any[] {
                 quality: getItemQuality(cleanLine)
             });
         } else {
-            // Try fuzzy matching - look for partial matches
+
             const lowerLine = cleanLine.toLowerCase();
             for (const [itemName, id] of Object.entries(itemIds)) {
                 if (itemName.includes(lowerLine) || lowerLine.includes(itemName)) {
@@ -4040,9 +3963,9 @@ function parseGearText(text: string): any[] {
     return foundItems;
 }
 
-// Bug Report Form Configuration
+
 const BUG_REPORT_CONFIG: any = {
-    // Replace this URL with your Google Apps Script Web App URL
+
     googleScriptUrl: 'https://script.google.com/macros/s/AKfycbx0OOy3YFpNVeaLspP4NlFdE2Hv60_YRj5tXmV3Cs7ggFJhDFIHjZMGTaCeO6QTR_PlUA/exec'
 };
 
@@ -4157,7 +4080,7 @@ function attachBugReportListeners(): void {
     form.addEventListener('submit', async (e: Event) => {
         e.preventDefault();
 
-        // Check if Google Script URL is configured
+
         if (BUG_REPORT_CONFIG.googleScriptUrl === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
             statusDiv.className = 'mt-6 p-4 border border-yellow-500 text-yellow-500';
             statusDiv.innerHTML = '⚠️ Bug report form not configured. Please set up Google Sheets integration.';
@@ -4172,7 +4095,7 @@ function attachBugReportListeners(): void {
             description: (document.getElementById('bug-description') as any).value
         };
 
-        // Disable submit button
+
         submitBtn.disabled = true;
         submitBtn.textContent = '[ SUBMITTING... ]';
         submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
@@ -4180,14 +4103,14 @@ function attachBugReportListeners(): void {
         try {
             const response = await fetch(BUG_REPORT_CONFIG.googleScriptUrl, {
                 method: 'POST',
-                mode: 'no-cors', // Required for Google Apps Script
+                mode: 'no-cors',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(data)
             });
 
-            // With no-cors mode, we can't read the response, but if no error thrown, assume success
+
             statusDiv.className = 'mt-6 p-4 border border-terminal-accent text-terminal-accent';
             statusDiv.innerHTML = '✓ Bug report submitted successfully! Thank you for helping improve TBC.TXT.';
             statusDiv.classList.remove('hidden');
@@ -4200,7 +4123,7 @@ function attachBugReportListeners(): void {
             statusDiv.classList.remove('hidden');
         }
 
-        // Re-enable submit button
+
         submitBtn.disabled = false;
         submitBtn.textContent = '[ SUBMIT REPORT ]';
         submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
@@ -4309,7 +4232,7 @@ function navigateToHash(hash: string): void {
     } else if (page === 'bug-report') {
         renderBugReportForm();
     } else {
-        // Class page: #warrior or #warrior/arms or #warrior/arms/3
+
         currentClass = page;
         if (parts[1]) currentSpec = parts[1];
         if (parts[2]) currentPhase = parseInt(parts[2]);
@@ -4332,25 +4255,25 @@ function initClassSelector(): void {
             if (e.ctrlKey || e.metaKey || e.button === 1) return;
             e.preventDefault();
             window.location.hash = this.getAttribute('href');
-            // Close any open dropdowns after clicking a link
+
             document.querySelectorAll('.nav-dropdown.open').forEach((dd: any) => dd.classList.remove('open'));
         });
     });
 
-    // Dropdown toggle for mobile/touch
+
     document.querySelectorAll('.nav-dropdown-btn').forEach((btn: any) => {
         btn.addEventListener('click', function(this: any, e: Event) {
             e.stopPropagation();
             const dropdown = this.closest('.nav-dropdown');
             const isOpen = dropdown.classList.contains('open');
-            // Close all other dropdowns
+
             document.querySelectorAll('.nav-dropdown.open').forEach((dd: any) => dd.classList.remove('open'));
-            // Toggle this dropdown
+
             if (!isOpen) dropdown.classList.add('open');
         });
     });
 
-    // Close dropdowns when clicking outside
+
     document.addEventListener('click', function(e: Event) {
         if (!(e.target as any).closest('.nav-dropdown')) {
             document.querySelectorAll('.nav-dropdown.open').forEach((dd: any) => dd.classList.remove('open'));
@@ -4359,14 +4282,14 @@ function initClassSelector(): void {
 
     window.addEventListener('hashchange', () => navigateToHash(window.location.hash));
 
-    // Handle auth callback (token in URL from OAuth)
+
     handleAuthCallback();
 
-    // Check for donation success/cancel
+
     checkDonationStatus();
 
     if (window.location.hash) {
-        // Handle auth hash states
+
         if (window.location.hash === '#login-success') {
             history.replaceState(null, '', window.location.pathname);
             console.log('Login successful!');
@@ -4377,7 +4300,7 @@ function initClassSelector(): void {
             navigateToHash(window.location.hash);
         }
     }
-    // Check auth status (from localStorage)
+
     checkAuthStatus();
 }
 window.addEventListener('DOMContentLoaded', loadAllData);
