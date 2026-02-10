@@ -9,7 +9,6 @@
 !styles.css
 !blank.txt
 !app.js
-!strip-comments.js
 
 # Build config
 !tsconfig.json
